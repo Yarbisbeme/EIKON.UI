@@ -33,194 +33,133 @@ else
 
         @* * Componente reutilizable para los Headers de los Form *@
         <FormHeader 
-        Title="SIRH - Creación de Cargos" 
-        FormCode="FRHCL101" 
-        OnAdd="Agregar" 
-        OnSave="Save" 
-        OnRemove="Eliminar" 
+            Title="SIRH - Creación de Cargos" 
+            FormCode="FRHCL101" 
+            OnAdd="Agregar" 
+            OnSave="Save" 
+            OnRemove="Eliminar"
         />
 
         <div class="container">
-
             <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
-
                 <DxTabPage CssClass="dxbl-tabs" Text="Mantenimiento del Puesto">
-            
-            <EditForm data-bind="@SelectedItem" Model="SelectedItem">
-              
-            <div class="row">
-             <div class="form-group col-md-4">
-                        <label for="puenume">Cargo</label>
-                                <DxTextBox id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true"></DxTextBox>
-            </div>
-            <div class="form-group col-md-4">
-                        <label for="puetitu">Título</label>
-                        <DxTextBox id="puetitu"  @bind-Text="@SelectedItem.Puetitu"></DxTextBox>
-            </div>
-                    <div class="form-group col-md-2">
-                        <label for="reqnume">Requisición</label>
-                        <DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"></DxTextBox>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="btnBuscar">Buscar Requisición</label>
-                        <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"></DxButton>
-                    </div>
-               
-            </div>
-            <div class="row">
-                
-                <div class="form-group  col-md-4">
-                    <label for="Oficina">Oficina</label>
-                    <DxComboBox id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="SelectedItem.OfCodigo" ></DxComboBox>
-                </div>
-           
-                    <div class="form-group  col-md-4">
-                        <label for="Ubicacion">Departamento</label>
-                        <DxComboBox id="Ubicacion" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="SelectedItem.UbCodigo"></DxComboBox>
-                    </div>
-                    <div class="form-group  col-md-4">
-                        <label for="Puesto">Puesto</label>
-                        <DxComboBox id="Puesto" Data="@puestos" ValueFieldName="JoNumber" TextFieldName="JoTitulo" @bind-Value="SelectedItem.JoNumber"></DxComboBox>
-                    </div>
+                    <EditForm data-bind="@SelectedItem" Model="SelectedItem">
 
-              
-            </div>
-                <div class="row">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="puenume">Cargo</label>
+                                <DxTextBox id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="puetitu">Título</label>
+                                <DxTextBox id="puetitu" @bind-Text="@SelectedItem.Puetitu" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="reqnume">Requisición</label>
+                                <DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="btnBuscar">Buscar Requisición</label>
+                                <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
+                            </div>
+                        </div>
 
-                    <div class="form-group  col-md-4">
-                        <label for="Clase">Clase</label>
-                        <DxComboBox id="Clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="SelectedItem.NpCodigo"></DxComboBox>
-                    </div>
+                        <div class="row">
+                            <div class="form-group  col-md-4">
+                                <label for="Oficina">Oficina</label>
+                                <DxComboBox id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="SelectedItem.OfCodigo"  />
+                            </div>
+                            <div class="form-group  col-md-4">
+                                <label for="Ubicacion">Departamento</label>
+                                <DxComboBox id="Ubicacion" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="SelectedItem.UbCodigo" />
+                            </div>
+                            <div class="form-group  col-md-4">
+                                <label for="Puesto">Puesto</label>
+                                <DxComboBox id="Puesto" Data="@puestos" ValueFieldName="JoNumber" TextFieldName="JoTitulo" @bind-Value="SelectedItem.JoNumber" />
+                            </div>
+                        </div>
 
-                    <div class="form-group  col-md-4">
-                        <label for="Categoria">Categoria</label>
-                        <DxComboBox id="Categoria" Data="@categorias" ValueFieldName="CtCodigo" TextFieldName="CtDescri" @bind-Value="clase_np.CtCodigo" Readonly></DxComboBox>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="create">Fecha Creacion</label>
-                        <DxDateEdit id="create" @bind-Date="@SelectedItem.ChangedOn"></DxDateEdit>
-                    </div>
-                   
+                        <div class="row">
+                            <div class="form-group  col-md-4">
+                                <label for="Clase">Clase</label>
+                                <DxComboBox id="Clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="SelectedItem.NpCodigo" />
+                            </div>
 
-                </div>
+                            <div class="form-group  col-md-4">
+                                <label for="Categoria">Categoria</label>
+                                <DxComboBox id="Categoria" Data="@categorias" ValueFieldName="CtCodigo" TextFieldName="CtDescri" @bind-Value="clase_np.CtCodigo" Readonly />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="create">Fecha Creacion</label>
+                                <DxDateEdit id="create" @bind-Date="@SelectedItem.ChangedOn" />
+                            </div>
+                        </div>
 
-                <div class="row">
+                        <div class="row">
+                            <div class="form-group  col-md-4">
+                                <label for="sEntrada">Sueldo Entrada</label>
+                                <DxSpinEdit id="sEntrada" @bind-Value="@categoria_np.Minent" Mask="n2" ReadOnly /> @* Solo permite numeros y es para seleccionar *@
+                            </div>
+                            <div class="form-group  col-md-4">
+                                <label for="pPrueba">Perido de Prueba en Meses</label>
+                                <DxSpinEdit id="pPrueba" @bind-Value="@SelectedItem.Pueperi" Mask="@NumericMask.WholeNumber" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="presupuesto">Presupuesto</label>
+                                <DxSpinEdit id="presupuesto" @bind-Value="@categoria_np.Ptomedio" Mask="n2" />
+                            </div>
+                        </div>
 
-                    <div class="form-group  col-md-4">
-                        <label for="sEntrada">Sueldo Entrada</label>
-                        <DxSpinEdit id="sEntrada" @bind-Value="@categoria_np.Minent" Mask="n2" ReadOnly></DxSpinEdit>
-                    </div>
-
-                    <div class="form-group  col-md-4">
-                        <label for="pPrueba">Perido de Prueba en Meses</label>
-                                <DxSpinEdit id="pPrueba" @bind-Value="@SelectedItem.Pueperi" Mask="@NumericMask.WholeNumber"></DxSpinEdit>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="presupuesto">Presupuesto</label>
-                        <DxSpinEdit id="presupuesto" @bind-Value="@categoria_np.Ptomedio" Mask="n2"></DxSpinEdit>
-                    </div>
-
-
-                </div>
-
-            <div class="row">
-                    <div class="form-group col-md-12">
-                        <label for="puevaca">Estatus</label>
-                        <DxRadioGroup Id="puevaca" CssClass="dxbl-text-edit"
-                                      Items="@estatus"
-                                      TextFieldName="Text"
-                                      ValueFieldName="Value"
-                                      @bind-Value="@SelectedItem.Puevaca"
-                                      Layout="RadioGroupLayout.Horizontal">
-                        </DxRadioGroup>
-
-                </div>
-            </div>
-            
-            @* <div class="row">
-                     <div class="form-group col-md-6 checkitem" style="border:dotted;">
-                <label class="col-lg-4">Estatus</label><br />
-                        <label for="activo" class="col-lg-4">Activo</label>
-                <input type="radio" id="activo" name="estatus" value="A" @onchange="CambiarEstatus" checked="@((Estatus == "A"))">
-
-                        <label for="inactivo" class="col-lg-4">Inactivo</label>
-                <input type="radio" id="inactivo" name="estatus" value="I" @onchange="CambiarEstatus" checked="@((Estatus == "I"))">
-                </div>
-                    <div class="form-group col-md-6 checkitem" style="border:dotted;">
-
-                        <label for="vacante" class="col-lg-4">Vacante</label>
-                        <input type="radio" id="vacante" name="estatus" value="V" @onchange="CambiarEstatus" checked="@((Estatus == "V"))">
-
-                        <label for="proceso" class="col-lg-4">Proceso</label>
-                        <input type="radio" id="proceso" name="estatus" value="P" @onchange="CambiarEstatus" checked="@((Estatus == "P"))">
-
-                        <label for="eliminar" class="col-lg-4">Eliminar</label>
-                        <input type="radio" id="eliminar" name="estatus" value="E" @onchange="CambiarEstatus" checked="@((Estatus == "E"))">
-
-
-                </div> 
-                </div> *@
-            
-                <!--aqui-->
-               @*  <div class="form-group  col-md-3 checkitem " style="border:dashed;">
-                   
-                    <label>Estatus</label><br />
-                    <label for="inactivo">Inactivo</label>
-                        <input type="radio" id="inactivo" name="red" checked>
-
-                    <label for="activo">Activo</label>
-                    <input type="radio" id="activo" name="red">
-
-                        <label for="vacante">Vacante</label>
-                        <input type="radio" id="vacante" name="red">
-
-                        <label for="proceso">Proceso</label>
-                        <input type="radio" id="proceso" name="red">
-
-                        <label for="eliminar">Eliminar</label>
-                        <input type="radio" id="eliminar" name="red">
-                    
-                </div> *@
-
-                <!---->
-            
-                
-            </EditForm>
-
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="puevaca">Estatus</label>
+                                <DxRadioGroup   
+                                    Id="puevaca" CssClass="dxbl-text-edit"
+                                    Items="@estatus"
+                                    TextFieldName="Text"
+                                    ValueFieldName="Value"
+                                    @bind-Value="@SelectedItem.Puevaca"
+                                    Layout="RadioGroupLayout.Horizontal">
+                                </DxRadioGroup>
+                            </div>
+                        </div>
+                    </EditForm>
                 </DxTabPage>
-            <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Puestos">
-                    <h3>Consulta de Puestos</h3>
-                    <DxGrid Data="@data" @ref="MyGrid"
-                            PageSize="15"
-                            CssClass="mw-1100"
-                            KeyFieldName="Puenume"
-                            ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
-        <Columns>
-            <DxGridCommandColumn Width="60px" VisibleIndex="2">
-                <HeaderTemplate>
-                    <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
-                </HeaderTemplate>
-                <CellDisplayTemplate>
-                    <a class="" @onclick="@(() => Editar((Frhpu010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
-                   @*  <a class="text-primary" @onclick="@(() => MyGrid.SelectDataItem(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a> *@
-                </CellDisplayTemplate>
-               </DxGridCommandColumn>
-            <DxGridDataColumn Caption="Id" FieldName="Puenume" Width="100px" VisibleIndex="3" />
-            <DxGridDataColumn Caption="Descripción" FieldName="Puetitu" Width="300px" VisibleIndex="4" />
+                <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Puestos">
+                <h3>Consulta de Puestos</h3>
+                <DxGrid Data="@data" 
+                        @ref="MyGrid"
+                        PageSize="15"
+                        CssClass="mw-1100"
+                        KeyFieldName="Puenume"
+                        ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
+                    <Columns>
+                        <DxGridCommandColumn Width="60px" VisibleIndex="2">
+                            <HeaderTemplate>
+                                <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                            </HeaderTemplate>
+                            <CellDisplayTemplate>
+                                <a class="" @onclick="@(() => Editar((Frhpu010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                            @*  <a class="text-primary" @onclick="@(() => MyGrid.SelectDataItem(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a> *@
+                            </CellDisplayTemplate>
+                        </DxGridCommandColumn>
+                        <DxGridDataColumn Caption="Id" FieldName="Puenume" Width="100px" VisibleIndex="3" />
+                        <DxGridDataColumn Caption="Descripción" FieldName="Puetitu" Width="300px" VisibleIndex="4" />
            
-            @* <DxGridDataColumn FieldName="OfCodigo" Caption="ID Oficina"/> *@
-            <DxGridDataColumn Caption="Oficina" FieldName="OfCodigo" Width="160px" VisibleIndex="5">
-                <EditSettings>
-                    <DxComboBoxSettings Data="oficinas"
-                                        ValueFieldName="OfCodigo"
-                                        TextFieldName="OfDescri"
-                                        FilteringMode="DataGridFilteringMode.Contains"
-                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                        EditFormat="{1} {2}">
-                        <Columns>
-                            <DxListEditorColumn FieldName="OfCodigo" Caption="Código" />
-                            <DxListEditorColumn FieldName="OfDescri" Caption="Descripción" />
-                            <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
+                        @* <DxGridDataColumn FieldName="OfCodigo" Caption="ID Oficina"/> *@
+                        <DxGridDataColumn Caption="Oficina" FieldName="OfCodigo" Width="160px" VisibleIndex="5">
+                        <EditSettings>
+                        <DxComboBoxSettings 
+                            Data="oficinas"
+                            ValueFieldName="OfCodigo"
+                            TextFieldName="OfDescri"
+                            FilteringMode="DataGridFilteringMode.Contains"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                            EditFormat="{1} {2}">
+                    <Columns>
+                    <DxListEditorColumn FieldName="OfCodigo" Caption="Código" />
+                    <DxListEditorColumn FieldName="OfDescri" Caption="Descripción" />
+                    <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
                         </Columns>
                     </DxComboBoxSettings>
                 </EditSettings>
@@ -768,8 +707,6 @@ else
     }
     async Task CargaRegistro()
     {
-
-
         data = await api.Frhpu010DtoGetAll(Token);
         
 
