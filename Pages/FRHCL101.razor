@@ -27,15 +27,18 @@ else
         <title>Creación de Cargos</title>
     </head>
     <body>
-    @* *Mensajes *@
         <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Usuario?" OnConfirm="OnConfirmDelete" />
         <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) perfil(es) asociados a este empleado, favor eliminar los perfiles" />
         <Alert2 @ref="alertInfo" TypeAlert="info" Message="Creación de Cargos" />
 
-        <div class="header border-bottom pb-2 mb-4 d-flex justify-content-between align-items-center">
-            <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">SIRH - Creación de Cargos</p>
-            <Toolbar  OnAdd="Agregar" OnSave="Save" OnRemove="Eliminar" formulario="FRHCL101" />
-        </div>
+        @* * Componente reutilizable para los Headers de los Form *@
+        <FormHeader 
+        Title="SIRH - Creación de Cargos" 
+        FormCode="FRHCL101" 
+        OnAdd="Agregar" 
+        OnSave="Save" 
+        OnRemove="Eliminar" 
+        />
 
         <div class="container">
 
