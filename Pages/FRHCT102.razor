@@ -1,0 +1,366 @@
+﻿@page "/FRHCT102"
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+<PageTitle>Relaciones</PageTitle>
+
+<DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+    <DxTabPage Text="Mantenimiento">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Relación Contratos" BackUrl="/dash" />
+            </div>
+            <Toolbar formulario="FRHCT102" OnProccess="BuscarTool" OnAdd="AgregarTool" OnSave="GuardaTool" OnRemove="EliminarTool" OnAudit="AuditTool" />
+        </div>
+        <br />
+        <EditForm Context="TcContext" Model="@editModel">
+            <DataAnnotationsValidator />
+            <DxFormLayout>
+                <DxFormLayoutItem Caption="Contratos">
+                    <DxComboBox @bind-Value="@editModel.TcCodigo" ValueFieldName="TcCodigo" TextFieldName="TcDescri"
+                                Data="@tcList" ReadOnly="@IsNewRecord" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Nómina">
+                    <DxComboBox @bind-Value="@editModel.WbCodigo" ValueFieldName="WbCodigo" TextFieldName="WbDescri"
+                                Data="@wbList" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Empleado">
+                    <DxComboBox @bind-Value="@editModel.WcCodigo" ValueFieldName="WcCodigo" TextFieldName="WcDescri"
+                                Data="@wcListAll" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Retroactivo">
+                    <DxComboBox @bind-Value="@editModel.WcRetro" ValueFieldName="WcRetro" TextFieldName="WcDescri"
+                                Data="@wcRetroList" />
+                </DxFormLayoutItem>
+            </DxFormLayout>
+        </EditForm>
+
+    </DxTabPage>
+    <DxTabPage Text="Consulta">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Relación Contratos" BackUrl="/dash" />
+            </div>
+        </div>
+        <DxGrid Data="@tcList" @ref="MyGrid"
+                CssClass="mw-1100"
+                EditMode="GridEditMode.EditRow"
+                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+            <Columns>
+                <DxGridCommandColumn Width="160px" VisibleIndex="1">
+                    <CellDisplayTemplate>
+                        <a @onclick="@(() => ShowEditRecord((Trhtc010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    </CellDisplayTemplate>
+                </DxGridCommandColumn>
+                <DxGridDataColumn Caption="Nómina" FieldName="WbCodigo" Width="380px" VisibleIndex="3" >
+                <EditSettings>
+                            <DxComboBoxSettings Data="wbList"
+                                                ValueFieldName="WbCodigo"
+                                                TextFieldName="WbDescri">
+                                
+                            </DxComboBoxSettings>
+                        </EditSettings>
+                    </DxGridDataColumn>
+                <DxGridDataColumn Caption="Tipo" FieldName="TcCodigo" Width="300px" VisibleIndex="4" >
+                <EditSettings>
+                            <DxComboBoxSettings Data="tcList"
+                                                ValueFieldName="TcCodigo"
+                                                TextFieldName="TcDescri">
+                                
+                            </DxComboBoxSettings>
+                        </EditSettings>
+                    </DxGridDataColumn>
+                <DxGridDataColumn Caption="Transacción Primaria" FieldName="WcCodigo" Width="300px" VisibleIndex="5" >
+                    <EditSettings>
+                        <DxComboBoxSettings Data="wcListAll"
+                                            ValueFieldName="WcCodigo"
+                                            TextFieldName="WcDescri">
+
+                        </DxComboBoxSettings>
+                    </EditSettings>
+                </DxGridDataColumn>
+                <DxGridDataColumn Caption="Transacción Retroactivo" FieldName="WcRetro" Width="300px" VisibleIndex="7" >
+                <EditSettings>
+                        <DxComboBoxSettings Data="wcRetroList"
+                                            ValueFieldName="WcCodigo"
+                                            TextFieldName="WcDescri">
+
+                        </DxComboBoxSettings>
+                    </EditSettings>
+                </DxGridDataColumn>
+                @*                 <DxGridDataColumn Caption="Puede Requizar" FieldName="GrIndReq" VisibleIndex="7" Width="130px" />
+                <DxGridDataColumn Caption="Activo" FieldName="GrEstatus" VisibleIndex="8" Width="130px" /> *@
+            </Columns>
+            <ToolbarTemplate>
+                <DxToolbar>
+                    <DxToolbarItem Text="Export to XLSX" Click="ExportXlsx_Click" BeginGroup="true" />
+                    <DxToolbarItem Context="itemGrx" Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                        <Template>
+                            <DxCheckBox @bind-Checked="@ExportSelectedRowsOnly">Export Selected Rows Only</DxCheckBox>
+                        </Template>
+                    </DxToolbarItem>
+                </DxToolbar>
+            </ToolbarTemplate>
+        </DxGrid>
+    </DxTabPage>
+</DxTabs>
+
+<ConfirmDialog @ref="confirmDialog" Title="Confirmar Eliminación"
+               Message="¿Seguro deseas eliminar este Grupo Ocupacional?"
+               OnConfirm="OnConfirmDelete" />
+
+<DxPopup @bind-Visible="@isPopupVisible"
+         HeaderText="@popupTitle"
+         ShowCloseButton="true"
+         ShowFooter="true"
+         Width="600px">
+    <BodyTemplate Context="popupCtx">
+        <DxFormLayout>
+            <DxFormLayoutItem Caption="Creado por:">
+                <DxTextBox @bind-Text="@editModel.CreatedBy" ReadOnly />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Creado el:">
+                <DxDateEdit @bind-Date="@editModel.CreatedOn" ReadOnly />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Modificado por:">
+                <DxTextBox @bind-Text="@editModel.ChangedBy" ReadOnly />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Modificado el:">
+                <DxDateEdit @bind-Date="@editModel.ChangedOn" ReadOnly />
+            </DxFormLayoutItem>
+        </DxFormLayout>
+    </BodyTemplate>
+    <FooterTemplate>
+        @*         <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                  Text="Guardar"
+                  Click="GuardarDatos" /> *@
+        <DxButton Text="Salir" RenderStyle="ButtonRenderStyle.Secondary" Click="@OnCancelPopup" />
+    </FooterTemplate>
+</DxPopup>
+
+
+@code {
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+    private Trhtc010Dto editModel = new();
+    private string[] ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    private ConfirmDialog confirmDialog;
+
+    private List<Trhwb010Dto> wbList = new();
+    private List<Trhtc010Dto> tcList = new();
+    private List<Trhwc010Dto> wcListAll = new();
+    private List<Trhwc010Dto> wcRetroList = new();
+
+    bool ExportSelectedRowsOnly { get; set; }
+
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    private bool IsNewRecord = true;
+    private bool isPopupVisible = false;
+    private string popupTitle = "Relación Beneficio";
+
+    async Task ExportXlsx_Click()
+    {
+        await MyGrid.ExportToXlsxAsync("ExportResult", new GridXlExportOptions()
+        {
+            ExportSelectedRowsOnly = ExportSelectedRowsOnly,
+            CustomizeCell = OnCustomizeXlCell
+        });
+    }
+
+    void OnCustomizeXlCell(GridExportCustomizeCellEventArgs args)
+    {
+        if (args.ColumnFieldName == "ContactName" && args.AreaType == SheetAreaType.DataArea)
+            args.Formatting.Font = new XlCellFont() { Italic = true };
+        args.Handled = true;
+    }
+
+    protected void AgregarTool()
+    {
+        IsNewRecord = false;
+        editModel = new Trhtc010Dto();
+        editModel.EmEmpresa = "01";
+    }
+
+    protected async Task GuardaTool()
+    {
+        try
+        {
+
+            if (editModel.IdentityColumn == 0)
+            {
+                // var ret0 = await api.PostTrhtc010Dtos(editModel);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                alertInfo.Show("Agregado con exito!!!", "success");
+            }
+            else
+            {
+                // var ret = await api.PutTrhtc010Dtos(editModel);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                alertInfo.Show("Modificado con exito!!!", "success");
+            }
+
+            IsNewRecord = true;
+        }
+        catch (Exception ex)
+        {
+            ActiveTabIndex = 1;
+            StateHasChanged();
+            Console.Write("Esto es un error al guardar..." + ex.Message);
+        }
+    }
+
+    protected void EliminarTool()
+    {
+        confirmDialog.Show();
+    }
+
+    private async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            try
+            {
+                // Lógica de eliminación si el usuario confirma
+                // var ret = await api.DelTrhtc010Dtos(editModel.IdentityColumn);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                Console.WriteLine("Error al eliminar..." + ex.Message);
+            }
+        }
+        else
+        {
+            alertInfo.Show("Eliminación cancelada");
+        }
+    }
+
+    private void ShowNewRecordPopup()
+    {
+        // popupTitle = "Nuevo Grupo";
+        editModel = new Trhtc010Dto();
+
+        // isPopupVisible = true;
+        ActiveTabIndex = 0;
+    }
+
+    private void ShowEditRecord(Trhtc010Dto record)
+    {
+        editModel = record;
+
+        ActiveTabIndex = 0;
+
+        // isPopupVisible = true;
+    }
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+        ActiveTabIndex = newIndex;
+    }
+
+    void BuscarTool()
+    {
+        ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+    }
+
+    private void OnCancelPopup()
+    {
+        isPopupVisible = false;
+    }
+
+    private void AuditTool()
+    {
+        isPopupVisible = true;
+    }
+
+    DxGrid MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+
+    // private List<Trhis000Dto> opciones { get; set; } =new List<Trhis000Dto>();
+    // private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+    private string SelectedCategoryId { get; set; }
+    private Trhtc010Dto SelectedItem { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (string.IsNullOrEmpty(Token))
+            {
+
+                Token = await auth.GetTokenAsync();
+                Token = auth.tkn;
+                if (string.IsNullOrEmpty(Token))
+                {
+                    //Token = await auth.GetTokenAsync();
+                    return;
+                }
+                api.SetToken(Token);
+                auth.SetToken(Token);
+            }
+            //StateHasChanged();
+            // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            // await SetPermisos("FRHCL106");
+            ApiBaseUrl = api.GetApiBaseUrl();
+
+            //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            tcList = (List<Trhtc010Dto>)await api.GetTrhtc010Dtos();
+            //tcList = (List<Trhtc010Dto>)await api.Trhtc010DtoGetAll(" ");
+            wbList = (List<Trhwb010Dto>)await api.Trhwb010DtoGetAll(" ");
+            wcListAll = (List<Trhwc010Dto>)await api.Trhwc010DtoGetAll(" ");
+
+            // wcInvisibList = wcListAll.Where(wc => wc.WcInvisib == "S").ToList();
+            wcRetroList = wcListAll.Where(wc => wc.WcInvisib != "S").ToList();
+            await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (string.IsNullOrEmpty(Token))
+        {
+
+            Token = auth.tkn;
+
+            if (string.IsNullOrEmpty(Token))
+            {
+                // Token = await auth.GetTokenAsync();
+                return;
+            }
+
+            api.SetToken(Token);
+        }
+
+
+    }
+
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            //var api2 = new Trhtc010Client(ApiBaseUrl, HttpClient);
+
+            //tcList = (List<Trhtc010Dto>)await api.GetTrhtc010Dtos();
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

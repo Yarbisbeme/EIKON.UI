@@ -1,0 +1,432 @@
+@layout MainLayout
+@page "/FRHCA101"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHCA101 - Acción de Cambios" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhca101-form">
+
+        <!-- Sección superior: Datos empleado + Imagen -->
+        <div class="top-section">
+            <!-- Columna izquierda: Datos del empleado -->
+            <div class="employee-data">
+                <!-- Empleado -->
+                <div class="input" style="width:30%;">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@Empleado"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchEmpleado" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Nombre Empleado -->
+                <div class="input">
+                    <label>Nombre Empleado</label>
+                    <DxTextBox @bind-Text="@NombreEmpleado" />
+                </div>
+
+                <!-- Cargo actual -->
+                <div class="input">
+                    <label>Cargo actual</label>
+                    <DxTextBox @bind-Text="@CargoActual" />
+                </div>
+
+                <!-- Ubicación -->
+                <div class="input">
+                    <label>Ubicación</label>
+                    <DxTextBox @bind-Text="@Ubicacion" />
+                </div>
+
+                <!-- Estatus y Ultimo cambio -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Estatus</label>
+                        <DxTextBox @bind-Text="@Estatus" />
+                    </div>
+                    <div class="input">
+                        <label>Ultimo cambio</label>
+                        <DxTextBox @bind-Text="@UltimoCambio" />
+                    </div>
+                </div>
+
+                <!-- Fecha Ult. Cambio y Cambios Pendientes -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Fecha Ult. Cambio</label>
+                        <DxTextBox @bind-Text="@FechaUltCambio" />
+                    </div>
+
+                    <div class="input">
+                        <label>Cambios Pendientes</label>
+                        <DxTextBox @bind-Text="@CambiosPendientes"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchCambios" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Área de imagen -->
+            <div class="image-area">
+                <div id="overviewDemoDropZone" class="custom-drop-zone">
+                    <span class="drop-file-icon fi fi-ss-upload mb-3"></span>
+                    <span class="drop-file-label">Drag and Drop File Here</span><span class="m-1">or</span>
+                    <DxButton Id="overviewDemoSelectButton"
+                              CssClass="m-1"
+                              RenderStyle="ButtonRenderStyle.Primary"
+                              Text="Select File" />
+                </div>
+                <DxFileInput Visible="@UploadVisible"
+                             ExternalSelectButtonCssSelector="#overviewDemoSelectButton"
+                             ExternalDropZoneCssSelector="#overviewDemoDropZone"
+                             ExternalDropZoneDragOverCssClass="custom-drop-zone-hover"
+                             MaxFileSize="15000000"
+                             FilesUploading="OnFilesUploading"
+                             SelectedFilesChanged="@SelectedFilesChanged">
+                </DxFileInput>
+            </div>
+        </div>
+
+        <!-- Tabs: Cambio y Comentario -->
+        <div class="tabs-section">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+                <DxTabPage Text="Cambio">
+                    <div class="cambio-tab">
+                        <!-- Layout de dos columnas -->
+                        <div class="cambio-layout">
+                            <!-- Columna izquierda: Campos del cambio -->
+                            <div class="cambio-fields">
+                                <!-- Tipo Cambio -->
+                                <div class="input">
+                                    <label>Tipo Cambio</label>
+                                    <DxComboBox Data="@TiposCambio"
+                                                @bind-Value="@TipoCambio"
+                                                NullText="Seleccione"
+                                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                                </div>
+
+                                <!-- Cargo Propuesto -->
+                                <div class="input">
+                                    <label>Cargo Propuesto</label>
+
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@CargoPropuestoCodigo"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchCargoPropuesto" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <!-- Reporta a -->
+                                <div class="input">
+                                    <label>Reporta a</label>
+
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@ReportaACodigo"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchReportaA" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <!-- Oficina -->
+                                <div class="input">
+                                    <label>Oficina</label>
+
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@OficinaCodigo"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchOficina" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <!-- Ubicación -->
+                                <div class="input">
+                                    <label>Ubicación</label>
+
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@UbicacionCambioCodigo"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchUbicacionCambio" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <!-- Puesto -->
+                                <div class="input">
+                                    <label>Puesto</label>
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@PuestoCodigo"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchPuesto" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <!-- Centro de Costo -->
+                                <div class="input">
+                                    <label>Centro de Costo</label>
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@CentroCostoCodigo"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchCentroCosto" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <!-- Nómina -->
+                                <div class="input">
+                                    <label>Nómina</label>
+                                    <DxTextBox @bind-Text="@Nomina" />
+                                </div>
+
+                                <!-- Nuevo Sueldo -->
+                                <div class="input">
+                                    <label>Nuevo Sueldo</label>
+                                    <div class="sueldo-row">
+                                        <DxSpinEdit @bind-Value="@NuevoSueldo"
+                                                    DisplayFormat="N2"
+                                                    ShowSpinButtons="true"
+                                                    CssClass="sueldo-field" />
+                                        <span class="dots">...</span>
+                                        <DxComboBox Data="@BasesSueldo"
+                                                    @bind-Value="@BaseSueldo"
+                                                    NullText="Base"
+                                                    CssClass="base-field"
+                                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                                    </div>
+                                </div>
+
+                                <!-- Nuevo Número -->
+                                <div class="input">
+                                    <label>Nuevo Número</label>
+                                    <DxTextBox @bind-Text="@NuevoNumero" />
+                                </div>
+
+                                <!-- Efectivo al -->
+                                <div class="input">
+                                    <label for="user">Efectivo al</label>
+                                    <DxDateEdit @bind-Date="@DateTimeValue"
+                                                CssClass="cw-320"
+                                                IconCssClass="fi fi-rr-search"
+                                                InputId="deOverview" />
+                                </div>
+
+                                <!-- Aplica el -->
+                                <div class="input">
+                                    <label for="user">Aplica el</label>
+                                    <DxDateEdit @bind-Date="@DateTimeValue"
+                                                CssClass="cw-320"
+                                                IconCssClass="fi fi-rr-search"
+                                                InputId="deOverview" />
+                                </div>
+
+                                <!-- Checkbox -->
+                                <div class="checkbox-section">
+                                    <DxCheckBox @bind-Checked="@DejarCargoVacante">¿Dejar cargo actual Vacante?</DxCheckBox>
+                                </div>
+
+                                <div class="divider"></div>
+                                <!-- Fechas -->
+                                <div class="fechas-section">
+                                    <label class="section-label">Fechas</label>
+
+                                    <div style="display:flex; gap:10px;">
+                                        <div class="input">
+                                            <label for="user">Desde</label>
+                                            <DxDateEdit @bind-Date="@DateTimeValue"
+                                                        CssClass="cw-320"
+                                                        IconCssClass="fi fi-rr-search"
+                                                        InputId="deOverview" />
+                                        </div>
+                                        <div class="input">
+                                            <label for="user">Hasta</label>
+                                            <DxDateEdit @bind-Date="@DateTimeValue"
+                                                        CssClass="cw-320"
+                                                        IconCssClass="fi fi-rr-search"
+                                                        InputId="deOverview" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Checkbox Mostrar foto -->
+                                <div class="checkbox-section">
+                                    <DxCheckBox @bind-Checked="@MostrarFotoAccion">Mostrar foto acción</DxCheckBox>
+                                </div>
+                            </div>
+
+                            <!-- Columna derecha: Radio buttons y labels -->
+                            <div class="cambio-options">
+                                <div class="radio-group">
+                                    <DxRadio GroupName="accion"
+                                             @bind-GroupValue="@Accion"
+                                             Value="@("imprimir")">
+                                        Imprimir cambio
+                                    </DxRadio>
+                                    <DxRadio GroupName="accion"
+                                             @bind-GroupValue="@Accion"
+                                             Value="@("salvar")">
+                                        Salvar Pendiente
+                                    </DxRadio>
+                                    <DxRadio GroupName="accion"
+                                             @bind-GroupValue="@Accion"
+                                             Value="@("completar")">
+                                        Completar acción
+                                    </DxRadio>
+                                    <DxRadio GroupName="accion"
+                                             @bind-GroupValue="@Accion"
+                                             Value="@("borrar")">
+                                        Borrar pendiente
+                                    </DxRadio>
+                                </div>
+
+                                <div class="datos-labels">
+                                    <label>Datos Generales</label>
+                                    <label>Incentivo</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <DxTabPage Text="Comentario">
+                    <div class="comentario-tab">
+                        <DxMemo @bind-Text="@Comentario"
+                                Rows="15"
+                                NullText="Escriba sus comentarios aquí..."
+                                CssClass="comentario-memo" />
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private int ActiveTabIndex = 0;
+    private DateTime DateTimeValue { get; set; } = DateTime.Now;
+    bool UploadVisible { get; set; } = false;
+    protected void SelectedFilesChanged(IEnumerable<UploadFileInfo> files)
+    {
+        UploadVisible = files.ToList().Count > 0;
+        InvokeAsync(StateHasChanged);
+    }
+    protected async Task OnFilesUploading(FilesUploadingEventArgs args)
+    {
+        var file = args.Files[0];
+        using var stream = new System.IO.MemoryStream();
+        await file.OpenReadStream(file.Size).CopyToAsync(stream);
+    }
+    // Datos del empleado
+    private string Empleado { get; set; } = string.Empty;
+    private string NombreEmpleado { get; set; } = string.Empty;
+    private string CargoActual { get; set; } = string.Empty;
+    private string Ubicacion { get; set; } = string.Empty;
+    private string Estatus { get; set; } = string.Empty;
+    private string UltimoCambio { get; set; } = string.Empty;
+    private string FechaUltCambio { get; set; } = string.Empty;
+    private string CambiosPendientes { get; set; } = string.Empty;
+
+    // Tab Cambio
+    private string? TipoCambio { get; set; }
+    private string CargoPropuestoCodigo { get; set; } = string.Empty;
+    private string CargoPropuestoDescripcion { get; set; } = string.Empty;
+    private string ReportaACodigo { get; set; } = string.Empty;
+    private string ReportaADescripcion { get; set; } = string.Empty;
+    private string OficinaCodigo { get; set; } = string.Empty;
+    private string OficinaDescripcion { get; set; } = string.Empty;
+    private string UbicacionCambioCodigo { get; set; } = string.Empty;
+    private string UbicacionCambioDescripcion { get; set; } = string.Empty;
+    private string PuestoCodigo { get; set; } = string.Empty;
+    private string PuestoDescripcion { get; set; } = string.Empty;
+    private string CentroCostoCodigo { get; set; } = string.Empty;
+    private string CentroCostoDescripcion { get; set; } = string.Empty;
+    private string Nomina { get; set; } = string.Empty;
+    private decimal NuevoSueldo { get; set; } = 0.00m;
+    private string? BaseSueldo { get; set; }
+    private string NuevoNumero { get; set; } = string.Empty;
+    private string EfectivoAl { get; set; } = string.Empty;
+    private string AplicaEl { get; set; } = string.Empty;
+    private bool DejarCargoVacante { get; set; } = false;
+    private string FechaDesde { get; set; } = string.Empty;
+    private string FechaHasta { get; set; } = string.Empty;
+    private bool MostrarFotoAccion { get; set; } = false;
+    private string Accion { get; set; } = "imprimir";
+
+    // Tab Comentario
+    private string Comentario { get; set; } = string.Empty;
+
+    // Datos
+    private List<string> TiposCambio = new List<string> { "Promoción", "Transferencia", "Cambio de Sueldo", "Cambio de Ubicación" };
+    private List<string> BasesSueldo = new List<string> { "Base", "Mensual", "Quincenal", "Semanal" };
+
+    private void OnSearchEmpleado() { }
+    private void OnSearchCambios() { }
+    private void OnSearchCargoPropuesto() { }
+    private void OnSearchReportaA() { }
+    private void OnSearchOficina() { }
+    private void OnSearchUbicacionCambio() { }
+    private void OnSearchPuesto() { }
+    private void OnSearchCentroCosto() { }
+    private void OnSelectEfectivoAl() { }
+    private void OnSelectAplicaEl() { }
+    private void OnSelectFechaDesde() { }
+    private void OnSelectFechaHasta() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

@@ -1,0 +1,170 @@
+@layout MainLayout
+@page "/FRHMA511"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA511 - Check - Out" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma506-form">
+
+        <!-- Código -->
+        <div class="input codigo-field">
+            <label>Código</label>
+            <DxTextBox @bind-Text="@Codigo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Descripción -->
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <!-- Items de chequeo -->
+        <div class="items-chequeo-section">
+            <div class="section-title">Items de chequeo</div>
+
+            <div class="dual-listbox-container">
+                <!-- Lista izquierda: Items disponibles -->
+                <div class="listbox-wrapper">
+                    <DxListBox Data="@ItemsDisponibles"
+                               @bind-Values="@ItemsDisponiblesSeleccionados"
+                               SelectionMode="ListBoxSelectionMode.Multiple"
+                               CssClass="items-listbox">
+
+                    </DxListBox>
+                </div>
+
+                <!-- Botones de transferencia -->
+                <div class="transfer-buttons">
+                    <DxButton IconCssClass="fi fi-rr-angle-right"
+                              CssClass="btn-arrow" />
+
+                    <DxButton IconCssClass="fi fi-rr-angle-double-right"
+                              CssClass="btn-arrow" />
+
+                    <DxButton IconCssClass="fi fi-rr-angle-left"
+                              CssClass="btn-arrow" />
+
+                    <DxButton IconCssClass="fi fi-rr-angle-double-left"
+                              CssClass="btn-arrow" />
+                </div>
+
+                <!-- Lista derecha: Items seleccionados -->
+                <div class="listbox-wrapper">
+                    <DxListBox Data="@ItemsSeleccionados"
+                               @bind-Values="@ItemsSeleccionadosSeleccionados"
+                               SelectionMode="ListBoxSelectionMode.Multiple"
+                               CssClass="items-listbox">
+                    </DxListBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items (sección inferior) -->
+        <div class="items-footer">
+            <span>Items</span>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+
+    // Listboxes
+    private List<ItemChequeo> ItemsDisponibles = new List<ItemChequeo>
+    {
+        new ItemChequeo { Nombre = "Carnet de empleado" },
+        new ItemChequeo { Nombre = "Reglamento Interno" },
+        new ItemChequeo { Nombre = "Llave de Locker" },
+        new ItemChequeo { Nombre = "Herramientas" },
+        new ItemChequeo { Nombre = "Firmas de documentos" },
+        new ItemChequeo { Nombre = "Tarjeta Ejecutiva" },
+        new ItemChequeo { Nombre = "Carnet de Identificación" },
+        new ItemChequeo { Nombre = "Tarjetas de presentación" }
+    };
+
+    private List<ItemChequeo> ItemsSeleccionados = new List<ItemChequeo>();
+
+    private IEnumerable<ItemChequeo> ItemsDisponiblesSeleccionados = new List<ItemChequeo>();
+    private IEnumerable<ItemChequeo> ItemsSeleccionadosSeleccionados = new List<ItemChequeo>();
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda
+    }
+
+    private void MoverSeleccionadosDerecha()
+    {
+        var itemsAMover = ItemsDisponiblesSeleccionados.ToList();
+        foreach (var item in itemsAMover)
+        {
+            ItemsDisponibles.Remove(item);
+            ItemsSeleccionados.Add(item);
+        }
+        ItemsDisponiblesSeleccionados = new List<ItemChequeo>();
+    }
+
+    private void MoverTodosDerecha()
+    {
+        ItemsSeleccionados.AddRange(ItemsDisponibles);
+        ItemsDisponibles.Clear();
+        ItemsDisponiblesSeleccionados = new List<ItemChequeo>();
+    }
+
+    private void MoverSeleccionadosIzquierda()
+    {
+        var itemsAMover = ItemsSeleccionadosSeleccionados.ToList();
+        foreach (var item in itemsAMover)
+        {
+            ItemsSeleccionados.Remove(item);
+            ItemsDisponibles.Add(item);
+        }
+        ItemsSeleccionadosSeleccionados = new List<ItemChequeo>();
+    }
+
+    private void MoverTodosIzquierda()
+    {
+        ItemsDisponibles.AddRange(ItemsSeleccionados);
+        ItemsSeleccionados.Clear();
+        ItemsSeleccionadosSeleccionados = new List<ItemChequeo>();
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class ItemChequeo
+    {
+        public string Nombre { get; set; } = string.Empty;
+    }
+}

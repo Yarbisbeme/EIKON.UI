@@ -1,0 +1,269 @@
+@layout MainLayout
+@page "/FRHNO205"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO205 - Impresión Nómina, Cheques y Volantes" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhno205-form">
+
+        <div class="two-column-layout">
+
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="left-column">
+
+                <!-- Nómina -->
+                <div class="input">
+                    <label>Nómina</label>
+                    <DxTextBox @bind-Text="@Nomina"
+                               CssClass="nomina-field">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNomina" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Descripción -->
+                <div class="input">
+                    <label>Descripción</label>
+                    <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+                </div>
+
+                <!-- Radio buttons -->
+                <div class="radio-group">
+                    <DxRadio GroupName="reportType"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("definitivo")">
+                        Reporte Definitivo
+                    </DxRadio>
+                    <DxRadio GroupName="reportType"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("cheques")">
+                        Cheques
+                    </DxRadio>
+                    <DxRadio GroupName="reportType"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("desglose_detalle")">
+                        Desglose Efectivo/Detalle
+                    </DxRadio>
+                    <DxRadio GroupName="reportType"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("desglose_resumen")">
+                        Desglose Efectivo/Resumen
+                    </DxRadio>
+                    <DxRadio GroupName="reportType"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("volantes")">
+                        Volantes
+                    </DxRadio>
+                </div>
+
+                <!-- Papel con Copia -->
+                <div class="grupo-papel">
+                    <label>Papel con Copia</label>
+                    <DxCheckBox @bind-Checked="@PonerMensajeVolante">Poner Mensaje en volante</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@VolanteEstandard">Volante estándard</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@EnviarVolantesEmail">Enviar Volantes por Email</DxCheckBox>
+                </div>
+
+                <div style="display:flex; gap:10px;align-items:flex-end;">
+                    <!-- Usar Servidor SMTP -->
+                    <DxCheckBox @bind-Checked="@UsarServidorSMTP">Usar Servidor SMTP</DxCheckBox>
+
+                    <!-- Botón Configurar -->
+                    <DxButton Text="Configurar" Click="OnConfigurar" />
+                </div>
+
+                <!-- Campo memo grande -->
+                <DxMemo @bind-Text="@MensajeGrande"
+                        Rows="8"
+                        NullText="Mensaje..." />
+
+                <!-- Reporte checkbox y combo -->
+                <div class="reporte-section">
+                    <DxCheckBox @bind-Checked="@IncluirReporte">Reporte</DxCheckBox>
+                    <DxComboBox Data="@OpcionesReporte"
+                                @bind-Value="@ReporteSeleccionado"
+                                NullText="Seleccione reporte"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="right-column">
+
+                <!-- Tipo de Reporte -->
+                <div class="input">
+                    <label>Tipo de Reporte</label>
+                    <DxComboBox Data="@TiposReporte"
+                                @bind-Value="@TipoReporteSeleccionado"
+                                NullText="Seleccione tipo"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Ordenado Por -->
+                <div class="input">
+                    <label>Ordenado Por</label>
+                    <DxComboBox Data="@OpcionesOrden"
+                                @bind-Value="@OrdenadoPor"
+                                NullText="Seleccione orden"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Fecha Pago -->
+                <div class="input">
+                    <label for="user">Fecha Pago.</label>
+                    <DxDateEdit @bind-Date="@DateTimeValue"
+                                CssClass="cw-320"
+                                IconCssClass="fi fi-rr-search"
+                                InputId="deOverview" />
+                </div>
+
+                <!-- Volantes por Pag. -->
+                <div class="input">
+                    <label>Volantes por Pag.</label>
+                    <DxSpinEdit @bind-Value="@VolantesPorPagina"
+                                MinValue="1"
+                                MaxValue="10"
+                                ShowSpinButtons="true" />
+                </div>
+
+                <!-- No.Cheque -->
+                <div class="input">
+                    <label>No.Cheque</label>
+                    <DxSpinEdit @bind-Value="@NumeroCheque"
+                                MinValue="0"
+                                ShowSpinButtons="true" />
+                </div>
+
+                <!-- Empleado No. -->
+                <div class="input">
+                    <label>Empleado No.</label>
+                    <div class="empleado-range">
+                        <DxTextBox @bind-Text="@EmpleadoDesde" />
+                        <span class="al-text">al</span>
+                        <DxTextBox @bind-Text="@EmpleadoHasta" />
+                    </div>
+                </div>
+
+                <!-- Oficinas -->
+                <div class="input-with-checkbox">
+                    <DxCheckBox @bind-Checked="@FiltrarOficinas">Oficinas</DxCheckBox>
+                    <div class="combo-search">
+                        <DxComboBox Data="@Oficinas"
+                                    @bind-Value="@OficinaSeleccionada"
+                                    NullText="Seleccione oficina"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        <DxButton IconCssClass="fi fi-rr-search" Click="OnSearchOficina"></DxButton>
+                    </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="input-with-checkbox">
+                    <DxCheckBox @bind-Checked="@FiltrarUbicacion">Ubicación</DxCheckBox>
+                    <div class="combo-search">
+                        <DxComboBox Data="@Ubicaciones"
+                                    @bind-Value="@UbicacionSeleccionada"
+                                    NullText="Seleccione ubicación"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        <DxButton IconCssClass="fi fi-rr-search" Click="OnSearchUbicacion"></DxButton>
+                    </div>
+                </div>
+
+                <!-- Sección Disco inferior -->
+                <div class="disco-section">
+                    <label class="disco-label">Disco</label>
+                    <div class="input">
+                        <label>Tipo</label>
+                        <DxComboBox Data="@TiposDisco"
+                                    @bind-Value="@TipoDiscoSeleccionado"
+                                    NullText="Tipo"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                    </div>
+                    <div class="input">
+                        <label>Nombre</label>
+                        <DxTextBox @bind-Text="@NombreArchivo" NullText="Nombre" />
+                    </div>
+                    <div class="disco-buttons">
+                        <DxButton IconCssClass="fi fi-rr-check"></DxButton>
+                        <DxButton IconCssClass="fi fi-rr-cross"></DxButton>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private DateTime DateTimeValue { get; set; } = DateTime.Now;
+
+    // Columna izquierda
+    private string Nomina { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string TipoReporte { get; set; } = "definitivo";
+    private bool PonerMensajeVolante { get; set; } = false;
+    private bool VolanteEstandard { get; set; } = false;
+    private bool EnviarVolantesEmail { get; set; } = false;
+    private bool UsarServidorSMTP { get; set; } = false;
+    private string MensajeGrande { get; set; } = string.Empty;
+    private bool IncluirReporte { get; set; } = false;
+    private string? ReporteSeleccionado { get; set; }
+
+    // Columna derecha
+    private string? TipoReporteSeleccionado { get; set; }
+    private string? OrdenadoPor { get; set; }
+    private string FechaPago { get; set; } = string.Empty;
+    private int VolantesPorPagina { get; set; } = 2;
+    private int NumeroCheque { get; set; } = 0;
+    private string EmpleadoDesde { get; set; } = "1";
+    private string EmpleadoHasta { get; set; } = "99999999";
+    private bool FiltrarOficinas { get; set; } = true;
+    private string? OficinaSeleccionada { get; set; }
+    private bool FiltrarUbicacion { get; set; } = true;
+    private string? UbicacionSeleccionada { get; set; }
+    private string? TipoDiscoSeleccionado { get; set; }
+    private string NombreArchivo { get; set; } = string.Empty;
+
+    // Datos
+    private List<string> OpcionesReporte = new List<string> { "Reporte 1", "Reporte 2", "Reporte 3" };
+    private List<string> TiposReporte = new List<string> { "Tipo 1", "Tipo 2", "Tipo 3" };
+    private List<string> OpcionesOrden = new List<string> { "Por Código", "Por Nombre", "Por Departamento" };
+    private List<string> Oficinas = new List<string> { "Oficina Central", "Oficina Norte", "Oficina Sur" };
+    private List<string> Ubicaciones = new List<string> { "Managua", "León", "Granada" };
+    private List<string> TiposDisco = new List<string> { "Local", "Red", "USB" };
+
+    private void OnSearchNomina() { }
+    private void OnConfigurar() { }
+    private void OnCalendar() { }
+    private void OnBuscarEmpleado() { }
+    private void OnSearchOficina() { }
+    private void OnSearchUbicacion() { }
+    private void OnAceptar() { }
+    private void OnCancelar() { }
+    private void OnBuscarToolbar() { }
+    private void OnGuardarToolbar() { }
+    private void OnCuadrado() { }
+    private void OnCarpeta() { }
+    private void OnColores() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

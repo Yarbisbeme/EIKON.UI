@@ -1,0 +1,347 @@
+@page "/FRHNO213"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO213 - Registro de Reclamaciones" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal de Campos -->
+        <div class="main-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input-field medium">
+                    <label>Número</label>
+                    <DxTextBox @bind-Text="@NumeroValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchNumeroClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@EmpleadoValue" />
+                </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Tipo Nómina</label>
+                    <DxComboBox Data="@TipoNominaList" 
+                               @bind-Value="@SelectedTipoNomina" 
+                               NullText="Seleccionar tipo"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <!-- Cuarta Fila - Años y Período en la misma fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Año origen</label>
+                    <DxSpinEdit @bind-Value="@AnoOrigenValue" 
+                               MinValue="2000" 
+                               MaxValue="2099" />
+                </div>
+                <div class="input-field">
+                    <label>Año referencia</label>
+                    <DxSpinEdit @bind-Value="@AnoReferenciaValue" 
+                               MinValue="2000" 
+                               MaxValue="2099" />
+                </div>
+                <div class="input-field">
+                    <label>Período</label>
+                    <DxSpinEdit @bind-Value="@PeriodoValue" 
+                               MinValue="0" 
+                               MaxValue="12" />
+                </div>
+            </div>
+
+            <!-- Sexta Fila -->
+            <div class="form-row">
+                <div class="input-field wide">
+                    <label>Transacción</label>
+                    <DxTextBox @bind-Text="@TransaccionValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchTransaccionClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Séptima Fila - Montos -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Monto Unitario</label>
+                    <DxSpinEdit @bind-Value="@MontoUnitarioValue" 
+                               MinValue="0m" 
+                               MaxValue="999999.99m" />
+                </div>
+            </div>
+
+            <!-- Octava Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Cantidad</label>
+                    <DxSpinEdit @bind-Value="@CantidadValue" 
+                               MinValue="0m" 
+                               MaxValue="9999.999m" />
+                </div>
+            </div>
+
+            <!-- Novena Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Monto aplicar</label>
+                    <DxSpinEdit @bind-Value="@MontoAplicarValue" 
+                               MinValue="0m" 
+                               MaxValue="999999.99m" />
+                </div>
+                <div class="checkbox-section">
+                    <DxCheckBox @bind-Checked="@SaldoAFavorOption">¿Saldo a Favor?</DxCheckBox>
+                </div>
+            </div>
+
+            <!-- Décima Fila - Comentario -->
+            <div class="form-row full-width">
+                <div class="input-field">
+                    <label>Comentario</label>
+                    <DxMemo @bind-Text="@ComentarioValue"
+                            Rows="4"
+                            ResizeMode="MemoResizeMode.Vertical"
+                            MaxLength="1000" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Detalles -->
+        <div class="grid-section">
+            <DxGrid Data="@ReclamacionesData"
+                    PageSize="10"
+                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                    TextWrapEnabled="false"
+                    CssClass="reclamaciones-grid"
+                    PagerVisible="true">
+                <Columns>
+                    <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" Width="40%" />
+                    <DxGridDataColumn FieldName="MontoAplica" Caption="Monto Aplica" Width="20%" DisplayFormat="C2" TextAlignment="GridTextAlignment.Right" />
+                    <DxGridDataColumn FieldName="AnoRef" Caption="Año Ref" Width="20%" TextAlignment="GridTextAlignment.Center" />
+                    <DxGridDataColumn FieldName="AnoOrigen" Caption="Año Origen" Width="20%" TextAlignment="GridTextAlignment.Center" />
+                </Columns>
+            </DxGrid>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Sección principal */
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    .form-row.full-width {
+        width: 100%;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-field.narrow {
+        flex: 0 0 150px;
+    }
+
+    .input-field.medium {
+        flex: 0 0 250px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    /* Checkbox section */
+    .checkbox-section {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    /* Grid section */
+    .grid-section {
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 15px;
+        height: 350px;
+    }
+
+    .reclamaciones-grid {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-spin-edit,
+    .dx-memo {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-spin-edit-container,
+    .dx-memo-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within,
+    .dx-memo-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .main-section {
+            padding: 15px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-field.narrow,
+        .input-field.medium,
+        .input-field.wide {
+            flex: 1;
+        }
+
+        .checkbox-section {
+            margin-bottom: 0;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .main-section,
+        .grid-section {
+            padding: 15px;
+        }
+
+        .grid-section {
+            height: 300px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string NumeroValue { get; set; } = "";
+    private string EmpleadoValue { get; set; } = "";
+    private int? SelectedTipoNomina { get; set; }
+    private int AnoOrigenValue { get; set; } = DateTime.Now.Year;
+    private int AnoReferenciaValue { get; set; } = DateTime.Now.Year;
+    private int PeriodoValue { get; set; } = 0;
+    private string TransaccionValue { get; set; } = "";
+    private decimal MontoUnitarioValue { get; set; } = 0.00m;
+    private decimal CantidadValue { get; set; } = 0.000m;
+    private decimal MontoAplicarValue { get; set; } = 0.00m;
+    private bool SaldoAFavorOption { get; set; } = false;
+    private string ComentarioValue { get; set; } = "";
+    
+    // Listas de datos
+    private List<TipoNominaItem> TipoNominaList = new List<TipoNominaItem>
+    {
+        new TipoNominaItem { Id = 1, Name = "NOMINA ADMINISTRATIVA" },
+        new TipoNominaItem { Id = 2, Name = "NOMINA OPERATIVA" },
+        new TipoNominaItem { Id = 3, Name = "NOMINA EJECUTIVA" },
+        new TipoNominaItem { Id = 4, Name = "NOMINA ESPECIAL" },
+        new TipoNominaItem { Id = 5, Name = "NOMINA TEMPORAL" }
+    };
+
+    private List<ReclamacionItem> ReclamacionesData = new List<ReclamacionItem>
+    {
+        new ReclamacionItem { Descripcion = "AJUSTE SALARIO BASE", MontoAplica = 5000.00m, AnoRef = 2025, AnoOrigen = 2024 },
+        new ReclamacionItem { Descripcion = "HORAS EXTRAS NO PAGADAS", MontoAplica = 2500.00m, AnoRef = 2025, AnoOrigen = 2024 },
+        new ReclamacionItem { Descripcion = "BONO PRODUCTIVIDAD", MontoAplica = 3000.00m, AnoRef = 2025, AnoOrigen = 2024 },
+        new ReclamacionItem { Descripcion = "VACACIONES PROPORCIONALES", MontoAplica = 8500.00m, AnoRef = 2025, AnoOrigen = 2024 }
+    };
+    
+    public class TipoNominaItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class ReclamacionItem
+    {
+        public string Descripcion { get; set; } = "";
+        public decimal MontoAplica { get; set; }
+        public int AnoRef { get; set; }
+        public int AnoOrigen { get; set; }
+    }
+    
+    private void OnSearchNumeroClick()
+    {
+        Console.WriteLine($"Buscando número: {NumeroValue}");
+    }
+    
+    private void OnSearchTransaccionClick()
+    {
+        Console.WriteLine($"Buscando transacción: {TransaccionValue}");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Registro de Reclamaciones guardado!");
+    }
+}

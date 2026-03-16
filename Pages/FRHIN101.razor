@@ -1,0 +1,422 @@
+@layout MainLayout
+@page "/FRHIN101"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+
+    <Breadcrumb Title="SIRH - Interfaces" BackUrl="/dash" />
+
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="interface-form">
+        <!-- Interfaz -->
+
+        <div style="display:flex; gap:5px;">
+
+            <div class="select">
+                <label for="interfaz">Interfaz</label>
+                <DxComboBox TData="InterfazDto" TValue="int?"
+                            Data="@interfacesList"
+                            @bind-Value="@InterfaceData.InterfazId"
+                            TextFieldName="@nameof(InterfazDto.Nombre)"
+                            ValueFieldName="@nameof(InterfazDto.Id)"
+                            NullText="Seleccionar interfaz"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+            <!-- Fecha -->
+            <div style="width:20%;">
+
+                <div class="input">
+                    <label for="fecha">Fecha</label>
+                    <DxDateEdit T="DateTime?"
+                                @bind-Value="@InterfaceData.Fecha"
+                                DisplayFormat="dd/MM/yyyy"
+                                NullText="--/--/----" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Nomina -->
+        <div class="input">
+            <label for="nomina">Nomina</label>
+            <div class="nomina-section">
+                <DxCheckBox @bind-Checked="@InterfaceData.TodasNominas">Todas</DxCheckBox>
+                <DxTextBox @bind-Text="@InterfaceData.NominaTexto"
+                           Enabled="@(!InterfaceData.TodasNominas)"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNominaClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+
+        <!-- Periodos -->
+        <div class="periods-container">
+            <label class="section-title">Periodos</label>
+            <div class="periods-grid">
+                <div class="period-group">
+                    <label class="period-label">Periodo</label>
+                    <DxSpinEdit T="int" @bind-Value="@InterfaceData.Periodo"
+                                MinValue="0" MaxValue="31" CssClass="period-input" />
+                </div>
+                <div class="period-group">
+                    <label class="period-label">Ano</label>
+                    <DxSpinEdit T="int" @bind-Value="@InterfaceData.Ano"
+                                MinValue="2020" MaxValue="2030" CssClass="period-input" />
+                </div>
+                <div class="period-group">
+                    <DxCheckBox @bind-Checked="@InterfaceData.Actual">Actual</DxCheckBox>
+                </div>
+                <div class="period-group">
+                    <DxCheckBox @bind-Checked="@InterfaceData.Fijar">Fijar</DxCheckBox>
+                </div>
+            </div>
+
+            <!-- Desde/Hasta -->
+            <div class="date-range-grid">
+                <div class="range-group">
+                    <label class="range-label">Desde</label>
+                    <DxSpinEdit T="int" @bind-Value="@InterfaceData.Desde"
+                                MinValue="0" MaxValue="31" CssClass="range-input" />
+                </div>
+                <div class="range-group">
+                    <label class="range-label">Hasta</label>
+                    <DxSpinEdit T="int" @bind-Value="@InterfaceData.Hasta"
+                                MinValue="0" MaxValue="31" CssClass="range-input" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Autenticacion -->
+        <div class="auth-container">
+            <DxCheckBox @bind-Checked="@InterfaceData.AutenticacionEnabled" CssClass="auth-title-checkbox">Autenticacion</DxCheckBox>
+            <div class="auth-grid">
+                <div class="auth-group">
+                    <label class="auth-label">Usuario</label>
+                    <DxTextBox @bind-Text="@InterfaceData.Usuario"
+                               Enabled="@InterfaceData.AutenticacionEnabled"
+                               CssClass="auth-input" />
+                </div>
+                <div class="auth-group">
+                    <label class="auth-label">Contrasena</label>
+                    <DxTextBox @bind-Text="@InterfaceData.Contrasena"
+                               Password="true"
+                               Enabled="@InterfaceData.AutenticacionEnabled"
+                               CssClass="auth-input" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Todos -->
+        <div class="input">
+            <div class="todos-section">
+                <DxCheckBox @bind-Checked="@InterfaceData.TodosEnabled">Todos</DxCheckBox>
+                <DxTextBox @bind-Text="@InterfaceData.TodosTexto"
+                           Enabled="@InterfaceData.TodosEnabled"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchTodosClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+
+        <!-- Transacciones -->
+        <div class="transactions-container">
+            <label class="section-title">Transacciones</label>
+            <div class="transaction-checkboxes">
+                <DxCheckBox @bind-Checked="@InterfaceData.TransaccionesTodas">Todas</DxCheckBox>
+                <DxCheckBox @bind-Checked="@InterfaceData.TransaccionesInvisibles">Invisibles</DxCheckBox>
+                <DxCheckBox @bind-Checked="@InterfaceData.TransaccionesNegacion">Negacion</DxCheckBox>
+            </div>
+            <DxTextBox @bind-Text="@InterfaceData.TransaccionesTexto"
+                       CssClass="transactions-input"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchTransaccionesClick" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Otros Criterios -->
+        <div class="criteria-container">
+            <label class="section-title">Otros Criterios</label>
+            <div class="criteria-grid">
+                <!-- Columna izquierda -->
+                <div class="criteria-column">
+                    <div class="criteria-row">
+                        <div>
+                            <DxCheckBox @bind-Checked="@InterfaceData.OficinaEnabled">Oficina</DxCheckBox>
+                        </div>
+                        <DxComboBox TData="OficinaDto" TValue="int?"
+                                    Data="@oficinasList"
+                                    @bind-Value="@InterfaceData.OficinaId"
+                                    TextFieldName="@nameof(OficinaDto.Nombre)"
+                                    ValueFieldName="@nameof(OficinaDto.Id)"
+                                    NullText="Seleccionar"
+                                    Enabled="@InterfaceData.OficinaEnabled"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                    <div class="criteria-row">
+                        <div>
+                            <DxCheckBox @bind-Checked="@InterfaceData.UbicacionEnabled" CssClass="criteria-checkbox">Ubicacion</DxCheckBox>
+                        </div>
+                        <DxComboBox TData="UbicacionDto" TValue="int?"
+                                    Data="@ubicacionesList"
+                                    @bind-Value="@InterfaceData.UbicacionId"
+                                    TextFieldName="@nameof(UbicacionDto.Descripcion)"
+                                    ValueFieldName="@nameof(UbicacionDto.Id)"
+                                    NullText="Seleccionar"
+                                    Enabled="@InterfaceData.UbicacionEnabled"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                    <div class="criteria-row">
+                        <div>
+                            <DxCheckBox @bind-Checked="@InterfaceData.CuentaContableEnabled" CssClass="criteria-checkbox">Cuenta Contable</DxCheckBox>
+                        </div>
+                        <DxTextBox @bind-Text="@InterfaceData.CuentaContable"
+                                   Enabled="@InterfaceData.CuentaContableEnabled"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCuentaClick" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <!-- Columna derecha -->
+                <div class="criteria-column">
+                    <div class="criteria-row">
+                        <div>
+                            <DxCheckBox @bind-Checked="@InterfaceData.CuentasBancoEnabled" CssClass="criteria-checkbox">Cuentas Banco</DxCheckBox>
+                        </div>
+                        <DxComboBox TData="CuentaBancoDto" TValue="int?"
+                                    Data="@cuentasBancoList"
+                                    @bind-Value="@InterfaceData.CuentasBancoId"
+                                    TextFieldName="@nameof(CuentaBancoDto.Nombre)"
+                                    ValueFieldName="@nameof(CuentaBancoDto.Id)"
+                                    NullText="Seleccionar"
+                                    Enabled="@InterfaceData.CuentasBancoEnabled"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                    <div class="employee-checkboxes">
+                        <DxCheckBox @bind-Checked="@InterfaceData.EmpleadosConCuentas">Empleados con Cuentas</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@InterfaceData.EmpleadosSinCuentas">Empleados sin Cuentas</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorias de empleados -->
+        <div class="employee-categories">
+            <DxCheckBox @bind-Checked="@InterfaceData.Regular">Regular</DxCheckBox>
+            <DxCheckBox @bind-Checked="@InterfaceData.Temporero">Temporero</DxCheckBox>
+            <DxCheckBox @bind-Checked="@InterfaceData.Exempleado">Exempleado</DxCheckBox>
+            <DxCheckBox @bind-Checked="@InterfaceData.Pensionados">Pensionados</DxCheckBox>
+        </div>
+
+        <!-- Reporte -->
+        <div class="select">
+            <label for="reporte">Reporte</label>
+            <DxComboBox TData="ReporteDto" TValue="int?"
+                        Data="@reportesList"
+                        @bind-Value="@InterfaceData.ReporteId"
+                        TextFieldName="@nameof(ReporteDto.Nombre)"
+                        ValueFieldName="@nameof(ReporteDto.Id)"
+                        NullText="Seleccionar reporte"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+        </div>
+
+        <!-- File config -->
+        <div class="file-section">
+            <label class="section-title">Disco</label>
+            <div>
+                <div class="file-fields">
+
+                    <div class="file-group">
+                        <label class="file-label">Tipo</label>
+                        <DxComboBox TData="TipoDto" TValue="int?"
+                                    Data="@tiposList"
+                                    @bind-Value="@InterfaceData.TipoId"
+                                    TextFieldName="@nameof(TipoDto.Nombre)"
+                                    ValueFieldName="@nameof(TipoDto.Id)"
+                                    NullText="Tipo"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never"
+                                    CssClass="tipo-combo" />
+                    </div>
+                    <div class="file-group">
+                        <label class="file-label">Nombre</label>
+                        <DxTextBox @bind-Text="@InterfaceData.Nombre" CssClass="nombre-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private InterfaceDataDto InterfaceData { get; set; } = new InterfaceDataDto();
+    // **- private string[] // **- ToolbarOptions = { "save", "leave" };
+
+    // Data lists
+    private List<InterfazDto> interfacesList { get; set; } = new List<InterfazDto>();
+    private List<OficinaDto> oficinasList { get; set; } = new List<OficinaDto>();
+    private List<UbicacionDto> ubicacionesList { get; set; } = new List<UbicacionDto>();
+    private List<CuentaBancoDto> cuentasBancoList { get; set; } = new List<CuentaBancoDto>();
+    private List<ReporteDto> reportesList { get; set; } = new List<ReporteDto>();
+    private List<TipoDto> tiposList { get; set; } = new List<TipoDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPlaceholderData();
+    }
+
+    private async Task LoadPlaceholderData()
+    {
+        await Task.Delay(100);
+
+        interfacesList = new List<InterfazDto>
+        {
+            new InterfazDto { Id = 1, Nombre = "Interfaz Contabilidad" },
+            new InterfazDto { Id = 2, Nombre = "Interfaz Bancaria" },
+            new InterfazDto { Id = 3, Nombre = "Interfaz Nomina" }
+        };
+
+        oficinasList = new List<OficinaDto>
+        {
+            new OficinaDto { Id = 1, Nombre = "Oficina Central" },
+            new OficinaDto { Id = 2, Nombre = "Sucursal Norte" },
+            new OficinaDto { Id = 3, Nombre = "Sucursal Sur" }
+        };
+
+        ubicacionesList = new List<UbicacionDto>
+        {
+            new UbicacionDto { Id = 1, Descripcion = "Recursos Humanos" },
+            new UbicacionDto { Id = 2, Descripcion = "Contabilidad" },
+            new UbicacionDto { Id = 3, Descripcion = "Sistemas" }
+        };
+
+        cuentasBancoList = new List<CuentaBancoDto>
+        {
+            new CuentaBancoDto { Id = 1, Nombre = "Banco Popular - 123456789" },
+            new CuentaBancoDto { Id = 2, Nombre = "Banco Santander - 987654321" }
+        };
+
+        reportesList = new List<ReporteDto>
+        {
+            new ReporteDto { Id = 1, Nombre = "Reporte de Interfaces" },
+            new ReporteDto { Id = 2, Nombre = "Reporte de Transacciones" }
+        };
+
+        tiposList = new List<TipoDto>
+        {
+            new TipoDto { Id = 1, Nombre = "PDF" },
+            new TipoDto { Id = 2, Nombre = "Excel" },
+            new TipoDto { Id = 3, Nombre = "CSV" }
+        };
+
+        InterfaceData = new InterfaceDataDto
+            {
+                Fecha = DateTime.Today,
+                Periodo = 1,
+                Ano = DateTime.Now.Year,
+                Desde = 0,
+                Hasta = 0,
+                Actual = false,
+                Regular = true,
+                Disco = "",
+                Nombre = ""
+            };
+    }
+
+    private void OnSearchNominaClick() { }
+    private void OnSearchTodosClick() { }
+    private void OnSearchTransaccionesClick() { }
+    private void OnSearchCuentaClick() { }
+    private void OnGenerarClick() { }
+    private void OnCancelarClick() { }
+    private void HandleClose() { }
+
+    public class InterfaceDataDto
+    {
+        public int? InterfazId { get; set; }
+        public DateTime? Fecha { get; set; }
+        public bool TodasNominas { get; set; }
+        public string NominaTexto { get; set; } = "";
+        public int Periodo { get; set; }
+        public int Ano { get; set; }
+        public bool Actual { get; set; }
+        public bool Fijar { get; set; }
+        public int Desde { get; set; }
+        public int Hasta { get; set; }
+        public bool AutenticacionEnabled { get; set; }
+        public string Usuario { get; set; } = "";
+        public string Contrasena { get; set; } = "";
+        public bool TodosEnabled { get; set; }
+        public string TodosTexto { get; set; } = "";
+        public bool TransaccionesTodas { get; set; }
+        public bool TransaccionesInvisibles { get; set; }
+        public bool TransaccionesNegacion { get; set; }
+        public string TransaccionesTexto { get; set; } = "";
+        public bool OficinaEnabled { get; set; }
+        public int? OficinaId { get; set; }
+        public bool UbicacionEnabled { get; set; }
+        public int? UbicacionId { get; set; }
+        public bool CuentaContableEnabled { get; set; }
+        public string CuentaContable { get; set; } = "";
+        public bool CuentasBancoEnabled { get; set; }
+        public int? CuentasBancoId { get; set; }
+        public bool EmpleadosConCuentas { get; set; }
+        public bool EmpleadosSinCuentas { get; set; }
+        public bool Regular { get; set; }
+        public bool Temporero { get; set; }
+        public bool Exempleado { get; set; }
+        public bool Pensionados { get; set; }
+        public int? ReporteId { get; set; }
+        public string Disco { get; set; } = "";
+        public int? TipoId { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+
+    public class InterfazDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+
+    public class OficinaDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+
+    public class UbicacionDto
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; } = "";
+    }
+
+    public class CuentaBancoDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+
+    public class ReporteDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+
+    public class TipoDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+}

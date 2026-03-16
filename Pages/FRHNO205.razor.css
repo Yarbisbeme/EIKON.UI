@@ -1,0 +1,428 @@
+/* FRHNO205 - Impresión Nómina, Cheques y Volantes */
+
+.frhno205-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Two-Column Layout */
+.frhno205-form .two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 100%;
+}
+
+.frhno205-form .left-column,
+.frhno205-form .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Standard Input Fields */
+.frhno205-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno205-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Nómina Field - Blue Background */
+.frhno205-form .nomina-field ::deep .dx-textbox {
+    background-color: #e3f2fd;
+}
+
+/* Radio Group */
+.frhno205-form .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+/* Grupo Papel con Copia */
+.frhno205-form .grupo-papel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.frhno205-form .grupo-papel label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Configurar Button */
+.frhno205-form .btn-configurar {
+    padding: 8px 16px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #33363f;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: fit-content;
+}
+
+.frhno205-form .btn-configurar:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+/* Reporte Section */
+.frhno205-form .reporte-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Fecha Container */
+.frhno205-form .fecha-container {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.frhno205-form .fecha-container .btn-calendar {
+    padding: 0 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhno205-form .fecha-container .btn-calendar:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno205-form .fecha-container .btn-calendar i {
+    font-size: 16px;
+}
+
+/* Empleado Range */
+.frhno205-form .empleado-range {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.frhno205-form .empleado-range .al-text {
+    font-size: 14px;
+    color: #33363f;
+    white-space: nowrap;
+}
+
+/* Input with Checkbox */
+.frhno205-form .input-with-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhno205-form .combo-search {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+/* Icon Buttons */
+.frhno205-form .btn-icon {
+    padding: 8px 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+}
+
+.frhno205-form .btn-icon:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno205-form .btn-icon i {
+    font-size: 16px;
+}
+
+/* Disco Section */
+.frhno205-form .disco-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.frhno205-form .disco-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.frhno205-form .disco-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.frhno205-form .btn-success {
+    padding: 8px 12px;
+    border: 1px solid #28a745;
+    border-radius: 4px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+}
+
+.frhno205-form .btn-success:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.frhno205-form .btn-danger {
+    padding: 8px 12px;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    background-color: #dc3545;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+}
+
+.frhno205-form .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* Bottom Toolbar */
+.frhno205-form .bottom-toolbar {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    padding: 15px;
+    border-top: 1px solid #bfbfbf;
+    margin-top: 10px;
+}
+
+.frhno205-form .toolbar-btn {
+    padding: 8px 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+}
+
+.frhno205-form .toolbar-btn:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno205-form .toolbar-btn i {
+    font-size: 18px;
+}
+
+/* DevExpress Component Overrides */
+.frhno205-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno205-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno205-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhno205-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhno205-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno205-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno205-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno205-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno205-form ::deep .dx-memo-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno205-form ::deep .dx-memo-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno205-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhno205-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhno205-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.frhno205-form ::deep .dx-radio-icon {
+    border: 1px solid #bfbfbf;
+}
+
+.frhno205-form ::deep .dx-radio-checked .dx-radio-icon {
+    border-color: #007bff;
+}
+
+.frhno205-form ::deep .dx-radio-checked .dx-radio-icon::before {
+    background-color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhno205-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhno205-form .two-column-layout {
+        gap: 25px;
+    }
+
+    .frhno205-form .left-column,
+    .frhno205-form .right-column {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno205-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhno205-form .two-column-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhno205-form .left-column,
+    .frhno205-form .right-column {
+        gap: 14px;
+    }
+
+    .frhno205-form .bottom-toolbar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .frhno205-form .empleado-range {
+        flex-wrap: wrap;
+    }
+
+    .frhno205-form .combo-search {
+        flex-direction: column;
+    }
+
+    .frhno205-form .fecha-container {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhno205-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhno205-form .input label {
+        font-size: 13px;
+    }
+
+    .frhno205-form .toolbar-btn {
+        min-width: 36px;
+        height: 36px;
+        padding: 6px 10px;
+    }
+
+    .frhno205-form .toolbar-btn i {
+        font-size: 16px;
+    }
+
+    .frhno205-form .disco-section {
+        padding: 12px;
+    }
+
+    .frhno205-form .bottom-toolbar {
+        padding: 12px;
+        gap: 8px;
+    }
+}

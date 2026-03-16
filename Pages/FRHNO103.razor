@@ -1,0 +1,1710 @@
+@page "/FRHNO103"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+
+<div class="page">
+    <Alert2 @ref="alertInfo" TypeAlert="info" Message="Actualización de Empresas" />
+    <ConfirmDialog @ref="confirmDialog" Title="Confirmar Eliminación"
+                   Message="¿Seguro deseas eliminar esta Transacción?"
+                   OnConfirm="OnConfirmDelete" />
+    <Breadcrumb Title="Tipos de Transacciones" BackUrl="/dash" />
+
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHNO103" OnClose="HandleClose" OnProccess="BuscarGrupo" OnAdd="Agregar" OnSave="Guarda" OnRemove="Eliminar" OnAudit="OnAuditPopup" />
+        </div>
+    </div>
+    <DxTabs ActiveTabIndex="@ActiveTabIndex0" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+        <DxTab Text="Generales"></DxTab>
+        <DxTab Text="Lista Transacciones"></DxTab>
+    </DxTabs>
+     @if (editModel == null)
+
+    {
+
+        <p><em>Loading...</em></p>
+
+    }
+
+    else
+
+    {
+    <div class="form-container">
+         @if (ActiveTabIndex0 == 0)
+            {
+        <!-- Sección Superior - Información Básica -->
+        <div class="basic-info-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input">
+                    <label>Código</label>
+                        <DxTextBox @bind-Text="@editModel.WcCodigo"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchCodigoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+                <div class="input">
+                    <label>Descripción</label>
+                        <DxTextBox @bind-Text="@editModel.WcDescri" />
+                </div>
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input">
+                    <label>Descrip. Corta</label>
+                        <DxTextBox @bind-Text="@editModel.WcExeNam" />
+                </div>
+                <div class="input">
+                    <label>Alterno</label>
+                        <DxTextBox @bind-Text="@editModel.WcDscalterno" />
+                </div>
+                <div class="input">
+                    <label>Etiqueta</label>
+                    <DxComboBox Data="@EtiquetaList"
+                                    @bind-Value="@editModel.WzOrdenal"
+                                NullText="Seleccionar"
+                                TextFieldName="Name"
+                                ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <!-- Tercera Fila - Radio Buttons y Orden/Prioridad -->
+            <div class="form-row">
+                <div class="radio-group-section">
+                    <div class="radio-group">
+                        <label class="group-title">Tipo</label>
+                        <div class="radio-options">
+                            <DxRadioGroup @bind-Value="@editModel.WcTipoTr"
+                                          Items="@TipoOptions"
+                                          ValueFieldName="Value"
+                                          TextFieldName="Text"
+                                          Layout="RadioGroupLayout.Horizontal" />
+
+                        </div>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <label class="group-title">Estatus</label>
+                        <div class="radio-options">
+                            <DxRadioGroup @bind-Value="@editModel.WcEstatus"
+                                          Items="@EstatusOptions"
+                                          ValueFieldName="Value"
+                                          TextFieldName="Text"
+                                          Layout="RadioGroupLayout.Horizontal" />
+                        </div>
+                    </div>
+                </div>
+                <div class="number-fields">
+                    <div class="input-field small">
+                        <label>Orden</label>
+                            <DxSpinEdit @bind-Value="@editModel.WcOrden"
+                                    MinValue="0"
+                                    MaxValue="999" />
+                    </div>
+                    <div class="input-field small">
+                        <label>Prioridad</label>
+                            <DxSpinEdit @bind-Value="@editModel.WcPrioridad"
+                                    MinValue="0"
+                                    MaxValue="999" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Principal - Single Tab Layout -->
+        <div class="main-section">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" CssClass="main-tabs" style="width:100% !important;">
+                <DxTabPage Text="Definición">
+                    <div class="tab-content">
+                        <div class="definition-layout">
+                            <!-- Columna Izquierda - Definición -->
+                            <div class="definition-left-column">
+                                <div class="definition-group">
+                                    <label class="group-title">Origen</label>
+                                    <div class="checkbox-vertical-group">
+                                            <DxRadioGroup @bind-Value="@editModel.WcOrigen"
+                                                          Items="@OrigenOptions"
+                                                          ValueFieldName="Value"
+                                                          TextFieldName="Text"
+                                                          Layout="RadioGroupLayout.Vertical" />
+                                    </div>
+                                </div>
+
+                                <div class="definition-group">
+                                    <label class="group-title">Duración</label>
+                                    <div class="checkbox-vertical-group">
+                                            <DxRadioGroup @bind-Value="@editModel.WcDuracio"
+                                                          Items="@DuracionOptions"
+                                                          ValueFieldName="Value"
+                                                          TextFieldName="Text"
+                                                          Layout="RadioGroupLayout.Vertical" />
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; flex-direction:column; gap:10px;">
+                                    <div class="input">
+                                        <label>ISR</label>
+                                            <DxComboBox id="Impto" Data="@imptoItems" ValueFieldName="WcCodigo" TextFieldName="WcDescri" @bind-Value="editModel.WcIsr"></DxComboBox>
+                                    </div>
+                                    <div style="display:flex; gap:5px;">
+                                            <SNCheckBox @bind-Value="@editModel.WcTisr" Label="Exención Mensual " />
+                                            <SNCheckBox @bind-Value="@editModel.WcIsrproy" Label="No proyectar " />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna Central - ISR y Opciones -->
+                            <div class="definition-center-column">
+
+                                <div class="checkbox-options">
+                                    <SNCheckBox Label="Infotep" @bind-Value="@editModel.WcInfotep" />
+                                    <SNCheckBox Label="Riesgo Laboral" @bind-Value="@editModel.WcAcci" />
+                                    <SNCheckBox Label="Transacción Afp" @bind-Value="@editModel.WcIsrafp" />
+                                    <SNCheckBox Label="Idss" @bind-Value="@editModel.WcIdss" />
+                                    <SNCheckBox Label="Usa C. Costos" @bind-Value="@editModel.WcCentroc" />
+                                    <SNCheckBox Label="Ajustar/Reclamar" @bind-Value="@editModel.WcCentroc" />
+                                    <SNCheckBox Label="Transacción ARS" @bind-Value="@editModel.WcCentroc" />
+                                    
+                                </div>
+
+                                <div class="checkbox-options">
+                                    
+                                    
+                                    <SNCheckBox @bind-Value="@editModel.WcPropose" Label="Proponer en generación " />
+                                    <SNCheckBox @bind-Value="@editModel.WcInvisib" Label="Transacción Invisible " />
+                                    <SNCheckBox @bind-Value="@editModel.WcIngreg" Label="Ingreso regular " />
+                                    <SNCheckBox @bind-Value="@editModel.WcNoisr" Label="No considerada para isr " />
+                                    <SNCheckBox @bind-Value="@editModel.WcInterfa" Label="En Interfaz " />
+                                    <SNCheckBox @bind-Value="@editModel.WcCambiar" Label="Cambiar en Verificación " />
+                                   @*  <DxCheckBox @bind-Checked="@ProponerGeneracionOption">Proponer en generación</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@TransaccionInvisibleOption">Transacción Invisible</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@IngresoRegularOption">Ingreso regular</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@NoConsideradaIsrOption">No considerada para isr</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@EnInterinasOption">En Interfaz</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@CambiarVerificacionOption">Cambiar en Verificación</DxCheckBox> *@
+                                </div>
+
+                                <div class="calculation-options">
+                                    <DxCheckBox @bind-Checked="@PresentarAcumuladoOption">Presentar Acumulado</DxCheckBox>
+
+                                    <div class="radio-inline-group">
+                                            <DxRadioGroup @bind-Value="@editModel.WcCurrent"
+                                                          Items="@PresentarOptions"
+                                                          ValueFieldName="Value"
+                                                          TextFieldName="Text"
+                                                          Layout="RadioGroupLayout.Horizontal" />
+                                        @* <DxRadioGroup @bind-Value="@PresentarValue"
+                                                      Data="@PresentarOptions"
+                                                      ValueFieldName="Value"
+                                                      TextFieldName="Text"
+                                                      TData="RadioOption"
+                                                      TValue="string"
+                                                      Orientation="Orientation.Horizontal" /> *@
+                                    </div>
+                                        <SNCheckBox @bind-Value="@editModel.WcNeutra" Label="Neutraliza" />
+                                        <SNCheckBox @bind-Value="@editModel.WcReglaT" Label="Neto Período" />
+                                        <SNCheckBox @bind-Value="@editModel.WcNeutra" Label="Consideraría Gasto *FC" />
+
+@*                                     <DxCheckBox @bind-Checked="@NeutralizaOption">Neutraliza</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@NetoPeriodoOption">Neto Período</DxCheckBox>
+                                    <DxCheckBox @bind-Checked="@ConsiderariaGastoOption">Consideraría gasto</DxCheckBox>
+ *@                                </div>
+                            </div>
+                        </div>
+                        <!-- Sección Inferior - Partidas -->
+                        <div class="partidas-bottom">
+                            <div class="partidas-row">
+                                <div class="input">
+                                    <label>Partida Contraria</label>
+
+                                    <div class="search-field">
+                                        <DxTextBox @bind-Text="@PartidaContrariaValue"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchPartidaClick" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>Complem/ISRneto</label>
+
+                                    <div class="search">
+                                        <DxTextBox @bind-Text="@ComplementIsrValue"
+                                                   NullText="ID requisición"
+                                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                                Click="@OnSearchComplementClick" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                        <DxTextBox NullText="ID requisicion" />
+                                    </div>
+                                </div>
+
+                                <div class="select">
+                                    <label>Si Genera desc</label>
+                                    <DxComboBox Data="@GeneraDescList"
+                                                @bind-Value="@SelectedGeneraDesc"
+                                                NullText="Seleccionar"
+                                                TextFieldName="Name"
+                                                ValueFieldName="Id" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Partidas">
+                    <div class="tab-content">
+                        <div class="partidas-table-section">
+                            @* <DxDataGrid Data="@partidas" ShowFilterRow="true" ShowGroupPanel="true" CssClass="partidas-grid">
+                                <Columns>
+                                    <DxDataGridColumn Field="@nameof(PartidasDto.WcCodigo)" Caption="Código" />
+                                    <DxDataGridColumn Field="@nameof(PartidasDto.WcDescri)" Caption="Descripción" />
+                                    <DxDataGridColumn Field="@nameof(PartidasDto.WcTipo_Tr)" Caption="Tipo Transacción" />
+                                    <DxDataGridColumn Field="@nameof(PartidasDto.Aplica)" Caption="Aplica" />
+                                    <DxDataGridColumn Field="@nameof(PartidasDto.WcEstatus)" Caption="Estatus" />
+                                </Columns>
+                            </DxDataGrid> *@
+                                <DxGrid @ref="GridPartidas" Data="@partidas"
+                                        ShowGroupPanel="false"
+                                        TextWrapEnabled="false"
+                                        ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                                        AllowSelectRowByClick="true"
+                                        PageSize="10"
+                                        HighlightRowOnHover="true"
+                                        PagerNavigationMode="PagerNavigationMode.NumericButtons"
+                                        PagerPageSizeSelectorVisible="false">
+
+                                    <Columns>
+                                        <DxGridSelectionColumn Width="50px" />
+
+                                        <DxGridDataColumn FieldName="@nameof(PartidasDto.WcCodigo)" Caption="Código" Width="20%" MinWidth="80">
+                                        </DxGridDataColumn>
+
+                                        <DxGridDataColumn FieldName="@nameof(PartidasDto.WcDescri)" Caption="Transacción" MinWidth="200" Width="60%">
+                   
+                                        </DxGridDataColumn>
+
+                                        <DxGridDataColumn FieldName="@nameof(PartidasDto.WcTipo_Tr)" Caption="Tipo" Width="40%" MinWidth="80" TextAlignment="GridTextAlignment.Center">
+                                        </DxGridDataColumn>
+
+                                        <DxGridDataColumn FieldName="@nameof(PartidasDto.Aplica)" Caption="Aplica" Width="20%" MinWidth="100" TextAlignment="GridTextAlignment.Center">
+                                        </DxGridDataColumn>
+                                        <DxGridDataColumn FieldName="@nameof(PartidasDto.WcEstatus)" Caption="Estatus" Width="20%" MinWidth="100" TextAlignment="GridTextAlignment.Center">
+                                        </DxGridDataColumn>
+                          
+                                     
+                                    </Columns>
+
+                                    <TotalSummary>
+                                        <DxGridSummaryItem FieldName="Codigo" SummaryType="GridSummaryItemType.Count" FooterColumnName="Transaccion" />
+                                    </TotalSummary>
+                                </DxGrid>
+                                <div class="row">
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedSFS(value))" @bind-Value="@chkaplicaSfS">SFS</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedAFP(value))" @bind-Value="@chkaplicaAFP">AFP</DxCheckBox> </div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedISR(value))" @bind-Value="@chkaplicaISR">ISR</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedNISR(value))" @bind-Value="@chkExcentoISR">No ISR</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedINF(value))" @bind-Value="@chkAplicaInfotep">Infotep</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedARL(value))" @bind-Value="@chkAplicaARL">ARL</DxCheckBox></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedIRG(value))" @bind-Value="@chkaplicaIngreg">Ing Reg</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedNIRG(value))" @bind-Value="@chkAplicaIngNoReg">Ing No Reg</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedTIN(value))" @bind-Value="@chkaplicainvisibles">T Invisible</DxCheckBox> </div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedSAL(value))" @bind-Value="@chkaplicasalud">Salud</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedBEN(value))" @bind-Value="@chkaplicaBeneficio">Beneficios</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedAMT(value))" @bind-Value="@chkAplicaAmortizable">Amortizables</DxCheckBox></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedACC(value))" @bind-Value="@chkAPLICAACCIONES">Acciones</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedAST(value))" @bind-Value="@chkAPLICAASISTEN">Asistencia</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedVAL(value))" @bind-Value="@chkaplicavALUABLES">Valuables</DxCheckBox> </div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedCONT(value))" @bind-Value="@chkaplicacontab">Contabilidad</DxCheckBox></div>
+                                    <div class="col-md-2 text-right"></div>
+                                    <div class="col-md-2 text-right"><DxCheckBox CheckedChanged="@((bool value) => OnCheckedChangedDFT(value))" @bind-Value="@chkaplicadefault">Transacciones</DxCheckBox></div>
+                                </div>
+
+
+
+                        </div>
+                        </div>  
+                </DxTabPage>
+            </DxTabs>
+            <!-- Columna Derecha - Relaciones y Partidas -->
+            <div class="definition-right-column">
+                <!-- Sección de Relaciones -->
+                <div class="relations-compact">
+                    <label class="group-title">Relaciones</label>
+                    <div class="relation-links-vertical">
+                        <DxButton Text="Beneficio"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnBeneficioClick" />
+                        <DxButton Text="Tipo Plan"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnTipoPlanClick" />
+                        <DxButton Text="Plan Salud"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnPlanSaludClick" />
+                        <DxButton Text="Contabilidad"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnContabilidadClick" />
+                        <DxButton Text="Contratos"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnContratosClick" />
+                        <DxButton Text="Acciones"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnAccionesClick" />
+                        <DxButton Text="Asistencia"
+                                  CssClass="relation-btn-compact"
+                                  Click="@OnAsistenciaClick" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+            else if (ActiveTabIndex0 == 1)
+            {
+                <!-- Tab Descripción -->
+                <div class="descripcion-tab">
+                    <h4 style="margin-bottom: 20px;" class="text-info">Lista de Grupos Corporativos</h4>
+
+                    <DxGrid Data="@trhwc010" @ref="MyGrid1"
+                            CssClass="mw-1100"
+                            AllowSelectRowByClick="true"
+                            SelectionMode="GridSelectionMode.Single"
+                            SelectedDataItemChanged="OnRowSelectedHQ">
+                        <Columns>
+
+                            <DxGridDataColumn Caption="Trans Id" FieldName="WcCodigo" Width="120px" VisibleIndex="1" />
+                            <DxGridDataColumn Caption="Descripción" FieldName="WcDescri" Width="300px" VisibleIndex="2" />
+
+                            <DxGridDataColumn Caption="Activo" FieldName="WcEstatus" VisibleIndex="3" Width="130px" />
+                        </Columns>
+
+                    </DxGrid>
+                    
+
+                </div>
+            }
+    </div>
+    
+
+    }
+
+</div>
+<div>
+    <DxPopup @bind-Visible="@IsModalBeneficioVisible"
+             Width="500px" Height="600px"
+             ShowCloseButton="true"
+             ShowHeader="true"
+             ShowFooter="true" HeaderText="Beneficios">
+        <Content>
+            <FRHNO106 />
+        </Content>
+        <FooterTemplate>
+            <DxButton Text="Cerrar" Click="() => IsModalBeneficioVisible = false" />
+        </FooterTemplate>
+
+    </DxPopup>
+    <DxPopup @bind-Visible="@IsModalPlanSaludVisible"
+             ShowFooter="true"
+             HeaderText="Plan Salud">
+        <Content>
+            <FRHNO107 />
+        </Content>
+        <FooterTemplate>
+            <DxButton Text="Cerrar" Click="() => IsModalPlanSaludVisible = false" />
+        </FooterTemplate>
+
+    </DxPopup>
+</div>
+@code {
+
+
+
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+
+    // Tab control
+    private int ActiveTabIndex { get; set; } = 0;
+    private int ActiveTabIndex0 { get; set; } = 0;
+    private bool isPopupVisible = false;
+    private string popupTitle = "Tipo Transacciones";
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    private ConfirmDialog confirmDialog;
+    DxGrid? MyGrid1;
+    // Campos básicos
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private string DescripcionCortaValue { get; set; } = "";
+    private string AlternoValue { get; set; } = "";
+    private int? SelectedEtiqueta { get; set; }
+    private int OrdenValue { get; set; } = 0;
+    private int PrioridadValue { get; set; } = 0;
+
+    private bool IsModalBeneficioVisible { get; set; } = false;
+    private bool IsModalTipoPlanVisible { get; set; } = false;
+    private bool IsModalPlanSaludVisible { get; set; } = false;
+    private bool IsModalContabilidadVisible { get; set; } = false;
+    private bool IsModalContratosVisible { get; set; } = false;
+    private bool IsModalAccionesVisible { get; set; } = false;
+    private bool IsModalAsistenciaVisible { get; set; } = false;
+
+
+    // Radio button values
+    private string TipoValue { get; set; } = "Ingreso";
+    private string EstatusValue { get; set; } = "Activo";
+
+    // Definición - Opciones de origen
+    private bool OrigenCalculoOption { get; set; } = false;
+    private bool OrigenManualOption { get; set; } = false;
+    private bool OrigenFijoOption { get; set; } = false;
+
+    // Definición - Opciones de duración
+    private bool DuracionPermanenteOption { get; set; } = false;
+    private bool DuracionAmortizableOption { get; set; } = false;
+    private bool DuracionContratoOption { get; set; } = false;
+
+    // Definición - Otras opciones
+
+    private bool chkaplicaSfS { get; set; } = false;
+    private bool chkaplicaAFP { get; set; } = false;
+    private bool chkaplicaISR { get; set; } = false;
+    private bool chkExcentoISR { get; set; } = false;
+    private bool chkAplicaInfotep { get; set; } = false;
+    private bool chkAplicaARL { get; set; } = false;
+    private bool chkaplicaIngreg { get; set; } = false;
+    private bool chkAplicaIngNoReg { get; set; } = false;
+    private bool chkaplicainvisibles { get; set; } = false;
+    private bool chkaplicasalud { get; set; } = false;
+    private bool chkaplicaBeneficio { get; set; } = false;
+    private bool chkAplicaAmortizable { get; set; } = false;
+    private bool chkAPLICAACCIONES { get; set; } = false;
+    private bool chkAPLICAASISTEN { get; set; } = false;
+    private bool chkaplicavALUABLES { get; set; } = false;
+    private bool chkaplicacontab { get; set; } = false;
+    private bool chkaplicadefault { get; set; } = true;
+
+    private bool IsVisibleAplicaSfS { get; set; } = false;
+    private bool IsVisibleAplicaAFP { get; set; } = false;
+    private bool IsVisibleAplicaISR { get; set; } = false;
+    private bool IsVisibleExcentoISR { get; set; } = false;
+    private bool IsVisibleAplicaInfotep { get; set; } = false;
+    private bool IsVisibleAplicaARL { get; set; } = false;
+    private bool IsVisibleAplicaIngreg { get; set; } = false;
+    private bool IsVisibleAplicaIngNoReg { get; set; } = false;
+    private bool IsVisibleAplicainvisibles { get; set; } = false;
+    private bool IsVisibleAplicasalud { get; set; } = false;
+    public bool IsVisibleAplicaBeneficio { get; set; }
+    private bool IsVisibleAplicaAmortizable { get; set; } = false;
+    private bool IsVisibleAPLICAACCIONES { get; set; } = false;
+    private bool IsVisibleAPLICAASISTEN { get; set; } = false;
+    private bool IsVisibleAplicavALUABLES { get; set; } = false;
+    private bool IsVisibleAplicacontab { get; set; } = false;
+
+    DxGrid? AplicaSfS;
+    DxGrid? AplicaAFP;
+    DxGrid? AplicaISR ;
+    DxGrid? ExcentoISR ; 
+    DxGrid? AplicaInfotep; 
+    DxGrid? AplicaARL ;
+    DxGrid? AplicaIngreg; 
+    DxGrid? AplicaIngNoReg; 
+    DxGrid? Aplicainvisibles; 
+    DxGrid? Aplicasalud ;
+    DxGrid? AplicaBeneficio ;
+    DxGrid? AplicaAmortizable; 
+    DxGrid? APLICAACCIONES ;
+    DxGrid? APLICAASISTEN;
+    DxGrid? AplicavALUABLES; 
+    DxGrid? Aplicacontab ;
+
+    private bool InfetepOption { get; set; } = false;
+    private bool RiesgoLaboralOption { get; set; } = false;
+    private bool TransaccionArsOption { get; set; } = false;
+    private bool TransaccionArsOption2 { get; set; } = false;
+    private bool IdssOption { get; set; } = false;
+    private bool UsaCostosOption { get; set; } = false;
+    private bool AjustarReclamarOption { get; set; } = false;
+
+    // Definición - ISR y cálculos
+    private string IsrValue { get; set; } = "";
+    private bool ExencionMensualOption { get; set; } = false;
+    private bool NoProyectarOption { get; set; } = false;
+    private bool ProponerGeneracionOption { get; set; } = false;
+    private bool TransaccionInvisibleOption { get; set; } = false;
+    private bool IngresoRegularOption { get; set; } = false;
+    private bool NoConsideradaIsrOption { get; set; } = false;
+    private bool EnInterinasOption { get; set; } = false;
+    private bool CambiarVerificacionOption { get; set; } = false;
+    private bool PresentarAcumuladoOption { get; set; } = false;
+    private bool NeutralizaOption { get; set; } = false;
+    private bool NetoPeriodoOption { get; set; } = false;
+    private bool ConsiderariaGastoOption { get; set; } = false;
+    private string PresentarValue { get; set; } = "Corriente";
+
+    // Partidas
+    IGrid GridPartidas { get; set; }
+    private string PartidaContrariaValue { get; set; } = "";
+    private string ComplementIsrValue { get; set; } = "";
+    private int? SelectedGeneraDesc { get; set; }
+
+    // Listas de datos
+    private List<OptionItem> EtiquetaList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Salario" },
+        new OptionItem { Id = 2, Name = "Bonificación" },
+        new OptionItem { Id = 3, Name = "Descuento" },
+        new OptionItem { Id = 4, Name = "Prestación" }
+    };
+
+    // Listas de origen
+    private List<RadioOption> OrigenOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "C", Text = "Cálculo" },
+        new RadioOption { Value = "M", Text = "Manual" },
+        new RadioOption { Value = "F", Text = "Fijo" }
+    };
+    // Listas de duración
+    private List<RadioOption> DuracionOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "P", Text = "Permanente" },
+        new RadioOption { Value = "A", Text = "Amortizable" },
+        new RadioOption { Value = "C", Text = "Contrato" }
+    };
+    private List<OptionItem> GeneraDescList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Sí" },
+        new OptionItem { Id = 2, Name = "No" },
+        new OptionItem { Id = 3, Name = "Condicional" }
+    };
+
+    private List<RadioOption> TipoOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "I", Text = "Ingreso" },
+        new RadioOption { Value = "D", Text = "Deducción" }
+    };
+
+    private List<RadioOption> EstatusOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "A", Text = "Activo" },
+        new RadioOption { Value = "I", Text = "Inactivo" }
+        // new RadioOption { Value = "O", Text = "Otro" }
+    };
+
+    private List<RadioOption> PresentarOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "N", Text = "Corriente" },
+        new RadioOption { Value = "A", Text = "A la Fecha" }
+    };
+
+    public class OptionItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    public class RadioOption
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    private void OnUndoClick() => Console.WriteLine("Deshacer");
+    private void OnChartClick() => Console.WriteLine("Gráfico");
+    private void OnListClick() => Console.WriteLine("Lista");
+    private void OnMenuClick() => Console.WriteLine("Menú");
+    private void OnSearchPartidaClick() => Console.WriteLine("Buscar partida");
+    private void OnSearchComplementClick() => Console.WriteLine("Buscar complemento");
+    private void OnBeneficioClick() => Console.WriteLine("Beneficio");
+    private void OnTipoPlanClick() => Console.WriteLine("Tipo Plan");
+    private void OnPlanSaludClick() => Console.WriteLine("Plan Salud");
+    private void OnContabilidadClick() => Console.WriteLine("Contabilidad");
+    private void OnContratosClick() => Console.WriteLine("Contratos");
+    private void OnAccionesClick() => Console.WriteLine("Acciones");
+    private void OnAsistenciaClick() => Console.WriteLine("Asistencia");
+    private void OnRelationSettingsClick() => Console.WriteLine("Configuración de relaciones");
+    private void OnRowSelectedHQ(object? item)
+    {
+        if (item is not Trhwc010Dto model)
+            return;
+        editModel = model;
+        ActiveTabIndex0=0;
+    }
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+        ActiveTabIndex0 = newIndex;
+    }
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Tipos de Transacciones guardado!");
+    }
+    private async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            try
+            {
+                // Lógica de eliminación si el usuario confirma
+                editModel.WcEstatus = "N";
+                var ret = await api.Trhwc010DtoPut(editModel);
+                ActiveTabIndex0 = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                ActiveTabIndex0 = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                
+                alertInfo.Show("Transacción desactivada con exito!!!", "success");
+                Console.WriteLine("Error al eliminar..." + ex.Message);
+            }
+        }
+        else
+        {
+            alertInfo.Show("Eliminación cancelada");
+        }
+    }
+    protected void Agregar()
+    {
+        editModel = new Trhwc010Dto();
+        editModel.EmEmpresa = "01";
+
+    }
+
+    protected async Task Guarda()
+    {
+        try
+        {
+
+            if (editModel.IdentityColumn == 0)
+            {
+                var ret0 = await api.Trhwc010DtoPost(editModel);
+                await CargarDatos();
+                ActiveTabIndex0 = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                alertInfo.Show("Agregado con exito!!!", "success");
+            }
+            else
+            {
+                var ret = await api.Trhwc010DtoPut(editModel);
+                ActiveTabIndex0 = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                alertInfo.Show("Modificado con exito!!!", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            //ActiveTabIndex = 1;
+            //StateHasChanged();
+            Console.Write("Esto es un error al guardar..." + ex.Message);
+            alertInfo.Show("***Error al guardar..." + ex.Message, "info");
+        }
+    }
+
+    protected void Eliminar()
+    {
+        confirmDialog.Show();
+    }
+
+    void BuscarGrupo()
+    {
+        ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+    }
+
+    private void OnCancelPopup()
+    {
+        isPopupVisible = false;
+    }
+
+    private void OnAuditPopup()
+    {
+        //isPopupVisible = true;
+        alertInfo.Show("Transacción Id:" + editModel.IdentityColumn.ToString() + "\r\nCreada por: " + editModel.CreatedBy + "\r\nFecha Creada: " + editModel.CreatedOn.Day.ToString() + " " + editModel.CreatedOn.Date.ToString() + "\r\n" + "\nModificada por: " + editModel.ChangedBy + "\nFecha Modificada: " + editModel.ChangedOn.Date.ToString() + " " + editModel.ChangedOn.Date.ToString(), "success");
+    }
+
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+
+    // definicion de data que vienen de WebAPI
+
+    private IEnumerable<Trhwc010Dto> trhwc010;
+    private IEnumerable<PartidasDto> partidas;
+    private IEnumerable<Frhwp010Dto> frhwp010;
+    private IEnumerable<Trhdg000Dto> trhdg000;
+    private IEnumerable<Trhtp010Dto> trhtp010;
+    private IEnumerable<Trhvf000Dto> trhvf000;
+    private IEnumerable<Trhvt000Dto> trhvt000;
+    private IEnumerable<Trher000Dto> trher000;
+    private IEnumerable<Trhwz010Dto> trhwz010;
+    private IEnumerable<Trhrx000Dto> trhrx000;
+    private IEnumerable<Trhfa000Dto> trhfa000;
+    private IEnumerable<Trhbf000Dto> trhbf000;
+    private IEnumerable<Trhrw000Dto> trhrw000;
+    private IEnumerable<Trhlw010Dto> trhlw010;
+    private IEnumerable<Trhwx010Dto> trhwx010;
+    private IEnumerable<Trhwi010Dto> trhwi010;
+    private IEnumerable<Trhwt010Dto> trhwt010;
+    private IEnumerable<Trhca010Dto> trhca010;
+    private IEnumerable<Trhwy010Dto> trhwy010;
+    private IEnumerable<Trhbe000Dto> trhbe000;
+    private IEnumerable<Trhih000Dto> trhih000;
+    private IEnumerable<Trhca000Dto> trhca000;
+    private IEnumerable<Trhta010Dto> trhta010;
+
+    private Trhwc010Dto editModel;
+    private Frhwp010Dto frhwp010Selected;
+    private Trhdg000Dto trhdg000Selected;
+    private Trhtp010Dto trhtp010Selected;
+    private Trhvf000Dto trhvf000Selected;
+    private Trhvt000Dto trhvt000Selected;
+    private Trher000Dto trher000Selected;
+    private Trhwz010Dto trhwz010Selected;
+    private Trhrx000Dto trhrx000Selected;
+    private Trhfa000Dto trhfa000Selected;
+    private Trhbf000Dto trhbf000Selected;
+    private Trhrw000Dto trhrw000Selected;
+    private Trhlw010Dto trhlw010Selected;
+    private Trhwx010Dto trhwx010Selected;
+    private Trhwi010Dto trhwi010Selected;
+    private Trhwt010Dto trhwt010Selected;
+    private Trhca010Dto trhca010Selected;
+    private Trhwy010Dto trhwy010Selected;
+    private Trhbe000Dto trhbe000Selected;
+    private Trhih000Dto trhih000Selected;
+    private Trhca000Dto trhca000Selected;
+    private Trhta010Dto trhta010Selected;
+
+    List<ImpuestoItem> imptoItems;
+    IEnumerable<PartidasDto> partidasConcatenadas = Enumerable.Empty<PartidasDto>();
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        DateTime currentDateTime = DateTime.Now;
+
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+
+        var tipo = auth.tipo;
+
+        await CargarDatos();
+    }
+    void OnCheckedChangedSFS(bool newCheckedValue)
+    {   chkaplicaSfS = newCheckedValue;
+        CargarPartidas();
+    }
+    void OnCheckedChangedAFP(bool newCheckedValue)
+    {
+        chkaplicaAFP = newCheckedValue;
+        CargarPartidas();
+    }
+    void OnCheckedChangedISR(bool newCheckedValue)
+    {
+        chkaplicaISR = newCheckedValue;
+        CargarPartidas();
+    }
+    void OnCheckedChangedNISR(bool newCheckedValue)
+    {
+        chkExcentoISR = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedINF
+    void OnCheckedChangedINF(bool newCheckedValue)
+    {
+        chkAplicaInfotep = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedARL
+    void OnCheckedChangedARL(bool newCheckedValue)
+    {
+        chkAplicaARL = newCheckedValue;
+        CargarPartidas();
+    }
+
+    //OnCheckedChangedIRG(value))" @bind-Value="@chkaplicaIngreg"
+    void OnCheckedChangedIRG(bool newCheckedValue)
+    {
+        chkaplicaIngreg = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedTIN(value))" @bind-Value="@chkaplicainvisibles"
+    void OnCheckedChangedTIN(bool newCheckedValue)
+    {
+        chkaplicainvisibles = newCheckedValue;
+        CargarPartidas();
+    }
+    //@((bool value) => OnCheckedChangedNIRG(value))" @bind-Value="@chkAplicaIngNoReg"
+    void OnCheckedChangedNIRG(bool newCheckedValue)
+    {
+        chkAplicaIngNoReg = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedSAL(value))" @bind-Value="@chkaplicasalud"
+    void OnCheckedChangedSAL(bool newCheckedValue)
+    {
+        chkaplicasalud = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedBEN(value))" @bind-Value="@chkaplicaBeneficio"
+    void OnCheckedChangedBEN(bool newCheckedValue)
+    {
+        chkaplicaBeneficio = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedAMT(value))" @bind-Value="@chkAplicaAmortizable"
+    void OnCheckedChangedAMT(bool newCheckedValue)
+    {
+        chkAplicaAmortizable = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedACC(value))" @bind-Value="@chkAPLICAACCIONES"
+    void OnCheckedChangedACC(bool newCheckedValue)
+    {
+        chkAPLICAACCIONES = newCheckedValue;
+        CargarPartidas();
+    }
+
+    //OnCheckedChangedAST(value))" @bind-Value="@chkAPLICAASISTEN"
+    void OnCheckedChangedAST(bool newCheckedValue)
+    {
+        chkAPLICAASISTEN = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedVAL(value))" @bind-Value="@chkaplicavALUABLES"
+    void OnCheckedChangedVAL(bool newCheckedValue)
+    {
+        chkaplicavALUABLES = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedCONT(value))" @bind-Value="@chkaplicacontab"
+    void OnCheckedChangedCONT(bool newCheckedValue)
+    {
+        chkaplicacontab = newCheckedValue;
+        CargarPartidas();
+    }
+    //OnCheckedChangedDFT(value))" @bind-Value="@chkaplicadefault"
+    void OnCheckedChangedDFT(bool newCheckedValue)
+    {
+        chkaplicadefault = newCheckedValue;
+        CargarPartidas();
+    }
+    // string GetPartidas()
+    // {
+    //     CargarPartidas();
+    // }
+    async Task CargarDatos()
+    {
+
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            // data = await api.GetFrhpu010Dtos();
+            trhwc010 = (List<Trhwc010Dto>)await api.GetTrhwc010Dtos();
+            trhlw010 = (List<Trhlw010Dto>)await api.GetTrhlw010Dtos();
+            trhwx010 = (List<Trhwx010Dto>)await api.GetTrhwx010Dtos();
+            trhwt010 = (List<Trhwt010Dto>)await api.GetTrhwt010Dtos();
+            trhwi010 = (List<Trhwi010Dto>)await api.GetTrhwi010Dtos();
+            trhtp010 = (List<Trhtp010Dto>)await api.GetTrhtp010Dtos();
+            trhca010 = (List<Trhca010Dto>)await api.GetTrhca010Dtos();
+            trhta010 = (List<Trhta010Dto>)await api.GetTrhta010Dtos();
+            trhwy010 = (List<Trhwy010Dto>)await api.GetTrhwy010Dtos();
+            // data = (List<Trhgr010Dto>)await api.Trhgr010DtoGetAll(Token);
+            editModel = trhwc010.FirstOrDefault() ?? new Trhwc010Dto();
+            imptoItems = trhwc010.Where(t=>t.WcTipoTr=="D").Select(i => new ImpuestoItem(i.WcCodigo, i.WcDescri)).ToList();
+            await CargarPartidas();
+            await InvokeAsync(StateHasChanged);
+        }
+
+    }
+    async Task CargarPartidas()
+    {
+        // var sfs = "14";
+        // var afp = "12";
+        // var chkaplicaISR = "1"; 
+        // var chkExcentoISR = "1";
+        // var chkAplicaInfotep = "1";
+        // var chkAplicaARL = "1";
+        // var chkaplicaIngreg = "1";
+        // var chkAplicaIngNoReg = "1";
+        // var chkaplicainvisibles = "1";
+        // var chkaplicasalud="1"; 
+        // var chkaplicaBeneficio = "1";
+        // var chkAplicaAmortizable = "1";
+        // var chkAPLICAACCIONES = "1";
+        // var chkAPLICAASISTEN = "1";
+        // var chkaplicavALUABLES = "1";
+        // var chkaplicacontab = "1";
+        // var chkaplicadefault="1";
+
+        partidasConcatenadas = Enumerable.Empty<PartidasDto>();
+        if (chkaplicaSfS)
+        {
+            try
+            {
+                var consulta1 =
+                from a in trhwc010
+                join b in trhwx010 on a.WcCodigo equals b.WcCodigo
+                join c in trhlw010 on b.LwCodigo equals c.LwCodigo
+                where c.YxCodigo == "14" && a.WcCodigo != null && b.LwCodigo != null
+                select new PartidasDto
+                  {
+                            WcCodigo = a.WcCodigo,
+                            WcDescri = a.WcDescri,
+                            WcTipo_Tr = a.WcTipoTr,
+                            Aplica = "SFS",
+                            WcInvisib = a.WcInvisib,
+                            WcEstatus = a.WcEstatus
+                        };
+                if (consulta1 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a trhwc010: " + ex.Message);
+            }
+        }
+        if (chkaplicaAFP)
+        {
+            try
+            {
+                var consulta2 =
+                   from a in trhwc010
+                   join b in trhwx010 on a.WcCodigo equals b.WcCodigo
+                   join c in trhlw010 on b.LwCodigo equals c.LwCodigo
+                   where c.YxCodigo == "12" && a.WcCodigo != null && b.LwCodigo != null
+                   select new PartidasDto
+                       {
+                           WcCodigo = a.WcCodigo,
+                            WcDescri = a.WcDescri,
+                            WcTipo_Tr = a.WcTipoTr,
+                            Aplica = "AFP",
+                            WcInvisib = a.WcInvisib,
+                            WcEstatus = a.WcEstatus
+                        };
+                if (consulta2 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a trhwc010: " + ex.Message);
+            }
+        }
+        //catch
+        if (chkaplicaISR)
+        {
+            try
+            {  var consulta3 =
+              from a in trhwc010
+              where !string.IsNullOrEmpty(a.WcIsr)
+              select new PartidasDto
+                    {
+                        WcCodigo = a.WcCodigo,
+                        WcDescri = a.WcDescri,
+                        WcTipo_Tr = a.WcTipoTr,
+                        Aplica = "ISR_Gravado",
+                        WcInvisib = a.WcInvisib,
+                        WcEstatus = a.WcEstatus
+                    };
+                if (consulta3 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta3);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a ISR_Gravado en trhwc010: " + ex.Message);
+            }
+        }
+
+        if (chkExcentoISR)
+
+        {
+
+            try
+
+            {
+
+                var consulta4 =
+
+              from a in trhwc010
+
+              where string.IsNullOrEmpty(a.WcIsr) && a.WcTipoTr == "I" && a.WcInvisib != "S"
+
+              select new PartidasDto
+
+                  {
+
+                      WcCodigo = a.WcCodigo,
+
+                      WcDescri = a.WcDescri,
+
+                      WcTipo_Tr = a.WcTipoTr,
+
+                      Aplica = "ISR_Exento",
+
+                      WcInvisib = a.WcInvisib,
+
+                      WcEstatus = a.WcEstatus
+
+                  };
+
+                if (consulta4 != null)
+
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta4);
+
+            }
+
+            catch (Exception ex)
+
+            {
+
+                Console.WriteLine("Error al acceder a ISR_Excento trhwc010: " + ex.Message);
+
+            }
+
+        }
+        //chkAplicaInfotep
+        if (chkAplicaInfotep)
+        {
+            try
+            {
+                var consulta5 =
+              from a in trhwc010
+              where a.WcInfotep == "S"
+              select new PartidasDto
+                  {
+                      WcCodigo = a.WcCodigo,
+                      WcDescri = a.WcDescri,
+                      WcTipo_Tr = a.WcTipoTr,
+                      Aplica = "Infotep",
+                      WcInvisib = a.WcInvisib,
+                      WcEstatus = a.WcEstatus
+                  };
+                if (consulta5 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta5);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Infotep trhwc010: " + ex.Message);
+            }
+        }
+        //chkAplicaARL
+        if (chkAplicaARL)
+        {
+            try
+            {
+                var consulta6 =
+              from a in trhwc010
+              where a.WcAcci == "S"
+              select new PartidasDto
+                  {
+                      WcCodigo = a.WcCodigo,
+                      WcDescri = a.WcDescri,
+                      WcTipo_Tr = a.WcTipoTr,
+                      Aplica = "Riesgo Laboral",
+                      WcInvisib = a.WcInvisib,
+                      WcEstatus = a.WcEstatus
+                  };
+                if (consulta6 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta6);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Riesgo Laboral trhwc010: " + ex.Message);
+            }
+        }
+        //chkaplicaIngreg
+        if (chkaplicaIngreg)
+        {
+            try
+            {
+                var consulta6 =
+              from a in trhwc010
+              where a.WcIngreg == "S"
+              select new PartidasDto
+              {
+                  WcCodigo = a.WcCodigo,
+                  WcDescri = a.WcDescri,
+                  WcTipo_Tr = a.WcTipoTr,
+                  Aplica = "Regular",
+                  WcInvisib = a.WcInvisib,
+                  WcEstatus = a.WcEstatus
+              };
+                if (consulta6 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta6);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Regular trhwc010: " + ex.Message);
+            }
+        }
+        //chkAplicaIngNoReg
+        if (chkAplicaIngNoReg)
+        {
+            try
+            {
+                var consulta7 =
+              from a in trhwc010
+              where a.WcIngreg != "S" && a.WcTipoTr == "I" && a.WcInvisib != "S"
+              select new PartidasDto
+              {
+                  WcCodigo = a.WcCodigo,
+                  WcDescri = a.WcDescri,
+                  WcTipo_Tr = a.WcTipoTr,
+                  Aplica = "No_Regular",
+                  WcInvisib = a.WcInvisib,
+                  WcEstatus = a.WcEstatus
+              };
+                if (consulta7 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta7);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Ingresos No Regulares trhwc010: " + ex.Message);
+            }
+        }
+        //chkaplicainvisibles
+        if (chkaplicainvisibles)
+        {
+            try
+            {
+                var consulta8 =
+              from a in trhwc010
+              where a.WcInvisib == "S"
+              select new PartidasDto
+              {
+                  WcCodigo = a.WcCodigo,
+                  WcDescri = a.WcDescri,
+                  WcTipo_Tr = a.WcTipoTr,
+                  Aplica = "Aportes",
+                  WcInvisib = a.WcInvisib,
+                  WcEstatus = a.WcEstatus
+              };
+                if (consulta8 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta8);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Aportes trhwc010: " + ex.Message);
+            }
+        }
+        // chkaplicasalud
+        List<PartidasDto> partidaSalud1 = new List<PartidasDto>(); 
+        List<PartidasDto> partidaSalud2 = new List<PartidasDto>();
+
+        if (chkaplicasalud)
+        {
+            try
+            {
+                partidaSalud1 =
+                (from a in trhwc010
+                 join b in trhwt010 on new { a.WcCodigo, a.EmEmpresa } equals new { b.WcCodigo, b.EmEmpresa }
+                 where a.WcCodigo == b.WcCodigo && a.EmEmpresa == b.EmEmpresa
+                 select new PartidasDto
+                {
+                    WcCodigo = a.WcCodigo,
+                    WcDescri = a.WcDescri,
+                    WcTipo_Tr = a.WcTipoTr,
+                    Aplica = "Salud",
+                    WcInvisib = a.WcInvisib,
+                    WcEstatus = a.WcEstatus
+                 }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                // if (consulta9 != null)
+                //     partidasConcatenadas = partidasConcatenadas.Concat(consulta9);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Salud en trhwc010: " + ex.Message);
+            }
+            try
+            {
+                partidaSalud2 =
+                (from a in trhwc010
+                 join b in trhwt010 on new { a.WcCodigo, a.EmEmpresa } equals new { b.WcCodigo, b.EmEmpresa }
+                where a.WcCodigo == b.WcInvisib
+                select new PartidasDto
+                {
+                    WcCodigo = a.WcCodigo,
+                    WcDescri = a.WcDescri,
+                    WcTipo_Tr = a.WcTipoTr,
+                    Aplica = "Salud",
+                    WcInvisib = a.WcInvisib,
+                    WcEstatus = a.WcEstatus
+                 }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                var resultadoFinalSalud = partidaSalud1
+                            .Union(partidaSalud2)
+                            .Distinct()
+                            .ToList();
+                if (resultadoFinalSalud != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(resultadoFinalSalud);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Salud inv en trhwc010: " + ex.Message);
+            }
+        }
+
+        // chkAplicaBeneficio
+        if (chkaplicaBeneficio)
+        {
+            try
+            {
+                var consulta11 =
+               ( from a in trhwc010
+                join b in trhwi010 on a.WcCodigo equals b.WcCodigo
+                where a.WcCodigo == b.WcCodigo
+                select new PartidasDto
+                {
+                    WcCodigo = a.WcCodigo,
+                    WcDescri = a.WcDescri,
+                    WcTipo_Tr = a.WcTipoTr,
+                    Aplica = "Beneficio",
+                    WcInvisib = a.WcInvisib,
+                    WcEstatus = a.WcEstatus
+                }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                if (consulta11 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta11);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Beneficio en trhwc010: " + ex.Message);
+            }
+            try
+            {
+                var consulta12 =
+                (from a in trhwc010
+                join b in trhwi010 on a.WcCodigo equals b.WcInvisib
+                where a.WcCodigo == b.WcInvisib
+                select new PartidasDto
+                {
+                    WcCodigo = a.WcCodigo,
+                    WcDescri = a.WcDescri,
+                    WcTipo_Tr = a.WcTipoTr,
+                    Aplica = "Beneficio",
+                    WcInvisib = a.WcInvisib,
+                    WcEstatus = a.WcEstatus
+                 }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                if (consulta12 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta12);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Beneficio inv en trhwc010: " + ex.Message);
+            }
+        }
+        // chkAplicaAmortizable
+
+        
+        if (chkAplicaAmortizable)
+        {
+            try
+            {
+                var consulta13 =
+               (from a in trhwc010
+                join b in trhtp010 on a.WcCodigo equals b.WcCodigo
+                where a.WcCodigo == b.WcCodigo
+                select new PartidasDto
+                {
+                    WcCodigo = a.WcCodigo,
+                    WcDescri = a.WcDescri,
+                    WcTipo_Tr = a.WcTipoTr,
+                    Aplica = "Amortizables",
+                    WcInvisib = a.WcInvisib,
+                    WcEstatus = a.WcEstatus
+                }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                if (consulta13 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta13);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Amortizables en trhwc010: " + ex.Message);
+            }
+            try
+            {
+                var consulta14 =
+                (from a in trhwc010
+                 join b in trhtp010 on a.WcCodigo equals b.WcInvisib
+                 where a.WcCodigo == b.WcInvisib
+                 select new PartidasDto
+                 {
+                     WcCodigo = a.WcCodigo,
+                     WcDescri = a.WcDescri,
+                     WcTipo_Tr = a.WcTipoTr,
+                     Aplica = "Amortizables",
+                     WcInvisib = a.WcInvisib,
+                     WcEstatus = a.WcEstatus
+                 }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                if (consulta14 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta14);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Amortizables inv en trhwc010: " + ex.Message);
+            }
+        }
+
+        //chkAPLICAACCIONES
+        if (chkAPLICAACCIONES)
+        {
+            try
+            {
+                var consulta15 =
+                   from a in trhwc010
+                   join b in trhca010 on a.WcCodigo equals b.WcCodigo
+                   where a.WcCodigo == b.WcCodigo
+                   select new PartidasDto
+                   {
+                       WcCodigo = a.WcCodigo,
+                       WcDescri = a.WcDescri,
+                       WcTipo_Tr = a.WcTipoTr,
+                       Aplica = "Aplica Acciones",
+                       WcInvisib = a.WcInvisib,
+                       WcEstatus = a.WcEstatus
+                   };
+                if (consulta15 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta15);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Aplica Acciones en trhwc010: " + ex.Message);
+            }
+        }
+
+        //chkAPLICAASISTEN
+        if (chkAPLICAASISTEN)
+        {
+            try
+            {
+                var consulta16 =
+                   from a in trhwc010
+                   join b in trhta010 on a.WcCodigo equals b.WcCodigo
+                   where a.WcCodigo == b.WcCodigo
+                   select new PartidasDto
+                   {
+                       WcCodigo = a.WcCodigo,
+                       WcDescri = a.WcDescri,
+                       WcTipo_Tr = a.WcTipoTr,
+                       Aplica = "Asistencia",
+                       WcInvisib = a.WcInvisib,
+                       WcEstatus = a.WcEstatus
+                   };
+                if (consulta16 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta16);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Aplica Acciones en trhwc010: " + ex.Message);
+            }
+        }
+
+        //chkaplicavALUABLES
+        if (chkaplicavALUABLES)
+        {
+            try
+            {
+                var consulta17 =
+              from a in trhwc010
+              where a.WcOrigen == "C" && a.WcDuracio == "P" && !string.IsNullOrEmpty(a.VfCodigo) && a.WcIsrafp != "S" && a.WcIsrArs != "S" && (a.WcFormaC == "F" || a.WcFormaC == "V") &&  a.WcInvisib != "S"
+              select new PartidasDto
+              {
+                  WcCodigo = a.WcCodigo,
+                  WcDescri = a.WcDescri,
+                  WcTipo_Tr = a.WcTipoTr,
+                  Aplica = "Valuables",
+                  WcInvisib = a.WcInvisib,
+                  WcEstatus = a.WcEstatus
+              };
+                if (consulta17 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta17);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Valuables trhwc010: " + ex.Message);
+            }
+        }
+        //chkaplicacontab
+        if (chkaplicacontab)
+        {
+            try
+            {
+                var consulta18 =
+               (from a in trhwc010
+                join b in trhwy010 on a.WcCodigo equals b.WcCodigo
+                where a.WcCodigo == b.WcCodigo
+                select new PartidasDto
+                {
+                    WcCodigo = a.WcCodigo,
+                    WcDescri = a.WcDescri,
+                    WcTipo_Tr = a.WcTipoTr,
+                    Aplica = "Contabilidad",
+                    WcInvisib = a.WcInvisib,
+                    WcEstatus = a.WcEstatus
+                }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                if (consulta18 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta18);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Beneficio en trhwc010: " + ex.Message);
+            }
+            try
+            {
+                var consulta19 =
+                (from a in trhwc010
+                 join b in trhwi010 on a.WcCodigo equals b.WcInvisib
+                 where a.WcCodigo == b.WcInvisib
+                 select new PartidasDto
+                 {
+                     WcCodigo = a.WcCodigo,
+                     WcDescri = a.WcDescri,
+                     WcTipo_Tr = a.WcTipoTr,
+                     Aplica = "Contabilidad",
+                     WcInvisib = a.WcInvisib,
+                     WcEstatus = a.WcEstatus
+                 }).DistinctBy(p => new { p.WcCodigo, p.Aplica }).ToList();
+                if (consulta19 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta19);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a Contabilidad inv en trhwc010: " + ex.Message);
+            }
+        }
+
+        //chkaplicadefault
+        if (chkaplicadefault)
+        {
+            try
+            {
+                var consulta20 =
+              from a in trhwc010
+              select new PartidasDto
+              {
+                  WcCodigo = a.WcCodigo,
+                  WcDescri = a.WcDescri,
+                  WcTipo_Tr = a.WcTipoTr,
+                  Aplica = "Transacciones",
+                  WcInvisib = a.WcInvisib,
+                  WcEstatus = a.WcEstatus
+              };
+                if (consulta20 != null)
+                    partidasConcatenadas = partidasConcatenadas.Concat(consulta20);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al acceder a ISR_Gravado en trhwc010: " + ex.Message);
+            }
+        }
+
+        partidas = partidasConcatenadas.ToList();
+
+    }
+    // hasta aqui Partidas
+    class ImpuestoItem
+    {
+        public string WcCodigo { get; }
+        public string WcDescri { get; }
+        public ImpuestoItem(string wcCodigo, string wcDescri)
+        {
+            (WcCodigo, WcDescri) = (wcCodigo, wcDescri);
+        }
+    }
+    public class PartidasDto
+    {
+        public string WcCodigo { get; set; }
+        public string WcDescri { get; set; }
+        public string WcTipo_Tr { get; set; }
+        public string WcEstatus { get; set; }
+        public string Aplica { get; set; } // clasificacion de partidas
+        public string WcInvisib { get; set; } // 
+    }
+}
+@* @code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private string Accion { get; set; } = "imprimir";
+
+    // Tab control
+    private int ActiveTabIndex { get; set; } = 0;
+
+    // Campos básicos
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private string DescripcionCortaValue { get; set; } = "";
+    private string AlternoValue { get; set; } = "";
+    private int? SelectedEtiqueta { get; set; }
+    private int OrdenValue { get; set; } = 0;
+    private int PrioridadValue { get; set; } = 0;
+
+    // Radio button values
+    private string TipoValue { get; set; } = "Ingreso";
+    private string EstatusValue { get; set; } = "Activo";
+
+    // Definición - Opciones de origen
+    private bool OrigenCalculoOption { get; set; } = false;
+    private bool OrigenManualOption { get; set; } = false;
+    private bool OrigenFijoOption { get; set; } = false;
+
+    // Definición - Opciones de duración
+    private bool DuracionPermanenteOption { get; set; } = false;
+    private bool DuracionAmortizableOption { get; set; } = false;
+    private bool DuracionContratoOption { get; set; } = false;
+
+    // Definición - Otras opciones
+    private bool InfetepOption { get; set; } = false;
+    private bool RiesgoLaboralOption { get; set; } = false;
+    private bool TransaccionArsOption { get; set; } = false;
+    private bool TransaccionArsOption2 { get; set; } = false;
+    private bool IdssOption { get; set; } = false;
+    private bool UsaCostosOption { get; set; } = false;
+    private bool AjustarReclamarOption { get; set; } = false;
+
+    // Definición - ISR y cálculos
+    private string IsrValue { get; set; } = "";
+    private bool ExencionMensualOption { get; set; } = false;
+    private bool NoProyectarOption { get; set; } = false;
+    private bool ProponerGeneracionOption { get; set; } = false;
+    private bool TransaccionInvisibleOption { get; set; } = false;
+    private bool IngresoRegularOption { get; set; } = false;
+    private bool NoConsideradaIsrOption { get; set; } = false;
+    private bool EnInterinasOption { get; set; } = false;
+    private bool CambiarVerificacionOption { get; set; } = false;
+    private bool PresentarAcumuladoOption { get; set; } = false;
+    private bool NeutralizaOption { get; set; } = false;
+    private bool NetoPeriodoOption { get; set; } = false;
+    private bool ConsiderariaGastoOption { get; set; } = false;
+    private string PresentarValue { get; set; } = "Corriente";
+
+    // Partidas
+    private string PartidaContrariaValue { get; set; } = "";
+    private string ComplementIsrValue { get; set; } = "";
+    private int? SelectedGeneraDesc { get; set; }
+
+    // Listas de datos
+    private List<OptionItem> EtiquetaList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Salario" },
+        new OptionItem { Id = 2, Name = "Bonificación" },
+        new OptionItem { Id = 3, Name = "Descuento" },
+        new OptionItem { Id = 4, Name = "Prestación" }
+    };
+
+    private List<OptionItem> GeneraDescList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Sí" },
+        new OptionItem { Id = 2, Name = "No" },
+        new OptionItem { Id = 3, Name = "Condicional" }
+    };
+
+    private List<RadioOption> TipoOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Ingreso", Text = "Ingreso" },
+        new RadioOption { Value = "Deduccion", Text = "Deducción" }
+    };
+
+    private List<RadioOption> EstatusOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Activo", Text = "Activo" },
+        new RadioOption { Value = "Inactivo", Text = "Inactivo" }
+    };
+
+    private List<RadioOption> PresentarOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Corriente", Text = "Corriente" },
+        new RadioOption { Value = "AFecha", Text = "A la Fecha" }
+    };
+
+    public class OptionItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    public class RadioOption
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    private void OnUndoClick() => Console.WriteLine("Deshacer");
+    private void OnChartClick() => Console.WriteLine("Gráfico");
+    private void OnListClick() => Console.WriteLine("Lista");
+    private void OnMenuClick() => Console.WriteLine("Menú");
+    private void OnSearchPartidaClick() => Console.WriteLine("Buscar partida");
+    private void OnSearchComplementClick() => Console.WriteLine("Buscar complemento");
+    private void OnBeneficioClick() => Console.WriteLine("Beneficio");
+    private void OnTipoPlanClick() => Console.WriteLine("Tipo Plan");
+    private void OnPlanSaludClick() => Console.WriteLine("Plan Salud");
+    private void OnContabilidadClick() => Console.WriteLine("Contabilidad");
+    private void OnContratosClick() => Console.WriteLine("Contratos");
+    private void OnAccionesClick() => Console.WriteLine("Acciones");
+    private void OnAsistenciaClick() => Console.WriteLine("Asistencia");
+    private void OnRelationSettingsClick() => Console.WriteLine("Configuración de relaciones");
+
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Tipos de Transacciones guardado!");
+    }
+} *@

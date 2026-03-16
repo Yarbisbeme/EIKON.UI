@@ -1,0 +1,387 @@
+/* Contenedor principal */
+.frhrj109-container {
+    display: flex;
+    gap: 0;
+    width: 100%;
+}
+
+/* Panel izquierdo */
+.left-panel {
+    width: 200px;
+    background-color: #f8f9fa;
+    border: 1px solid #bfbfbf;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.checkboxes-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkboxes-section ::deep .dx-checkbox {
+    margin: 0;
+}
+
+.checkboxes-section ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.checkboxes-section ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.checkboxes-section ::deep .dx-checkbox-text {
+    font-size: 13px;
+    color: #33363f;
+    font-weight: 500;
+}
+
+/* Importar section */
+.importar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.import-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 13px;
+}
+
+.import-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.import-check ::deep .dx-checkbox {
+    margin: 0;
+}
+
+.import-check ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.import-check ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.import-check ::deep .dx-checkbox-text {
+    font-size: 12px;
+    color: #33363f;
+}
+
+/* Contenido principal */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+}
+
+/* Top filters */
+.top-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 20px;
+}
+
+.date-fields {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-field label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.month-checks {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.month-checks ::deep .dx-checkbox {
+    margin: 0;
+}
+
+.month-checks ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.month-checks ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.month-checks ::deep .dx-checkbox-text {
+    font-size: 13px;
+    color: #33363f;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-icon {
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+}
+
+.btn-icon ::deep .dx-icon {
+    font-size: 14px;
+}
+
+/* Grid section */
+.grid-section {
+    flex: 1;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.carnes-grid {
+    min-height: 350px;
+}
+
+/* DevExpress Grid overrides */
+.frhrj109-container ::deep .dx-datagrid {
+    border: none !important;
+}
+
+.frhrj109-container ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+    font-weight: 600;
+}
+
+.frhrj109-container ::deep .dx-header-row td {
+    color: #33363f !important;
+    font-size: 12px;
+    border-bottom: 1px solid #bfbfbf;
+    padding: 6px 4px;
+}
+
+.frhrj109-container ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.frhrj109-container ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+.frhrj109-container ::deep .dx-datagrid-rowsview .dx-selection.dx-row {
+    background-color: #e9ecef !important;
+}
+
+/* Bottom section */
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.bottom-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field-row {
+    display: flex;
+    gap: 15px;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.input-field label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 13px;
+}
+
+.percentage-fields {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.perc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100px;
+}
+
+.perc-field label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 12px;
+}
+
+.bottom-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-action {
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+}
+
+.btn-action ::deep .dx-icon {
+    font-size: 16px;
+}
+
+/* DevExpress TextBox overrides */
+.frhrj109-container ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhrj109-container ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhrj109-container ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+.frhrj109-container ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 13px;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .date-fields {
+        flex-wrap: wrap;
+    }
+
+    .percentage-fields {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhrj109-container {
+        flex-direction: column;
+    }
+
+    .left-panel {
+        width: 100%;
+    }
+
+    .top-filters {
+        flex-direction: column;
+    }
+
+    .date-fields {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .action-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bottom-section {
+        flex-direction: column;
+    }
+
+    .field-row {
+        flex-direction: column;
+    }
+
+    .percentage-fields {
+        width: 100%;
+    }
+
+    .perc-field {
+        width: calc(50% - 5px);
+    }
+
+    .bottom-actions {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .carnes-grid {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .left-panel {
+        padding: 10px;
+    }
+
+    .filter-field label,
+    .input-field label {
+        font-size: 12px;
+    }
+
+    .btn-icon {
+        min-width: 28px;
+        height: 28px;
+    }
+
+    .btn-action {
+        min-width: 32px;
+        height: 32px;
+    }
+
+    .perc-field {
+        width: 100%;
+    }
+
+    .frhrj109-container ::deep .dx-texteditor-input {
+        font-size: 12px !important;
+    }
+
+    .carnes-grid {
+        min-height: 200px;
+    }
+}

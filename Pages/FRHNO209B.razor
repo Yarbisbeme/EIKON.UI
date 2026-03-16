@@ -1,0 +1,517 @@
+@page "/FRHNO209B"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO209B - Importar transacciones Pre-Generación" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal de Campos -->
+        <div class="main-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Formato</label>
+                    <DxTextBox @bind-Text="@FormatoValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchFormatoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Transacción</label>
+                    <DxTextBox @bind-Text="@TransaccionValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchTransaccionClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Nómina</label>
+                    <DxComboBox Data="@NominasList" 
+                               @bind-Value="@SelectedNomina" 
+                               NullText="Seleccionar nómina"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+                <div class="checkbox-section">
+                    <DxCheckBox @bind-Checked="@EmpleadoCheckbox">Empleado</DxCheckBox>
+                </div>
+            </div>
+
+            <!-- Cuarta Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Período</label>
+                    <DxComboBox Data="@PeriodosList" 
+                               @bind-Value="@SelectedPeriodo" 
+                               NullText="Seleccionar período"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <!-- Quinta Fila -->
+            <div class="form-row full-width">
+                <div class="input-field">
+                    <label>Archivo</label>
+                    <DxTextBox @bind-Text="@ArchivoValue" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Opciones y Checkboxes -->
+        <div class="options-section">
+            <!-- Primera Fila de Opciones -->
+            <div class="options-row">
+                <div class="checkbox-group left">
+                    <DxCheckBox @bind-Checked="@OkOption">OK</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@RechazosOption">Rechazos</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ErrorEmpleadosOption">Error en Empleados</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ErrorTransaccionesOption">Error en Transacciones</DxCheckBox>
+                </div>
+            </div>
+
+            <!-- Segunda Fila de Opciones -->
+            <div class="options-row">
+                <div class="checkbox-group left">
+                    <DxCheckBox @bind-Checked="@NominaPrincipalOption">Nómina Principal</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@SobreescribirDatosOption">Sobreescribir datos</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@LimpiarTransaccionOption">Limpiar transacción</DxCheckBox>
+                </div>
+                
+                <div class="aplicar-section">
+                    <span class="aplicar-label">Aplicar a nómina</span>
+                </div>
+            </div>
+
+            <!-- Tercera Fila de Opciones -->
+            <div class="options-row">
+                <div class="status-checkboxes">
+                    <DxCheckBox @bind-Checked="@RegularOption">Regular</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@TemporeroOption">Temporero</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ExempleadoOption">Exempleado</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@PensionadosOption">Pensionados</DxCheckBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Reporte -->
+        <div class="report-section">
+            <div class="report-controls">
+                <div class="input-field wide">
+                    <label>Reporte</label>
+                    <DxTextBox @bind-Text="@ReporteValue" />
+                </div>
+                <div class="report-actions">
+                    <DxButton IconCssClass="fi fi-rr-print" 
+                             CssClass="icon-btn info-btn" 
+                             Click="@OnPrintReportClick" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Sección principal */
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    .form-row.full-width {
+        width: 100%;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    /* Checkbox section */
+    .checkbox-section {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 8px;
+        margin-left: 15px;
+    }
+
+    /* Sección de opciones */
+    .options-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .options-row {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .checkbox-group {
+        display: flex;
+        gap: 15px;
+    }
+
+    .checkbox-group.left {
+        flex: 1;
+    }
+
+    .checkbox-group.right {
+        flex: 1;
+        justify-content: flex-start;
+    }
+
+    .aplicar-section {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        justify-content: flex-end;
+    }
+
+    .aplicar-label {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .status-checkboxes {
+        display: flex;
+        gap: 20px;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    /* Sección de reporte */
+    .report-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .report-controls {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .report-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* Botones de acción */
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .error-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .error-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .main-section,
+        .options-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .form-row,
+        .options-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        .checkbox-group.right,
+        .aplicar-section {
+            justify-content: flex-start;
+        }
+
+        .status-checkboxes {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-section {
+            margin-left: 0;
+            margin-bottom: 0;
+        }
+
+        .report-controls {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .report-actions {
+            justify-content: center;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .main-section,
+        .options-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .checkbox-group {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .action-btn,
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string FormatoValue { get; set; } = "";
+    private string TransaccionValue { get; set; } = "";
+    private int? SelectedNomina { get; set; }
+    private bool EmpleadoCheckbox { get; set; } = false;
+    private int? SelectedPeriodo { get; set; }
+    private string ArchivoValue { get; set; } = "";
+    private string ReporteValue { get; set; } = "";
+    
+    // Opciones de checkboxes
+    private bool OkOption { get; set; } = false;
+    private bool RechazosOption { get; set; } = false;
+    private bool ErrorEmpleadosOption { get; set; } = false;
+    private bool ErrorTransaccionesOption { get; set; } = false;
+    private bool NominaPrincipalOption { get; set; } = false;
+    private bool SobreescribirDatosOption { get; set; } = true;
+    private bool LimpiarTransaccionOption { get; set; } = false;
+    
+    // Estados de empleados
+    private bool RegularOption { get; set; } = true;
+    private bool TemporeroOption { get; set; } = true;
+    private bool ExempleadoOption { get; set; } = false;
+    private bool PensionadosOption { get; set; } = true;
+    
+    // Listas de datos
+    private List<NominaItem> NominasList = new List<NominaItem>
+    {
+        new NominaItem { Id = 1, Name = "NOMINA ADMINISTRATIVA" },
+        new NominaItem { Id = 2, Name = "NOMINA OPERATIVA" },
+        new NominaItem { Id = 3, Name = "NOMINA EJECUTIVA" },
+        new NominaItem { Id = 4, Name = "NOMINA ESPECIAL" },
+        new NominaItem { Id = 5, Name = "NOMINA TEMPORAL" }
+    };
+
+    private List<PeriodoItem> PeriodosList = new List<PeriodoItem>
+    {
+        new PeriodoItem { Id = 1, Name = "PERIODO 01 - ENERO" },
+        new PeriodoItem { Id = 2, Name = "PERIODO 02 - FEBRERO" },
+        new PeriodoItem { Id = 3, Name = "PERIODO 03 - MARZO" },
+        new PeriodoItem { Id = 4, Name = "PERIODO 04 - ABRIL" },
+        new PeriodoItem { Id = 5, Name = "PERIODO 05 - MAYO" },
+        new PeriodoItem { Id = 6, Name = "PERIODO 06 - JUNIO" },
+        new PeriodoItem { Id = 7, Name = "PERIODO 07 - JULIO" },
+        new PeriodoItem { Id = 8, Name = "PERIODO 08 - AGOSTO" },
+        new PeriodoItem { Id = 9, Name = "PERIODO 09 - SEPTIEMBRE" },
+        new PeriodoItem { Id = 10, Name = "PERIODO 10 - OCTUBRE" },
+        new PeriodoItem { Id = 11, Name = "PERIODO 11 - NOVIEMBRE" },
+        new PeriodoItem { Id = 12, Name = "PERIODO 12 - DICIEMBRE" }
+    };
+    
+    public class NominaItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class PeriodoItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    private void OnSearchFormatoClick()
+    {
+        Console.WriteLine($"Buscando formato: {FormatoValue}");
+    }
+    
+    private void OnSearchTransaccionClick()
+    {
+        Console.WriteLine($"Buscando transacción: {TransaccionValue}");
+    }
+    
+    private void OnValidateClick()
+    {
+        Console.WriteLine("Validando importación");
+    }
+    
+    private void OnCancelClick()
+    {
+        Console.WriteLine("Cancelando importación");
+    }
+    
+    private void OnSettingsClick()
+    {
+        Console.WriteLine("Abriendo configuración");
+    }
+    
+    private void OnValidateReportClick()
+    {
+        Console.WriteLine($"Validando reporte: {ReporteValue}");
+    }
+    
+    private void OnPrintReportClick()
+    {
+        Console.WriteLine("Imprimiendo reporte");
+    }
+    
+    private void OnConfigReportClick()
+    {
+        Console.WriteLine("Configurando reporte");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Importación de transacciones guardada!");
+    }
+}

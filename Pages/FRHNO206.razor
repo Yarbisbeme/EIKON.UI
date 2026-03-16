@@ -1,0 +1,337 @@
+@page "/FRHNO206"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO206 - Cierre de Período" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal de Campos -->
+        <div class="main-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Nómina</label>
+                    <DxTextBox @bind-Text="@NominaValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchNominaClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Descripción</label>
+                    <DxTextBox @bind-Text="@DescripcionValue" />
+                </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Año Fiscal</label>
+                    <DxSpinEdit @bind-Value="@AnoFiscalValue" 
+                               MinValue="2000" 
+                               MaxValue="2099" />
+                </div>
+                <div class="input-field">
+                    <label>Período</label>
+                    <DxSpinEdit @bind-Value="@PeriodoValue" 
+                               MinValue="1" 
+                               MaxValue="12" />
+                </div>
+            </div>
+
+            <!-- Cuarta Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Período desde</label>
+                    <DxSpinEdit @bind-Value="@PeriodoDesdeValue" 
+                               MinValue="1" 
+                               MaxValue="12" />
+                </div>
+                <div class="input-field">
+                    <label>Hasta</label>
+                    <DxSpinEdit @bind-Value="@HastaValue" 
+                               MinValue="1" 
+                               MaxValue="12" />
+                </div>
+            </div>
+
+            <!-- Quinta Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Fecha Corte</label>
+                    <DxDateEdit @bind-Date="@FechaCorteValue" 
+                               NullText="dd/mm/yyyy" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Reporte -->
+        <div class="report-section">
+            <div class="report-controls">
+                <div class="input-field wide">
+                    <label>Reporte</label>
+                    <DxComboBox Data="@ReportesList" 
+                               @bind-Value="@SelectedReporte" 
+                               NullText="Seleccionar reporte"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+                <div class="report-actions">
+                    <DxButton IconCssClass="fi fi-rr-print" 
+                             CssClass="icon-btn info-btn" 
+                             Click="@OnPrintReportClick" />
+                    <DxButton IconCssClass="fi fi-rr-file" 
+                             CssClass="icon-btn secondary-btn" 
+                             Click="@OnFileReportClick" />
+                    <DxButton IconCssClass="fi fi-rr-globe" 
+                             CssClass="icon-btn success-btn" 
+                             Click="@OnGlobeReportClick" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Sección principal */
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 0;
+        border: 1px solid transparent;
+        border-radius: 8px;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    /* Sección de reporte */
+    .report-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .report-controls {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .report-actions {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+    }
+
+    /* Botones de acción */
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-date-edit,
+    .dx-spin-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-date-edit-container,
+    .dx-spin-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-date-edit-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .main-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-controls {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .report-actions {
+            justify-content: center;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .main-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+        }
+
+        .report-actions {
+            gap: 6px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string NominaValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private int AnoFiscalValue { get; set; } = DateTime.Now.Year;
+    private int PeriodoValue { get; set; } = DateTime.Now.Month;
+    private int PeriodoDesdeValue { get; set; } = 1;
+    private int HastaValue { get; set; } = DateTime.Now.Month;
+    private DateTime? FechaCorteValue { get; set; }
+    private int? SelectedReporte { get; set; }
+    
+    // Listas de datos
+    private List<ReporteItem> ReportesList = new List<ReporteItem>
+    {
+        new ReporteItem { Id = 1, Name = "REPORTE CIERRE PERÍODO" },
+        new ReporteItem { Id = 2, Name = "RESUMEN DE CIERRE" },
+        new ReporteItem { Id = 3, Name = "DETALLE DE TRANSACCIONES" },
+        new ReporteItem { Id = 4, Name = "ESTADÍSTICAS DE NÓMINA" },
+        new ReporteItem { Id = 5, Name = "REPORTE COMPARATIVO" }
+    };
+    
+    public class ReporteItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    private void OnSearchNominaClick()
+    {
+        Console.WriteLine($"Buscando nómina: {NominaValue}");
+    }
+    
+    private void OnPrintReportClick()
+    {
+        Console.WriteLine("Imprimiendo reporte de cierre");
+    }
+    
+    private void OnFileReportClick()
+    {
+        Console.WriteLine("Generando archivo de reporte");
+    }
+    
+    private void OnGlobeReportClick()
+    {
+        Console.WriteLine("Publicando reporte web");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Cierre de Período guardado!");
+    }
+}

@@ -1,0 +1,107 @@
+﻿@page "/WFRHSU104"
+@layout MainLayout
+@page "/treeview-guardar"
+@using DevExpress.Blazor
+
+<h3>TreeView — Selección y Guardado</h3>
+<div class="cw-240">
+    <h5 class="card-title">Chemical elements</h5>
+    
+</div>
+<div class="row">
+    <div class="col-6">
+        <h4>Opciones disponibles</h4>
+        <DxTreeView AllowSelectNodes="true" Data="@TreeData"
+                    AnimationType="LayoutAnimationType.Slide"
+                    ShowCheckBoxes="true"
+                    SelectionMode="TreeViewSelectionMode.Multiple"
+                    @bind-SelectedItems="SelectedItems"
+                    SelectionChanged="@SelectionChanged">
+            <DataMappings>
+                <DxTreeViewDataMapping Children="Children"
+                                       Text="Text" />
+            
+
+            </DataMappings>
+        </DxTreeView>
+
+    </div>
+
+    <div class="col-6">
+        @* <button class="btn btn-primary mb-2" @onclick="GuardarSeleccion">Guardar selección</button> *@
+
+        <h4>Opciones guardadas</h4>
+        <DxTreeView AllowSelectNodes="true" Data="@ListaSeleccionada"
+                    AnimationType="LayoutAnimationType.Slide"
+                    ShowCheckBoxes="true"
+                    SelectionMode="TreeViewSelectionMode.Multiple"
+                  
+                    SelectionChanged="@SelectionChanged">
+            <DataMappings>
+                <DxTreeViewDataMapping Children="Children"
+                                       Text="Text" />
+
+
+            </DataMappings>
+        </DxTreeView>
+    </div>
+</div>
+
+@code {
+    // Datos del árbol inicial
+    List<TreeNode> TreeData { get; set; }
+
+    // Elementos actualmente seleccionados
+    List<TreeNode> SelectedItems { get; set; } = new();
+
+    // Lista final persistida
+    List<TreeNode> ListaSeleccionada { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        TreeData = new()
+        {
+            new TreeNode { Id = 1, Text = "Frutas", Children = new()
+            {
+                new TreeNode { Id = 11, Text = "Manzana" },
+                new TreeNode { Id = 12, Text = "Naranja" },
+                new TreeNode { Id = 13, Text = "Pera" }
+            }},
+            new TreeNode { Id = 2, Text = "Verduras", Children = new()
+            {
+                new TreeNode { Id = 21, Text = "Zanahoria" },
+                new TreeNode { Id = 22, Text = "Lechuga" },
+                new TreeNode { Id = 23, Text = "Pepino" }
+            }}
+        };
+    }
+
+    void GuardarSeleccion()
+    {
+        // Clonar los seleccionados para evitar referencias compartidas
+        ListaSeleccionada = SelectedItems
+            .Select(x => new TreeNode { Id = x.Id, Text = x.Text })
+            .ToList();
+    }
+    void SelectionChanged(TreeViewNodeEventArgs e)
+    {
+        var itsel = e.NodeInfo.DataItem;
+        ListaSeleccionada.Add((TreeNode)itsel);
+        // foreach (var item in e.AddedItems)
+        // {
+        //     if (!listaSeleccionada.Any(x => x.Id == item.Id))
+        //         listaSeleccionada.Add(item);
+        // }
+
+        // foreach (var item in e.RemovedItems)
+        // {
+        //     listaSeleccionada.RemoveAll(x => x.Id == item.Id);
+        // }
+    }
+    public class TreeNode
+    {
+        public int Id { get; set; }
+        public string Text { get; set; }
+        public List<TreeNode> Children { get; set; } = new();
+    }
+}

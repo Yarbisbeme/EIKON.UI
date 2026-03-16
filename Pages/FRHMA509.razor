@@ -1,0 +1,288 @@
+@layout MainLayout
+@page "/FRHMA509"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA509 - Editor de Fórmulas" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma509-form">
+
+        <!-- Fila 1: Código Fórmula -->
+        <div class="input" style="width:30%;">
+            <label>Código Fórmula</label>
+            <DxTextBox @bind-Text="@CodigoFormula" NullText="Código">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchFormula" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Fila 2: Nombre fórmula -->
+        <div class="input nombre-field">
+            <label>Nombre fórmula</label>
+            <DxTextBox @bind-Text="@NombreFormula" NullText="Nombre" />
+        </div>
+
+        <!-- Editor de fórmula + Calculadora (2 columnas) -->
+        <div class="editor-calculator-row">
+            <!-- Columna izquierda: Editor de fórmula -->
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <div class="input descripcion-field">
+                    <label>Descripción de fórmula</label>
+                    <DxTextBox @bind-Text="@DescripcionFormula" CssClass="formula-desc" NullText="Descripción" />
+                </div>
+                <div class="editor-section">
+                    <label>Edite aquí su fórmula</label>
+                    <DxMemo @bind-Text="@FormulaTexto"
+                            Rows="12"
+                            NullText="Escriba la fórmula aquí..."
+                            CssClass="formula-editor" />
+                </div>
+
+            </div>
+            <!-- Columna derecha: Calculadora numérica -->
+            <div class="calculator-section">
+                <div class="calculator-grid">
+                    <!-- Fila 1 -->
+                    <button class="calc-btn" @onclick='() => AgregarTexto("7")'>7</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto("8")'>8</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto("9")'>9</button>
+                    <button class="calc-btn operator" @onclick='() => AgregarTexto("+")'>+</button>
+
+                    <!-- Fila 2 -->
+                    <button class="calc-btn" @onclick='() => AgregarTexto("4")'>4</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto("5")'>5</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto("6")'>6</button>
+                    <button class="calc-btn operator" @onclick='() => AgregarTexto("-")'>-</button>
+
+                    <!-- Fila 3 -->
+                    <button class="calc-btn" @onclick='() => AgregarTexto("1")'>1</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto("2")'>2</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto("3")'>3</button>
+                    <button class="calc-btn operator" @onclick='() => AgregarTexto("*")'>*</button>
+
+                    <!-- Fila 4 -->
+                    <button class="calc-btn" @onclick='() => AgregarTexto("0")'>0</button>
+                    <button class="calc-btn" @onclick='() => AgregarTexto(".")'>.</button>
+                    <button class="calc-btn operator" @onclick='() => AgregarTexto("=")'>=</button>
+                    <button class="calc-btn operator" @onclick='() => AgregarTexto("/")'>/ </button>
+
+                    <!-- Fila 5 -->
+                    <button class="calc-btn special" @onclick='() => AgregarTexto("(")'>(</button>
+                    <button class="calc-btn special" @onclick='() => AgregarTexto(")")'>)</button>
+                    <button class="calc-btn special span-2" @onclick='() => AgregarTexto(",")'>,</button>
+                </div>
+
+                <DxButton @onclick="OnProbarFormula">
+                    Probar fórmula
+                </DxButton>
+            </div>
+        </div>
+
+        <!-- 3 columnas paralelas: Fórmulas existen | Variables de Datos | Funciones -->
+        <div class="three-columns-section">
+
+            <!-- Columna 1: Fórmulas existen -->
+            <div class="column">
+                <div class="column-header">Fórmulas existen</div>
+                <div class="column-list">
+                    @foreach (var formula in FormulasUsadas)
+                    {
+                        <div class="list-item" @onclick="() => SeleccionarFormula(formula)">
+                            @formula
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Columna 2: Variables de Datos -->
+            <div class="column">
+                <div class="column-header">Variables de Datos</div>
+                <div class="column-list">
+                    @foreach (var variable in VariablesCalculo)
+                    {
+                        <div class="list-item" @onclick="() => SeleccionarFormula(variable.Nombre)">
+                            @variable.Nombre
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Columna 3: Funciones -->
+            <div class="column">
+                <div class="column-header">Funciones</div>
+                <div class="column-list">
+                    @foreach (var funcion in Funciones)
+                    {
+                        <div class="list-item" @onclick="() => SeleccionarFormula(funcion.Firma)">
+                            @funcion.Firma
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Checkboxes inferiores -->
+        <div class="bottom-checkboxes">
+            <DxCheckBox @bind-Checked="@FormulaNueva">Usar en cartas</DxCheckBox>
+            <DxCheckBox @bind-Checked="@LeerEnAcumulados">indexar sueldo</DxCheckBox>
+            <DxCheckBox @bind-Checked="@LeerEnAcumulados">Formula Lógica</DxCheckBox>
+            <DxCheckBox @bind-Checked="@LeerEnAcumulados">Usar en Aumentos Masivos</DxCheckBox>
+        </div>
+
+    </div>
+</div>
+
+<!-- Popup - Prueba de las fórmulas -->
+<DxPopup @bind-Visible="@ShowTestDialog"
+         HeaderText="SIRH - Prueba de las fórmulas"
+         Width="500px"
+         CloseOnEscape="true"
+         ShowCloseButton="true">
+    <BodyTemplate>
+        <div class="test-dialog">
+            <div class="formula-title">
+                @NombreFormula
+            </div>
+
+            <div class="input">
+                <label>Fórmula</label>
+                <DxTextBox @bind-Text="@FormulaTest" ReadOnly="true" CssClass="formula-readonly" />
+            </div>
+
+            <div class="input">
+                <label>Número</label>
+                <DxTextBox @bind-Text="@NumeroTest" NullText="Número">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+
+            <div class="input">
+                <label>Nombre</label>
+                <DxTextBox @bind-Text="@NombreTest" NullText="Nombre del empleado" />
+            </div>
+
+            <div class="input">
+                <label>Resultado</label>
+                <DxTextBox @bind-Text="@ResultadoTest" ReadOnly="true" CssClass="resultado-readonly" />
+            </div>
+        </div>
+    </BodyTemplate>
+</DxPopup>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Campos básicos
+    private string CodigoFormula { get; set; } = string.Empty;
+    private string NombreFormula { get; set; } = string.Empty;
+    private string DescripcionFormula { get; set; } = string.Empty;
+    private string FormulaTexto { get; set; } = string.Empty;
+
+    // Checkboxes
+    private bool FormulaNueva { get; set; } = false;
+    private bool LeerEnAcumulados { get; set; } = false;
+
+    // Tabs
+    private int ActiveTabIndex { get; set; } = 0;
+
+    // Popup Test Dialog
+    private bool ShowTestDialog { get; set; } = false;
+    private string FormulaTest { get; set; } = "ADELANTO_COMISIONES";
+    private string NumeroTest { get; set; } = string.Empty;
+    private string NombreTest { get; set; } = string.Empty;
+    private string ResultadoTest { get; set; } = string.Empty;
+
+    // Fórmulas usadas
+    private List<string> FormulasUsadas = new List<string>
+    {
+        "ADELANTO_DESCONTAR",
+        "ADELANTO_ADD_LEGAL",
+        "ACUMULA_ADD_LEGAL1",
+        "ACUMULA_ADD_COMISIONES",
+        "APE_APLICADO",
+        "APE_DEDUCIDO",
+        "APE_TOPE",
+        "ASO_MES_ANTERIOR"
+    };
+
+    // Variables de cálculo
+    private List<Variable> VariablesCalculo = new List<Variable>
+    {
+        new Variable { Nombre = "RELACION_LABORAL" },
+        new Variable { Nombre = "TIPO_CONTRATO" },
+        new Variable { Nombre = "PRESTAMO" },
+        new Variable { Nombre = "DATOS" },
+        new Variable { Nombre = "EFECTIVIDAD_EMPRESA" },
+        new Variable { Nombre = "ESTADO_DEL_DIA" },
+        new Variable { Nombre = "NUMERO_EMPLEADO" },
+        new Variable { Nombre = "ACTUALIZADO" }
+    };
+
+    // Funciones
+    private List<Funcion> Funciones = new List<Funcion>
+    {
+        new Funcion { Firma = "RETENER(nvarchar(15),...)" },
+        new Funcion { Firma = "IIF(boolean, False...)" },
+        new Funcion { Firma = "IFThen(x2Verdadero False...)" },
+        new Funcion { Firma = "DEVOLVER()" },
+        new Funcion { Firma = "IFThen()" },
+        new Funcion { Firma = "Prometo(Total,Días,Mone...)" },
+        new Funcion { Firma = "Diago(TPlan,IFPrueba)" },
+        new Funcion { Firma = "WORate(code)" }
+    };
+
+    // Event handlers
+    private void OnSearchFormula() { }
+    private void OnSearchEmpleado() { }
+
+    private void AgregarTexto(string texto)
+    {
+        FormulaTexto += texto;
+    }
+
+    private void SeleccionarFormula(string formula)
+    {
+        FormulaTexto += formula;
+    }
+
+    private void OnProbarFormula()
+    {
+        FormulaTest = FormulaTexto;
+        ShowTestDialog = true;
+    }
+
+    private void HandleAdd() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+
+    public class Variable
+    {
+        public string Nombre { get; set; } = string.Empty;
+    }
+
+    public class Funcion
+    {
+        public string Firma { get; set; } = string.Empty;
+    }
+}

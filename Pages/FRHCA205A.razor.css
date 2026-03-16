@@ -1,0 +1,277 @@
+/* Contenedor principal */
+.frhca205a-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+/* Top section */
+.top-section {
+    display: flex;
+    gap: 0;
+    margin-bottom:10px;
+}
+
+.left-radio-panel {
+    flex: 0 0 180px;
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    justify-content: center;
+    padding-right: 20px;
+    border-right: 1px solid #e5e5ea;
+}
+
+.radio-vertical ::deep .dx-radiogroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-vertical ::deep .dx-radiogroup-item {
+    margin: 0;
+}
+
+.radio-vertical ::deep .dx-radiobutton-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.radio-vertical ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.radio-vertical ::deep .dx-radiobutton-text {
+    font-size: 13px;
+    color: #33363f;
+    font-weight: 500;
+}
+
+.right-filters-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 20px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-row label {
+    min-width: 80px;
+    font-weight: 500;
+    color: #33363f;
+    font-size: 13px;
+}
+
+.filter-row ::deep .dx-textbox {
+    flex: 1;
+    max-width: 300px;
+}
+
+/* Grid section */
+.grid-section {
+    border: 1px solid #bfbfbf;
+    border-top: none;
+    min-height: 300px;
+}
+
+.empleados-grid {
+    height: 100%;
+    min-height: 300px;
+}
+
+.empleados-grid ::deep .dx-datagrid {
+    border: none !important;
+}
+
+.empleados-grid ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+}
+
+.empleados-grid ::deep .dx-header-row td {
+    color: #33363f !important;
+    font-size: 13px;
+    border-bottom: 1px solid #bfbfbf;
+    padding: 8px;
+}
+
+.empleados-grid ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.empleados-grid ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+.empleados-grid ::deep .dx-datagrid-rowsview .dx-selection.dx-row {
+    background-color: #e9ecef !important;
+}
+
+.empleados-grid ::deep .dx-data-row td {
+    font-size: 13px;
+    padding: 6px 8px;
+}
+
+/* Bottom bar */
+.bottom-bar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top:10px;
+}
+
+.nuevo-supervisor-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.nuevo-supervisor-field label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.supervisor-input {
+    flex: 1;
+    max-width: 350px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.btn-action {
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+}
+
+.btn-action ::deep .dx-icon {
+    font-size: 16px;
+}
+
+/* DevExpress overrides */
+.frhca205a-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhca205a-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhca205a-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+.frhca205a-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 13px;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .top-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .left-radio-panel {
+        flex: 1;
+        border-right: none;
+        border-bottom: 1px solid #bfbfbf;
+        padding-right: 0;
+        padding-bottom: 15px;
+    }
+
+    .right-filters-panel {
+        padding-left: 0;
+    }
+
+    .filter-row ::deep .dx-textbox {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-row label {
+        min-width: auto;
+    }
+
+    .bottom-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nuevo-supervisor-field {
+        width: 100%;
+    }
+
+    .supervisor-input {
+        max-width: 100%;
+    }
+
+    .action-buttons {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .empleados-grid {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-section {
+        padding: 12px;
+    }
+
+    .bottom-bar {
+        padding: 12px;
+    }
+
+    .btn-action {
+        min-width: 32px;
+        height: 32px;
+    }
+
+    .radio-vertical ::deep .dx-radiobutton-text {
+        font-size: 12px;
+    }
+
+    .filter-row label,
+    .nuevo-supervisor-field label {
+        font-size: 12px;
+    }
+
+    .frhca205a-form ::deep .dx-texteditor-input {
+        font-size: 12px !important;
+    }
+
+    .empleados-grid {
+        min-height: 200px;
+    }
+
+    .empleados-grid ::deep .dx-data-row td {
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,161 @@
+@layout MainLayout
+@page "/FRHMA523"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA523 - Activos físicos destinados a empleados" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma523-form">
+
+        <!-- Código -->
+        <div class="input codigo-field">
+            <label>Código</label>
+            <DxTextBox @bind-Text="@Codigo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Descripción -->
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <!-- Tipo de Activo -->
+        <div class="input">
+            <label>Tipo de Activo</label>
+            <DxComboBox Data="@TiposActivo"
+                        @bind-Value="@TipoActivoSeleccionado"
+                        NullText="Seleccione un tipo de activo"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+            </DxComboBox>
+        </div>
+
+        <!-- Dual Row: Costo promedio + Punto de Reorden -->
+        <div class="dual-input-row">
+            <div class="input">
+                <label>Costo promedio</label>
+                <DxSpinEdit @bind-Value="@CostoPromedio"
+                            MinValue="0"
+                            DisplayFormat="N2"
+                            NullText="0.00" />
+            </div>
+            <div class="input">
+                <label>Punto de Reorden</label>
+                <DxTextBox @bind-Text="@PuntoReorden" NullText="Punto de Reorden" />
+            </div>
+        </div>
+
+        <!-- Descripción detallada -->
+        <div class="input">
+            <label>Descripción detallada</label>
+            <DxMemo @bind-Text="@DescripcionDetallada"
+                    Rows="8"
+                    NullText="Descripción detallada"
+                    CssClass="descripcion-memo" />
+        </div>
+
+        <!-- Bottom Section: Checkboxes + Fields with Days -->
+        <div class="bottom-section">
+            <!-- Left side: Checkboxes -->
+            <div class="checkboxes-group">
+                <DxCheckBox @bind-Checked="@EsInventariable"
+                            CssClass="custom-checkbox">Es Inventariable</DxCheckBox>
+                <DxCheckBox @bind-Checked="@Activo"
+                            CssClass="custom-checkbox">Activo</DxCheckBox>
+            </div>
+
+            <!-- Right side: Fields with Days suffix -->
+            <div class="days-fields-group">
+                <div class="field-with-suffix">
+                    <label>Primera Entrega</label>
+                    <div class="input-with-suffix">
+                        <DxSpinEdit @bind-Value="@PrimeraEntrega"
+                                    MinValue="0"
+                                    DisplayFormat="N0"
+                                    NullText="0"
+                                    CssClass="days-input" />
+                        <span class="suffix-label">Días</span>
+                    </div>
+                </div>
+                <div class="field-with-suffix">
+                    <label>Vencimiento</label>
+                    <div class="input-with-suffix">
+                        <DxSpinEdit @bind-Value="@Vencimiento"
+                                    MinValue="0"
+                                    DisplayFormat="N0"
+                                    NullText="0"
+                                    CssClass="days-input" />
+                        <span class="suffix-label">Días</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string TipoActivoSeleccionado { get; set; } = string.Empty;
+    private decimal CostoPromedio { get; set; } = 0;
+    private string PuntoReorden { get; set; } = string.Empty;
+    private string DescripcionDetallada { get; set; } = string.Empty;
+
+    // Checkboxes
+    private bool EsInventariable { get; set; } = false;
+    private bool Activo { get; set; } = false;
+
+    // Days fields
+    private int PrimeraEntrega { get; set; } = 0;
+    private int Vencimiento { get; set; } = 0;
+
+    // Dropdown data
+    private List<string> TiposActivo = new List<string>
+    {
+        "Equipo de cómputo",
+        "Mobiliario de oficina",
+        "Herramientas",
+        "Vehículos",
+        "Uniformes",
+        "Equipos de seguridad",
+        "Dispositivos móviles",
+        "Equipos de comunicación"
+    };
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

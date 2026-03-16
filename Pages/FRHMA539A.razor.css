@@ -1,0 +1,199 @@
+/* FRHMA539A - Aprobadores Web */
+
+.frhma539a-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Código + Nombre Row */
+.frhma539a-form .codigo-nombre-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 15px;
+}
+
+.frhma539a-form .codigo-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhma539a-form .nombre-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Jerarquía Field */
+.frhma539a-form .jerarquia-field {
+    max-width: 120px;
+}
+
+/* Standard Input Fields */
+.frhma539a-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma539a-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Dual Section (Empresa + Ubicación) */
+.frhma539a-form .dual-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.frhma539a-form .bordered-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhma539a-form .area-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhma539a-form .area-content {
+    min-height: 120px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fafbfc;
+    padding: 10px;
+}
+
+/* Procesos Section */
+.frhma539a-form .procesos-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.frhma539a-form .section-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhma539a-form .proceso-memo {
+    min-height: 200px;
+}
+
+/* DevExpress Component Overrides */
+.frhma539a-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma539a-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma539a-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma539a-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma539a-form ::deep .dx-numberbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma539a-form ::deep .dx-numberbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma539a-form ::deep .dx-memo {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma539a-form ::deep .dx-memo:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma539a-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhma539a-form .area-content {
+        min-height: 100px;
+    }
+
+    .frhma539a-form .proceso-memo {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma539a-form {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .frhma539a-form .codigo-nombre-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhma539a-form .jerarquia-field {
+        max-width: 100%;
+    }
+
+    .frhma539a-form .dual-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhma539a-form .area-content {
+        min-height: 80px;
+    }
+
+    .frhma539a-form .proceso-memo {
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma539a-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhma539a-form .input label,
+    .frhma539a-form .area-label,
+    .frhma539a-form .section-label {
+        font-size: 13px;
+    }
+
+    .frhma539a-form .area-content {
+        min-height: 60px;
+        padding: 8px;
+    }
+
+    .frhma539a-form .proceso-memo {
+        min-height: 140px;
+    }
+}

@@ -1,0 +1,173 @@
+﻿@page "/WFRHSU101"
+@layout MainLayout
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces 
+@inject HttpClient HttpClient
+
+ 
+@inject EIKON.UI.Services.EikonDataServices api
+
+<h3>Formulario WFRHSU101 - En proceso de Implementar...</h3>
+
+<div id="titulo">
+    <div id="contenedortitulo">
+        <div id="topepanel">
+            <h2>Datos Personales</h2>
+        </div>
+        <!--fin area tope panel-->
+        <div class="row">
+            <div class="col-12">
+            <ul>
+                    <li><a href="/">Inicio / </a>Datos Personales</li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="contenido" class="row">
+    <div class="col-12">
+        <div class="cw-480 ch-220">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+                <DxTab Text="Basicos"></DxTab>
+                <DxTab Text="Ubicacion"></DxTab>
+             </DxTabs>
+            <div class="card tabs-border-top-0 tabs-border-radius-top-0" style="min-height: 190px">
+                <div class="card-body">
+                    @switch (ActiveTabIndex)
+                    {
+                        case 0:
+                            <div id="campomantenimientofull">
+
+                                <div class="table table-bordered">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <span class="label2">Nombre</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="maenomb" Enabled="false" Text="@empleado.Maenomb"></DxTextBox>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <span class="label2">Apellido</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="maeapel" Enabled="false" Text="@empleado.Maeapel"></DxTextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table table-bordered">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <span class="label2">Cédula</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="maecedun" Enabled="false" Text="@empleado.Maecedun"></DxTextBox>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <span class="label2">Sexo</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="sexo" Enabled="false" Text="@empleado.Maesexo"></DxTextBox>
+                                         
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            break;
+                        case 1:
+                            <div id="campomantenimientofull">
+
+                                <div class="table table-bordered">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <span class="label2">Direccion</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="Direccion" Enabled="false" Text="@empleado.Maecalle"></DxTextBox>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <span class="label2">Depertamento</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="depto" Enabled="false" Text="@empleado.UbDescri"></DxTextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table table-bordered">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <span class="label2">Oficina</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="oficina" Enabled="false" Text="@empleado.OfDescri"></DxTextBox>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <span class="label2">Puesto</span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <DxTextBox ID="Puesto" Enabled="false" Text="@empleado.Puetitu"></DxTextBox>
+                                         
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            break;
+                        
+                    }
+                </div>
+            </div>
+        </div>
+       @*  <div class="cw-480 ch-220">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+                <DxTab Text="Datos Basicos" >
+               
+                </DxTab>
+                <DxTab Text="Familiares">
+                    <p>Datos de Hijos, Conyugue, padres </p>
+                </DxTab>
+                
+            </DxTabs>
+            <button id="basicos" @onclick="ActivarTab0">Datos Basicos</button>
+            <button id="Familia" @onclick="ActivarTab1">Datos Familiares</button>
+        </div> *@
+
+     
+    </div>
+</div>
+@code {
+    int ActiveTabIndex { get; set; } = 0;
+    Vfrhma000Activo empleado = new Vfrhma000Activo();
+    string Token = "";
+    string _apiBaseUrl = "";
+    private void ActivarTab0()
+    {
+        ActiveTabIndex = 0;
+
+    }
+    private void ActivarTab1()
+    {
+        ActiveTabIndex = 1;
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        // EikonDataServices eikonDataServices =  null;
+        if (Token == "")
+        {
+            // api.ObtenerTokenAsync();
+            Token = api.GetToken();
+            _apiBaseUrl = api.GetApiBaseUrl();
+        }
+     //   HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("_apiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("_apiBaseUrl + "Trhem000");
+        empleado = await HttpClient.GetFromJsonAsync<Vfrhma000Activo>(_apiBaseUrl + "Frhma010/Vfrhma000/00000376");
+      //  empresas = await HttpClient.GetFromJsonAsync<List<Trhem000>>(_apiBaseUrl + "Trhem000");
+    }
+
+}

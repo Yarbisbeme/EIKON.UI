@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace EIKON.UI.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+@*     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+ *@    
+    <link href="/css/site.css" rel="stylesheet" />
+    <link href="/css/custom/eikon-style.css" rel="stylesheet" />  
+    @*  <link href="/css/app.css" rel="stylesheet" /> *@
+    <link href="EIKON.UI.styles.css" rel="stylesheet" />
+
+    
+
+    @* <link href="~/css/custom/copia_estilo_eikon.css" rel="stylesheet" /> *@
+    
+  @*   <link href="_content/DevExpress.Blazor.Themes/bootstrap-external.bs5.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/journal/bootstrap.css" rel="stylesheet" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" asp-append-version="true" /> *@
+      <a href="/css/custom/eikon-style.css.map"></a>
+ 
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    @{
+        var isIEOrEdgeLegacy = Context.Request.Headers["User-Agent"]
+            .Any(userAgent => userAgent.Contains("MSIE") || userAgent.Contains("Trident") || userAgent.Contains("Edge/"));
+    }
+    @if(isIEOrEdgeLegacy)
+    {
+        <component type="typeof(EIKON.UI.Shared.BrowserNotSupported)" render-mode="Static" />
+    }
+    else
+    {
+        @RenderBody()
+
+        <div id="blazor-error-ui">
+            <environment include="Staging,Production">
+                An error has occurred. This application may no longer respond until reloaded.
+            </environment>
+            <environment include="Development">
+                An unhandled exception has occurred. See browser dev tools for details.
+            </environment>
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
+
+     
+
+
+        
+        
+        <script src="_framework/blazor.server.js"></script>
+        <script src="js/cookieInterop.js"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+        @* <script src="_framework/blazor.server.js"></script>
+             <script src="~/js/devextreme-config.js" asp-append-version="true"></script>
+        <script src="_content/DevExpress.Blazor.Themes/dx.blazor.js"></script> *@
+       
+    }
+</body>
+</html>

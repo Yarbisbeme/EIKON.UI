@@ -1,0 +1,216 @@
+@page "/FRHMA501"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Plantilla de Procesos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhma501-form">
+        <div class="top-fields-section">
+            <div class="input" style="width:50%">
+                <label>Código</label>
+                <DxTextBox @bind-Text="@Codigo" NullText="" CssClass="codigo-input">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+
+            <div class="input">
+                <label>Descripción</label>
+                <DxTextBox @bind-Text="@Descripcion" NullText="" />
+            </div>
+
+            <div class="dual-field-row">
+                <div class="select">
+                    <label>Check-IN</label>
+                     <DxComboBox Data="@empresas" 
+                                 @bind-Value="@empresaSeleccionada" 
+                                 TextFieldName="@nameof(Empresa.Nombre)" 
+                                 ValueFieldName="@nameof(Empresa.Id)" 
+                                 CssClass="mi-combobox"
+                                NullText="Check in"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" /> 
+                </div>
+                <div class="select">
+                    <label>Check-OUT</label>
+                    <DxComboBox Data="@empresas"
+                                @bind-Value="@empresaSeleccionada"
+                                TextFieldName="@nameof(Empresa.Nombre)"
+                                ValueFieldName="@nameof(Empresa.Id)"
+                                CssClass="mi-combobox"
+                                NullText="Check out"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+            </div>
+
+            <div class="dual-field-row">
+                <div class="input">
+                    <label>Beneficio</label>
+                    <DxComboBox Data="@empresas"
+                                @bind-Value="@empresaSeleccionada"
+                                TextFieldName="@nameof(Empresa.Nombre)"
+                                ValueFieldName="@nameof(Empresa.Id)"
+                                CssClass="mi-combobox"
+                                NullText="Seleccionar beneficio"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+                <div class="input">
+                    <label>Condición</label>
+                    <DxComboBox Data="@empresas"
+                                @bind-Value="@empresaSeleccionada"
+                                TextFieldName="@nameof(Empresa.Nombre)"
+                                ValueFieldName="@nameof(Empresa.Id)"
+                                CssClass="mi-combobox"
+                                NullText="Seleccionar condición"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+            </div>
+
+            <div class="select">
+                <label>Información</label>
+                <DxComboBox Data="@empresas"
+                            @bind-Value="@empresaSeleccionada"
+                            TextFieldName="@nameof(Empresa.Nombre)"
+                            ValueFieldName="@nameof(Empresa.Id)"
+                            CssClass="mi-combobox"
+                            NullText="Seleccionar información"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+
+            <div class="input" style="margin-bottom:10px;">
+                <label>Objetivo del proceso</label>
+                <DxMemo @bind-Text="@ObjetivoProceso"
+                        Rows="4"
+                        NullText=""
+                        CssClass="objetivo-memo" />
+            </div>
+        </div>
+
+                <div class="list-header">Tareas Gen</div>
+        <div class="middle-section">
+            <div class="left-list-container">
+                <DxListBox Data="@TareasGenerales"
+                           @bind-Value="@SelectedTarea"
+                           TextFieldName="Nombre"
+                           CssClass="tareas-listbox">
+                </DxListBox>
+            </div>
+
+            <div class="navigation-buttons">
+                <DxButton IconCssClass="fi fi-rr-angle-right"
+                          CssClass="btn-nav" />
+                <DxButton IconCssClass="fi fi-rr-angle-double-right"
+                          CssClass="btn-nav" />
+                <DxButton IconCssClass="fi fi-rr-angle-left"
+                          CssClass="btn-nav" />
+                <DxButton IconCssClass="fi fi-rr-angle-double-left"
+                          CssClass="btn-nav" />
+            </div>
+
+            <div class="right-list-container">
+                <DxListBox Data="@TareasSeleccionadas"
+                           @bind-Value="@SelectedTareaSeleccionada"
+                           TextFieldName="Nombre"
+                           CssClass="tareas-listbox">
+                </DxListBox>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="tareas-generadas-label">Tareas generales</div>
+
+            <div class="bottom-right-fields">
+                <div class="small-field">
+                    <label>Costos</label>
+                    <DxSpinEdit @bind-Value="@Costos"
+                                MinValue="0"
+                                DisplayFormat="N2"
+                                CssClass="costos-input" />
+                </div>
+                <div class="small-field">
+                    <label>Días</label>
+                    <DxSpinEdit @bind-Value="@Dias"
+                                MinValue="0"
+                                CssClass="dias-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string CheckIn { get; set; } = string.Empty;
+    private string CheckOut { get; set; } = string.Empty;
+    private string Beneficio { get; set; } = string.Empty;
+    private string Condicion { get; set; } = string.Empty;
+    private string Informacion { get; set; } = string.Empty;
+    private string ObjetivoProceso { get; set; } = string.Empty;
+
+    private decimal Costos { get; set; } = 0;
+    private int Dias { get; set; } = 0;
+
+    private string SelectedTarea { get; set; } = string.Empty;
+    private string SelectedTareaSeleccionada { get; set; } = string.Empty;
+
+    private List<TareaItem> TareasGenerales { get; set; } = new List<TareaItem>
+    {
+        new TareaItem { Id = 1, Nombre = "Identificación Necesidad Personal" },
+        new TareaItem { Id = 2, Nombre = "Solicitud de Persona" },
+        new TareaItem { Id = 3, Nombre = "Autorización - Reclutamiento Gales" },
+        new TareaItem { Id = 4, Nombre = "Publicar Perfil del Cargo" },
+        new TareaItem { Id = 5, Nombre = "Fijar la Candidate" },
+        new TareaItem { Id = 6, Nombre = "Pruebas Psicométricas" },
+        new TareaItem { Id = 7, Nombre = "Notificación de Resultados Pruebas" },
+        new TareaItem { Id = 8, Nombre = "Entrevista con Gerente de Área" },
+        new TareaItem { Id = 9, Nombre = "Entrevista o Candidate" },
+        new TareaItem { Id = 10, Nombre = "Selección de Candidate" },
+        new TareaItem { Id = 11, Nombre = "Elaboración de Expediente" },
+        new TareaItem { Id = 12, Nombre = "Notificación de Documentación" }
+    };
+
+    private List<Empresa> empresas = new List<Empresa>
+    {
+        new Empresa { Id = 1, Nombre = "Empresa 1", Codigo = "EMP001", Activa = true },
+        new Empresa { Id = 2, Nombre = "Empresa 2", Codigo = "EMP002", Activa = true },
+        new Empresa { Id = 3, Nombre = "Empresa 3", Codigo = "EMP003", Activa = true },
+        new Empresa { Id = 4, Nombre = "Empresa 4", Codigo = "EMP004", Activa = false },
+        new Empresa { Id = 5, Nombre = "Empresa 5", Codigo = "EMP005", Activa = true }
+    };
+
+    // Variable para almacenar la empresa seleccionada
+    private int? empresaSeleccionada = null;
+    public class Empresa
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Codigo { get; set; }
+        public bool Activa { get; set; }
+    }
+
+    private List<TareaItem> TareasSeleccionadas { get; set; } = new List<TareaItem>();
+
+    public class TareaItem
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+    }
+
+    private void HandleAdd() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

@@ -1,0 +1,338 @@
+/* FRHMA505 - Modelos de cartas */
+
+.frhma505-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+    /* Standard Input Field */
+    .frhma505-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+        .frhma505-form .input label {
+            font-weight: 500;
+            color: #33363f;
+            font-size: 14px;
+        }
+
+    .frhma505-form .section-label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    /* Top Row: 4 campos horizontales */
+    .frhma505-form .top-row {
+        display: grid;
+        grid-template-columns: 150px 1fr 200px 200px;
+        gap: 15px;
+        align-items: start;
+    }
+
+    .frhma505-form .codigo-input {
+        max-width: 150px;
+    }
+
+    /* Código TextBox con fondo azul */
+    .frhma505-form .codigo-textbox ::deep .dx-textbox-container {
+        background-color: #e3f2fd;
+        border-color: #2196f3 !important;
+    }
+
+    /* Formato Section */
+    .frhma505-form .formato-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 0;
+    }
+
+    .frhma505-form .formato-checkboxes {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    /* Main Layout: Texto de la carta (LEFT) + Atributo/Merge (RIGHT) */
+    .frhma505-form .main-layout {
+        display: grid;
+        grid-template-columns: 1fr 250px;
+        gap: 20px;
+        align-items: start;
+    }
+
+    /* Texto de la carta Section */
+    .frhma505-form .texto-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .frhma505-form .texto-header {
+        font-weight: 600;
+        color: #d32f2f;
+        font-size: 16px;
+        padding: 5px 0;
+    }
+
+    .frhma505-form .texto-memo {
+        width: 100%;
+        min-height: 400px;
+    }
+
+.text-memo-custom {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #bfbfbf;
+    outline: none;
+    background-color: transparent;
+}
+/* Atributo/Merge Section */
+.frhma505-form .atributo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.frhma505-form .atributo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+    .frhma505-form .atributo-header span {
+        font-weight: 600;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+.frhma505-form .limpiar-btn {
+    min-width: 70px;
+    min-height: 28px;
+    font-size: 13px;
+}
+
+.frhma505-form .atributos-listbox {
+    width: 100%;
+    min-height: 350px;
+    max-height: 400px;
+}
+
+/* Bottom Section */
+.frhma505-form .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 15px;
+    align-items: end;
+    padding-top: 10px;
+}
+
+.frhma505-form .plantilla-input {
+    max-width: 150px;
+}
+
+.frhma505-form .tipo-tamano-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhma505-form .tipo-tamano-inputs {
+    display: grid;
+    grid-template-columns: 150px 1fr 120px;
+    align-items: end;
+    gap: 10px;
+}
+
+.frhma505-form .tamano-input {
+    max-width: 120px;
+}
+
+.frhma505-form .beneficio-input {
+    max-width: 200px;
+}
+
+/* ===== DevExpress Component Overrides ===== */
+.frhma505-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+    .frhma505-form ::deep .dx-textbox-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+.frhma505-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+    .frhma505-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+/* Memo */
+.frhma505-form ::deep .dx-memo-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+    .frhma505-form ::deep .dx-memo-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+/* ListBox */
+.frhma505-form ::deep .dx-listbox {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma505-form ::deep .dx-listbox-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+    .frhma505-form ::deep .dx-listbox-item:hover {
+        background-color: #e9ecef;
+    }
+
+.frhma505-form ::deep .dx-listbox-item-selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Editor Buttons */
+.frhma505-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+    .frhma505-form ::deep .dx-editor-button:hover {
+        background-color: #e9ecef;
+    }
+
+/* Checkboxes */
+.frhma505-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhma505-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhma505-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Button Styling */
+.frhma505-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhma505-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+    .frhma505-form ::deep .dx-button-secondary:hover {
+        background-color: #e9ecef;
+        border-color: #007bff;
+    }
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .frhma505-form .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma505-form .atributo-section {
+        max-width: 100%;
+    }
+
+    .frhma505-form .atributos-listbox {
+        min-height: 250px;
+    }
+
+    .frhma505-form .top-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .frhma505-form .codigo-input {
+        max-width: 100%;
+    }
+
+    .frhma505-form .bottom-section {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma505-form .plantilla-input,
+    .frhma505-form .beneficio-input {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma505-form {
+        gap: 15px;
+    }
+
+        .frhma505-form .top-row {
+            grid-template-columns: 1fr;
+        }
+
+        .frhma505-form .formato-checkboxes {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .frhma505-form .tipo-tamano-inputs {
+            grid-template-columns: 1fr;
+        }
+
+        .frhma505-form .tamano-input {
+            max-width: 100%;
+        }
+}
+
+@media (max-width: 480px) {
+    .frhma505-form {
+        gap: 12px;
+    }
+
+        .frhma505-form .input label,
+        .frhma505-form .section-label {
+            font-size: 13px;
+        }
+
+        .frhma505-form .texto-header {
+            font-size: 15px;
+        }
+
+        .frhma505-form .atributo-section {
+            padding: 12px;
+        }
+
+        .frhma505-form .limpiar-btn {
+            min-width: 60px;
+            font-size: 12px;
+        }
+}

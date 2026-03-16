@@ -1,0 +1,211 @@
+/* FRHNO105 - Asignación de Nómina */
+
+.frhno105-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+    /* Standard Input Fields */
+    .frhno105-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+        .frhno105-form .input label {
+            font-weight: 500;
+            color: #33363f;
+            font-size: 14px;
+        }
+
+    .frhno105-form .numero-empleado-input {
+        width: 100%;
+    }
+
+
+    .frhno105-form .nomina-pago-combo {
+        width: 100%;
+    }
+
+    /* Separator */
+    .frhno105-form .separator {
+        height: 1px;
+        background-color: #e9ecef;
+        margin: 10px 0;
+    }
+
+    /* Transacciones Section */
+    .frhno105-form .transacciones-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 5px;
+    }
+
+    .frhno105-form .transacciones-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border: 1px solid #bfbfbf;
+        border-radius: 4px;
+    }
+
+    .frhno105-form .ordenado-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .frhno105-form .ordenado-label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .frhno105-form .ordenamiento-combo {
+        min-width: 250px;
+    }
+
+    .frhno105-form .emp-info {
+        display: flex;
+        flex-direction:row;
+        gap: 10px
+    }
+
+    .frhno105-form .action-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .frhno105-form .action-button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        border: 1px solid #bfbfbf;
+        background-color: #fff;
+        color: #33363f;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .frhno105-form .action-button:hover {
+            background-color: #e9ecef;
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        .frhno105-form .action-button i {
+            font-size: 16px;
+        }
+
+    /* DevExpress Component Overrides */
+    .frhno105-form ::deep .dx-textbox-container {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhno105-form ::deep .dx-textbox-container:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhno105-form ::deep .dx-editor-button {
+        background-color: #f8f9fa;
+        border-left: 1px solid #bfbfbf !important;
+    }
+
+        .frhno105-form ::deep .dx-editor-button:hover {
+            background-color: #e9ecef;
+        }
+
+    .frhno105-form ::deep .dx-dropdowneditor-input-wrapper {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhno105-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .frhno105-form {
+        padding: 15px;
+        gap: 12px;
+        max-width: 100%;
+    }
+
+        .frhno105-form .numero-empleado-field {
+            max-width: 100%;
+        }
+
+        .frhno105-form .nomina-pago-field {
+            max-width: 100%;
+        }
+        .frhno105-form .emp-info{
+            flex-direction:column;
+        }
+        .frhno105-form .transacciones-controls {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .frhno105-form .ordenado-container {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .frhno105-form .ordenado-label {
+            white-space: normal;
+        }
+
+        .frhno105-form .ordenamiento-combo {
+            min-width: 100%;
+        }
+
+        .frhno105-form .action-buttons {
+            justify-content: center;
+        }
+}
+
+@media (max-width: 480px) {
+    .frhno105-form {
+        padding: 12px;
+        gap: 10px;
+    }
+
+        .frhno105-form .input label,
+        .frhno105-form .transacciones-label,
+        .frhno105-form .ordenado-label {
+            font-size: 13px;
+        }
+
+        .frhno105-form .transacciones-controls {
+            padding: 12px;
+        }
+
+        .frhno105-form .action-button {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+        }
+
+            .frhno105-form .action-button i {
+                font-size: 14px;
+            }
+}

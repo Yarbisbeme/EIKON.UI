@@ -1,0 +1,97 @@
+@layout MainLayout
+@page "/FRHRJ101"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Importar Datos de Reloj" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhrj101-form">
+        <!-- Radio Group -->
+        <div class="radio-section">
+            <DxRadio GroupName="accion"
+                     @bind-GroupValue="@ImportMode"
+                     Value="@("ImportarDatos")">
+                Importar Datos
+            </DxRadio>
+            <DxRadio GroupName="accion"
+                     @bind-GroupValue="@ImportMode"
+                     Value="@("ImportarPorFecha")">
+                Importar Por Fecha
+            </DxRadio>
+        </div>
+
+        <!-- Desde/Hasta Section -->
+        <div class="dates-section">
+            <div class="date-row">
+                <label class="date-label">Desde</label>
+                <DxDateEdit @bind-Date="@FechaDesde"
+                            DisplayFormat="MM/dd/yyyy"
+                            CssClass="date-input" />
+                <DxCheckBox @bind-Checked="@Hoy">Hoy</DxCheckBox>
+                <DxCheckBox @bind-Checked="@Ayer">Ayer</DxCheckBox>
+            </div>
+            <div class="date-row">
+                <label class="date-label">Hasta</label>
+                <DxDateEdit @bind-Date="@FechaHasta"
+                            DisplayFormat="MM/dd/yyyy"
+                            CssClass="date-input" />
+            </div>
+        </div>
+
+        <!-- Formato -->
+        <div class="input">
+            <label>Formato</label>
+            <DxTextBox @bind-Text="@Formato"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchFormato" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Archivo -->
+        <div class="input">
+            <label>Archivo</label>
+            <DxTextBox @bind-Text="@Archivo"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+            </DxTextBox>
+        </div>
+
+        <!-- Renombrar checkbox -->
+        <div class="checkbox-section">
+            <DxCheckBox @bind-Checked="@RenombrarArchivo">Renombrar archivo cargado</DxCheckBox>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close" };
+
+    // Radio Group
+    private string ImportMode { get; set; } = "ImportarDatos";
+
+    // Fechas
+    private DateTime? FechaDesde { get; set; } = new DateTime(2025, 6, 27);
+    private DateTime? FechaHasta { get; set; } = new DateTime(2025, 6, 27);
+    private bool Hoy { get; set; } = false;
+    private bool Ayer { get; set; } = false;
+
+    // Campos
+    private string? Formato { get; set; }
+    private string? Archivo { get; set; }
+    private bool RenombrarArchivo { get; set; } = true;
+
+    // Event Handlers
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+    private void OnSearchFormato() { }
+    private void OnBrowseArchivo() { }
+}

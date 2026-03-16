@@ -1,0 +1,237 @@
+@layout MainLayout
+@page "/FRHRJ108"
+@using DevExpress.Blazor
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Asignación turnos - Masiva" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhrj108-form">
+        <!-- Radio buttons section -->
+        <div class="filter-section">
+            <div class="radio-group">
+                <div class="radio-item">
+                    <DxRadio TValue="string"
+                             GroupName="accion"
+                             @bind-GroupValue="@selectedFilterType"
+                             Value="@("Asignación")">
+                        Asignación/Área
+                    </DxRadio>
+                    <DxRadio TValue="string"
+                             GroupName="accion"
+                             @bind-GroupValue="@selectedFilterType"
+                             Value="@("AsignaciónOficina")">
+                        Asignación/Oficina
+                    </DxRadio>
+                    <DxRadio TValue="string"
+                             GroupName="accion"
+                             @bind-GroupValue="@selectedFilterType"
+                             Value="@("Turno")">
+                        Turno
+                    </DxRadio>
+                    <DxRadio TValue="string"
+                             GroupName="accion"
+                             @bind-GroupValue="@selectedFilterType"
+                             Value="@("Empleado")">
+                        Empleado
+                    </DxRadio>
+                </div>
+
+                <div class="filter-inputs">
+                    <!-- Área -->
+                    <div class="input-with-search">
+                        <label>Área</label>
+                        <div class="search-field">
+                            <DxTextBox @bind-Text="@areaValue"
+                                       Enabled="@(selectedFilterType == "Asignación")"
+                                       NullText=""
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                    Click="@OnSearchArea" />
+                                </Buttons>
+                            </DxTextBox>
+                            <DxTextBox @bind-Text="@areaDescription"
+                                       Enabled="@(selectedFilterType == "Asignación")"
+                                       ReadOnly="true"
+                                       NullText="" />
+                        </div>
+                    </div>
+
+                    <!-- Oficina -->
+                    <div class="input-with-search">
+                        <label>Oficina</label>
+                        <div class="search-field">
+                            <DxTextBox @bind-Text="@oficinaValue"
+                                       Enabled="@(selectedFilterType == "AsignaciónOficina")"
+                                       NullText=""
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                    Click="@OnSearchOficina" />
+                                </Buttons>
+                            </DxTextBox>
+                            <DxTextBox @bind-Text="@oficinaDescription"
+                                       Enabled="@(selectedFilterType == "AsignaciónOficina")"
+                                       ReadOnly="true"
+                                       NullText="" />
+                        </div>
+                    </div>
+
+                    <!-- Turno -->
+                    <div class="input-with-search">
+                        <label>Turno</label>
+                        <div class="search-field">
+                            <DxTextBox @bind-Text="@turnoValue"
+                                       Enabled="@(selectedFilterType == "Turno")"
+                                       NullText=""
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                    Click="@OnSearchTurno" />
+                                </Buttons>
+                            </DxTextBox>
+                            <DxTextBox @bind-Text="@turnoDescription"
+                                       Enabled="@(selectedFilterType == "Turno")"
+                                       ReadOnly="true"
+                                       NullText="" />
+                        </div>
+                    </div>
+
+                    <!-- Empleado -->
+                    <div class="input-with-search">
+                        <label>Empleado</label>
+                        <div class="search-field">
+                            <DxTextBox @bind-Text="@empleadoValue"
+                                       Enabled="@(selectedFilterType == "Empleado")"
+                                       NullText=""
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                    Click="@OnSearchEmpleado" />
+                                </Buttons>
+                            </DxTextBox>
+                            <DxTextBox @bind-Text="@empleadoDescription"
+                                       Enabled="@(selectedFilterType == "Empleado")"
+                                       ReadOnly="true"
+                                       NullText="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total empleados con supervisor -->
+            <div class="input">
+                <label>Total Empleados con Supervisor</label>
+                <DxTextBox @bind-Text="@totalEmpleados"
+                           ReadOnly="true"
+                           NullText="0" />
+            </div>
+        </div>
+
+        <!-- Grid section -->
+        <div class="grid-section">
+            <div class="grid-header">
+                <DxCheckBox @bind-Checked="@selectAll" />
+            </div>
+            <DxGrid Data="@empleados"
+                    CssClass="employee-grid"
+                    ShowFilterRow="false"
+                    PageSize="15">
+                <Columns>
+                    <DxGridDataColumn FieldName="ApiNo" Caption="Api/No." Width="100px" />
+                    <DxGridDataColumn FieldName="Nombre" Caption="Nombre" />
+                    <DxGridDataColumn FieldName="Ubicacion" Caption="Ubicación" Width="150px" />
+                    <DxGridDataColumn FieldName="Oficina" Caption="Oficina" Width="150px" />
+                    <DxGridDataColumn FieldName="Supervisor" Caption="Supervisor" Width="150px" />
+                    <DxGridDataColumn FieldName="TurnoHorario" Caption="Turno Horario" Width="150px" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+        <!-- Nuevo turno section -->
+        <div class="nuevo-turno-section">
+            <div class="nuevo-turno-input">
+                <label>Nuevo Turno</label>
+                <div class="turno-field">
+                    <DxTextBox @bind-Text="@nuevoTurnoValue"
+                               NullText=""
+                               CssClass="turno-textbox"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchNuevoTurno" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox @bind-Text="@nuevoTurnoDescription"
+                               ReadOnly="true"
+                               NullText=""
+                               CssClass="turno-description" />
+                </div>
+            </div>
+
+            <div class="turno-actual">
+                <DxCheckBox @bind-Checked="@turnoActual">Turno actual</DxCheckBox>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Filter section
+    private string selectedFilterType = "Asignación";
+    private string areaValue = "";
+    private string areaDescription = "";
+    private string oficinaValue = "";
+    private string oficinaDescription = "";
+    private string turnoValue = "";
+    private string turnoDescription = "";
+    private string empleadoValue = "";
+    private string empleadoDescription = "";
+    private string totalEmpleados = "0";
+
+    // Grid section
+    private bool selectAll = false;
+    private List<EmpleadoTurno> empleados = new()
+    {
+        new EmpleadoTurno { ApiNo = "12345", Nombre = "Juan Pérez", Ubicacion = "Oficina Central", Oficina = "RH-01", Supervisor = "María González", TurnoHorario = "08:00-17:00" },
+        new EmpleadoTurno { ApiNo = "12346", Nombre = "Ana Rodríguez", Ubicacion = "Sucursal Norte", Oficina = "RH-02", Supervisor = "Carlos Martínez", TurnoHorario = "09:00-18:00" }
+    };
+
+    // Nuevo turno section
+    private string nuevoTurnoValue = "";
+    private string nuevoTurnoDescription = "";
+    private bool turnoActual = false;
+
+    // Event handlers
+    private void OnSearchArea() { }
+    private void OnSearchOficina() { }
+    private void OnSearchTurno() { }
+    private void OnSearchEmpleado() { }
+    private void OnSearchNuevoTurno() { }
+
+    private void HandleSave() { }
+    private void HandleClose() { }
+    private void HandleRefresh() { }
+    private void HandleApply() { }
+    private void HandleCancel() { }
+    private void HandleMore() { }
+
+    // Model
+    public class EmpleadoTurno
+    {
+        public string ApiNo { get; set; } = "";
+        public string Nombre { get; set; } = "";
+        public string Ubicacion { get; set; } = "";
+        public string Oficina { get; set; } = "";
+        public string Supervisor { get; set; } = "";
+        public string TurnoHorario { get; set; } = "";
+    }
+}

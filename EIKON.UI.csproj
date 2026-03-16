@@ -1,0 +1,119 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <DefaultItemExcludes>Reports\**</DefaultItemExcludes>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileFile>Dockerfile</DockerfileFile>
+    <UserSecretsId>7bffbdbd-957d-40bc-92c8-236f2904aaee</UserSecretsId>
+    <DockerfileContext>.</DockerfileContext>
+    <DockerfileBuildArguments>--secret id=dxnuget,source=secrets.dev.yaml</DockerfileBuildArguments>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Reports\**" />
+    <Content Remove="Reports\**" />
+    <EmbeddedResource Remove="Reports\**" />
+    <None Remove="Reports\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Data\EikonApiBk.cs" />
+    <Compile Remove="Data\EikonApi_bk.cs" />
+    <Compile Remove="Interfaces\EikonApi.cs" />
+    <Compile Remove="Interfaces\EikonApi2.cs" />
+    <Compile Remove="Interfaces\IDataServices.cs" />
+    <Compile Remove="PredefinedReports\Report31.cs" />
+    <Compile Remove="PredefinedReports\Report31.Designer.cs" />
+    <Compile Remove="PredefinedReports\Report32.cs" />
+    <Compile Remove="PredefinedReports\Report32.Designer.cs" />
+    <Compile Remove="PredefinedReports\Report34.cs" />
+    <Compile Remove="PredefinedReports\Report34.Designer.cs" />
+    <Compile Remove="PredefinedReports\Reporte33.cs" />
+    <Compile Remove="PredefinedReports\Reporte33.Designer.cs" />
+    <Compile Remove="PredefinedReports\ReportsFactory.cs" />
+    <Compile Remove="PredefinedReports\rptEmpresas.cs" />
+    <Compile Remove="PredefinedReports\rptEmpresas.Designer.cs" />
+    <Compile Remove="PredefinedReports\Rptrrhel006a.cs" />
+    <Compile Remove="PredefinedReports\Rptrrhel006a.Designer.cs" />
+    <Compile Remove="PredefinedReports\rrhel006.cs" />
+    <Compile Remove="PredefinedReports\rrhel006.Designer.cs" />
+    <Compile Remove="PredefinedReports\TestReport.cs" />
+    <Compile Remove="PredefinedReports\TestReport.Designer.cs" />
+    <Compile Remove="PredefinedReports\XtraReport1.cs" />
+    <Compile Remove="PredefinedReports\XtraReport1.Designer.cs" />
+    <Compile Remove="Services\CustomReportStorageWebExtension.cs" />
+    <Compile Remove="Services\DataServices.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Pages\FRHCL301.razor" />
+    <Content Remove="Pages\ReportDesigner.razor" />
+    <Content Remove="Pages\ReportViewer.razor" />
+    <Content Remove="Pages\RptEmpresas.razor" />
+    <Content Remove="Pages\Visualizador.razor" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="PredefinedReports\Report31.resx" />
+    <EmbeddedResource Remove="PredefinedReports\Report32.resx" />
+    <EmbeddedResource Remove="PredefinedReports\Report34.resx" />
+    <EmbeddedResource Remove="PredefinedReports\Reporte33.resx" />
+    <EmbeddedResource Remove="PredefinedReports\rptEmpresas.resx" />
+    <EmbeddedResource Remove="PredefinedReports\Rptrrhel006a.resx" />
+    <EmbeddedResource Remove="PredefinedReports\rrhel006.resx" />
+    <EmbeddedResource Remove="PredefinedReports\TestReport.resx" />
+    <EmbeddedResource Remove="PredefinedReports\XtraReport1.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Data\nwind.db" />
+    <None Remove="Data\reportsData.db" />
+
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\nwind.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\reportsData.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Data\nwind.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Pages\FRHCL106.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Pages\FRHNO203B.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.3" />
+    <PackageReference Include="DevExpress.AspNetCore.Core" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Blazor" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Blazor.Themes" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Blazor.Themes.Fluent" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Charts.Core" Version="25.1.6" />
+    <PackageReference Include="DevExpress.CodeParser" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Data" Version="25.1.6" />
+    <PackageReference Include="DevExpress.DataAccess" Version="25.1.6" />
+    <PackageReference Include="DevExpress.DataVisualization.Core" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Drawing" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Pdf.Core" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Pdf.Drawing" Version="25.1.6" />
+    <PackageReference Include="DevExpress.PivotGrid.Core" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Printing.Core" Version="25.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.8.0" />
+    <PackageReference Include="System.Data.OleDb" Version="9.0.5" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.114.4" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls" Version="25.1.6" />
+    <PackageReference Include="DevExpress.Blazor.Reporting.Viewer" Version="25.1.6" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.8.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PredefinedReports\" />
+    <Folder Include="wwwroot\images\Fotos\" />
+  </ItemGroup>
+</Project>

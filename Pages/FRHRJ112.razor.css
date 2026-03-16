@@ -1,0 +1,298 @@
+/* Contenedor principal */
+.frhrj112-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Header label */
+.header-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Date row */
+.date-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom:5px;
+}
+
+.date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 110px;
+}
+
+    .date-field label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+    }
+
+.date-checks {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+    .date-checks ::deep .dx-checkbox {
+        margin: 0;
+    }
+
+    .date-checks ::deep .dx-checkbox-icon {
+        border: 1px solid #bfbfbf !important;
+    }
+
+    .date-checks ::deep .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+    }
+
+    .date-checks ::deep .dx-checkbox-text {
+        font-size: 13px;
+        color: #33363f;
+    }
+
+.date-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-action {
+    min-width: 28px;
+    height: 28px;
+    padding: 0;
+}
+
+    .btn-action ::deep .dx-icon {
+        font-size: 13px;
+    }
+
+/* Filter items */
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .filter-item ::deep .dx-checkbox {
+        margin: 0;
+        min-width: 100px;
+    }
+
+    .filter-item ::deep .dx-checkbox-icon {
+        border: 1px solid #bfbfbf !important;
+    }
+
+    .filter-item ::deep .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+    }
+
+    .filter-item ::deep .dx-checkbox-text {
+        font-size: 14px;
+        color: #33363f;
+        font-weight: 500;
+    }
+
+    .filter-item ::deep .dx-textbox,
+    .filter-item ::deep .dx-dropdownedit {
+        flex: 1;
+    }
+
+/* Import section */
+.import-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.import-section-checks {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.import-section label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.import-radios ::deep .dx-radiogroup {
+    display: flex;
+    gap: 15px;
+}
+
+.import-radios ::deep .dx-radiogroup-item {
+    margin: 0;
+}
+
+.import-radios ::deep .dx-radiobutton-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.import-radios ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.import-radios ::deep .dx-radiobutton-text {
+    font-size: 14px;
+    color: #33363f;
+    font-weight: 500;
+}
+
+/* Report row */
+.report-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: flex-end;
+}
+
+.report-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .report-field label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+.report-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-report {
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+}
+
+    .btn-report ::deep .dx-icon {
+        font-size: 16px;
+    }
+
+/* DevExpress overrides */
+.frhrj112-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+    .frhrj112-form ::deep .dx-textbox-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    }
+
+.frhrj112-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+.frhrj112-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+.frhrj112-form ::deep .dx-dropdownedit-input-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+}
+
+    .frhrj112-form ::deep .dx-dropdownedit-input-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .frhrj112-form {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .date-row {
+        /*        flex-direction: column;
+        align-items: flex-start;*/
+        flex-wrap: wrap;
+    }
+
+    .date-field {
+        width: 100%;
+    }
+
+    .date-checks {
+        width: 100%;
+    }
+
+    .date-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .filter-item ::deep .dx-checkbox {
+            min-width: auto;
+        }
+
+    .import-radios ::deep .dx-radiogroup {
+        flex-direction: column;
+    }
+
+    .report-buttons {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhrj112-form {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .header-label {
+        font-size: 13px;
+    }
+
+    .date-field label,
+    .report-field label,
+    .import-section label {
+        font-size: 12px;
+    }
+
+    .btn-action {
+        min-width: 26px;
+        height: 26px;
+    }
+
+    .btn-report {
+        min-width: 32px;
+        height: 32px;
+    }
+
+    .frhrj112-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .filter-item ::deep .dx-checkbox-text,
+    .date-checks ::deep .dx-checkbox-text,
+    .import-radios ::deep .dx-radiobutton-text {
+        font-size: 13px;
+    }
+}

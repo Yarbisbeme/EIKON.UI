@@ -1,0 +1,1429 @@
+﻿@page "/FRHCL101ANew"
+@page "/FRHCL101ANew/{id:int}"
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+
+@using EIKON.UI.Components
+@inject HttpClient HttpClient
+@* 
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+ *@
+@inject IMockService<Frhdj010Dto> MockDjService
+@inject IMockService<Trhhj000Dto> MockHjService
+
+@inject IMockService<Frhbj010Dto> MockBeneficiosPuestoService
+@inject IMockService<Trhbe000Dto> MockBeneficiosService
+
+
+@inject IMockService<Frhjo010Dto> MockPuestosService
+@inject IMockService<Trhfm000Dto> MockPermisosService
+@inject IMockService<Trhnp010Dto> MockClasesService
+@inject IMockService<Trhct010Dto> MockCategoriasService
+@inject IMockService<Trhof010Dto> MockOficinasService
+@inject IMockService<Trhem000Dto> MockEmpresasService
+@inject IMockService<Trhub010Dto> MockUbicacionesService
+@inject IMockService<Trhmt000Dto> MockmotivosService
+@inject IMockService<Trhuo000Dto> MockFamiliaService
+@inject IMockService<Trhnl000Dto> MockClasificadorService
+@inject IMockService<Trhsr000Dto> MockTitAlternoService
+@inject IMockService<Trhpf000Dto> MockProfesionesService
+@inject IMockService<Frhjc010Dto> MockProfPuestoService
+
+@inject IMockService<Trhid000Dto> MockIdiomasService
+@inject IMockService<Frhjl010Dto> MockIdiomasPuestoService
+
+@inject IMockService<Trhpc000Dto> MockPerfilCsService
+@inject IMockService<Trhcs000Dto> MockRelCursosService
+@inject IMockService<Trhcu000Dto> MockCursosService
+
+@inject IMockService<Trhni000Dto> MockNivelGradoService
+@inject IMockService<Trhed000Dto> MockGradoEdService
+@inject IMockService<Trhnt000Dto> MockNivelDesempService
+
+
+
+
+@inject IMockService<Trhsw000Dto> MockHabilidadesService
+
+@inject IMockService<Trhhg000Dto> MockConocimientosService
+@inject IMockService<Trhgn000Dto> MockTipoConocimientoService
+
+@inject IMockService<Frhjs010Dto> MockConocimientosPuestoService
+
+
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<PageTitle>Opciones Menu</PageTitle>
+
+@if (puestos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+   
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Creación de Puestos - SIRH</title>
+        <style>
+            .myListboxClass {
+                height: fit-content;
+            }
+
+            .dxbl-v-resize {
+                height: 300px;
+               
+            }
+        </style>
+           </head>
+    <body>
+        <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Usuario?" OnConfirm="OnConfirmDelete" />
+        <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) perfil(es) asociados a este empleado, favor eliminar los perfiles" />
+        <Alert2 @ref="alertInfo" TypeAlert="info" Message="Creación de Puestos" />
+        <div class="W-100">
+
+            <div class="header">
+                <p style="font-size:16px; font-weight:300;" class="eikon-primary-text">SIRH - Creación de Puestos</p>
+                <div style="display:flex; gap:10px">
+                </div>
+
+                <Toolbar formulario="FRHCL101A" OnAdd="Agregar" OnSave="Guarda" OnRemove="Eliminar" />
+
+            </div>
+        </div>
+        <div class="separador">
+            <hr />
+        </div>
+        
+        <div class="container">
+
+            <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+
+                <DxTabPage CssClass="dxbl-tabs" Text="Mantenimiento del Puesto">
+            
+
+            
+            <EditForm data-bind="@SelectedItem" Model="SelectedItem">
+              
+            <div class="row">
+             <div class="form-group col-md-2">
+                        <label for="jonumber">Puesto</label>
+                                <DxTextBox id="jonumber" @bind-Text="@SelectedItem.JoNumber" ReadOnly="true"></DxTextBox>
+            </div>
+             <div class="form-group col-md-2">
+                                <label for="btnBuscar">Puesto</label>
+                                <div>
+                                <DxButton Id="btnBuscar" Click="BuscarReq" Text="...Buscar" class="fi fi-rr-search"></DxButton>
+                                </div>
+                            </div>
+            <div class="form-group col-md-4">
+                        <label for="puetitu">Título</label>
+                        <DxTextBox id="puetitu"  @bind-Text="@SelectedItem.JoTitulo"></DxTextBox>
+            </div>
+            <div class="form-group col-md-4">
+                                <label for="titlon">Título Completo</label>
+                                <DxTextBox id="titlon" @bind-Text="@SelectedItem.JoTitLon"></DxTextBox>
+                    </div>
+            </div>
+            <div class="row">
+              <div class="form-group  col-md-4">
+                    <label for="joalt">Referencia</label>
+                     <DxTextBox id="joalt" @bind-Text="@SelectedItem.JoAlterno"></DxTextBox>
+               </div>
+               <div class="form-group  col-md-4">
+                                <label for="Ubicacion">Puesto Clave</label>
+                                <DxCheckBox @bind-Checked="@JpClaveBool" CssClass="dxbl-text-edit" />
+               </div>
+               <div class="form-group  col-md-4">
+                                <label for="familia">Familia Puesto</label>
+                                <DxComboBox id="familia" Data="@familia" ValueFieldName="UoCodigo" TextFieldName="UoDescri" @bind-Value="SelectedItem.UoCodigo"></DxComboBox>
+               </div>
+                </div>
+            <div class="row">
+                    
+                    <div class="form-group  col-md-4">
+                                <label for="clase">Clase</label>
+                                <DxComboBox id="clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="SelectedItem.NpCodigo"></DxComboBox>
+                            </div>
+                            <div class="form-group  col-md-4">
+                                <label for="Clasif">Clasificador</label>
+                                <DxComboBox id="Clasif" Data="@clasificador" ValueFieldName="NlCodigo" TextFieldName="NlDescri" @bind-Value="SelectedItem.NlCodigo"></DxComboBox>
+                            </div>
+
+                            <div class="form-group  col-md-4">
+                                <label for="titAlt">Titulo Alterno</label>
+                                <DxComboBox id="titAlt" Data="@titalterno" ValueFieldName="SrCodigo" TextFieldName="SrDescri" @bind-Value="SelectedItem.SrCodigo"></DxComboBox>
+                            </div>
+            </div>
+                <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="creadopor">Creado Por</label>
+                                <DxTextBox id="creadopor" @bind-Text="@SelectedItem.CreadoPor"></DxTextBox>
+                            </div>
+                    
+                    <div class="form-group col-md-3">
+                        <label for="create">Fecha Creación</label>
+                        <DxDateEdit id="create" @bind-Date="@SelectedItem.FechaCrea"></DxDateEdit>
+                    </div>
+                            <div class="form-group col-md-3">
+                                <label for="descr">Detalle Descripción Puesto</label>
+                                <div>
+                                <DxButton  Click="@BuscarDet" class="fi fi-rr-search"></DxButton>
+                                </div>
+                            </div>
+
+                </div>
+
+                <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="aprobadopor">Aprobado Por</label>
+                                <DxTextBox id="aprobadopor" @bind-Text="@SelectedItem.ProofBy"></DxTextBox>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="create">Fecha Aprobación</label>
+                                <DxDateEdit id="create" @bind-Date="@SelectedItem.FechaProo"></DxDateEdit>
+                            </div>
+                            
+                </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="aprobadopor">Modificado Por</label>
+                                <DxTextBox id="aprobadopor" @bind-Text="@SelectedItem.ModifyBy"></DxTextBox>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="create">Fecha Modificación</label>
+                                <DxDateEdit id="create" @bind-Date="@SelectedItem.FechaUpda"></DxDateEdit>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="descr">Especificaciones del Puesto</label>
+                                <div>
+                                    <DxButton Click="@BuscarEsp" class="fi fi-rr-search"></DxButton>
+                                </div>
+                            </div>
+                        </div>
+            <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="status">Estatus</label>
+                        <DxRadioGroup Id="status" CssClass="dxbl-text-edit"
+                                      Items="@estatus"
+                                      TextFieldName="Text"
+                                      ValueFieldName="Value"
+                                      @bind-Value="@SelectedItem.Estatus"
+                                      Layout="RadioGroupLayout.Horizontal">
+                        </DxRadioGroup>
+
+                </div>
+            </div>
+            
+            
+           
+                
+            </EditForm>
+
+                </DxTabPage>
+            <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Puestos">
+                    <h3>Consulta de Puestos</h3>
+                    <DxGrid Data="@puestos" @ref="MyGrid"
+            CssClass="mw-1100"
+                            KeyFieldName="JoNumber"
+                            ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
+        <Columns>
+            <DxGridCommandColumn Width="60px" VisibleIndex="2">
+                <HeaderTemplate>
+                    <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="" @onclick="@(() => Editar((Frhjo010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                   @*  <a class="text-primary" @onclick="@(() => MyGrid.SelectDataItem(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a> *@
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Id" FieldName="JoNumber" Width="100px" VisibleIndex="3" />
+            <DxGridDataColumn Caption="Descripción" FieldName="JoTitulo" Width="300px" VisibleIndex="4" />
+           
+            @* <DxGridDataColumn FieldName="OfCodigo" Caption="ID Oficina"/> *@
+            <DxGridDataColumn Caption="Familia" FieldName="UoCodigo" Width="160px" VisibleIndex="5">
+                <EditSettings>
+                    <DxComboBoxSettings Data="familia"
+                                        ValueFieldName="UoCodigo"
+                                        TextFieldName="UoDescri"
+                                        FilteringMode="DataGridFilteringMode.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        EditFormat="{0} {1}">
+                        <Columns>
+                            <DxListEditorColumn FieldName="UoCodigo" Caption="Código" />
+                            <DxListEditorColumn FieldName="UoDescri" Caption="Descripción" />
+                           
+                        </Columns>
+                    </DxComboBoxSettings>
+                </EditSettings>
+            </DxGridDataColumn>
+            @* <DxGridDataColumn FieldName="UbCodigo" Caption="ID Ubicac" /> *@
+            <DxGridDataColumn Caption="Clase" FieldName="NpCodigo" Width="260px" VisibleIndex="6">
+                <EditSettings>
+                    <DxComboBoxSettings Data="clases"
+                                        ValueFieldName="NpCodigo"
+                                        TextFieldName="NpDescri"
+                                        FilteringMode="DataGridFilteringMode.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        EditFormat="{1} {2}">
+                        <Columns>
+                            <DxListEditorColumn FieldName="NpCodigo" Caption="Código" />
+                            <DxListEditorColumn FieldName="NpDescri" Caption="Descripción" />
+                            <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
+                        </Columns>
+                    </DxComboBoxSettings>
+                </EditSettings>
+            </DxGridDataColumn>
+@*             <DxGridDataColumn FieldName="JoNumber" Caption="Id Puesto" />
+ *@            <DxGridDataColumn Caption="Titulo Alterno" FieldName="SrCodigo" Width="260px" VisibleIndex="7">
+                <EditSettings>
+                                    <DxComboBoxSettings Data="titalterno"
+                                                        ValueFieldName="SrCodigo"
+                                                        TextFieldName="SrDescri"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        EditFormat="{0} {1}">
+                        <Columns>
+                                            <DxListEditorColumn FieldName="SrCodigo" Caption="Código" />
+                                            <DxListEditorColumn FieldName="SrDescri" Caption="Descripción" />
+                           
+                        </Columns>
+                    </DxComboBoxSettings>
+                </EditSettings>
+            </DxGridDataColumn>
+            <DxGridDataColumn FieldName="IdentityColumn" Width="50px" Caption="#">
+                
+            </DxGridDataColumn>
+             <!-- Columna para el botón -->
+        
+
+
+
+        </Columns>
+    </DxGrid>
+                </DxTabPage>
+             <DxTabPage CssClass="dxbl-tabs"  Text="Especificaciones del Puesto">
+                    <h2>@SelectedItem.JoNumber - @SelectedItem.JoTitLon</h2>
+                    
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <DxListBox Data="@Items"
+                                       TextFieldName="Descripcion"
+                                       ValueFieldName="Id"
+                                       @bind-Value="SelectedId"
+                                       SelectionMode="ListBoxSelectionMode.Single"
+                                       Height="300px">
+                            </DxListBox>
+                        </div>
+                        <div class="col-lg-9">
+                            <DxTabs>
+                                @if (SelectedId==1)
+                                {
+                                    <DxTabPage Text="Info General">
+                                        <h4>Informaciones generales del puesto</h4>
+                                        <EditForm data-bind="@SelectedItem" Model="SelectedItem">
+
+                                            <div class="row">
+                                                <div class="form-group col-md-2">
+                                                    <label>Grado de educación</label>
+                                                    
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <DxComboBox id="familia" Data="@gradoEducacion" ValueFieldName="EdCodigo" TextFieldName="EdDescri" @bind-Value="SelectedItem.EdCodigo"></DxComboBox>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label>Edad Mínima</label>
+                                                    
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <DxSpinEdit @bind-Value="SelectedItem.EdadDesde" Min="0" Max="50" Step="1" ShowSpinButtons="true" Width="100%"></DxSpinEdit>
+                                                </div>
+                                            </div>
+                                            
+                                                <div class="row">
+                                                    <div class="form-group col-md-2">
+                                                        <label>Nivel del Grado</label>
+
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <DxComboBox id="familia" Data="@nivelGradoEd" ValueFieldName="NiCodigo" TextFieldName="NiDescri" @bind-Value="SelectedItem.NiCodigo"></DxComboBox>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <label>Edad Máxima</label>
+
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <DxSpinEdit @bind-Value="SelectedItem.EdadHasta" Min="0" Max="50" Step="1" ShowSpinButtons="true" Width="100%"></DxSpinEdit>
+                                                    </div>
+                                                </div>
+                                            <div class="row">
+
+                                                <div class="form-group  col-md-2">
+                                                    <label for="clase">Nivel de desempeño</label>
+                                                </div>
+                                                <div class="form-group  col-md-4">
+                                                    <DxComboBox id="Clasif" Data="@nivelDesemp" ValueFieldName="NtCodigo" TextFieldName="NtDescri" @bind-Value="SelectedItem.NtCodigo"></DxComboBox>
+                                                </div>
+
+                                                <div class="form-group  col-md-2">
+                                                    @* <DxComboBox id="titAlt" Data="@titalterno" ValueFieldName="SrCodigo" TextFieldName="SrDescri" @bind-Value="SelectedItem.SrCodigo"></DxComboBox> *@
+                                                </div>
+                                                    <div class="form-group  col-md-4"></div>
+                                            </div>
+
+                                        </EditForm>
+                                    </DxTabPage>
+                                }
+
+                                @if (SelectedId==2)
+                                {
+                                    <DxTabPage Text="Profesiones">
+                                        <h4> Profesiones relacionadas con el puesto</h4>
+                                        <div class="row">
+                                        <div class="col-lg-3">
+                                            <label>Disponibles</label>
+                                        <DxListBox Data="@profesiones"
+                                                   TextFieldName="@nameof(Trhpf000Dto.PfDescri)"
+                                                   ValueFieldName="@nameof(Trhpf000Dto.IdentityColumn)"
+                                                  
+                                                   @bind-Values="@profesionesSeleccionadas"
+                                                   SelectionMode="ListBoxSelectionMode.Multiple"
+                                                   ShowCheckboxes="true"
+                                                   
+                                                   
+                                                   ListRenderMode="ListRenderMode.Virtual">
+                                                   
+                                        </DxListBox>
+                                        </div>
+                                            <div class="col-lg-9">
+                                                <label>Seleccionadas</label>
+                                                <DxListBox Data="@profesionesSeleccionadas"
+                                                           TextFieldName="@nameof(Trhpf000Dto.PfDescri)"
+                                                           @bind-Value="@profPuestoSeleccionada"
+                                                           SelectionMode="ListBoxSelectionMode.Single"
+                                                           
+                                                          
+                                                           ListRenderMode="ListRenderMode.Virtual">
+
+                                                </DxListBox>
+                                            </div>
+                                        </div>
+                                    </DxTabPage>
+                                }
+                                @if (SelectedId == 3)
+                                {
+                                    <DxTabPage Text="Dimensiones">
+
+                                        <h4> Dimensiones relacionadas con el puesto</h4>
+                                        <div class="row">
+                                        <div class="col-lg-3">
+                                            <label>Disponibles</label>
+                                            
+                                            <DxListBox Data="@Data"
+                                                       TextFieldName="@nameof(Trhsw000Dto.SwDescri)"
+                                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                                       ShowCheckboxes="@ShowCheckboxes"
+                                                       CssClass="w-auto mt-1 me-1 flex-grow-1 chi-220"
+                                                       style="flex-basis: 240px"
+                                                       @bind-Values="@Values">
+                                            </DxListBox>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <label>Seleccionadas</label>
+                                                    <DxListBox Data="@Values"
+                                                               TextFieldName="@nameof(Trhsw000Dto.SwDescri)"
+                                                               SelectionMode="ListBoxSelectionMode.Single"
+                                                               CssClass="w-auto mt-1 me-1 flex-grow-1 chi-220"
+                                                               style="flex-basis: 240px"
+                                                               @bind-Values="@habilidades">
+                                                    </DxListBox>
+                                           
+                                                
+                                                @* <div class="demo-part-body card-body p-0 pb-2 overflow-auto">
+                                                    <ul class="list-group list-group-flush bg-transparent border-0">
+                                                        @foreach (var item in Values)
+                                                        {
+                                                            <li class="list-group-item bg-transparent text-body py-1 border-0">
+                                                                @item.HgDescri
+                                                            </li>
+                                                        }
+                                            </ul>
+                                        </div> *@
+                                    </div>
+                                </div>
+
+                               
+                                    </DxTabPage>
+                                }
+                                @if (SelectedId == 4)
+                                {
+                                    <DxTabPage Text="Conocimientos">
+                                        <h4> Conocimientos relacionados con el puesto</h4>
+                                        <div class="row">
+                                        <div class="col-lg-10">
+                                            <DxGrid id="conoce" Data="@conocimientosPuesto" AllowColumnReorder="true" 
+                                                        @ref="MyGridConoce"
+                                                        CssClass="mw-1100"
+                                                        EditModelSaving="OnEditModelSaving"
+                                                        EditMode="GridEditMode.EditRow">
+                                                    <Columns>
+                                                        <DxGridCommandColumn Width="60px">
+                                                            <HeaderTemplate>
+                                                                <a class="plus" @onclick="@(() => MyGridConoce.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"></a>
+                                                            </HeaderTemplate>
+                                                            <CellDisplayTemplate>
+                                                                <a class="edit" @onclick="@(() => MyGridConoce.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                                                                <a class="trash" @onclick="@(() => MyGridConoce.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                                                            </CellDisplayTemplate>
+                                                        </DxGridCommandColumn>
+                                                        <DxGridDataColumn Caption="Id" FieldName="HgCodigo" Width="180px" >
+                                                            <EditSettings>
+                                                                <DxComboBoxSettings Data="conocimientos"
+                                                                                    ValueFieldName="HgCodigo"
+                                                                                    TextFieldName="HgDescri"
+                                                                                    FilteringMode="DataGridFilteringMode.Contains"
+                                                                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                                                    EditFormat="{1} {2}">
+                                                                    <Columns>
+                                                                        <DxListEditorColumn FieldName="HgCodigo" Caption="Código" />
+                                                                        <DxListEditorColumn FieldName="HgDescri" Caption="Descripción" />
+                                                                    </Columns>
+                                                                </DxComboBoxSettings>
+                                                            </EditSettings>
+                                                        </DxGridDataColumn>
+                                                        <DxGridDataColumn Caption="Tipo" FieldName="GnCodigo" Width="180px">
+                                                            <EditSettings>
+                                                                <DxComboBoxSettings Data="conocimientosTipo"
+                                                                                    ValueFieldName="GnCodigo"
+                                                                                    TextFieldName="GnDescri"
+                                                                                    FilteringMode="DataGridFilteringMode.Contains"
+                                                                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                                                    EditFormat="{1} {2}">
+                                                                    <Columns>
+                                                                        <DxListEditorColumn FieldName="GnCodigo" Caption="Código" />
+                                                                        <DxListEditorColumn FieldName="GnDescri" Caption="Descripción" />
+                                                                    </Columns>
+                                                                </DxComboBoxSettings>
+                                                            </EditSettings>
+                                                        </DxGridDataColumn>
+                                                        <DxGridDataColumn FieldName="Habanos" Caption="Anos" />
+                                                        <DxGridDataColumn Caption="Meses" FieldName="Habmese" />
+                                                        <DxGridDataColumn FieldName="Habminima" Caption="Requerida" />
+
+
+                                                    </Columns>
+
+                                            </DxGrid>
+                                            </div>
+                                        </div>
+                                    </DxTabPage>
+                                }
+                                @if (SelectedId == 5)
+                                {
+                                    <DxTabPage Text="Entrenamientos">
+                                        <h4>Entrenamientos relacionados con el puesto</h4>
+                                        <div class="row">
+                                            <div class="col-lg-10">
+                                                <DxGrid id="conoce" Data="@cursos" AllowColumnReorder="true"
+                                                        @ref="MyGridEntrena"
+                                                        CssClass="mw-1100"
+                                                        EditModelSaving="OnEditModelSaving"
+                                                        EditMode="GridEditMode.EditRow">
+                                                    <Columns>
+                                                        <DxGridCommandColumn Width="60px">
+                                                            <HeaderTemplate>
+                                                                <a class="plus" @onclick="@(() => MyGridEntrena.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"></a>
+                                                            </HeaderTemplate>
+                                                            <CellDisplayTemplate>
+                                                                <a class="edit" @onclick="@(() => MyGridEntrena.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                                                                <a class="trash" @onclick="@(() => MyGridEntrena.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                                                            </CellDisplayTemplate>
+                                                        </DxGridCommandColumn>
+                                                        <DxGridDataColumn Caption="Id" FieldName="CuCodigo" Width="180px">
+                                                                                           </DxGridDataColumn>
+                                                        <DxGridDataColumn Caption="Descripcion" FieldName="CuDescri" Width="180px">
+                                                            
+                                                        </DxGridDataColumn>
+                                                        <DxGridDataColumn FieldName="Thoras" Caption="Horas" />
+                                                        
+
+
+                                                    </Columns>
+
+                                                </DxGrid>
+                                            </div>
+                                        </div>
+                                    </DxTabPage>
+                                }
+                                @if (SelectedId == 6)
+                                {
+                                    <DxTabPage Text="Idiomas">
+                                        <h4> Idiomas relacionados con el puesto</h4>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label>Disponibles</label>
+                                                <DxListBox Data="@idiomas"
+                                                           TextFieldName="@nameof(Trhid000Dto.IdDescri)"
+                                                           ValueFieldName="@nameof(Trhid000Dto.IdentityColumn)"
+                                                           @bind-Values="@idiomasSeleccionados"
+                                                           SelectionMode="ListBoxSelectionMode.Multiple"
+                                                           ShowCheckboxes="true"
+                                                           ListRenderMode="ListRenderMode.Virtual">
+
+                                                </DxListBox>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <label>Seleccionados</label>
+                                                <DxListBox Data="@idiomasSeleccionados"
+                                                           TextFieldName="@nameof(Trhid000Dto.IdDescri)"
+                                                           @bind-Value="@idiomasPuesto"
+                                                           SelectionMode="ListBoxSelectionMode.Single"
+                                                           ListRenderMode="ListRenderMode.Virtual">
+
+                                                </DxListBox>
+                                            </div>
+                                        </div>
+                                    </DxTabPage>
+                                }
+                                @if (SelectedId == 7)
+                                {
+                                    <DxTabPage Text="Beneficios">
+                                        <h4>Beneficios relacionados con el puesto</h4>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label>Disponibles</label>
+                                                <DxListBox Data="@beneficios"
+                                                           TextFieldName="@nameof(Trhbe000Dto.BeDescri)"
+                                                           ValueFieldName="@nameof(Trhbe000Dto.IdentityColumn)"
+                                                           @bind-Values="@beneficiosSeleccionados"
+                                                           SelectionMode="ListBoxSelectionMode.Multiple"
+                                                           ShowCheckboxes="true"
+                                                           ListRenderMode="ListRenderMode.Virtual">
+
+                                                </DxListBox>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <label>Seleccionados</label>
+                                                <DxListBox Data="@beneficiosSeleccionados"
+                                                           TextFieldName="@nameof(Trhbe000Dto.BeDescri)"
+                                                           @bind-Value="@beneficiosPuesto"
+                                                           SelectionMode="ListBoxSelectionMode.Single"
+                                                           ListRenderMode="ListRenderMode.Virtual">
+
+                                                </DxListBox>
+                                            </div>
+                                        </div>
+
+                                    </DxTabPage>
+                                }
+                        </DxTabs>
+
+                        @code {
+                            bool mostrarTab1 = true;
+                            bool mostrarTab2 = false;
+                        }
+
+                        </div>
+                    </div>
+                </DxTabPage>
+@*                 <DxTabPage CssClass="dxbl-tabs" Text="Descripción de Puesto">
+                    <h2>@SelectedItem.JoNumber - @SelectedItem.JoTitLon</h2>
+                    <DxListBox Data="@itemsmanual"
+                               TextFieldName="HjDescri"
+                               ValueFieldName="HjCodigo"
+                               @bind-Value="itemsmanualSelect"
+                               SelectedDataItemsChanged="(SelectedDataItemsChangedEventArgs<Trhhj000Dto> args) =>
+                                                                                               OnSelectedDataItemsChanged(args)"
+                           SelectionMode="ListBoxSelectionMode.Single"
+                           ShowFilterBox="true"
+                           FilterBoxPlaceholder="Buscar Descripcion Puesto..."
+                           CssClass="myListboxClass">
+                </DxListBox>
+                <hr />
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <DxMemo Id="descrip" Rows="10" @bind-Text="detmanualSelect.Descri" ></DxMemo>
+                        </div>
+                    </div>
+                </DxTabPage>
+ *@                
+ <DxTabPage CssClass="dxbl-tabs" Text="Descripción de Puesto">
+                    <h2>@SelectedItem.JoNumber - @SelectedItem.JoTitLon</h2>
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <DxListBox Data="@itemsmanual"
+                                       TextFieldName="HjDescri"
+                                       ValueFieldName="HjCodigo"
+                                       @bind-Value="itemsmanualSelect"
+                                       CssClass="myListboxClass"
+                                       SelectedDataItemsChanged="(SelectedDataItemsChangedEventArgs<Trhhj000Dto> args) =>
+                                                                                 OnSelectedDataItemsChanged(args)"
+                                   SelectionMode="ListBoxSelectionMode.Single"
+                                  
+                                   Height="600px">
+                        </DxListBox>
+                    </div>
+
+                        <div class="col-lg-9" >
+                            @* <DxMemo Id="descrip"
+                                    Rows="20"
+                                    
+                                    @bind-Text="detmanualSelect.Descri" >
+                            </DxMemo> *@
+                            <InputTextArea id="descri" @bind-Value="detmanualSelect.Descri" style="width:100%;height:400px"></InputTextArea>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+            </DxTabs>
+      
+            
+        </div>
+    </body>
+
+    
+   @*  <DxGrid Data="@data" @ref="MyGrid"
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+            DataItemDeleting="OnDataItemDeleting">
+        <Columns>
+            <DxGridCommandColumn Width="60px" >
+                <HeaderTemplate>
+                    <a class="plus" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="edit" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                    <a class="trash" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Id" FieldName="PasUserid" Width="260px"  />
+            <DxGridDataColumn Caption="Nombre" FieldName="Pasnomb" Width="300px" />
+            <DxGridDataColumn FieldName="Maenume" Caption="Empleado"/>
+            <DxGridDataColumn Caption="Expira" FieldName="PasExpira" />
+            <DxGridDataColumn FieldName="PasEsEmp" Caption="Es Empleado" />
+            
+
+        </Columns>
+    </DxGrid> *@
+    
+}
+
+<h3 class=""></h3>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    public bool IsModalVisible { get; set; }
+    public string FechaCrea { get; set; }
+    public string sPrueba { get; set; }
+    public string SueldoEntrada { get; set; } = "0.00";
+    public string Presupuesto { get; set; } = "0.00";
+    public bool CantAdd { get; set; } = false;
+    public bool CantEdit { get; set; } = false;
+    public bool CantDelete { get; set; } = true;
+    public bool CantSave { get; set; } = true;
+    public string Token { get; set; } = "";
+    public string PaCodigo { get; set; } = "0026";
+    public string IsCodigo { get; set; } = "FRHCL101";
+    public string ApiBaseUrl { get; set; } ="";
+    public string cAhdn { get; set; } = "";
+    public string cUhdn { get; set; } = "";
+    public string cShdn { get; set; } = "";
+    public string cDhdn { get; set; } = "";
+    // **- private string[] // **- ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+
+    public class Item
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+    }
+
+    List<Item> Items = new()
+    {
+        new() { Id = 1, Descripcion = "General" },
+        new() { Id = 2, Descripcion = "Profesión" },
+        new() { Id = 3, Descripcion = "Dimensión" },
+        new() { Id = 4, Descripcion = "Conocimientos" },
+        new() { Id = 5, Descripcion = "Entrenamiento" },
+        new() { Id = 6, Descripcion = "Idiomas" },
+        new() { Id = 7, Descripcion = "Beneficios" }
+
+    };
+    string SearchText { get; set; } = "";
+    int SelectedId { get; set; }
+
+    bool ShowCheckboxes { get; set; } = true;
+    IEnumerable<Trhsw000Dto> Data { get; set; }
+    IEnumerable<Trhsw000Dto> Values { get; set; }
+
+    private ConfirmDialog confirmDialog;
+    private AlertDialog alertDialog;
+    // Campo que viene de BD ("S" o "N")
+    private string Jpclave { get; set; } = "N";
+
+    // Propiedad booleana de ayuda
+    private bool JpClaveBool
+    {
+        get => Jpclave == "S";
+        set => Jpclave = value ? "S" : "N";
+    }
+    void ShowConfirmDialog()
+    {
+        confirmDialog.Show(); // Muestra el diálogo
+    }
+    void ShowAlertDialog()
+    {
+        //alertDialog.Message = "Testing";
+        alertDialog.Show(); // Muestra la alerta
+    }
+    async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            // Lógica de eliminación si el usuario confirma
+            await DeleteItem();
+        }
+        else
+        {
+            // Lógica si el usuario cancela
+            Console.WriteLine("Eliminación cancelada");
+        }
+    }
+
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+    protected void Guarda()
+    {
+        var dataItem = SelectedItem;
+        // dataItem.Puevaca = Estatus;
+        alertInfo.Show("Actualizar Cargo!!!","success");
+        if (SelectedItem.IdentityColumn==0)
+        {
+            // var ret0 = api.InsertFrhpu010Dto(dataItem);
+            //dataue = new List<Frhue000Dto>();
+            clase = "";
+        }
+        else
+        {
+            //  var ret = api.UpdateFrhpu010Dto(dataItem);
+            //   nv.NavigateTo("/FRHCL101");
+        }
+
+
+    }
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        ActiveTabIndex = newIndex;
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+    }
+    protected void Cancelar()
+    {
+        nv.NavigateTo("/FRHCL101");
+    }
+    protected async Task Deshacer()
+    {
+        await CargaRegistro();
+        await SetPermisos(PaCodigo,IsCodigo);
+        clase = "";
+    }
+    protected void Editar()
+    {
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        //CantSave= false;
+        alertInfo.Show("Editar Cargo!!!");
+    }
+    protected void Editar2(Frhrq010Dto item)
+    {
+        // SelectedItem = MockPuestosService.GetAllAsync(1).Result.FirstOrDefault();
+        // SelectedItem.JoTitulo = item.jot;
+        // SelectedItem.Reqnume = item.Reqnume;
+        // SelectedItem.OfCodigo = item.OfCodigo;
+        // SelectedItem.UbCodigo = item.UbCodigo;
+        // SelectedItem.JoNumber = item.JoNumber;
+        // SelectedItem.ChangedOn = DateTime.Today;
+        // SelectedItem.ChangedBy = "N";
+        // SelectedItem.NpCodigo = "01";
+        // SelectedItem.JoNumber = "000000"; 
+        // clase_np = clases.Where(x => x.NpCodigo == SelectedItem.NpCodigo).FirstOrDefault();
+        // categoria_np = categorias.Where(x => x.CtCodigo == clase_np.CtCodigo).FirstOrDefault();
+        SelectedItem.Estatus = "A";
+
+        Estatus = SelectedItem.Estatus;
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        //CantSave= false;
+        alertInfo.Show("Crear Cargo a partir de una requisicion!!!");
+        ActiveTabIndex = 0;
+    }
+    protected void Eliminar()
+    {
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        //CantSave= false;
+        alertInfo.Show("Eliminar Cargo!!!","warning");
+    }
+    protected void Agregar()
+    {
+        clase = "hidden";
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        SelectedItem.IdentityColumn=0;
+        alertInfo.Show("Crear Nuevo Cargo!!!");
+        // SelectedItem.a = "000";
+        // SelectedItem.Pasnomb = "xx";
+        // SelectedItem.PasUserid = "xx";
+        // SelectedItem.PasFecRe = DateTime.Today;
+        // SelectedItem.PasFecEx = DateTime.Today;
+        // SelectedItem.PasEsEmp = "N";
+        SelectedItem.CreatedBy = "N";
+        SelectedItem.CreatedOn = DateTime.Today;
+        SelectedItem.ChangedOn = DateTime.Today;
+        SelectedItem.ChangedBy = "N";
+        CantSave = false;
+    }
+    // Propiedad que manejará el estatus seleccionado
+    private string Estatus { get; set; } = "A"; // Valor por defecto "A" para Activo
+    // Propiedad que manejará el campo EsEmpleado
+    bool EsEmpl { get; set; } = false;
+    bool EnabledEmp { get; set; } = false;
+    bool Vacante { get; set; } = false;
+    bool EnabledExp { get; set; } = false;
+    private string clase { get; set; } = "";
+    // Método que actualiza el valor del estatus al cambiar la selección
+    private void CambiarEstatus(ChangeEventArgs e)
+    {
+        Estatus = e.Value.ToString();
+    }
+    private void EsEmpleadEstatus(bool value)
+    {
+        EsEmpl = value;
+        EnabledEmp = EsEmpl;  
+
+    }
+    private void ExpiraEstatus(bool value)
+    {
+        Vacante = value;
+        EnabledExp = Vacante;
+
+    }
+    DxGrid? MyGrid;
+    DxGrid? MyGridConoce;
+    DxGrid? MyGridEntrena;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    public class EstatusP
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+
+        public EstatusP(string value, string text)
+        {
+            Value = value;
+            Text = text;
+        }
+    }
+
+    private List<EstatusP> estatus = new()
+    {
+        new EstatusP("E", "En Proceso"),
+        new EstatusP("D", "Desactivado"),
+        new EstatusP("A", "Aprobado"),
+
+    };
+    private List<Frhpu010Dto> data;
+    private List<Frhrq010Dto> datarq;
+    //private List<Trhnz000Dto> modulos { get; set; } =new List<Trhnz000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Frhjo010Dto SelectedItem { get; set; }
+    private List<Trhem000Dto> empresas { get; set; } = new List<Trhem000Dto>();
+    //private List<Trhpa000Dto> perfiles { get; set; } = new List<Trhpa000Dto>();
+    private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+    private List<Trhmt000Dto> motivos { get; set; }
+    private List<Trhuo000Dto> familia { get; set; }
+    private List<Trhnl000Dto> clasificador { get; set; }
+    private List<Trhhj000Dto> itemsmanual { get; set; }
+    private List<Frhdj010Dto> detmanual { get; set; }
+    private Trhhj000Dto itemsmanualSelect { get; set; }
+    private Frhdj010Dto detmanualSelect { get; set; }
+
+    private List<Frhjo010Dto> puestos { get; set; } = new List<Frhjo010Dto>();
+
+    private IEnumerable<Trhpf000Dto> profesiones { get; set; }
+    private IEnumerable<Trhpf000Dto> profesionesSeleccionadas { get; set; } 
+    private List<Trhpf000Dto> profesionesPuesto { get; set; }
+
+    private IEnumerable<Trhid000Dto> idiomas { get; set; }
+    private IEnumerable<Trhid000Dto> idiomasSeleccionados { get; set; }
+    private List<Frhjl010Dto> idiomasPuesto { get; set; }
+
+    private IEnumerable<Trhpc000Dto> perfilcs { get; set; }
+    private IEnumerable<Trhcs000Dto> perfilcursos { get; set; }
+    private IEnumerable<Trhcu000Dto> cursos { get; set; }
+
+    private IEnumerable<Trhbe000Dto> beneficios { get; set; }
+    private IEnumerable<Trhbe000Dto> beneficiosSeleccionados { get; set; }
+    private List<Frhbj010Dto> beneficiosPuesto { get; set; }
+
+
+    private IEnumerable<Trhsw000Dto> habilidades { get; set; }
+
+    private IEnumerable<Trhhg000Dto> conocimientos { get; set; }
+    private IEnumerable<Trhgn000Dto> conocimientosTipo { get; set; }
+    private IEnumerable<Trhhg000Dto> conocimientosSeleccionados { get; set; }
+    private IEnumerable<Frhjs010Dto> conocimientosPuesto { get; set; }
+    private Trhpf000Dto profesioneSeleccionada { get; set; }
+    private List<Frhjc010Dto> profPuestos { get; set; }
+    private Frhjc010Dto profPuestoSeleccionada { get; set; }
+
+    private List<Trhub010Dto> ubicaciones { get; set; }
+
+    private List<Trhnp010Dto> clases { get; set; }
+    private Trhnp010Dto clase_np { get; set; }
+    private Trhct010Dto categoria_np { get; set; }
+    private List<Trhct010Dto> categorias { get; set; }
+    private List<Trhsr000Dto> titalterno { get; set; }
+
+    private List<Trhed000Dto> gradoEducacion { get; set; }
+    private List<Trhni000Dto> nivelGradoEd { get; set; }
+    private List<Trhnt000Dto> nivelDesemp { get; set; }
+
+   // private IEnumerable<Trhni000Dto> nivelGrado { get; set; }
+   // private IEnumerable<Trhed000Dto> gradoEduc { get; set; }
+   // private IEnumerable<Trhnt000Dto> nivelDesemp { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            // Token = auth.tkn;
+            // if (string.IsNullOrEmpty(Token))
+            // {
+            //     //Token = await auth.GetTokenAsync();
+            //     return;
+            // }
+            // api.SetToken(Token);
+        }
+        //ApiBaseUrl = api.GetApiBaseUrl();
+        //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+        // set permisos
+        await SetPermisos(PaCodigo, IsCodigo);
+        //modulos = await api.GetTrhnz000Dtos();
+        await CargaRegistro();
+        // if (id==0)
+        // { data = await api.GetTrhps000Dtos(); }
+        // else
+        // { SelectedItem = await api.GetByIdTrhps000Dtos(id);
+        //     data = new List<Trhps000Dto>();
+        //     data.Add(SelectedItem);
+        //     Estatus = SelectedItem.PasUserE;
+        //     EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+        //     EnabledEmp = EsEmpl;
+        //     Expira = SelectedItem.PasExpira == "S" ? true : false;
+        //     EnabledExp = Expira;
+        //     dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        // }
+        //modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "api/Trhnz000");
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Trhps000Dto)e.DataItem).IdentityColumn;
+        //*await api.DeleteTrhps000Dto(codigo);
+        //await HttpClient.DeleteAsync(ApiBaseUrl + "api/Trhps000/" + ((Trhps000Dto)e.DataItem).IdentityColumn);
+        // data = await api.GetFrhpu010Dtos();
+        //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+    }
+    async Task ConfirmDelete()
+    {
+        // Llamada a JavaScript para la confirmación
+        bool isConfirmed = await JS.InvokeAsync<bool>("confirmar", "¿Estás seguro de que deseas eliminar este registro?");
+
+        if (isConfirmed)
+        {
+            // Lógica para eliminar si el usuario confirma
+            await  DeleteItem();
+        }
+    }
+
+    async Task DeleteItem()
+    {
+        // Tu lógica para eliminar el elemento
+        // dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        // if (dataue.Count() > 0)
+        // {
+        //     alertDialog.Message = "Tiene (" + dataue.Count().ToString() + " ) perfil(es). Favor elimine todos los perfiles asociados a este empleado y luego podra eliminar el empleado.";
+        //     alertDialog.Show();
+        //     //await JS.InvokeVoidAsync("alert", "Favor eliminar los perfiles asociados a este usuario antes de eliminarlo!");
+        // }
+        // else
+
+        // await api.puDeleteAsync(id,Token);
+        nv.NavigateTo("/FRHCL101");
+
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            Frhpu010Dto newCategory = new Frhpu010Dto();
+            SetNewValues(newCategory, (Frhpu010Dto)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<DTOs.Trhps000Dto>(ApiBaseUrl + "api/Trhps000/", newCategory);
+            // HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhps000Dto>(ApiBaseUrl + "api/Trhps000/", newCategory);
+            //*var ret = await api.InsertFrhpu010Dto(newCategory);
+            // Verifica si la solicitud fue exitosa
+            //* if (ret)
+            //* {
+            //*     // SelectedItem = await api.GetFrhpu010Dtos();
+            //* }
+            //*else
+            //*{
+            //**/    Console.WriteLine($"Error: Insertando ");
+            //* }
+
+            //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+        }
+        else
+        {
+            //var dataItem = (Trhps000Dto)e.DataItem;
+            //SetEditValues(dataItem, (Trhps000Dto)e.EditModel);
+            // HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl + "api/Trhps000/" + dataItem.PasUserid, dataItem);
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+            //     string responseContent = await response.Content.ReadAsStringAsync();
+            //     // Puedes deserializar el contenido si es un JSON
+            //     // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            // }
+            // else
+            // {
+            //     // La solicitud falló. Puedes manejar el error aquí.
+            //     string errorContent = await response.Content.ReadAsStringAsync();
+            //     Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            // }
+            //**/ var ret = await api.UpdateFrhpu010Dto(dataItem);
+            // if (ret)
+            // { data = await api.GetTrhps000Dtos(); }
+            // else
+            // { Console.WriteLine($"Error: Actualizando"); }
+            //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+        }
+
+        void SetNewValues(Frhpu010Dto dataItem, Frhpu010Dto newValues)
+        {
+            dataItem.Puenume = newValues.Puenume;
+            dataItem.Puetitu = newValues.Puetitu;
+            dataItem.OfCodigo = newValues.OfCodigo; 
+            dataItem.UbCodigo = newValues.UbCodigo;
+
+            dataItem.JoNumber = newValues.JoNumber;
+            dataItem.Puefedi = newValues.Puefedi;
+            dataItem.Puefech = newValues.Puefech;
+            dataItem.Puesuel = newValues.Puesuel;
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+        void SetEditValues(Frhpu010Dto dataItem, Frhpu010Dto newValues)
+        {
+            //dataItem.PasUserid = newValues.PasUserid;
+            dataItem.Puenume = newValues.Puenume;
+            dataItem.Puetitu = newValues.Puetitu;
+            dataItem.OfCodigo = newValues.OfCodigo;
+            dataItem.UbCodigo = newValues.UbCodigo;
+
+            dataItem.JoNumber = newValues.JoNumber;
+            dataItem.Puefedi = newValues.Puefedi;
+            dataItem.Puefech = newValues.Puefech;
+            dataItem.Puesuel = newValues.Puesuel;
+            dataItem.ChangedBy = "Eikon";
+            //            dataItem.CreatedOn = DateTime.Today.Date;
+            //            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+
+        }
+
+    }
+    async Task SetPermisos(string paCodigo, string isCodigo)
+    {
+        var permisosall = await MockPermisosService.GetAllAsync(1);
+        permisos = permisosall.FirstOrDefault();
+        if (permisos == null)
+        {
+            permisos = new Trhfm000Dto();
+            permisos.MpMail = false;
+            permisos.MpDelete = false;
+            permisos.MpUpdate = false;
+            permisos.MpReadFo = false;
+            permisos.MpAddFor = false;
+
+        }
+        cAhdn = permisos.MpAddFor ? "" : "hidden";
+        cUhdn = permisos.MpUpdate ? "" : "hidden";
+        cShdn = "hidden";
+        cDhdn = permisos.MpDelete ? "" : "hidden";
+        //return "OK";
+        /*
+        * remove leave save add
+        */
+                                                                                                                        // **- ToolbarOptions = ToolbarOptions.Append("remove").ToArray();
+        // **- ToolbarOptions = ToolbarOptions.Append("leave").ToArray();
+        // **- ToolbarOptions = ToolbarOptions.Append("save").ToArray();
+        // **- ToolbarOptions = ToolbarOptions.Append("add").ToArray();
+        // **- ToolbarOptions = ToolbarOptions.Append("procesar").ToArray();
+
+    }
+    void OnRowClick(GridRowClickEventArgs e)
+    {
+        SelectedItem = (Frhjo010Dto)e.Grid.SelectedDataItem;
+        SetActiveTab(2);
+        ActiveTabIndex = 2;
+    }
+    public void SetActiveTab(int index)
+    {
+        if (index >= 0 && index < 4) 
+        {
+            ActiveTabIndex = index;
+        }
+    }
+    async Task CargaRegistro()
+    {
+
+        //data = await MockCargosService.GetAllAsync(9); //await HttpClient.GetFromJsonAsync<List<Frhpu010Dto>>(ApiBaseUrl + "api/Frhpu010");
+        //datarq = await MockRequisicionesService.GetAllAsync(9);
+        empresas = await MockEmpresasService.GetAllAsync(9);//*HttpClient.GetFromJsonAsync<List<Trhem000>>(ApiBaseUrl + "api/Trhem000");
+        puestos = await MockPuestosService.GetAllAsync(9); //*api.joGetAllAsync(Token);
+        ubicaciones = await MockUbicacionesService.GetAllAsync(9); //*api.ubGetByEmCodigo("01", Token);
+        profesiones = await MockProfesionesService.GetAllAsync(9); //*api.ofGetByEmCodigo("01", Token);
+        profesionesSeleccionadas = profesiones.Skip(1).Take(3).ToList();
+
+        profesionesPuesto = profesiones.Skip(1).Take(3).ToList();
+
+        Data = await MockHabilidadesService.GetAllAsync();
+        Values = Data.Take(2);
+        conocimientos= await MockConocimientosService.GetAllAsync(9);
+        conocimientosTipo = await MockTipoConocimientoService.GetAllAsync(9);
+        conocimientosPuesto = await MockConocimientosPuestoService.GetAllAsync(9);
+        foreach (var item in conocimientosPuesto)
+        {
+            conocimientosPuesto.First(xc=>xc.IdentityColumn==item.IdentityColumn).Habminima="S";
+            conocimientosPuesto.First(xc => xc.IdentityColumn == item.IdentityColumn).Habanos = item.IdentityColumn+1;
+            conocimientosPuesto.First(xc => xc.IdentityColumn == item.IdentityColumn).Habmese = item.IdentityColumn +2;
+        }
+        // conocimientosSeleccionados = conocimientos.Take(4);
+        idiomas = await MockIdiomasService.GetAllAsync(7); //*api.ofGetByEmCodigo("01", Token);
+        idiomasSeleccionados = idiomas.Skip(1).Take(2);
+
+        perfilcs = await MockPerfilCsService.GetAllAsync(4);
+        perfilcursos = await MockRelCursosService.GetAllAsync(5);
+        cursos = await MockCursosService.GetAllAsync(8);
+
+        gradoEducacion = await MockGradoEdService.GetAllAsync(9); //*api.ofGetByEmCodigo("01", Token);
+        nivelGradoEd = await MockNivelGradoService.GetAllAsync(9); //*api.ofGetByEmCodigo("01", Token); 
+        nivelDesemp = await MockNivelDesempService.GetAllAsync(9); //*api.ofGetByEmCodigo("01", Token);  
+
+        beneficios = await MockBeneficiosService.GetAllAsync(7); //*api.ofGetByEmCodigo("01", Token);
+        beneficiosSeleccionados = beneficios.Skip(3).Take(2);
+
+        clases = await MockClasesService.GetAllAsync(9); //*api.npGetByEmCodigo("01", Token);
+        categorias = await MockCategoriasService.GetAllAsync(9); //*api.ctGetByEmCodigo("01", Token);
+        motivos = await MockmotivosService.GetAllAsync(9);//** await api.mtGetByEmCodigo("01", Token);
+        familia = await MockFamiliaService.GetAllAsync(9);//* await api.uoGetByEmCodigo("01", Token);
+        clasificador = await MockClasificadorService.GetAllAsync(9);//* await api.nlGetByEmCodigo("01", Token);
+        titalterno = await MockTitAlternoService.GetAllAsync(9);//* await api.srGetByEmCodigo("01", Token);
+        itemsmanual = await MockHjService.GetAllAsync(9);//* await api.hjGetByEmCodigo("01", Token);
+        detmanual = await MockDjService.GetAllAsync(9);//* await api.djGetByEmCodigo("01", Token);
+        itemsmanualSelect = itemsmanual.FirstOrDefault();
+
+        detmanualSelect = detmanual.FirstOrDefault();
+        detmanualSelect.Descri = "Una descripcion larga para probar el campo de descripcion de puesto. Aqui el departamento de recursos humanos pone la descripcion del puesto, ademas en los otros items ponen mas detalles del puesto.";
+        Random random = new Random();
+
+        // Genera un número entero aleatorio entre 1 y 6
+        char[] caracteres = { 'E', 'A', 'D', 'D', 'A', 'A', 'E' };
+        int numeroAleatorio = random.Next(1, 6);
+        char caracterAleatorio = caracteres[numeroAleatorio];
+        if (id==0)
+        {
+            SelectedItem = puestos.FirstOrDefault();
+            SelectedItem.Estatus = caracterAleatorio.ToString();    
+            clase_np = clases.FirstOrDefault();
+            //   clase_np.NpPeriodo = 3;
+            categoria_np = categorias.FirstOrDefault();
+        }
+        else
+        {
+            SelectedItem = puestos.FirstOrDefault(pt => pt.IdentityColumn == id);
+            // clase_np = clases.FirstOrDefault(pt => pt.IdentityColumn == id);
+            SelectedItem.Estatus = caracterAleatorio.ToString();
+            // categoria_np = categorias.FirstOrDefault(pt => pt.IdentityColumn == id);
+
+        }
+
+        //data = new List<Frhpu010Dto>();
+        puestos.Add(SelectedItem);
+        // var trhnp010Dto = await MockClasesService.GetAllAsync(1);
+        // var trhct010Dto = await MockCategoriasService.GetAllAsync(1);
+
+        // sPrueba = clase_np.NpPeriodo.ToString("N0");
+        FechaCrea = SelectedItem.ChangedOn.ToString("yyyy-MM-dd");
+        Estatus = SelectedItem.Estatus;
+        //Presupuesto = categoria_np.Ptomedio.ToString("N2");
+        //SueldoEntrada = categoria_np.Minent.ToString("N2");
+        // EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+        // EnabledEmp = EsEmpl;
+        //Vacante = SelectedItem.Estatus == "S" ? true : false;
+        // EnabledExp = Expira;
+        //  dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+
+    }
+    async Task BuscarReq()
+    {
+        SetActiveTab(1); // Cambiar a la pestaña de busqueda
+    
+    }
+    async Task BuscarEsp()
+    {
+        SetActiveTab(2); // Cambiar a la pestaña de especificaciones
+
+    }
+    async Task BuscarDet()
+    {
+        SetActiveTab(3); // Cambiar a la pestaña de descripcion
+
+    }
+    /*desde aqui*/
+    async Task OnDataItemDeletingUe(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Frhue000Dto)e.DataItem).IdentityColumn;
+        var userid = ((Frhue000Dto)e.DataItem).PasUserid;
+        await HttpClient.DeleteAsync(ApiBaseUrl + "frhue000/" + ((Frhue000Dto)e.DataItem).IdentityColumn);
+        //  dataue = await api.GetFrhue000DtosByPasUserId(userid);
+    }
+
+    void Editar(Frhjo010Dto puesto)
+    {
+        Random random = new Random();
+
+        // Genera un número entero aleatorio entre 1 y 6
+        char[] caracteres = { 'E', 'A', 'D', 'D', 'A', 'A', 'E' };
+        int numeroAleatorio = random.Next(1, 6);
+        char caracterAleatorio = caracteres[numeroAleatorio];
+        id = puesto.IdentityColumn;
+        SelectedItem = puesto;
+        clase_np = clases.FirstOrDefault(pt => pt.IdentityColumn == id);
+        clase_np.NpPeriodo = numeroAleatorio;
+        categoria_np = categorias.FirstOrDefault(pt => pt.IdentityColumn == id);
+        SelectedItem.Estatus = caracterAleatorio.ToString();
+        // Encabezado = "Editando Requisición de Personal " + SelectedRq.Reqnume;
+        SetActiveTab(0); // Cambiar a la pestaña de Mantenimiento
+        StateHasChanged();
+    }
+    void OnSelectedDataItemsChanged(SelectedDataItemsChangedEventArgs<Trhhj000Dto> args)
+    {
+        var msg = "";
+        detmanualSelect = MockDjService.GetAllAsync(9).Result.FirstOrDefault(d => d.HjCodigo == args.DataItems.First().HjCodigo);
+        // Only one item is present in the collection for single selection List Box
+        if (detmanualSelect.HjCodigo == "001")
+        {
+            detmanualSelect.Descri = "Una descripcion larga para probar el campo de descripcion de puesto. Aqui el departamento de recursos humanos pone la descripcion del puesto, ademas en los otros items ponen mas detalles del puesto. Aqui pueden describirse las funciones del puesto, entre otros. las responsabilidades, a quien reporta, etcetera, etcetera.";
+        }
+        if (args.ChangeSource == SelectionChangeSource.ParameterChange)
+            msg = "Selection changed in code. The selected item: " +
+                args.DataItems.First().HjDescri + " " + args.DataItems.First().HjDescri;
+        else
+            msg = "Selection changed by a user action. The selected item: " +
+                args.DataItems.First().HjDescri + " " + args.DataItems.First().HjDescri;
+    }
+    // async Task OnEditModelSavingUe(GridEditModelSavingEventArgs e)
+    // {
+    //     if (e.IsNew)
+    //     {
+    //         Frhue000Dto newCategory = new Frhue000Dto();
+    //         SetNewValues(newCategory, (Frhue000Dto)e.EditModel);
+    //         //await HttpClient.PostAsJsonAsync<DTOs.frhue000Dto>(ApiBaseUrl + "frhue000/", newCategory);
+    //         HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Frhue000Dto>(ApiBaseUrl + "frhue000/", newCategory);
+
+    //         // Verifica si la solicitud fue exitosa
+    //         if (response.IsSuccessStatusCode)
+    //         {
+    //             // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+    //             string responseContent = await response.Content.ReadAsStringAsync();
+    //             // Puedes deserializar el contenido si es un JSON
+    //             // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+    //         }
+    //         else
+    //         {
+    //             // La solicitud falló. Puedes manejar el error aquí.
+    //             string errorContent = await response.Content.ReadAsStringAsync();
+    //             Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+    //         }
+
+    //         dataue = await api.GetFrhue000DtosByPasUserId(newCategory.PasUserid);
+    //     }
+     
+
+    //     // void SetNewValues(Frhue000Dto dataItem, Frhue000Dto newValues)
+    //     // {
+    //     //     dataItem.PasUserid = SelectedItem.PasUserid;
+
+    //     //     dataItem.PaCodigo = newValues.PaCodigo;
+
+    //     //     dataItem.EmCodigo = newValues.EmCodigo;
+
+    //     //     dataItem.CreatedBy = "Eikon";
+    //     //     dataItem.CreatedOn = DateTime.Today.Date;
+    //     //     dataItem.ChangedBy = " ";
+    //     //     dataItem.ChangedOn = DateTime.Today.Date;
+
+    //     // }
+        
+    // }
+    /*hasta aqui*/
+
+   
+}
+
+
+

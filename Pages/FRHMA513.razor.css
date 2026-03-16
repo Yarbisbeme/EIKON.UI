@@ -1,0 +1,285 @@
+/* Main form container */
+.frhma513-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Main content layout - two columns */
+.frhma513-form .main-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    width: 100%;
+}
+
+/* Left column */
+.frhma513-form .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Right column */
+.frhma513-form .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid var(--border-color, #bfbfbf);
+    border-radius: 4px;
+    padding: 20px;
+    background-color: var(--background-light, #fafafa);
+}
+
+/* Input field styles */
+.frhma513-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma513-form .input label {
+    font-weight: 500;
+    color: var(--text-color, #33363f);
+    font-size: 14px;
+}
+
+/* Montos row - three inputs */
+.frhma513-form .montos-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    align-items: start;
+}
+
+/* Radio and checkbox groups */
+.frhma513-form .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma513-form .group-label {
+    font-weight: 600;
+    color: var(--text-color, #33363f);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Radio buttons vertical layout */
+.frhma513-form .radio-buttons-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Checkboxes vertical */
+.frhma513-form .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+/* Action buttons */
+.frhma513-form .action-buttons {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+/* Description section */
+.frhma513-form .description-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+}
+
+.frhma513-form .description-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma513-form .description-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.frhma513-form .description-header label {
+    font-weight: 500;
+    color: var(--text-color, #33363f);
+    font-size: 14px;
+}
+
+.frhma513-form .aplicar-spinner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.frhma513-form .aplicar-spinner label {
+    font-weight: 500;
+    color: var(--text-color, #33363f);
+    font-size: 14px;
+}
+
+/* Tabs and image container */
+.frhma513-form .tabs-imagen-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.frhma513-form .tab-content {
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid var(--border-light, #e9ecef);
+    border-top: none;
+}
+
+.frhma513-form .custom-grid {
+    border: 1px solid var(--border-color, #bfbfbf);
+    max-height: 300px;
+}
+
+/* Image section */
+.frhma513-form .imagen-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhma513-form .imagen-section label {
+    font-weight: 500;
+    color: var(--text-color, #33363f);
+    font-size: 14px;
+}
+
+.frhma513-form .imagen-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-textbox-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-spin-edit-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-spin-edit-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-combobox-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-combobox-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-memo {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-memo:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-checkbox {
+    color: var(--text-color, #33363f);
+}
+
+::deep .dx-grid {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-grid-header {
+    background-color: var(--background-light, #f8f9fa);
+    font-weight: 600;
+}
+
+::deep .dxbs-grid-header-content {
+    color: var(--text-color, #33363f);
+}
+
+::deep .dx-radio-button-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+::deep .dx-radio-button {
+    color: var(--text-color, #33363f);
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .frhma513-form .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma513-form .right-column {
+        width: 100%;
+    }
+
+    .frhma513-form .description-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma513-form {
+        padding: 15px;
+    }
+
+    .frhma513-form .montos-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma513-form .description-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .frhma513-form .action-buttons {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma513-form {
+        padding: 10px;
+        gap: 20px;
+    }
+
+    .frhma513-form .main-content {
+        gap: 20px;
+    }
+
+    .frhma513-form .input label,
+    .frhma513-form .group-label,
+    .frhma513-form .description-header label,
+    .frhma513-form .imagen-section label {
+        font-size: 13px;
+    }
+
+    .frhma513-form .imagen-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

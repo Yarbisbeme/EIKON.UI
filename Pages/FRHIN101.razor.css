@@ -1,0 +1,312 @@
+/* Interface form */
+.interface-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Nomina section */
+.nomina-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Todos section */
+.todos-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Periods container */
+.periods-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.periods-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    align-items: end;
+    margin-bottom: 15px;
+}
+
+.period-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.period-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.period-input {
+    width: 80px;
+}
+
+.date-range-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.range-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.range-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.range-input {
+    width: 80px;
+}
+
+/* Authentication container */
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.auth-title-checkbox {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.auth-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.auth-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.auth-input {
+    width: 200px;
+}
+
+/* Transactions container */
+.transactions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.transaction-checkboxes {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.transactions-input {
+    width: 300px;
+}
+
+/* Criteria container */
+.criteria-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.criteria-grid {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.criteria-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.criteria-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+    .criteria-row > div{
+        width:200px !important
+    }
+
+    .employee-checkboxes {
+        display: flex;
+        gap: 8px;
+    }
+
+/* Employee categories */
+.employee-categories {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 10px 0 15px 0;
+}
+
+/* File section */
+.file-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    flex-direction:column;
+    margin-top: 20px;
+}
+
+.file-fields {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.file-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.file-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.disco-input {
+    width: 150px;
+}
+
+.tipo-combo {
+    width: 100px;
+}
+
+.nombre-input {
+    width: 200px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.generate-btn {
+    width: 35px !important;
+    height: 35px !important;
+    background: #28a745 !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 4px !important;
+}
+
+.generate-btn:hover {
+    background: #218838 !important;
+}
+
+.cancel-btn {
+    width: 35px !important;
+    height: 35px !important;
+    background: #dc3545 !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 4px !important;
+}
+
+.cancel-btn:hover {
+    background: #c82333 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .periods-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .criteria-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .file-section {
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .file-fields {
+        gap: 10px;
+    }
+
+    .action-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .periods-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .date-range-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .transaction-checkboxes {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .employee-categories {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .nomina-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+    }
+    .file-fields {
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .criteria-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+    }
+}

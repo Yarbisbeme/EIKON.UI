@@ -1,0 +1,46 @@
+﻿<div class="popup @Type">
+    <div class="popup-icon">
+        <span></span>
+        @switch (Type)
+        {
+            case "alert":
+                <i class="fi fi-rr-exclamation"></i>
+
+                break;
+
+            case "warning":
+                <i class="fi fi-rr-triangle-warning"></i>
+                break;
+
+            case "success":
+                <i class="fi fi-rr-check-circle"></i>
+                break;
+        }
+    </div>
+    <h2 class="popup-header">@Header</h2>
+    <span class="popup-desc">
+        @Desc
+    </span>
+    <span class="popup-divider"></span>
+    <div class="popup-options">
+        <button class="cancel-btn">@CancelMsg</button>
+        <button class="confirm-btn">@ConfirmMsg</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Header { get; set; } = "";
+
+    [Parameter]
+    public string Desc { get; set; } = "";
+
+    [Parameter]
+    public string CancelMsg { get; set; } = "";
+
+    [Parameter]
+    public string ConfirmMsg { get; set; } = "";
+
+    [Parameter]
+    public string Type { get; set; } = "";
+}

@@ -1,0 +1,360 @@
+@layout MainLayout
+@page "/FRHCA203"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Check-Out de Empleado" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca203-form">
+        <!-- Sección superior con campos principales -->
+        <div class="top-section">
+            <!-- Columna izquierda: Campos -->
+            <div class="left-fields">
+                <!-- Número -->
+                <div class="input">
+                    <label>Número</label>
+                    <DxTextBox @bind-Text="@Numero"
+                               NullText="Número"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNumero" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Empleado -->
+                <div class="input">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@Empleado" NullText="Empleado" ReadOnly="true" />
+                </div>
+
+                <!-- Ingreso -->
+                <div class="input">
+                    <label>Ingreso</label>
+                    <DxDateEdit @bind-Date="@Ingreso"
+                                NullText="  /  /"
+                                DisplayFormat="dd/MM/yyyy" />
+                </div>
+
+                <!-- Estatus + Check-Out en fila -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Estatus</label>
+                        <DxComboBox Data="@EstatusOptions"
+                                    @bind-Value="@Estatus"
+                                    NullText="Seleccione..."
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                    <div class="input">
+                        <label>Check-Out</label>
+                        <DxComboBox Data="@CheckOutOptions"
+                                    @bind-Value="@CheckOut"
+                                    NullText="Seleccione..."
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                </div>
+
+                <!-- Aprobado por (ID + Nombre) -->
+                <div class="input">
+                    <label>Aprobado por</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@AprobadoPorId"
+                                   NullText="ID"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchAprobado" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox @bind-Text="@AprobadoPorNombre"
+                                   NullText="Nombre"
+                                   ReadOnly="true" />
+                    </div>
+                </div>
+
+                <!-- Cargo -->
+                <div class="input">
+                    <label>Cargo</label>
+                    <DxTextBox @bind-Text="@Cargo"
+                               NullText="Cargo"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCargo" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- F.Aprobación + F.Registro -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>F.Aprobación</label>
+                        <DxDateEdit @bind-Date="@FechaAprobacion"
+                                    NullText="  /  /"
+                                    DisplayFormat="dd/MM/yyyy">
+                        </DxDateEdit>
+                    </div>
+                    <div class="input">
+                        <label>F.Registro</label>
+                        <DxDateEdit @bind-Date="@FechaRegistro"
+                                    NullText="  /  /"
+                                    DisplayFormat="dd/MM/yyyy">
+                        </DxDateEdit>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Estatus Según Lista + Activos físicos -->
+            <div class="right-section">
+                <div class="estatus-lista-box">
+                    <label class="section-label">Estatus Según Lista</label>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@EstatusSegunLista"
+                             Value="@("Completo")">
+                        Completo
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@EstatusSegunLista"
+                             Value="@("Incompleto")">
+                        Incompleto
+                    </DxRadio>
+                </div>
+
+                <div class="activos-fisicos-box">
+                    <label class="section-label">Activos físicos</label>
+                    <label class="simulacion-label">Simulación</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs: Solicitud Salida y Lista chequeo -->
+        <DxTabs @bind-ActiveTabIndex="@ActiveTab" CssClass="main-tabs">
+            <DxTabPage Text="Solicitud Salida">
+                <div class="tab-content">
+                    <!-- Campos de Solicitud Salida + Checkboxes en layout horizontal -->
+                    <div class="solicitud-layout">
+                        <!-- Campos de Solicitud Salida -->
+                        <div class="solicitud-fields">
+                            <div class="input">
+                                <label>Tipo Separación</label>
+                                <DxComboBox Data="@TipoSeparacionOptions"
+                                            @bind-Value="@TipoSeparacion"
+                                            NullText="Seleccione..."
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                            </div>
+
+                            <div class="input">
+                                <label>Motivo Salida</label>
+                                <DxComboBox Data="@MotivoSalidaOptions"
+                                            @bind-Value="@MotivoSalida"
+                                            NullText="Seleccione..."
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                            </div>
+
+                            <div class="input">
+                                <label>Fecha Salida</label>
+                                <DxDateEdit @bind-Date="@FechaSalida"
+                                            NullText="  /  /"
+                                            DisplayFormat="dd/MM/yyyy" />
+                            </div>
+                        </div>
+
+                        <!-- Lista chequeo con checkboxes -->
+                        <div class="lista-chequeo-checkboxes">
+                            <DxCheckBox @bind-Checked="@Preavisado">¿Preavisado ?</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@Muerte">¿Muerte ?</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@PodriaVolver">¿Podría volver?</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@DejarVacante">¿Dejar vacante?</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@PagoPendiente">¿Pago pendiente?</DxCheckBox>
+                        </div>
+                    </div>
+                </div>
+            </DxTabPage>
+
+            <DxTabPage Text="Lista chequeo">
+                <div class="tab-content">
+                    <!-- Dual-list con botones de navegación -->
+                    <div class="dual-list-container">
+                        <div class="list-box">
+                            <DxListBox Data="@ListaDisponible"
+                                       @bind-Values="@SelectedDisponible"
+                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                       CssClass="custom-listbox"
+                                       ShowFilterHeader="false">
+                            </DxListBox>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <DxButton IconCssClass="fi fi-rr-angle-right"
+                                      Click="@MoveRight"
+                                      CssClass="nav-btn" />
+                            <DxButton IconCssClass="fi fi-rr-angle-double-right"
+                                      Click="@MoveAllRight"
+                                      CssClass="nav-btn" />
+                            <DxButton IconCssClass="fi fi-rr-angle-left"
+                                      Click="@MoveLeft"
+                                      CssClass="nav-btn" />
+                            <DxButton IconCssClass="fi fi-rr-angle-double-left"
+                                      Click="@MoveAllLeft"
+                                      CssClass="nav-btn" />
+                        </div>
+
+                        <div class="list-box">
+                            <DxListBox Data="@ListaSeleccionada"
+                                       @bind-Values="@SelectedSeleccionada"
+                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                       CssClass="custom-listbox"
+                                       ShowFilterHeader="false">
+                            </DxListBox>
+                        </div>
+                    </div>
+                </div>
+            </DxTabPage>
+        </DxTabs>
+
+        <!-- Comentario -->
+        <div class="input comentario-section">
+            <label>Comentario</label>
+            <DxMemo @bind-Text="@Comentario" Rows="5" NullText="Comentario" />
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+    private int ActiveTab = 0;
+
+    // Campos principales
+    private string Numero { get; set; } = "";
+    private string Empleado { get; set; } = "";
+    private DateTime? Ingreso { get; set; }
+    private string Estatus { get; set; } = "";
+    private string CheckOut { get; set; } = "";
+    private string AprobadoPorId { get; set; } = "";
+    private string AprobadoPorNombre { get; set; } = "";
+    private string Cargo { get; set; } = "";
+    private DateTime? FechaAprobacion { get; set; }
+    private DateTime? FechaRegistro { get; set; }
+
+    // Estatus Según Lista
+    private string EstatusSegunLista { get; set; } = "Incompleto";
+
+    // Activos físicos
+    private List<string> ActivosFisicos = new() { "Item 1", "Item 2", "Item 3" };
+    private IEnumerable<string> SelectedActivos = new List<string>();
+
+    // Solicitud Salida
+    private string TipoSeparacion { get; set; } = "";
+    private string MotivoSalida { get; set; } = "";
+    private DateTime? FechaSalida { get; set; }
+
+    // Lista chequeo checkboxes
+    private bool Preavisado { get; set; } = false;
+    private bool Muerte { get; set; } = false;
+    private bool PodriaVolver { get; set; } = false;
+    private bool DejarVacante { get; set; } = false;
+    private bool PagoPendiente { get; set; } = false;
+
+    // Comentario
+    private string Comentario { get; set; } = "";
+
+    // Dual-list
+    private List<string> ListaDisponible = new()
+    {
+        "Item disponible 1",
+        "Item disponible 2",
+        "Item disponible 3",
+        "Item disponible 4",
+        "Item disponible 5"
+    };
+    private List<string> ListaSeleccionada = new()
+    {
+        "Item seleccionado 1",
+        "Item seleccionado 2"
+    };
+    private IEnumerable<string> SelectedDisponible = new List<string>();
+    private IEnumerable<string> SelectedSeleccionada = new List<string>();
+
+    // Options
+    private List<string> EstatusOptions = new() { "Activo", "Inactivo", "Suspendido" };
+    private List<string> CheckOutOptions = new() { "Pendiente", "Aprobado", "Rechazado" };
+    private List<string> TipoSeparacionOptions = new() { "Renuncia", "Despido", "Retiro", "Jubilación" };
+    private List<string> MotivoSalidaOptions = new() { "Mejor oferta", "Razones personales", "Mudanza", "Estudios" };
+
+    // Event handlers
+    private void OnSearchNumero()
+    {
+        // TODO: Implementar búsqueda de número
+    }
+
+    private void OnSearchAprobado()
+    {
+        // TODO: Implementar búsqueda de aprobador
+    }
+
+    private void OnSearchCargo()
+    {
+        // TODO: Implementar búsqueda de cargo
+    }
+
+    private void MoveRight()
+    {
+        // Mover items seleccionados de disponible a seleccionada
+        var itemsToMove = SelectedDisponible.ToList();
+        foreach (var item in itemsToMove)
+        {
+            ListaDisponible.Remove(item);
+            ListaSeleccionada.Add(item);
+        }
+        SelectedDisponible = new List<string>();
+    }
+
+    private void MoveAllRight()
+    {
+        // Mover todos los items de disponible a seleccionada
+        ListaSeleccionada.AddRange(ListaDisponible);
+        ListaDisponible.Clear();
+        SelectedDisponible = new List<string>();
+    }
+
+    private void MoveLeft()
+    {
+        // Mover items seleccionados de seleccionada a disponible
+        var itemsToMove = SelectedSeleccionada.ToList();
+        foreach (var item in itemsToMove)
+        {
+            ListaSeleccionada.Remove(item);
+            ListaDisponible.Add(item);
+        }
+        SelectedSeleccionada = new List<string>();
+    }
+
+    private void MoveAllLeft()
+    {
+        // Mover todos los items de seleccionada a disponible
+        ListaDisponible.AddRange(ListaSeleccionada);
+        ListaSeleccionada.Clear();
+        SelectedSeleccionada = new List<string>();
+    }
+
+    private void HandleAdd()
+    {
+        // TODO: Implementar agregar nuevo registro
+    }
+
+    private void HandleSave()
+    {
+        // TODO: Implementar guardar cambios
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

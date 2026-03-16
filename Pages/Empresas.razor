@@ -1,0 +1,270 @@
+﻿@page "/empresas"
+
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+@inject NavigationManager nv;
+
+<PageTitle>Empresas</PageTitle>
+<h1>Grid Empresa</h1>
+
+@if (data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DxGrid Data="@data" @ref="MyGrid"
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+            DataItemDeleting="OnDataItemDeleting"
+            ShowFilterRow>
+        <Columns>
+            <DxGridCommandColumn Width="60px" >
+                <HeaderTemplate>
+                    <a class="" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    <a class="" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-trash"></i></a>
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Id" FieldName="EmCodigo" Width="60px" />
+            <DxGridDataColumn Caption="Descripción" FieldName="EmDescri" Width="600px" />
+            <DxGridDataColumn Caption="Teléfono" FieldName="Telefono" />
+            <DxGridDataColumn Caption="RNC" FieldName="EmRnc" />
+
+        </Columns>
+    </DxGrid>
+    
+}
+
+<h3 class="fi fi-rr-plus">Otros Controles: DropDown, Date Edit, CheckBox </h3>
+<div class="row">
+    <div class="col-md-2">
+<DxComboBox Data="@empresas"
+            TextFieldName="EmDescri"
+            ValueFieldName="EmCodigo"
+            @bind-Value="SelectedCategoryId"
+            ShowClearButton="true"
+            Placeholder="Select a empresa"
+            Width="300px">
+</DxComboBox>
+    </div>
+    <div class="col-md-2">
+        <i class="fi fi-rr-plus"></i>Seleccionado:<b> @SelectedCategoryId</b>
+    </div>
+    <div class="col-md-1">
+        <label for="EmDesde" class="demo-text cw-320 mb-1">
+            Fecha
+        </label>
+    </div>
+    <div class="col-md-2">
+        <DxDateEdit @bind-Date="@DateTimeValue"
+                    CssClass=""
+                    InputId="EmDesde" />
+    </div>
+    <div class="col-md-3">
+        Seleccionado: <b>@DateTimeValue.ToString("dddd, dd MMM yyyy")</b>
+    </div>
+    <div class="col-md-2">
+        
+        <DxCheckBox @bind-Checked="@IsChecked">@GetText()</DxCheckBox>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+         @*    <button class="btn btn-primary" @onclick="OpenModal">Registrar Token</button> *@
+    </div>
+    <div class="col-md-10">
+        @* <DxPopup Visible @bind-Value="IsModalVisible" >
+          
+                <div class="modal-content">
+                    <DxTextBox Text="@Token" Placeholder="Ingrese el token" />
+                    <DxButton Text="Aceptar" OnClick="ConfirmToken" />
+                    <DxButton Text="Cancelar" OnClick="Cancel" />
+                </div>
+            </DxPopup> *@
+    </div>
+</div>
+@code {
+    public bool IsModalVisible { get; set; }
+    public string Token { get; set; } = "";
+    public string _apiBaseUrl;
+
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+
+    private List<Trhem000> data;
+    private IEnumerable<Trhem000> empresas { get; set; } = Enumerable.Empty<Trhem000>();
+    private string SelectedCategoryId { get; set; }
+    private Trhem000 SelectedItem { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+                                //api.SetToken(Token);
+                                //await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _apiBaseUrl = api.GetApiBaseUrl();
+        // EikonDataServices eikonDataServices =  null;
+        
+        Token = auth.tkn;
+        if (string.IsNullOrEmpty(Token))
+        {
+            //Token = await auth.GetTokenAsync();
+            return;
+        }
+        api.SetToken(Token);
+
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(_apiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(_apiBaseUrl + "Trhem000");
+        data = await HttpClient.GetFromJsonAsync<List<Trhem000>>(_apiBaseUrl + "Trhem000");
+        empresas = await HttpClient.GetFromJsonAsync<List<Trhem000>>(_apiBaseUrl + "Trhem000");
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Trhem000)e.DataItem).IdentityColumn;
+        await HttpClient.DeleteFromJsonAsync<Trhem000>(_apiBaseUrl + "Trhem000/" + ((Trhem000)e.DataItem).IdentityColumn);
+        data = await HttpClient.GetFromJsonAsync<List<Trhem000>>(_apiBaseUrl + "Trhem000");
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            Trhem000 newCategory = new Trhem000();
+            SetNewValues(newCategory, (Trhem000)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<Models.Trhem000>(_apiBaseUrl + "Trhem000/", newCategory);
+            HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhem000>(_apiBaseUrl + "Trhem000/", newCategory);
+
+            // Verifica si la solicitud fue exitosa
+            if (response.IsSuccessStatusCode)
+            {
+                // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+                string responseContent = await response.Content.ReadAsStringAsync();
+                // Puedes deserializar el contenido si es un JSON
+                // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            }
+            else
+            {
+                // La solicitud falló. Puedes manejar el error aquí.
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            }
+
+            data = await HttpClient.GetFromJsonAsync<List<Trhem000>>(_apiBaseUrl + "Trhem000");
+        }
+        else
+        {
+            var dataItem = (Trhem000)e.DataItem;
+            SetNewValues(dataItem, (Trhem000)e.EditModel);
+            HttpResponseMessage response = await HttpClient.PutAsJsonAsync(_apiBaseUrl + "Trhem000/" + dataItem.EmCodigo, dataItem);
+            if (response.IsSuccessStatusCode)
+            {
+                // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+                string responseContent = await response.Content.ReadAsStringAsync();
+                // Puedes deserializar el contenido si es un JSON
+                // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            }
+            else
+            {
+                // La solicitud falló. Puedes manejar el error aquí.
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            }
+
+            data = await HttpClient.GetFromJsonAsync<List<Trhem000>>(_apiBaseUrl + "Trhem000");
+        }
+
+        void SetNewValues(Trhem000 dataItem, Trhem000 newValues)
+        {
+            dataItem.EmCodigo = newValues.EmCodigo;
+            dataItem.EmDescri = newValues.EmDescri;
+            dataItem.Activo = "A";
+            dataItem.Direcc = "33                                      ";
+            dataItem.Telefono = newValues.Telefono;
+            dataItem.Fax = "                    ";
+            dataItem.Apostal = "      ";
+            dataItem.Status = "A";
+            dataItem.Registro = "          ";
+            dataItem.Provincia = "01";
+            dataItem.Actividad = "                                        ";
+            dataItem.Capital = 0;
+            dataItem.Clase = "--       ";
+            dataItem.EmFiscal = "     ";
+            dataItem.EmComenta = " ";
+            dataItem.EmAnivers = DateTime.Today;
+            dataItem.EmNombrec = "--                           ";
+            dataItem.EmRnc = newValues.EmRnc;
+            dataItem.EmEMail = "                              ";
+            dataItem.EmBmp = "                              ";
+            dataItem.EmTimbre = " ";
+            dataItem.EmNoidss = "               ";
+            dataItem.EmForfech = " ";
+            dataItem.EmPoliza = "                              ";
+            dataItem.IdentityColumn = 0;
+            dataItem.EmSplash = "                              ";
+            dataItem.CyCodigo = "  ";
+            dataItem.EmDesde = DateTime.Today;
+            dataItem.EmHasta = DateTime.Today;
+            dataItem.CreatedBy = "              ";
+            dataItem.CreatedOn = DateTime.Today;
+            dataItem.ChangedBy = "              ";
+            dataItem.ChangedOn = DateTime.Today;
+            dataItem.NcCodigo = "001";
+            dataItem.EmDesalterno = "AVA                 ";
+            dataItem.LcCodigo = "  ";
+        }
+    }
+
+   
+}
+
+
+

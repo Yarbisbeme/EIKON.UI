@@ -1,0 +1,245 @@
+/* FRHMA507 - Firmas de Documentos */
+
+.frhma507-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Red Header */
+.frhma507-form .red-header {
+    background-color: #dc3545;
+    padding: 12px 20px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.frhma507-form .red-header h2 {
+    margin: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Horizontal Tabs Override */
+.frhma507-form .horizontal-tabs {
+    margin-bottom: 20px;
+}
+
+.frhma507-form ::deep .horizontal-tabs .dx-tabs-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.frhma507-form ::deep .horizontal-tabs .dx-tab {
+    min-width: 100px;
+    padding: 10px 15px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Signatures Container */
+.frhma507-form .signatures-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.frhma507-form .signatures-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.frhma507-form .signature-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma507-form .signature-area {
+    min-height: 80px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: white;
+    position: relative;
+}
+
+.frhma507-form .signature-area::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background-color: #33363f;
+}
+
+.frhma507-form .signature-label {
+    text-align: center;
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    padding-top: 5px;
+    border-top: 2px solid #33363f;
+}
+
+/* Standard Input Fields */
+.frhma507-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma507-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Bottom Row */
+.frhma507-form .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.frhma507-form .firmas-button-container {
+    display: flex;
+    align-items: flex-end;
+}
+
+.frhma507-form .firmas-button {
+    padding: 10px 20px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.frhma507-form .firmas-button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.frhma507-form .firmas-button:active {
+    transform: scale(0.98);
+}
+
+/* DevExpress Component Overrides */
+.frhma507-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma507-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma507-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhma507-form .red-header h2 {
+        font-size: 16px;
+    }
+
+    .frhma507-form .signatures-row {
+        gap: 20px;
+    }
+
+    .frhma507-form .signature-area {
+        min-height: 70px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma507-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhma507-form .red-header {
+        padding: 10px 15px;
+    }
+
+    .frhma507-form .red-header h2 {
+        font-size: 15px;
+    }
+
+    .frhma507-form .signatures-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhma507-form .signature-area {
+        min-height: 60px;
+    }
+
+    .frhma507-form .bottom-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhma507-form .firmas-button {
+        width: 100%;
+    }
+
+    .frhma507-form ::deep .horizontal-tabs .dx-tab {
+        min-width: 80px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma507-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhma507-form .red-header {
+        padding: 8px 12px;
+    }
+
+    .frhma507-form .red-header h2 {
+        font-size: 14px;
+    }
+
+    .frhma507-form .signatures-container {
+        padding: 15px;
+    }
+
+    .frhma507-form .signature-area {
+        min-height: 50px;
+    }
+
+    .frhma507-form .signature-label {
+        font-size: 13px;
+    }
+
+    .frhma507-form .input label {
+        font-size: 13px;
+    }
+
+    .frhma507-form ::deep .horizontal-tabs .dx-tab {
+        min-width: 70px;
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}

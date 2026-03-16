@@ -1,0 +1,246 @@
+﻿@page "/FRHCL107isidro"
+
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject NavigationManager nv;
+
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+<PageTitle>Opciones Menu</PageTitle>
+<h1>Mantenimiento Categorias Salariales</h1>
+
+@if (data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DxGrid Data="@data" @ref="MyGrid" 
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+            DataItemDeleting="OnDataItemDeleting"
+            ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals"
+            >
+        <Columns>
+            <DxGridCommandColumn Width="160px" VisibleIndex="1">
+                <HeaderTemplate>
+                    <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="text-primary" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    <a class="text-primary" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-trash"></i></a>
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="CategoriaId" FieldName="CtCodigo" Width="80px" VisibleIndex="3" >
+            
+            </DxGridDataColumn>
+            <DxGridDataColumn Caption="Descripción" FieldName="CtDescri" Width="300px" VisibleIndex="4">
+             
+            </DxGridDataColumn>
+            @* <DxGridDataColumn Caption="Desde" FieldName="GrDesde" Width="100px" VisibleIndex="5"></DxGridDataColumn>
+            <DxGridDataColumn Caption="Hasta" FieldName="GrHasta" Width="100px" VisibleIndex="6"></DxGridDataColumn>
+
+            <DxGridDataColumn Caption="Puede Requizar" FieldName="GrIndReq" VisibleIndex="7" Width="130px" /> *@
+            <DxGridDataColumn Caption="Activo" FieldName="CtEstatus" VisibleIndex="8" Width="130px" />
+            
+        </Columns>
+    </DxGrid>
+    
+}
+
+<h3 class=""></h3>
+
+@code {
+    [Parameter]
+    public string? pPaCodigo { get; set; }
+    public bool IsModalVisible { get; set; }
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } ="";
+    private bool IsNewRecord = false;
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Trhct010Dto> data;
+    //private List<Trhis000Dto> opciones { get; set; } =new List<Trhis000Dto>();
+    //private List<Trhpa000Dto> perfiles { get; set; } = new List<Trhpa000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Trhct010Dto SelectedItem { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+           // await InvokeAsync(StateHasChanged);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+                                //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(ApiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("http://localhost:8081/api/Trhem000");
+        data = await HttpClient.GetFromJsonAsync<List<Trhct010Dto>>(ApiBaseUrl + "api/Trhct010");
+        //opciones = await HttpClient.GetFromJsonAsync<List<Trhis000Dto>>(ApiBaseUrl + "Trhis000");
+        //perfiles = await HttpClient.GetFromJsonAsync<List<Trhpa000Dto>>(ApiBaseUrl + "Trhpa000");
+    }
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            data = await HttpClient.GetFromJsonAsync<List<Trhct010Dto>>(ApiBaseUrl + "api/Trhct010");
+            await InvokeAsync(StateHasChanged);
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Trhgr010Dto)e.DataItem).IdentityColumn;
+        await HttpClient.DeleteAsync(ApiBaseUrl + "Api/Trhgr010/" + ((Trhgr010Dto)e.DataItem).IdentityColumn);
+        data = await HttpClient.GetFromJsonAsync<List<Trhct010Dto>>(ApiBaseUrl + "Api/Trhct010");
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            Trhct010Dto newCategory = new Trhct010Dto();
+            SetNewValues(newCategory, (Trhct010Dto)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<DTOs.Trhct010Dto>(ApiBaseUrl + "Trhct010/", newCategory);
+            HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhct010Dto>(ApiBaseUrl + "Api/Trhct010/", newCategory);
+
+            // Verifica si la solicitud fue exitosa
+            if (response.IsSuccessStatusCode)
+            {
+                // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+                string responseContent = await response.Content.ReadAsStringAsync();
+                // Puedes deserializar el contenido si es un JSON
+                // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            }
+            else
+            {
+                // La solicitud falló. Puedes manejar el error aquí.
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            }
+
+            data = await HttpClient.GetFromJsonAsync<List<Trhct010Dto>>(ApiBaseUrl + "Api/Trhct010");
+        }
+        else
+        {
+            var dataItem = (Trhct010Dto)e.DataItem;
+            SetEditValues(dataItem, (Trhct010Dto)e.EditModel);
+            HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl + "api/Trhct010/" + dataItem.CtCodigo, dataItem);
+            if (response.IsSuccessStatusCode)
+            {
+                // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+                string responseContent = await response.Content.ReadAsStringAsync();
+                // Puedes deserializar el contenido si es un JSON
+                // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            }
+            else
+            {
+                // La solicitud falló. Puedes manejar el error aquí.
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            }
+
+            data = await HttpClient.GetFromJsonAsync<List<Trhct010Dto>>(ApiBaseUrl + "api/Trhct010");
+        }
+
+        void SetNewValues(Trhct010Dto dataItem, Trhct010Dto newValues)
+        {
+            dataItem.CtCodigo = newValues.CtCodigo;
+
+            dataItem.CtDescri = newValues.CtDescri; 
+
+            dataItem.CtMisc1 = newValues.CtMisc1;
+            dataItem.CtMisc2 = newValues.CtMisc2;
+            dataItem.CtMsp = newValues.CtMsp;
+            dataItem.CtEstatus = newValues.CtEstatus;
+            dataItem.EmEmpresa = newValues.EmEmpresa;
+            
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = " ";
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+        void SetEditValues(Trhct010Dto dataItem, Trhct010Dto newValues)
+        {
+            dataItem.CtMisc1 = newValues.CtMisc1;
+            dataItem.CtMisc2 = newValues.CtMisc2;
+            dataItem.CtMsp = newValues.CtMsp;
+            dataItem.CtEstatus = newValues.CtEstatus;
+            dataItem.EmEmpresa = newValues.EmEmpresa;
+           
+            dataItem.ChangedBy = "EikonWeb";
+            dataItem.ChangedOn = DateTime.Today.Date;
+            dataItem.IdentityColumn = newValues.IdentityColumn;
+            dataItem.CtCodigo = newValues.CtCodigo;
+            dataItem.CtDescri = newValues.CtDescri;
+        }
+    }
+    
+
+   
+}
+
+
+

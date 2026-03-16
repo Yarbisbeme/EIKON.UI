@@ -1,0 +1,694 @@
+@page "/FRHNO102"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHNO102 - Tipos de Nóminas" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Superior - Información Básica -->
+        <div class="basic-info-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Código</label>
+                    <DxTextBox @bind-Text="@CodigoValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchCodigoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+                <div class="input-field wide">
+                    <label>Descripción</label>
+                    <DxTextBox @bind-Text="@DescripcionValue" />
+                </div>
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Moneda Base</label>
+                    <DxComboBox Data="@MonedaList" 
+                               @bind-Value="@SelectedMoneda" 
+                               NullText="Seleccionar"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+                <div class="input-field">
+                    <label>Alterno</label>
+                    <DxTextBox @bind-Text="@AlternoValue" />
+                </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Cuenta</label>
+                    <DxTextBox @bind-Text="@CuentaValue" />
+                </div>
+                <div class="radio-group">
+                    <label class="group-title">Estatus</label>
+                    <div class="radio-options">
+                        <DxRadioGroup @bind-Value="@EstatusValue" 
+                                     Data="@EstatusOptions" 
+                                     ValueFieldName="Value"
+                                     TextFieldName="Text"
+                                     TData="RadioOption"
+                                     TValue="string"
+                                     Orientation="Orientation.Horizontal" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Principal con Layout Complejo -->
+        <div class="main-section">
+            <div class="main-layout">
+                <!-- Columna Izquierda -->
+                <div class="left-column">
+                    <!-- Forma Pago -->
+                    <div class="section-group">
+                        <label class="group-title">Forma Pago</label>
+                        <div class="radio-vertical-group">
+                            <DxRadioGroup @bind-Value="@FormaPagoValue" 
+                                         Data="@FormaPagoOptions" 
+                                         ValueFieldName="Value"
+                                         TextFieldName="Text"
+                                         TData="RadioOption"
+                                         TValue="string"
+                                         Orientation="Orientation.Vertical" />
+                        </div>
+                    </div>
+
+                    <!-- Presentación -->
+                    <div class="section-group">
+                        <label class="group-title">Presentación</label>
+                        <div class="radio-vertical-group">
+                            <DxRadioGroup @bind-Value="@PresentacionValue" 
+                                         Data="@PresentacionOptions" 
+                                         ValueFieldName="Value"
+                                         TextFieldName="Text"
+                                         TData="RadioOption"
+                                         TValue="string"
+                                         Orientation="Orientation.Vertical" />
+                        </div>
+                    </div>
+
+                    <!-- Periodicidad y Períodos -->
+                    <div class="section-group">
+                        <div class="input-field">
+                            <label>Periodicidad Pago</label>
+                            <DxTextBox @bind-Text="@PeriodicidadPagoValue" />
+                        </div>
+                        <div class="input-field">
+                            <label>Períodos Días</label>
+                            <DxSpinEdit @bind-Value="@PeriodosDiasValue" 
+                                       MinValue="0" 
+                                       MaxValue="365" />
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes inferiores -->
+                    <div class="section-group">
+                        <DxCheckBox @bind-Checked="@NominaPrincipalOption">Nómina principal</DxCheckBox>
+                    </div>
+                </div>
+
+                <!-- Columna Central -->
+                <div class="center-column">
+                    <!-- Cierre -->
+                    <div class="section-group">
+                        <label class="group-title">Cierre</label>
+                        <div class="checkbox-vertical-group">
+                            <DxCheckBox @bind-Checked="@CierreNominaOption">Nómina</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@CierreMensualOption">Mensual</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@CierreAnualOption">Anual</DxCheckBox>
+                        </div>
+                    </div>
+
+                    <!-- Autorización -->
+                    <div class="section-group">
+                        <label class="group-title">Autorización</label>
+                        <div class="checkbox-vertical-group">
+                            <DxCheckBox @bind-Checked="@AutorizacionPruebaOption">Prueba</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@AutorizacionFirmaOption">Firma</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@AutorizacionCierreOption">Cierre</DxCheckBox>
+                        </div>
+                    </div>
+
+                    <!-- Sueldos Anuales -->
+                    <div class="section-group">
+                        <div class="input-field">
+                            <label>Sueldos Anuales Gravables</label>
+                            <DxSpinEdit @bind-Value="@SueldosAnualesValue" 
+                                       MinValue="0" 
+                                       MaxValue="50" />
+                        </div>
+                    </div>
+
+                    <!-- Fechas de Cierre y otros -->
+                    <div class="section-group">
+                        <div class="fechas-cierre">
+                            <label class="group-title">Fechas de Cierre</label>
+                            <DxButton Text="Ver Estatus" 
+                                     CssClass="btn-sm info-btn" 
+                                     Click="@OnVerEstatusClick" />
+                        </div>
+                        <DxButton Text="Transacciones" 
+                                 CssClass="btn-sm primary-btn" 
+                                 Click="@OnTransaccionesClick" />
+                    </div>
+                </div>
+
+                <!-- Columna Derecha - Transacciones Básicas -->
+                <div class="right-column">
+                    <div class="transacciones-section">
+                        <label class="group-title">Transacciones Básicas</label>
+                        <div class="transacciones-list">
+                            <div class="transaccion-item">
+                                <label>Sueldo</label>
+                                <DxTextBox @bind-Text="@SueldoValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Retroactivo</label>
+                                <DxTextBox @bind-Text="@RetroactivoValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Seguro Social</label>
+                                <DxTextBox @bind-Text="@SeguroSocialValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Complettvo</label>
+                                <DxTextBox @bind-Text="@ComplettivoValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Saldo favor ISR</label>
+                                <DxTextBox @bind-Text="@SaldoFavorIsrValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Aporte Infotep</label>
+                                <DxTextBox @bind-Text="@AporteInfotepValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Aporte Acc.</label>
+                                <DxTextBox @bind-Text="@AporteAccValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Aporte Idss</label>
+                                <DxTextBox @bind-Text="@AporteIdssValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Producción</label>
+                                <DxTextBox @bind-Text="@ProduccionValue" 
+                                          CssClass="transaccion-input" />
+                            </div>
+                            <div class="transaccion-item">
+                                <label>Volante</label>
+                                <DxComboBox Data="@VolanteList" 
+                                           @bind-Value="@SelectedVolante" 
+                                           NullText="Seleccionar"
+                                           TextFieldName="Name" 
+                                           ValueFieldName="Id"
+                                           CssClass="transaccion-combo" />
+                            </div>
+                        </div>
+                        
+                        <!-- Icono decorativo -->
+                        <div class="transacciones-icon">
+                            <DxButton IconCssClass="fi fi-rr-settings" 
+                                     CssClass="icon-btn-medium info-btn" 
+                                     Click="@OnTransaccionesSettingsClick" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Sección de información básica */
+    .basic-info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Toolbar actions */
+    .toolbar-actions {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+        align-items: flex-end;
+        padding-bottom: 5px;
+    }
+
+    /* Radio groups */
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .group-title {
+        font-weight: 600;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .radio-options {
+        display: flex;
+        gap: 15px;
+    }
+
+    /* Main section layout */
+    .main-section {
+        background-color: white;
+        padding: 25px;
+    }
+
+    .main-layout {
+        display: flex;
+        gap: 30px;
+        min-height: 500px;
+    }
+
+    /* Columnas */
+    .left-column {
+        flex: 0 0 180px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .center-column {
+        flex: 0 0 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .right-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Section groups */
+    .section-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .radio-vertical-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .checkbox-vertical-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Fechas de cierre */
+    .fechas-cierre {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    /* Transacciones básicas */
+    .transacciones-section {
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: transparent;
+    }
+
+    .transacciones-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .transaccion-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .transaccion-item label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .transaccion-input,
+    .transaccion-combo {
+        font-size: 12px;
+    }
+
+    .transacciones-icon {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    /* Botones */
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .icon-btn-medium {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 14px;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .primary-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .primary-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-spin-edit {
+        border-radius: 4px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-spin-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Radio buttons and checkboxes */
+    .dx-radiobutton-checked .dx-radiobutton-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-radiobutton:hover .dx-radiobutton-icon,
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1024px) {
+        .main-layout {
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .left-column,
+        .center-column,
+        .right-column {
+            flex: none;
+        }
+    }
+
+    media (max-width: 768px) {
+        .basic-info-section,
+        .main-section {
+            padding: 15px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-layout {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .transacciones-section {
+            padding: 15px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .basic-info-section,
+        .main-section {
+            padding: 15px;
+        }
+
+        .toolbar-actions {
+            flex-direction: row;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+        }
+
+        .transacciones-icon {
+            position: static;
+            text-align: center;
+            margin-top: 15px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos básicos
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private string AlternoValue { get; set; } = "";
+    private string CuentaValue { get; set; } = "";
+    private int? SelectedMoneda { get; set; }
+    
+    // Radio button values
+    private string EstatusValue { get; set; } = "Activo";
+    private string FormaPagoValue { get; set; } = "Depósito";
+    private string PresentacionValue { get; set; } = "E-Mail";
+    
+    // Campos numéricos
+    private string PeriodicidadPagoValue { get; set; } = "";
+    private int PeriodosDiasValue { get; set; } = 0;
+    private int SueldosAnualesValue { get; set; } = 0;
+    
+    // Opciones de checkboxes
+    private bool NominaPrincipalOption { get; set; } = false;
+    private bool CierreNominaOption { get; set; } = false;
+    private bool CierreMensualOption { get; set; } = false;
+    private bool CierreAnualOption { get; set; } = false;
+    private bool AutorizacionPruebaOption { get; set; } = false;
+    private bool AutorizacionFirmaOption { get; set; } = false;
+    private bool AutorizacionCierreOption { get; set; } = false;
+    
+    // Transacciones básicas
+    private string SueldoValue { get; set; } = "";
+    private string RetroactivoValue { get; set; } = "";
+    private string SeguroSocialValue { get; set; } = "";
+    private string ComplettivoValue { get; set; } = "";
+    private string SaldoFavorIsrValue { get; set; } = "";
+    private string AporteInfotepValue { get; set; } = "";
+    private string AporteAccValue { get; set; } = "";
+    private string AporteIdssValue { get; set; } = "";
+    private string ProduccionValue { get; set; } = "";
+    private int? SelectedVolante { get; set; }
+    
+    // Listas de datos
+    private List<OptionItem> MonedaList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "USD - Dólar Americano" },
+        new OptionItem { Id = 2, Name = "DOP - Peso Dominicano" },
+        new OptionItem { Id = 3, Name = "EUR - Euro" }
+    };
+
+    private List<OptionItem> VolanteList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Estándar" },
+        new OptionItem { Id = 2, Name = "Detallado" },
+        new OptionItem { Id = 3, Name = "Resumido" }
+    };
+
+    private List<RadioOption> EstatusOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Activo", Text = "Activo" },
+        new RadioOption { Value = "Inactivo", Text = "Inactivo" }
+    };
+
+    private List<RadioOption> FormaPagoOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Depósito", Text = "Depósito" },
+        new RadioOption { Value = "Cheque", Text = "Cheque" },
+        new RadioOption { Value = "Efectivo", Text = "Efectivo" }
+    };
+
+    private List<RadioOption> PresentacionOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "E-Mail", Text = "E-Mail" },
+        new RadioOption { Value = "Volante", Text = "Volante" }
+    };
+    
+    public class OptionItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class RadioOption
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    private void OnUndoClick() => Console.WriteLine("Deshacer");
+    private void OnVerEstatusClick() => Console.WriteLine("Ver Estatus");
+    private void OnTransaccionesClick() => Console.WriteLine("Transacciones");
+    private void OnTransaccionesSettingsClick() => Console.WriteLine("Configuración de transacciones");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Tipos de Nóminas guardado!");
+    }
+}

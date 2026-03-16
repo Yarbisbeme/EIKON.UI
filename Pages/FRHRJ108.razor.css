@@ -1,0 +1,356 @@
+.frhrj108-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* ===========================
+   Filter Section with Radio Buttons
+   =========================== */
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.radio-group {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.radio-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+::deep .custom-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+    ::deep .custom-radio-group .dx-radiobutton {
+        margin-bottom: 8px;
+    }
+
+    ::deep .custom-radio-group .dx-radiobutton-text {
+        font-size: 14px;
+        color: #33363f;
+        font-weight: 500;
+    }
+
+.filter-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input-with-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .input-with-search label {
+        min-width: 80px;
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+.search-field {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 8px;
+    flex: 1;
+}
+
+.total-empleados {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+    .total-empleados label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+::deep .total-empleados .dx-textbox {
+    max-width: 200px;
+}
+
+/* ===========================
+   Grid Section
+   =========================== */
+.grid-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.grid-header {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #bfbfbf;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+}
+
+::deep .employee-grid {
+    border: 1px solid #bfbfbf;
+}
+
+    ::deep .employee-grid .dx-datagrid-headers {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #33363f;
+    }
+
+    ::deep .employee-grid .dx-header-row {
+        border-bottom: 2px solid #bfbfbf;
+    }
+
+    ::deep .employee-grid .dx-datagrid-table td {
+        border-right: 1px solid #e9ecef;
+        padding: 8px;
+    }
+
+    ::deep .employee-grid .dx-datagrid-table th {
+        border-right: 1px solid #bfbfbf;
+        padding: 10px 8px;
+        text-align: left;
+    }
+
+/* ===========================
+   Nuevo Turno Section
+   =========================== */
+.nuevo-turno-section {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
+    align-items: end;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.nuevo-turno-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .nuevo-turno-input label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+.turno-field {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 8px;
+}
+
+.turno-textbox {
+    width: 100%;
+}
+
+.turno-description {
+    width: 100%;
+}
+
+.turno-actual {
+    display: flex;
+    align-items: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* ===========================
+   Icon Buttons
+   =========================== */
+.icon-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+    .icon-btn:hover {
+        background-color: #e9ecef;
+        border-color: #007bff;
+    }
+
+    .icon-btn i {
+        font-size: 16px;
+        color: #33363f;
+    }
+
+.refresh-btn:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+    .refresh-btn:hover i {
+        color: white;
+    }
+
+.check-btn {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+    .check-btn i {
+        color: white;
+    }
+
+    .check-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+.close-btn {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .close-btn i {
+        color: white;
+    }
+
+    .close-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+.more-btn:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+    .more-btn:hover i {
+        color: white;
+    }
+
+/* ===========================
+   DevExpress Component Overrides
+   =========================== */
+::deep .dx-textbox-container,
+::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 2px !important;
+}
+
+    ::deep .dx-textbox-container:focus-within,
+    ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+::deep .dx-textbox,
+::deep .dx-dropdowneditor-input {
+    font-size: 14px !important;
+    color: #33363f !important;
+}
+
+    ::deep .dx-textbox:disabled,
+    ::deep .dx-textbox[readonly] {
+        background-color: #e9ecef !important;
+        opacity: 0.6;
+    }
+
+::deep .dx-checkbox {
+    margin: 0 !important;
+}
+
+::deep .dx-checkbox-text {
+    font-size: 14px !important;
+    color: #33363f !important;
+    font-weight: 500;
+}
+
+/* ===========================
+   Responsive Design
+   =========================== */
+@media (max-width: 1024px) {
+    .radio-group {
+        grid-template-columns: 1fr;
+    }
+
+    .nuevo-turno-section {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        justify-content: flex-end;
+    }
+
+    .turno-field {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhrj108-form {
+        padding: 15px;
+    }
+
+    .input-with-search {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .input-with-search label {
+            min-width: auto;
+        }
+
+    .search-field {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .total-empleados {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    ::deep .total-empleados .dx-textbox {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-section {
+        padding: 10px;
+    }
+
+    .nuevo-turno-section {
+        padding: 10px;
+    }
+}

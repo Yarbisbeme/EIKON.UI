@@ -1,0 +1,218 @@
+/* FRHMA539 - Análisis de recursos Humanos */
+
+.frhma539-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Header Row */
+.frhma539-form .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.frhma539-form .codigo-nombre-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 15px;
+    flex: 1;
+}
+
+.frhma539-form .codigo-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhma539-form .nombre-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhma539-form .activo-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+/* Standard Input Fields */
+.frhma539-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma539-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Checkboxes Grid (3x3) */
+.frhma539-form .checkboxes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px 20px;
+    padding: 15px 0;
+}
+
+.frhma539-form .grid-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+/* EMPRESA Section */
+.frhma539-form .empresa-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma539-form .section-label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.frhma539-form .empresa-content {
+    min-height: 80px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+/* Notificaciones Section */
+.frhma539-form .notificaciones-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.frhma539-form .proceso-memo {
+    min-height: 200px;
+}
+
+/* DevExpress Component Overrides */
+.frhma539-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma539-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma539-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma539-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma539-form ::deep .dx-memo {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma539-form ::deep .dx-memo:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma539-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhma539-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhma539-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.frhma539-form ::deep .dx-checkbox-text {
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma539-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhma539-form .checkboxes-grid {
+        gap: 12px 18px;
+    }
+
+    .frhma539-form .proceso-memo {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma539-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhma539-form .header-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .frhma539-form .codigo-nombre-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhma539-form .activo-checkbox {
+        padding-bottom: 0;
+        justify-content: flex-start;
+    }
+
+    .frhma539-form .checkboxes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 15px;
+    }
+
+    .frhma539-form .proceso-memo {
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma539-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhma539-form .input label,
+    .frhma539-form .section-label {
+        font-size: 13px;
+    }
+
+    .frhma539-form .checkboxes-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .frhma539-form .empresa-content {
+        min-height: 60px;
+    }
+
+    .frhma539-form .proceso-memo {
+        min-height: 140px;
+    }
+}

@@ -1,0 +1,368 @@
+@layout MainLayout
+@page "/FRHCA202"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Modificar Históricos Administrativos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca202-form">
+        <!-- Main Layout: Left fields + Right numeric section -->
+        <div class="main-layout">
+            <!-- Left Column: Data Fields -->
+            <div class="left-fields">
+                <!-- Número -->
+                <div class="input numero-field">
+                    <label>Número</label>
+                    <DxTextBox @bind-Text="@Numero"
+                               CssClass="numero-input"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNumero" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Nombre -->
+                <div class="input">
+                    <label>Nombre</label>
+                    <DxTextBox @bind-Text="@Nombre" ReadOnly="true" />
+                </div>
+
+                <!-- Div Acción + Registro -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Div Acción</label>
+                        <DxTextBox @bind-Text="@DivAccion" />
+                    </div>
+                    <div class="input">
+                        <label>Registro</label>
+                        <DxDateEdit @bind-Date="@Registro"
+                                    NullText="//"
+                                    DisplayFormat="dd/MM/yyyy" />
+                    </div>
+                </div>
+
+                <!-- Fecha Acción + Aplica -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Fecha Acción</label>
+                        <DxDateEdit @bind-Date="@FechaAccion"
+                                    NullText="//"
+                                    DisplayFormat="dd/MM/yyyy" />
+                    </div>
+                    <div class="input">
+                        <label>Aplica</label>
+                        <DxDateEdit @bind-Date="@Aplica"
+                                    NullText="//"
+                                    DisplayFormat="dd/MM/yyyy" />
+                    </div>
+                </div>
+
+                <!-- Tipo Acción -->
+                <div class="input">
+                    <label>Tipo Acción</label>
+                    <DxTextBox @bind-Text="@TipoAccion" />
+                </div>
+
+                <!-- Menor Sueldo -->
+                <div class="input">
+                    <label>Menor Sueldo</label>
+                    <DxTextBox @bind-Text="@MenorSueldo" NullText="//" />
+                </div>
+
+                <!-- Dónde + Hasta -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Dónde</label>
+                        <DxTextBox @bind-Text="@Donde" />
+                    </div>
+                    <div class="input">
+                        <label>Hasta</label>
+                        <DxDateEdit @bind-Date="@Hasta"
+                                    NullText="//"
+                                    DisplayFormat="dd/MM/yyyy" />
+                    </div>
+                </div>
+
+                <!-- Cargo -->
+                <div class="input">
+                    <label>Cargo</label>
+                    <DxTextBox @bind-Text="@Cargo"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCargo" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Puesto -->
+                <div class="input">
+                    <label>Puesto</label>
+                    <DxTextBox @bind-Text="@Puesto"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchPuesto" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Oficina -->
+                <div class="input">
+                    <label>Oficina</label>
+                    <DxTextBox @bind-Text="@Oficina"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchOficina" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="input">
+                    <label>Ubicación</label>
+                    <DxTextBox @bind-Text="@Ubicacion"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchUbicacion" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Clase -->
+                <div class="input">
+                    <label>Clase</label>
+                    <DxTextBox @bind-Text="@Clase" />
+                </div>
+            </div>
+
+            <!-- Right Column: Numeric Fields + Buttons -->
+            <div class="right-section">
+                <!-- Numeric Fields -->
+                <div class="numeric-fields">
+                    <!-- Sueldo -->
+                    <div class="input">
+                        <label>Sueldo</label>
+                        <DxSpinEdit @bind-Value="@Sueldo"
+                                    DisplayFormat="N1"
+                                    ShowSpinButtons="false" />
+                    </div>
+
+                    <!-- Gastos + Etapa -->
+                    <div class="dual-field-row">
+                        <div class="input">
+                            <label>Gastos</label>
+                            <DxSpinEdit @bind-Value="@Gastos"
+                                        DisplayFormat="N1"
+                                        ShowSpinButtons="false" />
+                        </div>
+                        <div class="checkbox-field">
+                            <DxCheckBox @bind-Checked="@Etapa">Etapa</DxCheckBox>
+                        </div>
+                    </div>
+
+                    <!-- Otros + Diversos -->
+                    <div class="dual-field-row">
+                        <div class="input">
+                            <label>Otros</label>
+                            <DxSpinEdit @bind-Value="@Otros"
+                                        DisplayFormat="N1"
+                                        ShowSpinButtons="false" />
+                        </div>
+                        <div class="checkbox-field">
+                            <DxCheckBox @bind-Checked="@Diversos">Diversos</DxCheckBox>
+                        </div>
+                    </div>
+
+                    <!-- Monto + Orden -->
+                    <div class="dual-field-row">
+                        <div class="input">
+                            <label>Monto</label>
+                            <DxSpinEdit @bind-Value="@Monto"
+                                        DisplayFormat="N1"
+                                        ShowSpinButtons="false" />
+                        </div>
+                        <div class="input">
+                            <label>Orden</label>
+                            <DxComboBox Data="@OrdenOptions"
+                                        @bind-Value="@Orden"
+                                        NullText="..."
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        </div>
+                    </div>
+
+                    <!-- Cantidad + Línea -->
+                    <div class="dual-field-row">
+                        <div class="input">
+                            <label>Cantidad</label>
+                            <DxSpinEdit @bind-Value="@Cantidad"
+                                        DisplayFormat="N1"
+                                        ShowSpinButtons="false" />
+                        </div>
+                        <div class="input">
+                            <label>Línea</label>
+                            <DxSpinEdit @bind-Value="@Linea"
+                                        DisplayFormat="N1"
+                                        ShowSpinButtons="false" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <DxButton Text="Categoría" Click="@OnCategoria" RenderStyle="ButtonRenderStyle.Secondary" CssClass="action-btn" />
+                    <DxButton Text="Grupo" Click="@OnGrupo" RenderStyle="ButtonRenderStyle.Secondary" CssClass="action-btn" />
+                    <DxButton Text="Centro Costo" Click="@OnCentroCosto" RenderStyle="ButtonRenderStyle.Secondary" CssClass="action-btn" />
+                    <DxButton Text="Nómina" Click="@OnNomina" RenderStyle="ButtonRenderStyle.Secondary" CssClass="action-btn" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="tabs-section">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" CssClass="historicos-tabs">
+                <DxTabPage Text="Acción Actuals">
+                    <div class="tab-content">
+                        <!-- Grid de Vocaciones -->
+                        <div class="grid-section">
+                            <DxGrid Data="@VocacionesData"
+                                    CssClass="vocaciones-grid"
+                                    ShowFilterRow="false"
+                                    AllowSelectRowByClick="true">
+                                <Columns>
+                                    <DxGridDataColumn FieldName="VocacionFecha" Caption="Vocación Fecha" Width="15%" />
+                                    <DxGridDataColumn FieldName="Tipo" Caption="Tipo" Width="15%" />
+                                    <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" Width="30%" />
+                                    <DxGridDataColumn FieldName="Titulo" Caption="Título" Width="20%" />
+                                    <DxGridDataColumn FieldName="Sueldo" Caption="Sueldo" Width="10%" />
+                                    <DxGridDataColumn FieldName="Aplica" Caption="Aplica" Width="10%" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+
+                        <!-- Filtros Section -->
+                        <div class="filtros-section">
+                            <label class="filtros-label">Filtros</label>
+                            <div class="filtros-checkboxes">
+                                <DxCheckBox @bind-Checked="@FiltroTodos">Todos</DxCheckBox>
+                                <DxCheckBox @bind-Checked="@FiltroAscensos">Ascensos</DxCheckBox>
+                                <DxCheckBox @bind-Checked="@FiltroRetenciones">Retenciones</DxCheckBox>
+                                <DxCheckBox @bind-Checked="@FiltroMovimientos">Movimientos</DxCheckBox>
+                                <DxCheckBox @bind-Checked="@FiltroVarios">Varios</DxCheckBox>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <DxTabPage Text="Cambio Oficial">
+                    <div class="tab-content">
+                        <p class="tab-placeholder">Contenido de Cambio Oficial</p>
+                    </div>
+                </DxTabPage>
+
+                <DxTabPage Text="Perfil Actual">
+                    <div class="tab-content">
+                        <p class="tab-placeholder">Contenido de Perfil Actual</p>
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+
+        <!-- Reporte Section -->
+        <div class="reporte-section">
+            <div class="input">
+                <label>Reporte</label>
+                <DxTextBox @bind-Text="@Reporte" />
+            </div>
+            <div class="reporte-checkbox">
+                <DxCheckBox @bind-Checked="@EnviarEmpleadoNomina">
+                    Enviar el empleado a la nomina solo para abonos
+                </DxCheckBox>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Left Fields
+    private string? Numero { get; set; }
+    private string? Nombre { get; set; }
+    private string? DivAccion { get; set; }
+    private DateTime? Registro { get; set; }
+    private DateTime? FechaAccion { get; set; }
+    private DateTime? Aplica { get; set; }
+    private string? TipoAccion { get; set; }
+    private string? MenorSueldo { get; set; }
+    private string? Donde { get; set; }
+    private DateTime? Hasta { get; set; }
+    private string? Cargo { get; set; }
+    private string? Puesto { get; set; }
+    private string? Oficina { get; set; }
+    private string? Ubicacion { get; set; }
+    private string? Clase { get; set; }
+
+    // Right Fields - Numeric
+    private decimal Sueldo { get; set; } = 0.0m;
+    private decimal Gastos { get; set; } = 0.0m;
+    private bool Etapa { get; set; } = false;
+    private decimal Otros { get; set; } = 0.0m;
+    private bool Diversos { get; set; } = false;
+    private decimal Monto { get; set; } = 0.0m;
+    private string? Orden { get; set; }
+    private decimal Cantidad { get; set; } = 0.0m;
+    private decimal Linea { get; set; } = 0.0m;
+
+    // Reporte
+    private string? Reporte { get; set; }
+    private bool EnviarEmpleadoNomina { get; set; } = false;
+
+    // Filtros
+    private bool FiltroTodos { get; set; } = false;
+    private bool FiltroAscensos { get; set; } = false;
+    private bool FiltroRetenciones { get; set; } = false;
+    private bool FiltroMovimientos { get; set; } = false;
+    private bool FiltroVarios { get; set; } = false;
+
+    // Tab index
+    private int ActiveTabIndex { get; set; } = 0;
+
+    // Grid Data
+    private List<VocacionItem> VocacionesData { get; set; } = new();
+
+    // Options
+    private List<string> OrdenOptions = new() { "Opción 1", "Opción 2", "Opción 3" };
+
+    // Event Handlers
+    private void OnSearchNumero() { }
+    private void OnSearchCargo() { }
+    private void OnSearchPuesto() { }
+    private void OnSearchOficina() { }
+    private void OnSearchUbicacion() { }
+    private void OnCategoria() { }
+    private void OnGrupo() { }
+    private void OnCentroCosto() { }
+    private void OnNomina() { }
+    private void HandleAdd() { }
+    private void HandleSave() { }
+    private void HandleClose() { }
+
+    public class VocacionItem
+    {
+        public string? VocacionFecha { get; set; }
+        public string? Tipo { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Titulo { get; set; }
+        public string? Sueldo { get; set; }
+        public string? Aplica { get; set; }
+    }
+}

@@ -1,0 +1,262 @@
+﻿@page "/FRHMA401"
+
+@page "/FRHMA401/{pTabla}"
+
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Mantenimiento Tabla de Referencia</PageTitle>
+<h1>Mantenimiento Tablas de Referencias</h1>
+
+@if (tbreferencias == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DxGrid Data="@tbreferencias" @ref="MyGrid0"
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+            EditMode="GridEditMode.EditRow"
+            DataItemDeleting="OnDataItemDeleting"
+            ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+        <Columns>
+            <DxGridCommandColumn Width="160px" VisibleIndex="1">
+                <HeaderTemplate>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="" @onclick="@(() => ShowEditRecordPopup((Trhtb000Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                </CellDisplayTemplate>
+            </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Tabla" FieldName="TbCodigo" Width="100px" VisibleIndex="3">
+
+            </DxGridDataColumn>
+            <DxGridDataColumn Caption="Descripción" FieldName="TbDescri" Width="600px" VisibleIndex="4">
+
+            </DxGridDataColumn>
+            
+        </Columns>
+    </DxGrid>
+}
+
+<h3 class=""></h3>
+<DxPopup @bind-Visible="@isPopupVisible"
+         HeaderText="@popupTitle"
+         ShowCloseButton="true"
+         ShowFooter="true"
+         Width="800px">
+    <BodyTemplate Context="popupCtx">
+        <DxGrid Data="@data" @ref="MyGrid"
+                CssClass="mw-1100"
+                EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+                DataItemDeleting="OnDataItemDeleting"
+                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+            <Columns>
+                <DxGridCommandColumn Width="200px" VisibleIndex="0">
+                    <HeaderTemplate>
+                        <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                    </HeaderTemplate>
+                    <CellDisplayTemplate>
+                        <a class="text-primary" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                        <a class="text-primary" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-trash"></i></a>
+                    </CellDisplayTemplate>
+                </DxGridCommandColumn>
+
+                <DxGridDataColumn Caption="Descripción" FieldName="Descri" Width="500px" VisibleIndex="1" />
+                <DxGridDataColumn Caption="Id" FieldName="Codigo" Width="100px" ReadOnly VisibleIndex="2" />
+            </Columns>
+        </DxGrid>
+        
+    </BodyTemplate>
+
+    <FooterTemplate>
+        
+        <DxButton Text="Cancelar" RenderStyle="ButtonRenderStyle.Secondary" Click="@Cancel" />
+    </FooterTemplate>
+</DxPopup>
+@code {
+    [Parameter]
+    public string? pTabla { get; set; }
+    public bool isPopupVisible { get; set; } = false;   
+
+    private string popupTitle = "Editar Tabla de referencia";
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } ="";
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        //IsModalVisible = false;
+    }
+
+    private void Cancel()
+    {
+        isPopupVisible = false;
+    }
+    private void OpenModal()
+    {
+       // IsModalVisible = true;
+    }
+
+    DxGrid? MyGrid0;
+    DxGrid? MyGrid;
+    DxTextBox? txtDescri;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Tref000Dto> data;
+    private List<Trhtb000Dto> tbreferencias { get; set; } =new List<Trhtb000Dto>();
+    private List<Trhtb000Dto> tbrefall { get; set; } = new List<Trhtb000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Tref000Dto SelectedItem { get; set; }
+    private List<Trhtb000Dto> SelectedTable { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        // EikonDataServices eikonDataServices =  null;
+        if (Token == "")
+        {
+            //api.ObtenerTokenAsync();
+            Token = api.GetToken();
+        }
+        ApiBaseUrl = api.GetApiBaseUrl() + "api/";
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(ApiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("http://localhost:8081/api/Trhem000");
+        tbrefall = await HttpClient.GetFromJsonAsync<List<Trhtb000Dto>>(ApiBaseUrl + "Trhtb000");
+        tbreferencias = tbrefall.Where(t=>t.TbMostrar=="S" && t.Generico=="S").ToList();
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        // var codigo = ((Tref000Dto)e.DataItem).IdentityColumn;
+        // await HttpClient.puDeleteAsync(ApiBaseUrl + "Trhpa000/" + ((Tref000Dto)e.DataItem).IdentityColumn);
+        // data = await HttpClient.GetFromJsonAsync<List<Tref000Dto>>(ApiBaseUrl + "Trhpa000");
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            Tref000Dto newCategory = new Tref000Dto();
+            SetNewValues(newCategory, (Tref000Dto)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<DTOs.Tref000Dto>(ApiBaseUrl + "Trhpa000/", newCategory);
+            HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Tref000Dto>(ApiBaseUrl  + pTabla + "/", newCategory);
+
+            // Verifica si la solicitud fue exitosa
+            if (response.IsSuccessStatusCode)
+            {
+                // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+                string responseContent = await response.Content.ReadAsStringAsync();
+                // Puedes deserializar el contenido si es un JSON
+                // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            }
+            else
+            {
+                // La solicitud falló. Puedes manejar el error aquí.
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            }
+
+            data = await HttpClient.GetFromJsonAsync<List<Tref000Dto>>(ApiBaseUrl + pTabla + "/" + pTabla + "Ref" );
+        }
+        else
+        {
+            var dataItem = (Tref000Dto)e.DataItem;
+            SetEditValues(dataItem, (Tref000Dto)e.EditModel);
+            HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl  + pTabla + "/" + dataItem.Codigo, dataItem);
+            if (response.IsSuccessStatusCode)
+            {
+                // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+                string responseContent = await response.Content.ReadAsStringAsync();
+                // Puedes deserializar el contenido si es un JSON
+                // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            }
+            else
+            {
+                // La solicitud falló. Puedes manejar el error aquí.
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            }
+
+            data = await HttpClient.GetFromJsonAsync<List<Tref000Dto>>(ApiBaseUrl + pTabla + "/" + pTabla + "Ref");
+        }
+
+        void SetNewValues(Tref000Dto dataItem, Tref000Dto newValues)
+        {
+            dataItem.Codigo = "0";
+            dataItem.Descri = newValues.Descri;
+          
+
+            
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = " ";
+            dataItem.ChangedOn = DateTime.Today.Date;
+            
+        }
+        void SetEditValues(Tref000Dto dataItem, Tref000Dto newValues)
+        {
+            //dataItem.PaCodigo = newValues.PaCodigo;
+            dataItem.Descri = newValues.Descri;
+           
+
+            dataItem.ChangedBy = "Eikon";
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+    }
+    async Task ShowEditRecordPopup(Trhtb000Dto record)
+    {
+        popupTitle = "Editar Tabla: " + record.TbCodigo + " - " + record.TbDescri;
+        pTabla = record.TbCodigo;
+        try
+        {
+            data = await HttpClient.GetFromJsonAsync<List<Tref000Dto>>(ApiBaseUrl + pTabla + "/" + pTabla + "Ref");
+        }
+        catch (Exception ex)
+        {
+            
+            Console.WriteLine("Error al cargar los datos: " + ex.Message);
+            return;
+        }
+       
+        await InvokeAsync(() =>
+   {
+       isPopupVisible = true;
+   });
+        //isPopupVisible = true;
+    }
+    async Task OnEditStart(GridEditStartEventArgs e)
+    {
+        // Poner foco en la columna Descri
+        //await MyGrid.SetEditCellFocusedAsync(e.Grid., "Descri");
+        await Task.Delay(50); // Pequeño retraso para asegurar que el DOM de edición esté renderizado
+
+        // Llamamos a una función JavaScript para buscar y enfocar el campo.
+        // El ID del campo editable es generalmente: 
+        // "EditForm_" + FieldName + "_" + RowVisibleIndex
+        
+        // El índice de la fila que se está editando está en e.VisibleIndex
+        //string fieldName = "Descri";
+        //string elementId = $"EditForm_{fieldName}_{rowVisibleIndex}";
+        if (txtDescri != null)
+        {
+            await txtDescri.FocusAsync();
+        }
+
+        //await JSRuntime.InvokeVoidAsync("setFocusById", elementId);
+    }
+
+   
+}
+
+
+

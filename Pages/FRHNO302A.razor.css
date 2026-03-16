@@ -1,0 +1,325 @@
+/* FRHNO302A - Reportes de Nóminas en proceso */
+
+.frhno302a-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Main Layout: Content + Action Buttons */
+.frhno302a-form .main-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+}
+
+/* Content Area (Left) */
+.frhno302a-form .content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Standard Input Field */
+.frhno302a-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno302a-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Reporte Combo - Special Styling */
+.frhno302a-form .reporte-combo {
+    width: 100%;
+}
+
+/* Checkboxes Row Top */
+.frhno302a-form .checkboxes-row-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.frhno302a-form .checkbox-with-combo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhno302a-form .checkbox-single {
+/*    padding-top: 28px;*/
+}
+
+/* Section Groups (Fieldsets) */
+.frhno302a-form .section-group {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.frhno302a-form .section-header {
+    margin-bottom: 10px;
+}
+
+.frhno302a-form .section-header label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhno302a-form .section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Transacciones Section */
+.frhno302a-form .transacciones-inputs {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.frhno302a-form .trans-codigo {
+    max-width: 80px;
+}
+
+/* Otros Criterios Section */
+.frhno302a-form .criterio-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhno302a-form .criterio-combo {
+    width: 100%;
+}
+
+/* Employee Checkboxes */
+.frhno302a-form .employee-checkboxes {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+/* Disco Section */
+.frhno302a-form .disco-section {
+    margin-top: 5px;
+}
+
+.frhno302a-form .disco-fields {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.frhno302a-form .disco-tipo {
+    max-width: 150px;
+}
+
+.frhno302a-form .sub-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #33363f;
+    margin-top: -2px;
+}
+
+/* Action Buttons Panel (Right) */
+.frhno302a-form .action-buttons-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 32px;
+}
+
+.frhno302a-form .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* ===== DevExpress Component Overrides ===== */
+.frhno302a-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno302a-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno302a-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno302a-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Reporte Combo Special Styling */
+.frhno302a-form .reporte-combo ::deep .dx-dropdowneditor-input-wrapper {
+    background-color: #e3f2fd;
+    border-color: #2196f3 !important;
+}
+
+/* Editor Buttons */
+.frhno302a-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhno302a-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Checkboxes */
+.frhno302a-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhno302a-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhno302a-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Button Styling */
+.frhno302a-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhno302a-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhno302a-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno302a-form ::deep .dx-button-success {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: #fff;
+}
+
+.frhno302a-form ::deep .dx-button-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.frhno302a-form ::deep .dx-button-danger {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #fff;
+}
+
+.frhno302a-form ::deep .dx-button-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .frhno302a-form .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302a-form .action-buttons-panel {
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 15px;
+    }
+
+    .frhno302a-form .disco-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302a-form .disco-tipo {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno302a-form {
+        gap: 15px;
+    }
+
+    .frhno302a-form .content-area {
+        gap: 12px;
+    }
+
+    .frhno302a-form .checkboxes-row-top {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302a-form .checkbox-single {
+        padding-top: 0;
+    }
+
+    .frhno302a-form .transacciones-inputs {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .frhno302a-form .criterio-row {
+        grid-template-columns: 80px 1fr;
+    }
+
+    .frhno302a-form .employee-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .frhno302a-form .action-buttons-panel {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhno302a-form {
+        gap: 12px;
+    }
+
+    .frhno302a-form .input label,
+    .frhno302a-form .section-header label {
+        font-size: 13px;
+    }
+
+    .frhno302a-form .transacciones-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302a-form .criterio-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .frhno302a-form .action-buttons-panel {
+        flex-direction: column;
+    }
+
+    .frhno302a-form .action-btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,196 @@
+@layout MainLayout
+@page "/FRHMA514"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA514 - Direcciones" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma514-form">
+
+        <!-- Layout de 2 columnas: Mapa + Formulario -->
+        <div class="main-layout">
+
+            <!-- Columna izquierda: Mapa -->
+            <div class="map-section">
+                <div class="map-container">
+                    <img src="/images/mapa.png" alt="Mapa Nicaragua" />
+                </div>
+            </div>
+
+            <!-- Columna derecha: Formulario -->
+            <div class="form-section">
+
+                <!-- Campos superiores en grid 2x2 -->
+                <div class="fields-grid">
+                    <!-- Código -->
+                    <div class="input codigo-field">
+                        <label>Código</label>
+                        <DxTextBox @bind-Text="@Codigo">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="input">
+                        <label>Descripción</label>
+                        <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+                    </div>
+
+                    <!-- Capital -->
+                    <div class="input">
+                        <label>Capital</label>
+                        <DxTextBox @bind-Text="@Capital" NullText="Capital" />
+                    </div>
+
+                    <!-- Región -->
+                    <div class="input">
+                        <label>Región</label>
+                        <DxComboBox Data="@empresas"
+                                    @bind-Value="@empresaSeleccionada"
+                                    TextFieldName="@nameof(Empresa.Nombre)"
+                                    ValueFieldName="@nameof(Empresa.Id)"
+                                    CssClass="mi-combobox"
+                                    NullText="Seleccionar region"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                </div>
+
+                <!-- Checkbox con botón -->
+                <div class="arrastrar-section">
+                    <DxCheckBox @bind-Checked="@ArrastrarMapa">Arrastrar al Mapa</DxCheckBox>
+                    <DxButton IconCssClass="fi fi-rr-download" Click="OnDownload"></DxButton>
+                </div>
+
+                <!-- Grid de direcciones - 2 columnas -->
+                <div class="grid-section">
+                    <DxGrid Data="@Direcciones"
+                            CssClass="direcciones-grid"
+                            PageSize="15"
+                            ShowAllRows="false">
+                        <Columns>
+                            <DxGridDataColumn FieldName="CodigoDescripcion" Caption="Código Descripción" Width="250px" />
+                            <DxGridDataColumn FieldName="Capital" Caption="Capital" />
+                        </Columns>
+                    </DxGrid>
+                </div>
+
+                <!-- Botones inferiores -->
+                <div class="bottom-buttons">
+                    <DxComboBox Data="@empresas"
+                                @bind-Value="@empresaSeleccionada"
+                                TextFieldName="@nameof(Empresa.Nombre)"
+                                ValueFieldName="@nameof(Empresa.Id)"
+                                CssClass="mi-combobox"
+                                NullText="Seleccionar region"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    <DxButton IconCssClass="fi fi-rr-print" Click="OnPrint"></DxButton>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string Capital { get; set; } = string.Empty;
+    private string Region { get; set; } = string.Empty;
+    private bool ArrastrarMapa { get; set; } = false;
+
+    // Grid Data
+    private List<DireccionItem> Direcciones = new List<DireccionItem>
+    {
+        new DireccionItem { CodigoDescripcion = "02 - MIAMI", Capital = "ESTADOS UNIDOS" },
+        new DireccionItem { CodigoDescripcion = "02 - MASAYA", Capital = "MASAYA" },
+        new DireccionItem { CodigoDescripcion = "05 - GRANADA", Capital = "GRANADA" },
+        new DireccionItem { CodigoDescripcion = "06 - CARAZO", Capital = "JINOTEPE" },
+        new DireccionItem { CodigoDescripcion = "07 - RIVAS", Capital = "RIVAS" },
+        new DireccionItem { CodigoDescripcion = "08 - NUEVA SEGOVIA", Capital = "OCOTAL" },
+        new DireccionItem { CodigoDescripcion = "09 - MADRIZ", Capital = "SOMOTO" },
+        new DireccionItem { CodigoDescripcion = "10 - ESTELÍ", Capital = "ESTELÍ" },
+        new DireccionItem { CodigoDescripcion = "11 - MATAGALPA", Capital = "MATAGALPA" },
+        new DireccionItem { CodigoDescripcion = "12 - BOACO", Capital = "BOACO" },
+        new DireccionItem { CodigoDescripcion = "13 - CHONTALES", Capital = "JUIGALPA" }
+    };
+
+    private List<Empresa> empresas = new List<Empresa>
+    {
+        new Empresa { Id = 1, Nombre = "Empresa 1", Codigo = "EMP001", Activa = true },
+        new Empresa { Id = 2, Nombre = "Empresa 2", Codigo = "EMP002", Activa = true },
+        new Empresa { Id = 3, Nombre = "Empresa 3", Codigo = "EMP003", Activa = true },
+        new Empresa { Id = 4, Nombre = "Empresa 4", Codigo = "EMP004", Activa = false },
+        new Empresa { Id = 5, Nombre = "Empresa 5", Codigo = "EMP005", Activa = true }
+    };
+
+    // Variable para almacenar la empresa seleccionada
+    private int? empresaSeleccionada = null;
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda
+    }
+
+    private void OnDownload()
+    {
+        // Implementar descarga/mapa
+    }
+
+    private void OnScrollMap()
+    {
+        // Implementar desplazamiento
+    }
+
+    private void OnPrint()
+    {
+        // Implementar impresión
+    }
+
+    private void HandleAdd() { }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class DireccionItem
+    {
+        public string CodigoDescripcion { get; set; } = string.Empty;
+        public string Capital { get; set; } = string.Empty;
+    }
+
+    public class Empresa
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Codigo { get; set; }
+        public bool Activa { get; set; }
+    }
+}

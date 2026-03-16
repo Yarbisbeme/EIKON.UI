@@ -1,0 +1,156 @@
+@page "/FRHCA205A"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Cambio masivo - Supervisor" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca205a-form">
+        <div class="top-section">
+            <div class="left-radio-panel">
+                @foreach (var option in GeneralAnswerOptions)
+                {
+                    <DxRadio GroupName="general-radio-group"
+                    @bind-GroupValue="@GeneralAnswer"
+                    Value="@option"
+                    CssClass="dx-demo-radio">
+                        @option
+                    </DxRadio>
+                }
+            </div>
+
+            <div class="right-filters-panel">
+
+                <div class="input">
+                    <label for="user">Supervisor</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Supervisor"
+                        NullText="ID requisición"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"/>
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+
+                <div class="input">
+                    <label for="user">Área</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Area"
+                        NullText="Area"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+
+                <div class="input">
+                    <label for="user">Oficina</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Oficina"
+                        NullText="Oficina"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+
+                <div class="input">
+                    <label for="user">Turno</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Turno"
+                        NullText="Turno"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <DxGrid Data="@EmpleadosData"
+            CssClass="empleados-grid"
+            PageSize="15"
+            ShowPager="false">
+                <Columns>
+                    <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100px" />
+                    <DxGridDataColumn FieldName="Nombre" Caption="Nombre" />
+                    <DxGridDataColumn FieldName="Ubicacion" Caption="Ubicación" Width="150px" />
+                    <DxGridDataColumn FieldName="Oficina" Caption="Oficina" Width="120px" />
+                    <DxGridDataColumn FieldName="Supervisor" Caption="Supervisor" Width="150px" />
+                    <DxGridDataColumn FieldName="Tipo" Caption="Tipo" Width="100px" />
+                </Columns>
+            </DxGrid>
+
+        <div class="bottom-bar">
+
+            <div class="input">
+                <label for="user">Nuevo Supervisor</label>
+                <div class="search-field">
+                    <DxTextBox @bind-Text="@NuevoSupervisor"
+                               NullText="ID requisición"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"/>
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close", "add"};
+
+    private string ModoSeleccion { get; set; } = "CambioSupervisor";
+    private string Supervisor { get; set; } = string.Empty;
+    private string Area { get; set; } = string.Empty;
+    private string Oficina { get; set; } = string.Empty;
+    private string Turno { get; set; } = string.Empty;
+    private string NuevoSupervisor { get; set; } = string.Empty;
+    private string GeneralAnswer { get; set; }
+    private List<EmpleadoItem> EmpleadosData { get; set; } = new();
+    IEnumerable<string> GeneralAnswerOptions = new[] {"Cambio Supervisor","Asignación/Area",
+"Asignación/Oficina",
+    "Asignación / Turno",
+    "Asign Area / Turno",
+    "Asign Oficina/Turno",
+};
+    public class EmpleadoItem
+    {
+        public string Codigo { get; set; } = string.Empty;
+        public string Nombre { get; set; } = string.Empty;
+        public string Ubicacion { get; set; } = string.Empty;
+        public string Oficina { get; set; } = string.Empty;
+        public string Supervisor { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+    }
+
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

@@ -1,0 +1,104 @@
+﻿@namespace EIKON.UI.Components
+
+<div class="modal" style="display:@(IsVisible ? "block" : "none");">
+    <div class="modal-dialog bg-light">
+        <div class="modal-content w-100">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="fi fi-rr-cross" @onclick="Close">
+                    <span></span>
+                </button>
+            </div>
+            <div class="modal-body alerts w-100">
+                <div class="w-100 alert @(TypeAlert)">
+                    <div class="alert-icon">
+                        <span class="bg-icon"></span>
+                        @switch (TypeAlert)
+                        {
+                            case AlertType.Success:
+                                <i class="fi fi-sr-check-circle"></i>
+                                break;
+
+                            case AlertType.Warning:
+                                <i class="fi fi-ss-triangle-warning"></i>
+                                break;
+
+                            case AlertType.Info:
+                                <i class="fi fi-ss-info"></i>
+                                break;
+
+                            case AlertType.Error:
+                                <i class="fi fi-sr-exclamation"></i>
+                                break;
+
+                            default:
+                                <i class="fi fi-ss-info"></i>
+                                break;
+                        }
+                        
+                    </div>
+                    <span>&nbsp;@Message</span>
+                </div>
+               
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="Cancel">Aceptar</button>
+             </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string TypeAlert { get; set; } = "";
+    [Parameter] public string Title { get; set; } = "Eikon Información";
+    [Parameter] public string Message { get; set; } = "Haga clic en Aceptar";
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+    public class AlertType
+    {
+        public const string Success = "success";
+        public const string Info = "info";
+        public const string Warning = "warning";
+        public const string Error = "error";
+    }
+    private bool IsVisible { get; set; } = false;
+
+    public void Show(string msg, string tipo="info")
+    {
+        if (string.IsNullOrEmpty(msg))
+        {
+            msg = "No hay mensaje disponible.";
+        }
+        else
+        {
+            Message = msg.Trim();
+        }
+        
+        if (string.IsNullOrEmpty(tipo))
+        {
+            tipo = "info";
+        }
+        else
+        {
+            TypeAlert = tipo.Trim();
+        }
+        
+        IsVisible = true;
+       StateHasChanged();
+    }
+
+    public void Close()
+    {
+        IsVisible = false;
+       StateHasChanged();
+    }
+
+   
+
+    private async Task Cancel()
+    {
+        IsVisible = false;
+        await OnConfirm.InvokeAsync(false); // Llama a la acción de cancelación
+    }
+}
+
+

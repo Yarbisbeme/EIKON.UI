@@ -1,0 +1,103 @@
+@layout MainLayout
+@page "/FRHMA522"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA522 - Tipos de requerimientos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma522-form">
+
+        <!-- Código -->
+        <div class="input codigo-field">
+            <label>Código</label>
+            <DxTextBox @bind-Text="@Codigo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Descripción -->
+        <div style="display:flex; gap:10px;">
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <!-- Carta asociada -->
+        <div class="input">
+            <label>Carta asociada</label>
+            <DxTextBox @bind-Text="@CartaAsociada" NullText="Carta asociada" />
+        </div>
+        </div>
+
+        <!-- Fila: Días estimados, Costo estimados, Web, Carnet -->
+        <div class="estimados-row">
+            <div class="input dias-field">
+                <label>Días estimados</label>
+                <DxSpinEdit @bind-Value="@DiasEstimados" MinValue="0" DisplayFormat="N0" />
+            </div>
+
+            <div class="input costo-field">
+                <label>Costo estimados</label>
+                <DxSpinEdit @bind-Value="@CostoEstimados" MinValue="0" DisplayFormat="N2" />
+            </div>
+
+            <div class="checkboxes-group">
+                <DxCheckBox @bind-Checked="@Web">Web</DxCheckBox>
+                <DxCheckBox @bind-Checked="@Carnet">Carnet</DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Descripción del tipo -->
+        <div class="input">
+            <label>Descripción del tipo</label>
+            <DxMemo @bind-Text="@DescripcionTipo" Rows="8" NullText="Descripción del tipo" />
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string CartaAsociada { get; set; } = string.Empty;
+    private int DiasEstimados { get; set; } = 0;
+    private decimal CostoEstimados { get; set; } = 0.00m;
+    private bool Web { get; set; } = false;
+    private bool Carnet { get; set; } = false;
+    private string DescripcionTipo { get; set; } = string.Empty;
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda de código
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

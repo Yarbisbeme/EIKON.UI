@@ -1,0 +1,31 @@
+﻿@page "/Tabs"
+
+<DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+    <DxTabPage Text="Pestaña 1">
+        Contenido de la pestaña 1
+    </DxTabPage>
+    <DxTabPage Text="Pestaña 2">
+        Contenido de la pestaña 2
+    </DxTabPage>
+    <DxTabPage Text="Pestaña 3">
+        Contenido de la pestaña 3
+    </DxTabPage>
+</DxTabs>
+
+<br />
+
+<button @onclick="ChangeToTab2">Ir a la Pestaña 2</button>
+
+@code {
+    int ActiveTabIndex { get; set; } = 0; // Pestaña inicial (índice 0)
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        ActiveTabIndex = newIndex;
+    }
+
+    void ChangeToTab2()
+    {
+        ActiveTabIndex = 1; // Cambia a la pestaña con índice 1
+    }
+}

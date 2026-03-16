@@ -1,0 +1,473 @@
+@page "/FRHCL110New"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHCL110 - SIRH - Oficinas/Sucursales" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        
+        <!-- Sección 1: Información Básica -->
+        <div class="form-section">
+            <div class="section-header">
+                <h4>Información Básica</h4>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Código</label>
+                    <DxTextBox @bind-Text="@CodigoValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="OnSearchCodigoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+                <div class="input-field wide">
+                    <label>Descripción</label>
+                    <div class="input-with-action">
+                        <DxTextBox @bind-Text="@DescripcionValue" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Nombre Alt.</label>
+                    <DxTextBox @bind-Text="@NombreAltValue" />
+                </div>
+                <div class="input-field">
+                    <label>Tipo</label>
+                    <DxComboBox Data="@TiposList" 
+                               @bind-Value="@SelectedTipo" 
+                               NullText="Seleccionar tipo"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 2: Ubicación -->
+        <div class="form-section">
+            <div class="section-header">
+                <h4>Ubicación</h4>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Ofic. Regional</label>
+                    <DxTextBox @bind-Text="@OficinaRegionalValue" />
+                </div>
+                <div class="input-field">
+                    <label>Dirección</label>
+                    <DxTextBox @bind-Text="@DireccionValue" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: Información de Contacto -->
+        <div class="form-section">
+            <div class="section-header">
+                <h4>Información de Contacto</h4>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>E-mail</label>
+                    <DxTextBox @bind-Text="@EmailValue" 
+                              InputType="DataEditorInputType.Email" />
+                </div>
+                <div class="input-field">
+                    <label>Teléfono</label>
+                    <DxTextBox @bind-Text="@TelefonoValue" 
+                              Mask="@TelefonoMask"
+                              MaskMode="MaskMode.Text" />
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Fax</label>
+                    <DxTextBox @bind-Text="@FaxValue" 
+                              Mask="@TelefonoMask"
+                              MaskMode="MaskMode.Text" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 4: Fechas y Estado -->
+        <div class="form-section">
+            <div class="section-header">
+                <h4>Fechas y Estado</h4>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Creado</label>
+                    <DxDateEdit @bind-Date="@CreadoValue" 
+                               DisplayFormat="d"
+                               NullText="--/--/----" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Vigencia</label>
+                    <DxDateEdit @bind-Date="@VigenciaValue" 
+                               DisplayFormat="d"
+                               NullText="--/--/----" />
+                </div>
+                
+                <div class="checkbox-field">
+                    <DxCheckBox @bind-Checked="@ActivoOption">Activo</DxCheckBox>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Secciones del formulario */
+    .form-section {
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+    }
+
+    .section-header {
+        background: transparent;
+        padding: 15px 0;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .section-header h4 {
+        margin: 0;
+        color: #333;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .section-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .section-action-btn {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+        border-radius: 6px !important;
+        font-size: 14px !important;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        min-height: 60px;
+        padding: 20px 0;
+    }
+
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    .input-field.full-width {
+        flex: 1;
+        width: 100%;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Input with action button */
+    .input-with-action {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .action-btn {
+        flex: 0 0 auto;
+        min-width: 36px !important;
+        width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+    }
+
+
+    /* Checkbox fields */
+    .checkbox-field {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        min-height: 60px;
+        padding-top: 25px;
+        margin-left: 20px;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-date-edit {
+        border-radius: 6px !important;
+        flex: 1;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-date-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-date-edit-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Search button styling */
+    .dx-editor-button {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        border-radius: 4px !important;
+    }
+
+    .dx-editor-button:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+    /* Checkboxes */
+    .dx-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Button styling */
+    .dx-button-mode-contained.dx-button-default {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+    }
+
+    .dx-button-mode-contained.dx-button-default:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1024px) {
+        .form-container {
+            padding: 15px;
+            gap: 25px;
+        }
+
+        .form-row {
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px 0;
+        }
+
+        .section-header {
+            padding: 12px 15px;
+        }
+
+        .section-header h4 {
+            font-size: 15px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .form-container {
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+            min-height: auto;
+            padding: 15px 0;
+        }
+
+        .input-field {
+            min-width: auto;
+        }
+
+        .input-field.wide,
+        .input-field.full-width {
+            flex: 1;
+        }
+
+        .checkbox-field {
+            min-height: auto;
+            padding-top: 10px;
+            margin-left: 0;
+        }
+
+        .input-with-action {
+            flex-direction: row;
+            gap: 10px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+            padding: 12px 15px;
+        }
+
+        .section-actions {
+            justify-content: center;
+        }
+
+        .section-header h4 {
+            text-align: center;
+            font-size: 14px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+            padding: 12px;
+        }
+
+        .form-row {
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .section-header {
+            padding: 10px 12px;
+        }
+
+        .input-field label {
+            font-size: 12px;
+        }
+
+        .section-header h4 {
+            font-size: 13px;
+        }
+
+        .action-btn,
+        .section-action-btn {
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px !important;
+            font-size: 12px !important;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private string NombreAltValue { get; set; } = "";
+    private int? SelectedTipo { get; set; }
+    private string OficinaRegionalValue { get; set; } = "";
+    private string DireccionValue { get; set; } = "";
+    private string EmailValue { get; set; } = "";
+    private string TelefonoValue { get; set; } = "";
+    private string FaxValue { get; set; } = "";
+    private DateTime? CreadoValue { get; set; } = DateTime.Now;
+    private DateTime? VigenciaValue { get; set; } = DateTime.Now.AddYears(1);
+    private bool ActivoOption { get; set; } = true;
+    
+    // Máscaras
+    private string TelefonoMask = "(999) 999-9999";
+    
+    // Listas de datos
+    private List<OptionItem> TiposList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Oficina Principal" },
+        new OptionItem { Id = 2, Name = "Sucursal" },
+        new OptionItem { Id = 3, Name = "Agencia" },
+        new OptionItem { Id = 4, Name = "Centro de Servicio" },
+        new OptionItem { Id = 5, Name = "Punto de Venta" }
+    };
+
+
+    public class OptionItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    private void OnDuplicateClick() => Console.WriteLine("Duplicar oficina");
+    private void OnContactSettingsClick() => Console.WriteLine("Configurar contacto");
+    private void OnCopyContactClick() => Console.WriteLine("Copiar información de contacto");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Oficina/Sucursal guardada exitosamente!");
+    }
+}

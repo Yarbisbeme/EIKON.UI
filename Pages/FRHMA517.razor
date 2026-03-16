@@ -1,0 +1,197 @@
+@layout MainLayout
+@page "/FRHMA517"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA517 - Selección de Preguntas" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma517-form">
+
+        <!-- Código -->
+        <div class="input codigo-field">
+            <label>Código</label>
+            <DxTextBox @bind-Text="@Codigo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Pregunta -->
+        <div class="input">
+            <label>Pregunta</label>
+            <DxTextBox @bind-Text="@Pregunta" NullText="Pregunta" />
+        </div>
+
+        <!-- Clasificación -->
+        <div class="clasificacion-section">
+            <label class="section-label">Clasificación</label>
+            <DxMemo @bind-Text="@Pregunta"
+                    Rows="6"
+                    NullText="Ingrese comentarios sobre el clasificacion"
+                    CssClass="comment-field" />
+        </div>
+
+        <!-- Tipo -->
+        <div class="tipo-section">
+            <label class="section-label">Tipo</label>
+            <div class="radio-group">
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@Accion"
+                         Value="@("Abierta")">
+                    Imprimir cambio
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@Accion"
+                         Value="@("Cerrada")">
+                    Salvar Pendiente
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@Accion"
+                         Value="@("Multiple")">
+                    Completar acción
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@Accion"
+                         Value="@("Valores")">
+                    Borrar pendiente
+                </DxRadio>
+            </div>
+        </div>
+
+        <!-- Valores Section -->
+        <div class="valores-section">
+            <label class="valores-title">Valores</label>
+
+            <div class="dual-listbox-container">
+                <!-- Lista izquierda: Valores disponibles -->
+                <div class="listbox-wrapper">
+                    <DxListBox Data="@ValoresDisponibles"
+                               @bind-Values="@ValoresDisponiblesSeleccionados"
+                               SelectionMode="ListBoxSelectionMode.Multiple"
+                               CssClass="valores-listbox">
+                        <DxListEditorColumn FieldName="Nombre" />
+                    </DxListBox>
+                </div>
+
+                <!-- Botones de transferencia -->
+                <div class="transfer-buttons">
+                    <DxButton IconCssClass="fi fi-rr-angle-right" Click="MoverSeleccionadosDerecha"></DxButton>
+                    <DxButton IconCssClass="fi fi-rr-angle-double-right" Click="MoverTodosDerecha"></DxButton>
+                    <DxButton IconCssClass="fi fi-rr-angle-left" Click="MoverSeleccionadosIzquierda"></DxButton>
+                    <DxButton IconCssClass="fi fi-rr-angle-double-left" Click="MoverTodosIzquierda"></DxButton>
+                </div>
+
+                <!-- Lista derecha: Valores seleccionados -->
+                <div class="listbox-wrapper">
+                    <DxListBox Data="@ValoresSeleccionados"
+                               @bind-Values="@ValoresSeleccionadosSeleccionados"
+                               SelectionMode="ListBoxSelectionMode.Multiple"
+                               CssClass="valores-listbox">
+                        <DxListEditorColumn FieldName="Nombre" />
+                    </DxListBox>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private string Accion { get; set; } = "imprimir";
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Pregunta { get; set; } = string.Empty;
+    private string TipoSeleccionado { get; set; } = "Valores";
+
+    // Listboxes
+    private List<ValorItem> ValoresDisponibles = new List<ValorItem>
+    {
+        new ValorItem { Nombre = "Excelente" },
+        new ValorItem { Nombre = "Muy Bueno" },
+        new ValorItem { Nombre = "Bueno" },
+        new ValorItem { Nombre = "Regular" },
+        new ValorItem { Nombre = "Deficiente" },
+        new ValorItem { Nombre = "Sí" },
+        new ValorItem { Nombre = "No" },
+        new ValorItem { Nombre = "No Aplica" }
+    };
+
+    private List<ValorItem> ValoresSeleccionados = new List<ValorItem>();
+
+    private IEnumerable<ValorItem> ValoresDisponiblesSeleccionados = new List<ValorItem>();
+    private IEnumerable<ValorItem> ValoresSeleccionadosSeleccionados = new List<ValorItem>();
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda
+    }
+
+    private void MoverSeleccionadosDerecha()
+    {
+        var itemsAMover = ValoresDisponiblesSeleccionados.ToList();
+        foreach (var item in itemsAMover)
+        {
+            ValoresDisponibles.Remove(item);
+            ValoresSeleccionados.Add(item);
+        }
+        ValoresDisponiblesSeleccionados = new List<ValorItem>();
+    }
+
+    private void MoverTodosDerecha()
+    {
+        ValoresSeleccionados.AddRange(ValoresDisponibles);
+        ValoresDisponibles.Clear();
+        ValoresDisponiblesSeleccionados = new List<ValorItem>();
+    }
+
+    private void MoverSeleccionadosIzquierda()
+    {
+        var itemsAMover = ValoresSeleccionadosSeleccionados.ToList();
+        foreach (var item in itemsAMover)
+        {
+            ValoresSeleccionados.Remove(item);
+            ValoresDisponibles.Add(item);
+        }
+        ValoresSeleccionadosSeleccionados = new List<ValorItem>();
+    }
+
+    private void MoverTodosIzquierda()
+    {
+        ValoresDisponibles.AddRange(ValoresSeleccionados);
+        ValoresSeleccionados.Clear();
+        ValoresSeleccionadosSeleccionados = new List<ValorItem>();
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class ValorItem
+    {
+        public string Nombre { get; set; } = string.Empty;
+    }
+}

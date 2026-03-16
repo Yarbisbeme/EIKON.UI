@@ -1,0 +1,239 @@
+/* Main form container */
+.frhma512-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+    /* Main content layout - two columns */
+    .frhma512-form .main-content {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 25px;
+        width: 100%;
+    }
+
+    /* Left column */
+    .frhma512-form .left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Right column */
+    .frhma512-form .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border: 1px solid var(--border-color, #bfbfbf);
+        border-radius: 4px;
+        padding: 20px;
+    }
+
+    /* Input field styles */
+    .frhma512-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+        .frhma512-form .input label {
+            font-weight: 500;
+            color: var(--text-color, #33363f);
+            font-size: 14px;
+        }
+
+    /* Formula row - three inputs in a row */
+    .frhma512-form .formula-row {
+        display: grid;
+        grid-template-columns: 1fr 150px 150px 150px;
+        gap: 15px;
+        align-items: start;
+    }
+
+    /* Vigencia row */
+    .frhma512-form .vigencia-row {
+        display: grid;
+        grid-template-columns: 150px;
+    }
+
+    /* Radio and checkbox groups */
+    .frhma512-form .radio-group,
+    .frhma512-form .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .frhma512-form .group-label {
+        font-weight: 600;
+        color: var(--text-color, #33363f);
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    /* Radio buttons layout - horizontal */
+    .frhma512-form .radio-buttons {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .frhma512-form .radio-buttons-horizontal {
+        display: flex;
+        gap: 20px;
+    }
+
+    /* Checkboxes inline */
+    .frhma512-form .checkboxes-inline {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    /* Checkboxes vertical */
+    .frhma512-form .checkboxes-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Tabs section */
+    .frhma512-form .tabs-section {
+        width: 100%;
+        border: 1px solid #bfbfbf;
+        border-radius: 4px;
+        overflow:hidden;
+    }
+
+    .frhma512-form .tab-content {
+        padding: 20px;
+    }
+
+    /* Bottom grids */
+    .frhma512-form .bottom-grids {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .frhma512-form .grid-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .frhma512-form .grid-header {
+        font-weight: 600;
+        color: var(--text-color, #33363f);
+        font-size: 14px;
+        padding: 10px;
+        border: 1px solid var(--border-color, #bfbfbf);
+        border-bottom: none;
+    }
+
+    .frhma512-form .custom-grid {
+        border: 1px solid var(--border-color, #bfbfbf);
+    }
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+    ::deep .dx-textbox-container:focus-within {
+        border-color: var(--accent-color, #007bff) !important;
+    }
+
+::deep .dx-spin-edit-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+    ::deep .dx-spin-edit-container:focus-within {
+        border-color: var(--accent-color, #007bff) !important;
+    }
+
+::deep .dx-memo {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+    ::deep .dx-memo:focus-within {
+        border-color: var(--accent-color, #007bff) !important;
+    }
+
+::deep .dx-checkbox {
+    color: var(--text-color, #33363f);
+}
+
+::deep .dx-radio-button-list {
+    display: flex;
+    gap: 20px;
+}
+
+::deep .dx-radio-button {
+    color: var(--text-color, #33363f);
+}
+
+::deep .dx-grid {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-grid-header {
+    background-color: var(--background-light, #f8f9fa);
+    font-weight: 600;
+}
+
+::deep .dxbs-grid-header-content {
+    color: var(--text-color, #33363f);
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .frhma512-form .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma512-form .right-column {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma512-form {
+        padding: 15px;
+    }
+
+        .frhma512-form .formula-row {
+            grid-template-columns: 1fr;
+        }
+
+        .frhma512-form .bottom-grids {
+            grid-template-columns: 1fr;
+        }
+
+        .frhma512-form .radio-buttons,
+        .frhma512-form .checkboxes-inline {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+}
+
+@media (max-width: 480px) {
+    .frhma512-form {
+        padding: 10px;
+        gap: 20px;
+    }
+
+        .frhma512-form .main-content {
+            gap: 20px;
+        }
+
+        .frhma512-form .input label,
+        .frhma512-form .group-label {
+            font-size: 13px;
+        }
+}

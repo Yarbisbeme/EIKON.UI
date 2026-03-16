@@ -1,0 +1,174 @@
+@layout MainLayout
+@page "/FRHMA521"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA521 - Tardanzas, Asistencias y Permisos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma521-form">
+
+        <!-- Código -->
+        <div class="input codigo-field">
+            <label>Código</label>
+            <DxTextBox @bind-Text="@Codigo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Descripción -->
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <div class="field-row">
+            <div style="width:100%;display:flex; flex-direction:column; gap:10px;">
+                <!-- Cód. Alterno -->
+                <div class="input">
+                    <label>Cód. Alterno</label>
+                    <DxTextBox @bind-Text="@CodigoAlterno" NullText="Código Alterno" />
+                </div>
+
+                <!-- Fórmula -->
+                <div class="input">
+                    <label>Fórmula</label>
+                    <DxComboBox Data="@Formulas"
+                                @bind-Value="@FormulaSeleccionada"
+                                NullText="Seleccione una fórmula"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                    </DxComboBox>
+                </div>
+
+                <!-- Días de Ley -->
+                <div class="dias-ley-section">
+                    <div class="dias-ley-row">
+                        <div class="input">
+                            <label class="section-label">Días de Ley</label>
+                            <DxSpinEdit @bind-Value="@DiasLey"
+                                        MinValue="0"
+                                        MaxValue="365"
+                                        DisplayFormat="N0" />
+                        </div>
+                        <div class="input tipo-field">
+                            <label>Tipo</label>
+                            <DxTextBox @bind-Text="@TipoDias" NullText="Tipo" />
+                        </div>
+                        <div class="input estado-field">
+                            <label>Estado</label>
+                            <DxTextBox @bind-Text="@EstadoDias" NullText="Estado" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tipo-radio-section">
+                <label class="section-label">Tipo</label>
+
+                <div class="radio-group">
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Accion"
+                             Value="@("Tardanza")">
+                        Imprimir cambio
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Accion"
+                             Value="@("Asistencia")">
+                        Salvar Pendiente
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Accion"
+                             Value="@("Permiso")">
+                        Completar acción
+                    </DxRadio>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descripción de política -->
+        <div class="input">
+            <label>Descripción de política</label>
+            <DxMemo @bind-Text="@DescripcionPolitica"
+                    Rows="10"
+                    NullText="Descripción de política"
+                    CssClass="politica-memo" />
+        </div>
+
+        <!-- Bottom Section: Checkboxes + Radio Buttons -->
+        <div class="bottom-section">
+            <!-- Left side: Checkboxes -->
+            <div class="checkboxes-group">
+                <DxCheckBox @bind-Checked="@AlertaAsistencia"
+                            CssClass="custom-checkbox">Alerta Asistencia</DxCheckBox>
+                <DxCheckBox @bind-Checked="@DiasCalendario"
+                            CssClass="custom-checkbox">Días Calendario</DxCheckBox>
+                <DxCheckBox @bind-Checked="@Activo"
+                            CssClass="custom-checkbox">Activo</DxCheckBox>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private string Accion { get; set; } = "Tardanza";
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string CodigoAlterno { get; set; } = string.Empty;
+    private string FormulaSeleccionada { get; set; } = string.Empty;
+    private int DiasLey { get; set; } = 0;
+    private string TipoDias { get; set; } = string.Empty;
+    private string EstadoDias { get; set; } = string.Empty;
+    private string DescripcionPolitica { get; set; } = string.Empty;
+
+    // Checkboxes
+    private bool AlertaAsistencia { get; set; } = false;
+    private bool DiasCalendario { get; set; } = false;
+    private bool Activo { get; set; } = false;
+
+    // Radio buttons
+    private string TipoSeleccionado { get; set; } = "Tardanza";
+
+    // Dropdown data
+    private List<string> Formulas = new List<string>
+    {
+        "Fórmula 1 - Cálculo estándar",
+        "Fórmula 2 - Cálculo proporcional",
+        "Fórmula 3 - Cálculo acumulado",
+        "Fórmula 4 - Cálculo personalizado"
+    };
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

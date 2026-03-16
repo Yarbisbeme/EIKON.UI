@@ -1,0 +1,190 @@
+﻿.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header Section */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.year-field {
+    min-width: 150px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Form Fields */
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.details-row {
+    justify-content: flex-end;
+    padding-top: 5px;
+}
+
+/* Sección de campos numéricos */
+.numeric-fields-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.numeric-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Botones de acción */
+.action-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.success-btn {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+
+.info-btn {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+}
+
+
+.danger-btn {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.primary-btn {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.tertiary-btn {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+/* Input fields con label arriba */
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+    .input-field label {
+        color: #333;
+    }
+
+/* Estilos para DevExpress Components */
+.dx-textbox,
+.dx-combobox,
+.dx-spin-edit {
+    border-radius: 6px !important;
+}
+
+.dx-textbox-container,
+.dx-combobox-container,
+.dx-spin-edit-container {
+    border: 1px solid #ced4da !important;
+    border-radius: 6px !important;
+}
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+.form-row {
+    flex-direction: column;
+    gap: 15px;
+}
+    .form-fields{
+        width:100%;
+    }
+
+    .numeric-fields-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 15px;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .form-container
+
+{
+    gap: 15px;
+}
+
+.header-section,
+.form-fields {
+    padding: 15px;
+}
+
+.header-actions {
+    gap: 6px;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+}
+
+.details-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.numeric-fields-section {
+    padding: 12px;
+}
+
+}

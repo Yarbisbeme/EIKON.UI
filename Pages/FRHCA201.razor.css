@@ -1,0 +1,684 @@
+/* FRHCA201 - Modificar Datos Empleados */
+
+.frhca201-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Header Section */
+.frhca201-form .header-section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.frhca201-form .numero-empleado-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhca201-form .numero-empleado-field label,
+.frhca201-form .nombre-empleado-field label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhca201-form .nombre-empleado-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Main Layout: 3 columnas */
+.frhca201-form .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 350px;
+    gap: 20px;
+    padding: 15px 0;
+}
+
+/* Identificaciones Section */
+.frhca201-form .identificaciones-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 15px;
+    background-color: #f8f9fa;
+}
+
+.frhca201-form .section-title {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #bfbfbf;
+    padding-bottom: 5px;
+}
+
+/* Nombres Section */
+.frhca201-form .nombres-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 15px;
+    background-color: #f8f9fa;
+}
+
+/* Imagen Area */
+.frhca201-form .imagen-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhca201-form .custom-drop-zone {
+    width: 100%;
+    height: 280px;
+    border: 2px dashed #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.frhca201-form .custom-drop-zone:hover {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+}
+
+.frhca201-form .drop-file-icon {
+    font-size: 60px;
+    color: #bfbfbf;
+}
+
+.frhca201-form .imagen-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+/* Standard Input */
+.frhca201-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhca201-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Dual Row */
+.frhca201-form .dual-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+/* Triple Row */
+.frhca201-form .triple-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+/* Tabs Section */
+.frhca201-form .tabs-section {
+    margin-top: 10px;
+}
+
+.frhca201-form .tab-content {
+    padding: 20px;
+    min-height: 400px;
+}
+
+/* Básicos Tab */
+.frhca201-form .basicos-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.frhca201-form .basicos-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.frhca201-form .fecha-nacimiento-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.frhca201-form .edad-field {
+    width: 100px;
+}
+
+.frhca201-form .basicos-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Localizadores Tab */
+.frhca201-form .localizadores-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.frhca201-form .celular-row,
+.frhca201-form .telefono-oficina-row {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 12px;
+    align-items: end;
+}
+
+.frhca201-form .ext-field {
+    width: 100px;
+}
+
+.frhca201-form .emergencia-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.frhca201-form .section-subtitle {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.frhca201-form .telefono-row {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 12px;
+    align-items: end;
+}
+
+/* Licencia de Conducir Tab */
+.frhca201-form .licencia-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.frhca201-form .licencia-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.frhca201-form .fecha-am-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhca201-form .vehiculo-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+/* Familia Tab */
+.frhca201-form .familia-content {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 25px;
+}
+
+.frhca201-form .familia-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.frhca201-form .fecha-edad-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhca201-form .edad-label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.frhca201-form .familia-detalle-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.frhca201-form .edad-small {
+    max-width: 80px;
+}
+
+.frhca201-form .familia-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhca201-form .familia-btn {
+    width: 100%;
+}
+
+/* Enfermedad Tab */
+.frhca201-form .enfermedad-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 800px;
+}
+
+.frhca201-form .enfermedad-opciones {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.frhca201-form .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhca201-form .radio-group label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhca201-form .conte-field {
+    max-width: 150px;
+}
+
+.frhca201-form .enfermedad-grid {
+    margin-top: 15px;
+}
+
+.frhca201-form .enfermedad-data-grid {
+    width: 100%;
+    border: 1px solid #bfbfbf;
+}
+
+/* Diversos Tab */
+.frhca201-form .diversos-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.frhca201-form .diversos-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 800px;
+}
+
+.frhca201-form .vencimiento-group,
+.frhca201-form .vestuario-group,
+.frhca201-form .tiempo-group,
+.frhca201-form .normal-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhca201-form .vencimiento-group label,
+.frhca201-form .vestuario-group label,
+.frhca201-form .normal-group label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhca201-form .diversos-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.frhca201-form .diversos-row-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+/* Comentarios Tab */
+.frhca201-form .comentarios-content {
+    width: 100%;
+}
+
+.frhca201-form .comentarios-tabs {
+    width: 100%;
+}
+
+/* DevExpress Component Overrides */
+.frhca201-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca201-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca201-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhca201-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhca201-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca201-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca201-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca201-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca201-form ::deep .dx-memo-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+    min-height: 300px;
+}
+
+.frhca201-form ::deep .dx-memo-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca201-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhca201-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhca201-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.frhca201-form ::deep .dx-radio-icon {
+    border: 1px solid #bfbfbf;
+}
+
+.frhca201-form ::deep .dx-radio-checked .dx-radio-icon {
+    border-color: #007bff;
+}
+
+.frhca201-form ::deep .dx-radio-checked .dx-radio-icon::before {
+    background-color: #007bff;
+}
+
+.frhca201-form ::deep .dx-dateedit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca201-form ::deep .dx-dateedit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Tabs Styling */
+.frhca201-form ::deep .dx-tabs {
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.frhca201-form ::deep .dx-tab {
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+.frhca201-form ::deep .dx-tab-active {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #007bff;
+    font-weight: 500;
+}
+
+.frhca201-form ::deep .main-tabs .dx-tab {
+    padding: 12px 20px;
+}
+
+.frhca201-form ::deep .comentarios-tabs .dx-tab {
+    padding: 10px 15px;
+}
+
+/* Read-only fields */
+.frhca201-form ::deep .dx-textbox[readonly] {
+    background-color: #e9ecef;
+}
+
+.frhca201-form ::deep .dx-textbox[readonly] .dx-texteditor-input {
+    background-color: #e9ecef;
+}
+
+/* Grid styling */
+.frhca201-form ::deep .dx-datagrid {
+    border: 1px solid #bfbfbf;
+}
+
+.frhca201-form ::deep .dx-datagrid-headers {
+    border-bottom: 2px solid #bfbfbf;
+    background-color: #f8f9fa;
+}
+
+.frhca201-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Button Styling */
+.frhca201-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhca201-form ::deep .dx-button-secondary {
+    background-color: #f8f9fa;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhca201-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .frhca201-form .main-layout {
+        grid-template-columns: 1fr 1fr 280px;
+        gap: 15px;
+    }
+
+    .frhca201-form .custom-drop-zone {
+        height: 240px;
+    }
+
+    .frhca201-form .familia-content {
+        grid-template-columns: 1fr 180px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .frhca201-form .main-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .frhca201-form .imagen-area {
+        grid-column: 1 / -1;
+    }
+
+    .frhca201-form .custom-drop-zone {
+        height: 200px;
+    }
+
+    .frhca201-form .familia-detalle-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .frhca201-form .diversos-row,
+    .frhca201-form .diversos-row-bottom {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhca201-form .header-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca201-form .main-layout {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhca201-form .dual-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca201-form .triple-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca201-form .fecha-nacimiento-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhca201-form .edad-field {
+        width: 100%;
+    }
+
+    .frhca201-form .celular-row,
+    .frhca201-form .telefono-oficina-row,
+    .frhca201-form .telefono-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhca201-form .ext-field {
+        width: 100%;
+    }
+
+    .frhca201-form .familia-content {
+        grid-template-columns: 1fr;
+    }
+
+    .frhca201-form .familia-detalle-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhca201-form .enfermedad-opciones {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .frhca201-form .conte-field {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhca201-form {
+        gap: 15px;
+    }
+
+    .frhca201-form .tab-content {
+        padding: 15px;
+        min-height: 300px;
+    }
+
+    .frhca201-form .input label {
+        font-size: 13px;
+    }
+
+    .frhca201-form .custom-drop-zone {
+        height: 180px;
+    }
+
+    .frhca201-form .drop-file-icon {
+        font-size: 40px;
+    }
+
+    .frhca201-form .imagen-buttons {
+        flex-direction: column;
+    }
+
+    .frhca201-form .basicos-buttons,
+    .frhca201-form .familia-buttons {
+        flex-direction: column;
+    }
+
+    .frhca201-form ::deep .dx-memo-container {
+        min-height: 200px;
+    }
+}

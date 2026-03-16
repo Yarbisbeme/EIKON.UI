@@ -1,0 +1,296 @@
+@layout MainLayout
+@page "/pre-generation-config"
+@using EIKON.UI.Components
+@* @rendermode InteractiveServer *@
+<div class="preConfig">
+
+    <Breadcrumb Title="Configuración Pre-Generación" BackUrl="/dash" />
+    <div class="header">
+        <span style="font-size:16px;">NÓMINA QUINCENAL</span>
+        <div style="display:flex; gap:10px">
+            <span style="font-size:16px;">Periodo: 5</span>
+            <span style="font-size:16px;">Año: 2024</span>
+
+        </div>
+
+        <Toolbar formulario="FRHxxx999" />
+    </div>
+    @if (SelectedTransaction != null)
+    {
+        <div class="w-100">
+            <div class="bg-light rounded-3 p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-2">@SelectedTransaction.Transaccion</h4>
+                        <p class="mb-4">
+                            <strong>Código:</strong> @SelectedTransaction.Codigo |
+                            <strong>Tipo:</strong> @SelectedTransaction.Tipo |
+                            <strong>Periodo:</strong> @SelectedTransaction.Periodo
+                        </p>
+                        <p class="mb-4">
+                            <strong>Estado:</strong>
+                            <span class="badge badge-@(SelectedTransaction.Generada == "N" ? "danger" : "success")">
+                                @(SelectedTransaction.Generada == "N" ? "No Generada" : "Generada")
+                            </span>
+                        </p>
+                    </div>
+                    <div class="info text-center">
+                        <span class="badge rounded-pill bg-info">#@SelectedTransaction.Codigo</span>
+                        <h5 class="text-info mt-1">@SelectedTransaction.Tipo</h5>
+                    </div>
+                </div>
+                <DxButton Text="Volver al Grid" Click="@(() => SelectedTransaction = null)">
+                </DxButton>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="grid-container">
+            <DxPopup @bind-Visible="@PopupVisible" HeaderText="@PopupHeader" BodyText="@PopupContent">
+            </DxPopup>
+
+            <DxGrid @ref="Grid" Data="@DataSource"
+                    ShowGroupPanel="false"
+                    TextWrapEnabled="false"
+                    ShowSearchBox="true"
+                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                    AllowSelectRowByClick="true"
+                    PageSize="5"
+                    HighlightRowOnHover="true"
+                    ShowPager="true"
+                    PagerNavigationMode="PagerNavigationMode.NumericButtons"
+                    PagerPageSizeSelectorVisible="false">
+
+                <Columns>
+                    <DxGridSelectionColumn Width="50px" />
+
+                    <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100%" MinWidth="80">
+                    </DxGridDataColumn>
+
+                    <DxGridDataColumn FieldName="Transaccion" Caption="Transacción" MinWidth="200" Width="100%">
+                        <CellDisplayTemplate>
+                            <button class="btn btn-link grid-btn-link p-0" @onclick="() => ShowTransactionDetails((Transaction)context.DataItem)">
+                                @context.DisplayText
+                            </button>
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
+
+                    <DxGridDataColumn FieldName="Tipo" Caption="Tipo" Width="100%" MinWidth="80" TextAlignment="GridTextAlignment.Center">
+                    </DxGridDataColumn>
+
+                    <DxGridDataColumn FieldName="Periodo" Caption="Periodo" Width="100%" MinWidth="100" TextAlignment="GridTextAlignment.Center">
+                    </DxGridDataColumn>
+
+                    <DxGridDataColumn FieldName="Generada" Caption="Generada" Width="100px" MinWidth="100" TextAlignment="GridTextAlignment.Center">
+                        <CellDisplayTemplate>
+                            <span class="badge badge-@(((Transaction)context.DataItem).Generada == "N" ? "danger" : "success")">
+                                @context.DisplayText
+                            </span>
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
+                </Columns>
+
+                <TotalSummary>
+                    <DxGridSummaryItem FieldName="Codigo" SummaryType="GridSummaryItemType.Count" FooterColumnName="Transaccion" />
+                </TotalSummary>
+            </DxGrid>
+        </div>
+    }
+
+    <div class="filter-section">
+        <span>Filtros</span>
+
+        <div style="display:flex; gap:10px; flex-direction:column">
+            <span style="font-weight: bold">Filtrar por tipo</span>
+            <div style="display:flex; gap:10px;flex-wrap:wrap">
+                <DxCheckBox @bind-Checked="@IsChecked">Ingresos</DxCheckBox>
+                <DxCheckBox @bind-Checked="@IsChecked">Deducciones</DxCheckBox>
+                <DxCheckBox @bind-Checked="@IsChecked">Invisibles</DxCheckBox>
+                <DxCheckBox @bind-Checked="@IsChecked">Todas</DxCheckBox>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-direction:column">
+            <span style="font-weight: bold">Filtrar por categoría</span>
+            <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <DxCheckBox @bind-Checked="@IsChecked">Regular</DxCheckBox>
+                <DxCheckBox @bind-Checked="@IsChecked">Temporero</DxCheckBox>
+                <DxCheckBox @bind-Checked="@IsChecked">Exempleado</DxCheckBox>
+                <DxCheckBox @bind-Checked="@IsChecked">Pensionados</DxCheckBox>
+            </div>
+        </div>
+
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@IsChecked">Oficina</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+
+        </div>
+
+        <!-- -- -->
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@IsChecked">Oficina</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+
+        </div>
+        <!-- -- -->
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@IsChecked">Oficina</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+@code {
+    private bool IsChecked = true;
+
+    // **- private string[] // **- ToolbarOptions = { "save", "leave" };
+    IGrid Grid { get; set; }
+    IEnumerable<Transaction> DataSource { get; set; }
+    Transaction SelectedTransaction { get; set; }
+    bool PopupVisible = false;
+    string PopupHeader;
+    string PopupContent;
+
+    protected override void OnInitialized()
+    {
+        DataSource = GetTransactionData();
+    }
+
+    void ShowTransactionDetails(Transaction transaction)
+    {
+        SelectedTransaction = transaction;
+    }
+
+    private List<Transaction> GetTransactionData()
+    {
+        return new List<Transaction>
+        {
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" },
+            new Transaction { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Tipo = "S", Periodo = 0, Generada = "N" }
+        };
+    }
+
+    public class Transaction
+    {
+        public string Codigo { get; set; }
+        public string Transaccion { get; set; }
+        public string Tipo { get; set; }
+        public int Periodo { get; set; }
+        public string Generada { get; set; }
+    }
+
+    }
+
+<style>
+    .grid-btn-link {
+        color: #0066cc;
+        text-decoration: none;
+        background: none;
+        border: none;
+        text-align: left;
+    }
+
+        .grid-btn-link:hover {
+            text-decoration: underline;
+            color: #004499;
+        }
+
+    .badge-success {
+        color: #28a745;
+    }
+
+    .badge-danger {
+        color: #dc3545;
+    }
+
+    .badge {
+        padding: 0.25em 0.5em;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+        font-weight: 500;
+    }
+
+    .grid-container {
+        width: 100%;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa;
+    }
+
+    .rounded-3 {
+        border-radius: 0.375rem;
+    }
+
+    .p-4 {
+        padding: 1.5rem;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+
+    .text-info {
+        color: #0dcaf0;
+    }
+
+    .bg-info {
+        background-color: #0dcaf0;
+    }
+
+    .rounded-pill {
+        border-radius: 50rem;
+    }
+</style>

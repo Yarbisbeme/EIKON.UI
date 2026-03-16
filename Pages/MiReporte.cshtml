@@ -1,0 +1,10 @@
+﻿@page "/ReportPdf/"
+@model EIKON.UI.Pages.MiReporteModel
+@{
+}
+
+<h2>Generar Reporte</h2>
+
+<form method="post" asp-page-handler="DownloadReport">
+    <button type="submit" class="btn btn-primary">Descargar Reporte</button>
+</form>

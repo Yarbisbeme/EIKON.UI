@@ -1,0 +1,471 @@
+@page "/FRHCL108New"
+
+
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHCL108 - Clase de Puesto" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHCL108" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal -->
+        <div class="main-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Código Clase</label>
+                    <DxTextBox @bind-Text="@CodigoClaseValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchCodigoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>  </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input-field wide">
+                    <label>Nombre Clase</label>
+                    <DxTextBox @bind-Text="@NombreClaseValue" />
+                </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Próxima Clase</label>
+                    <DxTextBox @bind-Text="@ProximaClaseValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchProximaClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Cuarta Fila -->
+            <div class="form-row">
+                <div class="input-field wide">
+                    <label>Categoría</label>
+                    <DxTextBox @bind-Text="@CategoriaValue" />
+                </div>
+                <div class="toolbar-right-actions">
+                    <DxButton IconCssClass="fi fi-rr-settings" 
+                             CssClass="icon-btn secondary-btn" 
+                             Click="@OnSettingsClick" />
+                    <DxButton IconCssClass="fi fi-rr-envelope" 
+                             CssClass="icon-btn info-btn" 
+                             Click="@OnMailClick" />
+                </div>
+            </div>
+
+            <!-- Quinta Fila -->
+            <div class="form-row">
+                <div class="input-field wide">
+                    <label>Grupo Ocupacional</label>
+                    <DxTextBox @bind-Text="@GrupoOcupacionalValue" />
+                </div>
+            </div>
+
+            <!-- Sexta Fila -->
+            <div class="form-row">
+                <div class="input-field wide">
+                    <label>Perfil entrenamiento</label>
+                    <DxTextBox @bind-Text="@PerfilEntrenamientoValue" />
+                </div>
+            </div>
+
+            <!-- Séptima Fila - Campos numéricos y fechas -->
+            <div class="form-row">
+                <div class="numeric-group">
+                    <div class="input-field small">
+                        <label>Puntos</label>
+                        <DxSpinEdit @bind-Value="@PuntosValue" 
+                                   MinValue="0" 
+                                   MaxValue="9999" />
+                    </div>
+                    <div class="input-field small">
+                        <label>Prueba</label>
+                        <DxSpinEdit @bind-Value="@PruebaValue" 
+                                   MinValue="0" 
+                                   MaxValue="9999" />
+                    </div>
+                    <div class="input-field small">
+                        <label>Meses</label>
+                        <DxSpinEdit @bind-Value="@MesesValue" 
+                                   MinValue="0" 
+                                   MaxValue="999" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Octava Fila - Fechas -->
+            <div class="form-row">
+                <div class="date-group">
+                    <div class="input-field">
+                        <label>Creado</label>
+                        <DxDateEdit @bind-Date="@CreadoValue" 
+                                   NullText="dd/mm/yyyy"/>
+
+                    </div>
+                    <div class="input-field">
+                        <label>Vigencia</label>
+                        <DxDateEdit @bind-Date="@VigenciaValue" 
+                                   NullText="dd/mm/yyyy"/>
+                    </div>
+                    <div class="status-group">
+                        <DxCheckBox @bind-Checked="@ActivoOption">Activo</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Sección principal */
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        min-height: 60px;
+    }
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field.wide {
+        flex: 3;
+    }
+
+    .input-field.small {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Toolbar actions */
+    .toolbar-actions {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+        align-items: flex-end;
+        padding-bottom: 5px;
+    }
+
+    .toolbar-right-actions {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+        align-items: flex-end;
+        padding-bottom: 5px;
+    }
+
+    /* Grupos especializados */
+    .numeric-group {
+        display: flex;
+        gap: 20px;
+        flex: 1;
+        width: 100%;
+        align-items: flex-end;
+    }
+
+    .date-group {
+        display: flex;
+        gap: 20px;
+        flex: 3;
+        align-items: flex-end;
+    }
+
+    .status-group {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Botones */
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .primary-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .primary-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .danger-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .danger-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .warning-btn {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #212529;
+    }
+
+    .warning-btn:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-spin-edit,
+    .dx-date-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-spin-edit-container,
+    .dx-date-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-spin-edit-container:focus-within,
+    .dx-date-edit-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Checkboxes */
+    .dx-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+
+    /* Responsive Design */
+    media (max-width: 1024px) {
+        .form-row {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .numeric-group,
+        .date-group {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .toolbar-actions,
+        .toolbar-right-actions {
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .main-section {
+            padding: 20px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        .input-field {
+            min-width: auto;
+        }
+
+        .input-field.wide {
+            flex: 1;
+        }
+
+        .toolbar-actions,
+        .toolbar-right-actions {
+            justify-content: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .numeric-group,
+        .date-group {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .status-group {
+            padding-bottom: 0;
+            justify-content: center;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .main-section {
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+        }
+
+        .toolbar-actions,
+        .toolbar-right-actions {
+            gap: 4px;
+        }
+
+        .form-row {
+            min-height: auto;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string CodigoClaseValue { get; set; } = "";
+    private string NombreClaseValue { get; set; } = "";
+    private string ProximaClaseValue { get; set; } = "";
+    private string CategoriaValue { get; set; } = "";
+    private string GrupoOcupacionalValue { get; set; } = "";
+    private string PerfilEntrenamientoValue { get; set; } = "";
+    
+    // Campos numéricos
+    private int PuntosValue { get; set; } = 0;
+    private int PruebaValue { get; set; } = 0;
+    private int MesesValue { get; set; } = 0;
+    
+    // Campos de fecha
+    private DateTime? CreadoValue { get; set; } = DateTime.Now;
+    private DateTime? VigenciaValue { get; set; }
+    
+    // Opciones de checkbox
+    private bool ActivoOption { get; set; } = true;
+    
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código clase");
+    private void OnAddClick() => Console.WriteLine("Agregar nuevo");
+    private void OnSaveClick() => Console.WriteLine("Guardar");
+    private void OnDeleteClick() => Console.WriteLine("Eliminar");
+    private void OnHomeClick() => Console.WriteLine("Inicio");
+    private void OnRefreshClick() => Console.WriteLine("Actualizar");
+    private void OnSearchProximaClick() => Console.WriteLine("Buscar próxima clase");
+    private void OnSettingsClick() => Console.WriteLine("Configuración");
+    private void OnMailClick() => Console.WriteLine("Correo");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Clase de Puesto guardada!");
+    }
+}

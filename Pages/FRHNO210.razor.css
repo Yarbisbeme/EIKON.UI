@@ -1,0 +1,303 @@
+/* FRHNO210 - Generación de Entradas Contables */
+
+.frhno210-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Standard Input Fields */
+.frhno210-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno210-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Cierres Section - Layout especial con dos columnas */
+.frhno210-form .cierres-section {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 20px;
+    border:1px solid #bfbfbf;
+    border-radius:4px;
+    padding:10px;
+    align-items: start;
+}
+
+.frhno210-form .cierres-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhno210-form .cierres-inputs label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Periodo Section */
+.frhno210-form .periodo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhno210-form .periodo-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhno210-form .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Todos Section - Checkbox + Search */
+.frhno210-form .todos-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.frhno210-form .todos-section .search-field {
+    flex: 1;
+}
+
+/* Transacciones Section */
+.frhno210-form .transacciones-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhno210-form .transacciones-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhno210-form .transacciones-checkboxes {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.frhno210-form .transacciones-section .search-field {
+    width: 100%;
+}
+
+/* Bottom Toolbar */
+.frhno210-form .bottom-toolbar {
+    display: flex;
+    flex-direction:column;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.frhno210-form .toolbar-left {
+    display: flex;
+    gap: 8px;
+}
+
+.frhno210-form .toolbar-center {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.frhno210-form .toolbar-right {
+    display: flex;
+    gap: 8px;
+}
+
+.frhno210-form .input-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.frhno210-form .input-inline label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Icon Buttons */
+.frhno210-form .icon-btn {
+    padding: 8px 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+}
+
+.frhno210-form .icon-btn:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno210-form .icon-btn i {
+    font-size: 16px;
+}
+
+.frhno210-form .icon-btn.success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.frhno210-form .icon-btn.success:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.frhno210-form .icon-btn.danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.frhno210-form .icon-btn.danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* DevExpress Component Overrides */
+.frhno210-form ::deep .dx-textbox-container,
+.frhno210-form ::deep .dx-dropdownedit-input-wrapper,
+.frhno210-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno210-form ::deep .dx-textbox-container:focus-within,
+.frhno210-form ::deep .dx-dropdownedit-input-wrapper:focus-within,
+.frhno210-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno210-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhno210-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhno210-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhno210-form .cierres-section {
+        grid-template-columns: 1fr 180px;
+        gap: 15px;
+    }
+
+    .frhno210-form .bottom-toolbar {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhno210-form .toolbar-left,
+    .frhno210-form .toolbar-center,
+    .frhno210-form .toolbar-right {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno210-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhno210-form .cierres-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhno210-form .todos-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .frhno210-form .transacciones-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .frhno210-form .bottom-toolbar {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .frhno210-form .toolbar-center {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .frhno210-form .input-inline {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhno210-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhno210-form .input label {
+        font-size: 13px;
+    }
+
+    .frhno210-form .toolbar-left,
+    .frhno210-form .toolbar-right {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .frhno210-form .icon-btn {
+        min-width: 32px;
+        height: 32px;
+        padding: 6px 10px;
+    }
+
+    .frhno210-form .icon-btn i {
+        font-size: 14px;
+    }
+}

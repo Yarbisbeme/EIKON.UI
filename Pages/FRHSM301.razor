@@ -1,0 +1,182 @@
+@page "/FRHSM301"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Consulta Varias de Afiliados a planes de salud" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhsm301-form">
+        <div class="search-section">
+            <div class="left-panel">
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("TodosAfiliados")">
+                    Todos Afiliados
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("Empleado")">
+                    Empleado
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("TipoSeguro")">
+                    Tipo Seguro
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("Empresa")">
+                    Empresa
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("MesInclusion")">
+                    Mes Inclusión
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("MesExclusion")">
+                    Mes Exclusión
+                </DxRadio>
+                <DxRadio GroupName="accion"
+                         @bind-GroupValue="@SelectedSearchType"
+                         Value="@("MesSolicitad")">
+                    Mes Solicitad
+                </DxRadio>
+            </div>
+
+            <div class="right-panel">
+                <div class="input">
+                    <label>Número</label>
+                    <DxTextBox @bind-Text="@Numero" NullText="">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNumero" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@Empleado" NullText="" />
+                </div>
+
+                <div class="input">
+                    <label>Tipo</label>
+                    <DxComboBox Data="@TipoOptions"
+                                @bind-Value="@SelectedTipo"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <div class="input">
+                    <label>Empresa</label>
+                    <DxComboBox Data="@EmpresaOptions"
+                                @bind-Value="@SelectedEmpresa"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <div class="mes-row">
+                    <div class="input">
+                        <label>Mes</label>
+                        <DxTextBox @bind-Text="@Mes" NullText="" />
+                    </div>
+                    <div class="input">
+                        <label>Año</label>
+                        <DxSpinEdit @bind-Value="@Anio"
+                                    MinValue="0"
+                                    MaxValue="9999"
+                                    ShowSpinButtons="true" />
+                    </div>
+                    <div class="ejecutar-btn">
+                        <DxButton Text="Ejecutar"
+                                  Click="@HandleEjecutar"
+                                  RenderStyle="ButtonRenderStyle.Primary"
+                                  CssClass="btn-ejecutar" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-section">
+            <DxGrid Data="@ResultadosData"
+                    CssClass="resultados-grid"
+                    PageSize="15"
+                    ShowPager="true">
+                <Columns>
+                    <DxGridDataColumn FieldName="Numero" Caption="Número" Width="120px" />
+                    <DxGridDataColumn FieldName="Nombre" Caption="Nombre" />
+                    <DxGridDataColumn FieldName="Tipo" Caption="Tipo" Width="200px" />
+                    <DxGridDataColumn FieldName="Estatus" Caption="Estatus" Width="150px" />
+                </Columns>
+            </DxGrid>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close", "add", "save" };
+
+    // Search type
+    private string SelectedSearchType { get; set; } = "TodosAfiliados";
+
+    // Search fields
+    private string Numero { get; set; } = string.Empty;
+    private string Empleado { get; set; } = string.Empty;
+    private string? SelectedTipo { get; set; }
+    private string? SelectedEmpresa { get; set; }
+    private string Mes { get; set; } = string.Empty;
+    private int Anio { get; set; } = 0;
+
+    // Dropdown options
+    private List<string> TipoOptions { get; set; } = new()
+    {
+        "Opción 1",
+        "Opción 2",
+        "Opción 3"
+    };
+
+    private List<string> EmpresaOptions { get; set; } = new()
+    {
+        "Empresa 1",
+        "Empresa 2",
+        "Empresa 3"
+    };
+
+    // Grid data
+    private List<Resultado> ResultadosData { get; set; } = new();
+
+    private void OnSearchNumero()
+    {
+        // Implementar búsqueda por número
+    }
+
+    private void HandleEjecutar()
+    {
+        // Implementar ejecución de consulta
+        // Aquí se cargarían los datos según el tipo de búsqueda seleccionado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class Resultado
+    {
+        public string Numero { get; set; } = string.Empty;
+        public string Nombre { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+        public string Estatus { get; set; } = string.Empty;
+    }
+}

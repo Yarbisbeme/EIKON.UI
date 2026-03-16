@@ -1,0 +1,609 @@
+﻿@page "/FRHCL106"
+
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+<PageTitle>Grupos</PageTitle>
+<head>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+@if (data == null)
+{
+    <p><em>Loading...</em></p>
+}
+    <ConfirmDialog @ref="confirmDialog" Title="Confirmar Eliminación"
+                   Message="¿Seguro deseas eliminar este Grupo Ocupacional?"
+                   OnConfirm="OnConfirmDelete" />
+
+    <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+        <DxTabPage Text="Mantenimiento">
+            <div class="header">
+                <div style="display:flex;width:auto;gap:20px;">
+                    <Breadcrumb Title="Grupos Ocupacionales" BackUrl="/dash" />
+                </div>
+                <Toolbar formulario="FRHCL106" OnProccess="BuscarGrupo" OnAdd="Agregar" OnSave="Guarda" OnRemove="Eliminar" OnAudit="OnAuditPopup" />
+            </div>
+            <div class="form-container">
+                <!-- Primera Fila - Código y Descripción -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Código</label>
+                        <DxTextBox @bind-Text="@editModel.GrCodigo" ReadOnly
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="BuscarGrupo" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                    <div class="input-field wide">
+                        <label>Descripción</label>
+                        <DxTextBox @bind-Text="@editModel.GrDescri" />
+                    </div>
+                </div>
+
+                <!-- Segunda Fila - Creado, Activo y Toolbar lateral -->
+                <div class="form-row-with-sidebar">
+                    <div class="input-fields-section">
+                        <div class="form-row">
+                            <div class="input-field">
+                                <label>Creado</label>
+                                <div class="date-with-button">
+                                    <DxDateEdit @bind-Date="@editModel.GrDesde"
+                                                DisplayFormat="d"
+                                                NullText="--/--/----" />
+                                </div>
+                            </div>
+                            <div class="checkbox-field">
+                                <DxCheckBox @bind-Checked="@editModel.GrEstatus">Activo</DxCheckBox>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-field">
+                                <label>Vigencia</label>
+                                <div class="date-with-button">
+                                    <DxDateEdit @bind-Date="@editModel.GrHasta"
+                                                DisplayFormat="d"
+                                                NullText="--/--/----" />
+                                </div>
+                            </div>
+                            <div class="checkbox-field">
+                                <DxCheckBox @bind-Checked="@editModel.GrIndReq">¿Puede este grupo hacer requisición?</DxCheckBox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </DxTabPage>
+        <DxTabPage Text="Búsqueda de Grupos Ocupacionales">
+            <div class="header">
+                <div style="display:flex;width:auto;gap:20px;">
+                    <Breadcrumb Title="Grupos Ocupacionales" BackUrl="/dash" />
+                </div>
+            </div>
+            <DxGrid Data="@data" @ref="MyGrid"
+                    CssClass="mw-1100"
+                    EditMode="GridEditMode.EditRow"
+                    ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+                <Columns>
+                    <DxGridCommandColumn Width="160px" VisibleIndex="1">
+                        <CellDisplayTemplate>
+                            <a @onclick="@(() => ShowEditRecord((Trhgr010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                        </CellDisplayTemplate>
+                    </DxGridCommandColumn>
+                    <DxGridDataColumn Caption="GrupoId" FieldName="GrCodigo" Width="80px" VisibleIndex="3" />
+                    <DxGridDataColumn Caption="Descripción" FieldName="GrDescri" Width="300px" VisibleIndex="4" />
+                    <DxGridDataColumn Caption="Puede Requizar" FieldName="GrIndReq" VisibleIndex="7" Width="130px" />
+                    <DxGridDataColumn Caption="Activo" FieldName="GrEstatus" VisibleIndex="8" Width="130px" />
+                </Columns>
+                <ToolbarTemplate>
+                    <DxToolbar>
+                        <DxToolbarItem Text="Export to XLSX" Click="ExportXlsx_Click" BeginGroup="true" />
+                        <DxToolbarItem Context="itemCtx" Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                            <Template>
+                                <DxCheckBox @bind-Checked="@ExportSelectedRowsOnly">Export Selected Rows Only</DxCheckBox>
+                            </Template>
+                        </DxToolbarItem>
+                    </DxToolbar>
+                </ToolbarTemplate>
+            </DxGrid>
+        </DxTabPage>
+    </DxTabs>
+@* } *@
+
+@*   <a class=" @cDhdn" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-trash"></i></a> *@
+@*  <Toolbar formulario="FRHxxx999" OnClose="Cancel" /> *@
+@*                         <HeaderTemplate>
+                            <a class=" @cAhdn " @onclick="@(() => ShowNewRecordPopup())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                        </HeaderTemplate> *@
+@* <DxGridDataColumn Caption="Desde" FieldName="GrDesde" Width="100px" VisibleIndex="5"></DxGridDataColumn>
+                    <DxGridDataColumn Caption="Hasta" FieldName="GrHasta" Width="100px" VisibleIndex="6"></DxGridDataColumn> *@
+@*                     DataItemDeleting="OnDataItemDeleting" *@
+@*                    EditModelSaving="OnEditModelSaving" *@
+@* <h3 class=""></h3> *@
+@* OnValidSubmit="@OnValidSubmit" *@
+
+<DxPopup @bind-Visible="@isPopupVisible"
+         HeaderText="@popupTitle"
+         ShowCloseButton="true"
+         ShowFooter="true"
+         Width="600px">
+    <BodyTemplate Context="popupCtx">
+        <EditForm Context="editpop" Model="@editModel">
+            <DataAnnotationsValidator />
+            <DxFormLayout>
+                <DxFormLayoutItem Caption="Creado por:" >
+                    <DxTextBox @bind-Text="@editModel.CreatedBy" ReadOnly/>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Creado el:">
+                    <DxDateEdit @bind-Date="@editModel.CreatedOn" ReadOnly/>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Modificado por:">
+                    <DxTextBox @bind-Text="@editModel.ChangedBy" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Modificado el:">
+                    <DxDateEdit @bind-Date="@editModel.ChangedOn" ReadOnly />
+                </DxFormLayoutItem>
+            </DxFormLayout>
+        </EditForm>
+    </BodyTemplate>
+    <FooterTemplate>
+@*         <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                  Text="Guardar"
+                  Click="GuardarDatos" /> *@
+        <DxButton Text="Salir" RenderStyle="ButtonRenderStyle.Secondary" Click="@OnCancelPopup" />
+    </FooterTemplate>
+</DxPopup>
+
+@code {
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+    private Trhgr010Dto editModel = new();
+    //// **- private string[] // **- ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    private ConfirmDialog confirmDialog;
+    bool ExportSelectedRowsOnly { get; set; }
+
+    // [Parameter]
+    // public string? pGrCodigo { get; set; }
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    private bool IsNewRecord = false;
+    private bool isPopupVisible = false;
+    private string popupTitle = "Grupo Ocupacional";
+    // public string cAhdn { get; set; } = "";
+    // public string cUhdn { get; set; } = "";
+    // public string cShdn { get; set; } = "";
+    // public string cDhdn { get; set; } = "";
+
+    async Task ExportXlsx_Click()
+    {
+        await MyGrid.ExportToXlsxAsync("ExportResult", new GridXlExportOptions()
+        {
+            ExportSelectedRowsOnly = ExportSelectedRowsOnly,
+            CustomizeCell = OnCustomizeXlCell
+        });
+    }
+
+    void OnCustomizeXlCell(GridExportCustomizeCellEventArgs args)
+    {
+        if (args.ColumnFieldName == "ContactName" && args.AreaType == SheetAreaType.DataArea)
+            args.Formatting.Font = new XlCellFont() { Italic = true };
+        args.Handled = true;
+    }
+
+    protected void Agregar()
+    {
+        editModel = new Trhgr010Dto();
+        editModel.EmEmpresa = "01";
+        
+    }
+
+    protected async Task Guarda()
+    {
+        try
+        {
+            
+            if (editModel.IdentityColumn == 0)
+            {
+                var ret0 = await api.grAddAsync(editModel, Token);
+                await CargarDatos();
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                alertInfo.Show("Agregado con exito!!!", "success");
+            }
+            else
+            {
+                var ret = await api.grUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                alertInfo.Show("Modificado con exito!!!", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ActiveTabIndex = 1;
+            //StateHasChanged();
+            Console.Write("Esto es un error al guardar..." + ex.Message);
+        }
+    }
+
+    protected void Eliminar()
+    {
+        confirmDialog.Show();
+    }
+
+    void BuscarGrupo()
+    {
+        ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+    }
+
+    private void OnCancelPopup()
+    {
+        isPopupVisible = false;
+    }
+
+    private void OnAuditPopup()
+    {
+        isPopupVisible = true;
+    }
+
+
+    private async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            try
+            {
+                // Lógica de eliminación si el usuario confirma
+                editModel.GrEstatus = false;
+                var ret = await api.grUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                Console.WriteLine("Error al eliminar..." + ex.Message);
+            }
+        }
+        else
+        {
+            alertInfo.Show("Eliminación cancelada");
+        }
+    }
+
+    private void ShowNewRecordPopup()
+    {
+        // popupTitle = "Nuevo Grupo";
+        editModel = new Trhgr010Dto();
+
+        // isPopupVisible = true;
+        ActiveTabIndex = 0;
+    }
+
+    private void ShowEditRecord(Trhgr010Dto record)
+    {
+        editModel = record;
+
+        // popupTitle = "Editar Grupo";
+        // editModel = new Trhgr010Dto
+        // {
+        //     GrCodigo = record.GrCodigo,
+        //     GrDescri = record.GrDescri,
+        //     GrDesde = record.GrDesde,
+        //     GrHasta = record.GrHasta,
+        //     GrIndReq = record.GrIndReq,
+        //     GrEstatus = record.GrEstatus,
+        //     IdentityColumn = record.IdentityColumn,
+        //     EmEmpresa = record.EmEmpresa
+        // };
+
+        ActiveTabIndex = 0;
+
+        // isPopupVisible = true;
+    }
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+        ActiveTabIndex = newIndex;
+    }
+
+    
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Trhgr010Dto> data;
+    //private List<Trhis000Dto> opciones { get; set; } =new List<Trhis000Dto>();
+    private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+    private string SelectedCategoryId { get; set; }
+    private Trhgr010Dto SelectedItem { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+
+            api.SetToken(Token);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            //await SetPermisos("FRHCL106");
+            await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+       // // **- ToolbarOptions = ToolbarOptions.Append("add").ToArray();
+       // // **- ToolbarOptions = ToolbarOptions.Append("save").ToArray();
+       // // **- ToolbarOptions = ToolbarOptions.Append("remove").ToArray();
+       // // **- ToolbarOptions = ToolbarOptions.Append("audit").ToArray();
+        
+        // // **- ToolbarOptions = ToolbarOptions.Append("Process").ToArray();
+        // // **- ToolbarOptions = ToolbarOptions.Append("leave").ToArray();
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+
+       // HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+       // var api2 = new Trhgr010Client(ApiBaseUrl, HttpClient);
+        data = await api.Trhgr010DtoGetAll(Token);
+    }
+
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+           // var api2 = new Trhgr010Client(ApiBaseUrl, HttpClient);
+
+            data = await api.Trhgr010DtoGetAll(Token);
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    // async Task SetPermisos(string isCodigo)
+    // {
+    //     permisos = await api.GetTrhfm000DtosByPaIs(isCodigo);
+    //     if (permisos == null)
+    //     {
+    //         permisos = new Trhfm000Dto();
+    //         permisos.MpMail = false;
+    //         permisos.MpDelete = false;
+    //         permisos.MpUpdate = false;
+    //         permisos.MpReadFo = false;
+    //         permisos.MpAddFor = false;
+    //     }
+
+    //     // cAhdn = permisos.MpAddFor ? "" : "hidden";
+    //     // cUhdn = permisos.MpUpdate ? "" : "hidden";
+    //     // cShdn = "hidden";
+    //     // cDhdn = permisos.MpDelete ? "" : "hidden";
+    //     //return "OK";
+    // }
+
+    // **  data = (List<Trhgr010Dto>)await api2.Trhgr010AllAsync();
+    // MyGrid.Reload();
+    //puestos = await api.joGetAllAsync(Token);
+    //**   data = (List<Trhgr010Dto>)await api2.Trhgr010AllAsync();
+    //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(ApiBaseUrl + "Trhem000");
+    //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("http://localhost:8081/api/Trhem000");
+    //data = await HttpClient.GetFromJsonAsync<List<Trhgr010Dto>>(ApiBaseUrl + "Api/Trhgr010");
+    //opciones = await HttpClient.GetFromJsonAsync<List<Trhis000Dto>>(ApiBaseUrl + "Trhis000");
+    //perfiles = await HttpClient.GetFromJsonAsync<List<Trhpa000Dto>>(ApiBaseUrl + "Trhpa000");
+
+    // public bool IsModalVisible { get; set; }
+    // private ConfirmDialog confirmDialog;
+    // private AlertDialog alertDialog;
+    // private bool isPopupVisible = false;
+    // private string popupTitle = "Nuevo Grupo";
+    // public class GrupoDto
+    // {
+    //     public string GrCodigo { get; set; }
+    //     public string GrDescri { get; set; }
+    //     public DateTime? GrDesde { get; set; }
+    //     public DateTime? GrHasta { get; set; }
+    //     public bool GrIndReq { get; set; }
+    //     public bool GrEstatus { get; set; }
+    // }
+
+    // private async Task OnValidSubmit()
+    // {
+    //     // Guardar cambios en BD o API
+    //     Console.WriteLine("Registro guardado");
+    //     isPopupVisible = false;
+    // }
+
+
+
+    // private void ConfirmToken()
+    // {
+    //     // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+    //     IsModalVisible = false;
+    // }
+
+    // private void Cancel()
+    // {
+    //     IsModalVisible = false;
+    // }
+    // private void OpenModal()
+    // {
+    //     IsModalVisible = true;
+    // }
+
+    // async Task GuardarDatos()
+    // {
+    //     if (Token != null)
+    //     {
+    //         Trhgr010Dto record = editModel;
+    //         var selectedRecord = data.Where(ind => ind.IdentityColumn == record.IdentityColumn).FirstOrDefault();
+    //         selectedRecord.GrDescri = record.GrDescri;
+    //         selectedRecord.GrDesde = record.GrDesde;
+    //         selectedRecord.GrHasta = record.GrHasta;
+
+    //         await InvokeAsync(StateHasChanged);
+
+    //         // MyGrid.Reload();
+    //         //puestos = await api.joGetAllAsync(Token);
+    //     }
+
+    // }
+
+    // async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    // {
+    //     var codigo = ((Trhgr010Dto)e.DataItem).GrCodigo;
+    //     var api2 = new Trhgr010Client(ApiBaseUrl, HttpClient);
+    //     try
+    //     {
+    //         await api2.Trhgr010DELETEAsync(codigo);
+    //     }
+    //     catch (ApiException ex)
+    //     {
+
+    //         Console.WriteLine($"Error: {ex.Message}");
+    //     }
+
+    //     data = (List<Trhgr010Dto>)await api2.Trhgr010AllAsync();
+    //     // await HttpClient.DeleteAsync(ApiBaseUrl + "Trhgr010/" + ((Trhgr010Dto)e.DataItem).IdentityColumn);
+    //     // data = await HttpClient.GetFromJsonAsync<List<Trhgr010Dto>>(ApiBaseUrl + "Trhgr010");
+    // }
+
+    // async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    // {
+    //     var api2 = new Trhgr010Client(ApiBaseUrl, HttpClient);
+
+    //     if (e.IsNew)
+    //     {
+    //         //** Trhgr010Dto newCategory =
+    //         //**  SetNewValues(newCategory, (Trhgr010Dto)e.EditModel);
+    //         editModel = new Trhgr010Dto();
+    //         ShowNewRecordPopup();
+    //         //await HttpClient.PostAsJsonAsync<DTOs.Trhgr010Dto>(ApiBaseUrl + "Trhgr010/", newCategory);
+    //         //HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhgr010Dto>(ApiBaseUrl + "Trhgr010/", newCategory);
+    //         try
+    //         {
+    //             //** await api2.Trhgr010POSTAsync(newCategory);
+
+    //         }
+    //         catch (Exception ex)
+    //         {
+
+    //             Console.WriteLine($"Error: {ex.Message}");
+    //         }
+
+
+    //         data = (List<Trhgr010Dto>)await api2.Trhgr010AllAsync();
+    //         //data = await HttpClient.GetFromJsonAsync<List<Trhgr010Dto>>(ApiBaseUrl + "Trhgr010");
+    //     }
+    //     else
+    //     {
+    //         // ** var dataItem = (Trhgr010Dto)e.DataItem;
+    //         // ** SetEditValues(dataItem, (Trhgr010Dto)e.EditModel);
+    //         editModel = (Trhgr010Dto)e.EditModel;
+    //         ShowEditRecordPopup(editModel);
+    //         try
+    //         {
+    //             //** /  await api2.Trhgr010PUTAsync(dataItem.GrCodigo,dataItem);
+
+    //         }
+    //         catch (Exception ex)
+    //         {
+
+    //             Console.WriteLine($"Error: {ex.Message}");
+    //         }
+    //         // HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl + "Trhgr010/" + dataItem.GrCodigo, dataItem);
+    //         // if (response.IsSuccessStatusCode)
+    //         // {
+    //         //     // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+    //         //     string responseContent = await response.Content.ReadAsStringAsync();
+    //         //     // Puedes deserializar el contenido si es un JSON
+    //         //     // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+    //         // }
+    //         // else
+    //         // {
+    //         //     // La solicitud falló. Puedes manejar el error aquí.
+    //         //     string errorContent = await response.Content.ReadAsStringAsync();
+    //         //     Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+    //         // }
+    //         data = (List<Trhgr010Dto>)await api2.Trhgr010AllAsync();
+    //         //data = await HttpClient.GetFromJsonAsync<List<Trhgr010Dto>>(ApiBaseUrl + "Trhgr010");
+    //     }
+
+    //     void SetNewValues(Trhgr010Dto dataItem, Trhgr010Dto newValues)
+    //     {
+    //         dataItem.GrCodigo = newValues.GrCodigo;
+
+    //         dataItem.GrDescri = newValues.GrDescri;
+
+    //         dataItem.GrIndReq = newValues.GrIndReq;
+    //         dataItem.GrEstatus = newValues.GrEstatus;
+    //         dataItem.GrDesde = newValues.GrDesde;
+    //         dataItem.GrHasta = newValues.GrHasta;
+    //         dataItem.EmEmpresa = newValues.EmEmpresa;
+
+    //         dataItem.CreatedBy = "Eikon";
+    //         dataItem.CreatedOn = DateTime.Today.Date;
+    //         dataItem.ChangedBy = " ";
+    //         dataItem.ChangedOn = DateTime.Today.Date;
+
+    //     }
+    //     void SetEditValues(Trhgr010Dto dataItem, Trhgr010Dto newValues)
+    //     {
+    //         dataItem.GrIndReq = newValues.GrIndReq;
+    //         dataItem.GrEstatus = newValues.GrEstatus;
+    //         dataItem.GrDesde = newValues.GrDesde;
+    //         dataItem.GrHasta = newValues.GrHasta;
+    //         dataItem.EmEmpresa = newValues.EmEmpresa;
+
+    //         dataItem.ChangedBy = "EikonWeb";
+    //         dataItem.ChangedOn = DateTime.Today.Date;
+    //         dataItem.IdentityColumn = newValues.IdentityColumn;
+    //         dataItem.GrCodigo = newValues.GrCodigo;
+    //         dataItem.GrDescri = newValues.GrDescri;
+    //     }
+
+    // }
+}
+
+
+

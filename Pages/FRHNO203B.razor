@@ -1,0 +1,1122 @@
+﻿@page "/FRHNO203B"
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@using EIKON.UI.Components
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+@inject NavigationManager nv
+@inject IJSRuntime JS
+@using DevExpress.Blazor.Reporting
+
+
+<PageTitle>Generación de Nómina</PageTitle>
+
+@if (nominas == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SIRH - Generación de Nómina</title>
+
+        <style>
+            .visible {
+            display: block;
+            }
+
+            .oculto {
+            display: none;
+            }
+
+
+            .highlighted-item-inv > td {
+            background-color: cornflowerblue;
+            color: blue;    
+            }
+
+            .highlighted-item-inv > td:first-child {
+            background-color: transparent;
+            }
+
+            .highlighted-item-I > td {
+            background-color: white;
+            color: green;
+            }
+
+            .highlighted-item-I > td:first-child {
+            background-color: transparent;
+
+            }
+
+            .highlighted-item-D > td {
+            background-color: yellow;
+            color: red;
+            }
+
+            .highlighted-item-D > td:first-child {
+            background-color: transparent;
+            }
+
+
+            .parametros-reporte, .report-viewer {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: auto;
+            text-align: center;
+            }
+
+            body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            }
+
+            .container {
+            width: 95%;
+            margin: 0 auto;
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 5px;
+            }
+
+            .form-group {
+            margin-bottom: 4px;
+            }
+
+            .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+            }
+
+            .form-group input, .form-group select {
+            width: 80%;
+            padding: 4px;
+            box-sizing: border-box;
+            }
+
+            .form-group input[type="checkbox"] {
+            width: 50%;
+            }
+
+            .form-row {
+            display: flex;
+            justify-content: space-between;
+            }
+
+            .form-row .form-group {
+            width: 48%;
+            }
+
+            .actions {
+            text-align: right;
+
+            margin-top: 10px;
+            }
+
+            .actions button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            }
+
+            .checkitem > label {
+            display: inline-block;
+            width: calc(100% - 20px);
+            vertical-align: middle;
+            }
+
+            .checkitem > input[type=checkbox] {
+            display: inline-block;
+            width: 15px;
+            height: 25%;
+            vertical-align: middle;
+            }
+
+            .checkitem > input[type=radio] {
+            display: inline-block;
+            width: 15px;
+            height: 25%;
+            vertical-align: middle;
+
+            }
+
+            table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            }
+
+            table, th, td {
+            border: 1px solid #ccc;
+            }
+
+            th, td {
+            padding: 8px;
+            text-align: left;
+            }
+
+            .hidden {
+            display: none;
+            }
+
+            .Ahdn {
+            display: none;
+            }
+
+            .Uhdn {
+            display: none;
+            }
+
+            .Dhdn {
+            display: none;
+            }
+
+            .Shdn {
+            display: none;
+            }
+
+            .Phdn {
+            display: none;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+
+            <div class="parametros-reporte">
+                <h1>SIRH - Generación de Nómina</h1>
+                <div class="row">
+
+                    <div class="form-group col-md-2">
+                        <label for="fecha1">Periodo Fiscal:</label>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <DxSpinEdit id="anoref" Value="@anoref" MinValue="2010" MaxValue="2030"></DxSpinEdit>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        <label for="fecha2">Tipo de Nómina:</label>
+                    </div>
+
+                    <div class="form-group col-md-8">
+                        <DxComboBox Data="@nominas"
+                        @bind-value="@NominaSeleccionada"
+                        TextFieldName="@nameof(Trhwb010Dto.WbDescri)"
+                        ValueFieldName="@nameof(Trhwb010Dto.WbCodigo)"
+                        CssClass="cw-480">
+                            <Columns>
+                                <DxListEditorColumn FieldName="@nameof(Trhwb010Dto.WbDescri)" Caption="Nómina" Width="300px" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwb010Dto.WbCodigo)" Caption="Código" Width="80px" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwb010Dto.EmEmpresa)" Caption="Empresa" Width="80px" />
+                            </Columns>
+                        </DxComboBox>
+                        @*   <DxButton Click="CargarPeriodos" Text="CargarPeriodos" CssClass="btn btn-primary mt-3" /> *@
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        <label for="fecha2">Periodos:</label>
+                    </div>
+
+                    <div class="form-group col-md-8">
+                        <DxComboBox Data="@periodos"
+                        @bind-Value="@Periodo"
+
+                        DisplayFormat="{2}-{4}"
+                        EditFormat="{2}-{4}"
+                        CssClass="cw-480">
+                            <Columns>
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.EmEmpresa)" Caption="Empresa" Width="80px" Visible="false" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WbCodigo)" Caption="Nómina" Width="80px" Visible="false" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WgAnoRef)" Caption="Año" Width="60px" Visible="false" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WgIniMes)" Caption="Mes" Width="60px" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WgSecuen)" Caption="Periodo" Width="70px" />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WgInicialSt)" Caption="Inicio" Width="80px"  />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WgFinalFSt)" Caption="Final" Width="80px"  />
+                                <DxListEditorColumn FieldName="@nameof(Trhwg010Dto.WsEstatusDescri)" Caption="Estatus" Width="60px" />
+                            </Columns>
+                        </DxComboBox>
+
+                    </div>
+                </div>
+                <div class="row">
+                    @* <div class="col-lg-1"></div> *@
+                    <div class="col-lg-10">
+                        <DxGrid Data="@csrPreGenList"  @ref="MyGrid" 
+                        PageSize="1000"
+                        SelectionMode="GridSelectionMode.Multiple"
+                        FilterMenuButtonDisplayMode="GridFilterMenuButtonDisplayMode.Always"
+                        CustomizeElement="Grid_CustomizeElement"
+                        @bind-SelectedDataItems="@SelectedDataItems"
+                        Style="height: 400px; overflow-y: auto;">
+                            <Columns>
+                                <DxGridSelectionColumn Width="60px" VisibleIndex="0" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.Chk)" Caption="Selecc" Width="100px" VisibleIndex="1" Visible="false"/>
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.Generada)" Caption="Generada" Width="80px" VisibleIndex="6" FilterMenuButtonDisplayMode="GridFilterMenuButtonDisplayMode.Never" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WbCodigo)" Caption="Nómina" Width="120px" VisibleIndex="10" Visible="false" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WcCodigo)" Caption="Codigo" Width="80px" VisibleIndex="2" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WcDescri)" Caption="Transacción" Width="260px" VisibleIndex="3" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WcInvisib)" Caption="Invisible" Name="Tipo_I" Width="100px" VisibleIndex="7"  />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WcTipoTr)" Caption="Tipo" Name="Tipo_T" Width="80px" VisibleIndex="4" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WjPeriodo)" Caption="Periodo" Width="80px" VisibleIndex="5" Visible="false" />
+                                <DxGridDataColumn FieldName="@nameof(CsrPreGenDto.WjSiempre)" Caption="Siempre" Width="100px" VisibleIndex="9" Visible="false" />
+                            </Columns>
+                        </DxGrid>
+
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="card-body p-0 pb-2 overflow-auto">
+                            <label>Trans. Sel:</label><br />
+                            <ul class="list-group list-group-flush bg-transparent border-0">
+                                @{
+                                    if(SelectedDataItems!=null) 
+                                    {
+                                        //var trn = SelectedDataItems.Cast<CsrPreGenDto>();
+                                        //csrPreGenSelectedList = trn;
+                                        // foreach (var trans in SelectedDataItems.Cast<CsrPreGenDto>())
+                                        // {
+                                        //     <li class="list-group-item bg-transparent text-body py-1 border-0">@trans.WcCodigo</li>
+                                        // }}
+                                        <li class="list-group-item bg-transparent text-body py-1 border-0"> @SelectedDataItems.Count().ToString()</li>}
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label for="tbNullText" class="demo-text cw-480 mb-1">
+                            Tipo Empleados:
+                        </label>
+                    </div>
+                    <div class="col-lg-8">
+
+                        <DxTagBox NullText="Seleccione el tipo empleado..."
+                        Data="@TipoEmpl"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                        @bind-Values="@TipoEmplSelec"
+                        CssClass="cw-480"
+                        InputId="tbNullText" />
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label for="Filtro" class="demo-text cw-480 mb-1">
+                            Filtrar por:
+                        </label>
+                    </div>
+                    <div class="col-lg-8">
+                        <DxRadioGroup aria-labelledby="radio-group-layout-label"
+                        Items="@opciones"
+                        @bind-Value="@filtroSeleccionado"
+                        Layout="RadioGroupLayout.Horizontal"
+                        Id="filtro"/>
+                    </div>
+                </div>
+                @if (filtroSeleccionado == "Oficina")
+                {
+                    <div class="row">
+                        <div class="form-group col-md-2">
+
+                            <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorOficina" CheckedExpression="@(() => EsPorOficina)"
+                            CheckedChanged="@((bool value) => hdOficina(value))">Oficina</DxCheckBox>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="Oficina">Seleccione:</label>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <DxComboBox id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="@Oficina" ></DxComboBox>
+                        </div>
+                    </div>}
+                @if (filtroSeleccionado == "Departamento")
+                {
+
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorUbicacion" CheckedExpression="@(() => EsPorUbicacion)"
+                            CheckedChanged="@((bool value) => hdUbicacion(value))">Ubicación</DxCheckBox>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="Oficina">Seleccione:</label>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <DxComboBox id="Oficina" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="@Ubicacion" ></DxComboBox>
+                        </div>
+                    </div>}
+                @if (filtroSeleccionado == "Empleado")
+                {
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorClase" CheckedExpression="@(() => EsPorClase)"
+                            CheckedChanged="@((bool value) => hdClase(value))">Empleado</DxCheckBox>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="Clase">Seleccione:</label>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <DxComboBox id="Clase" Data="@empleados" ValueFieldName="Maenomi" TextFieldName="Maenomb" @bind-Value="@Empleado"></DxComboBox>
+                        </div>
+                    </div>}
+
+                <div class="row">
+                    
+                    <div class="col-lg-8">
+                        <!--aqui  AllowSelectRowByClick="true" -->
+                        <DxGrid Data="@datarq" @ref="MyGridNomina"
+                        CssClass="mw-1100"
+                        >
+                            <Columns>
+
+                                <DxGridDataColumn Caption="IdEmpl" FieldName="Maenume" Width="100px" VisibleIndex="3" />
+                                <DxGridDataColumn Caption="Transacción" FieldName="WpComent" Width="300px" VisibleIndex="4" />
+
+                                @* <DxGridDataColumn FieldName="CcCodigo" Caption="ID Ccicina"/> *@
+                                <DxGridDataColumn Caption="IdTrans" FieldName="WcCodigo" Width="90px" VisibleIndex="5">
+
+                                </DxGridDataColumn>
+                                @* <DxGridDataColumn FieldName="UbCodigo" Caption="ID Ubicac" /> *@
+
+                                @*             <DxGridDataColumn FieldName="JoNumber" Caption="Id Puesto" />
+ *@            <DxGridDataColumn Caption="Monto" FieldName="WpMonto" Width="90px" VisibleIndex="7">
+                                </DxGridDataColumn>
+                                <DxDataGridColumn FieldName="IdentityColumn" Width="150px" Caption="#">
+
+                                </DxDataGridColumn>
+                                <!-- Columna para el botón -->
+
+
+
+
+                            </Columns>
+                        </DxGrid>
+                    </div>
+                    <div class="col-lg-2">
+                        <DxButton Id="btnProcesar" Click="ProcesarNomina" Text="Procesar"></DxButton>
+                    </div>
+                </div>
+                <br />
+                @*  <div class="row">
+                 ValueFieldName="WbCodigo" 
+                 TextFieldName="WbDescri" 
+                <div class="form-group col-md-3">
+                    <label for="Reporte">Reportes:</label>
+                </div>
+                <div class="form-group col-md-5">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="btn-group col-md-3" role="group" aria-label="Barra de botones">
+                    <button type="button" class="btn btn-dark" @onclick="ReporteRrwel006a">
+                        <i class="fas fa-printer"></i> Imprimir
+                    </button>
+                </div>
+            </div> *@
+
+
+
+
+                @* <DxPopup @bind-Visible="@isPopupVisible" ShowCloseButton="true"
+          Width="90vw"
+         Height="90vh"
+         TitleText="Reporte...">
+
+    <DialogContent>
+
+        <DxButton Click="ClosePopup" Text="Cerrar" CssClass="btn btn-secondary" />
+    </DialogContent>
+</DxPopup> *@
+            </div>
+            @* <div class="report-viewer">
+        <DxButton Click="ClosePopup" Text="Volver a Parámetros" CssClass="btn btn-warning mt-3" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <DxReportViewer Id="RepViewer" @ref="reportViewer" Report="@Report" RootCssClasses="w-90 h-100" />
+
+                </div>
+
+            </div>
+</div>      *@
+
+        </div>
+
+    </body>
+}
+
+
+
+
+
+<h3 class="x"></h3>
+
+@code {
+    // [Parameter]
+    // public int id { get; set; }
+    public bool IsModalVisible { get; set; }
+    public int anoref { get; set; } = 2011;
+    public DateTime fecha2s { get; set; } 
+    public string sPrueba { get; set; }
+    public string Oficina { get; set; } = "000";
+    // public string Nomina { get; set; } = "00001";
+
+    public string Ubicacion { get; set; } = "00000";
+    public string Empleado { get; set; } = "0";
+    public string Puesto { get; set; } = "0";
+    public string Reporte { get; set; } = "001";
+    public string Presupuesto { get; set; } = "0.00";
+    public bool CantAdd { get; set; } = false;
+    public bool CantEdit { get; set; } = false;
+    public bool CantDelete { get; set; } = true;
+    public bool CantSave { get; set; } = true;
+    public string Token { get; set; } = "";
+    public string PaCodigo { get; set; } = "0088";
+    public string IsCodigo { get; set; } = "Wtrhfm000";
+    public string ApiBaseUrl { get; set; } ="";
+    public string cAhdn { get; set; } = "";
+    public string cUhdn { get; set; } = "";
+    public string cShdn { get; set; } = "";
+    public string cDhdn { get; set; } = "";
+    private ConfirmDialog confirmDialog;
+    private AlertDialog alertDialog;
+    DxReportViewer reportViewer;
+    XtraReport Report;
+    private bool isPopupVisible = false;
+    private string parametrosClass => isPopupVisible ? "oculto" : "visible";
+    private string reporteClass => isPopupVisible ? "visible" : "oculto";
+    private void ShowPopup()
+    {
+        isPopupVisible = true;
+    }
+
+    private void ClosePopup()
+    {
+        isPopupVisible = false;
+    }
+    void ShowConfirmDialog()
+    {
+        confirmDialog.Show(); // Muestra el diálogo
+    }
+    void ShowAlertDialog()
+    {
+        alertDialog.Message = "Testing";
+        alertDialog.Show(); // Muestra la alerta
+    }
+    async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            // Lógica de eliminación si el usuario confirma
+            //**/ await DeleteItem();
+        }
+        else
+        {
+            // Lógica si el usuario cancela
+            Console.WriteLine("Eliminación cancelada");
+        }
+    }
+
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+    protected void Guarda()
+    {
+        var dataItem = SelectedItem;
+        dataItem.Puevaca = Estatus;
+
+        if (SelectedItem.IdentityColumn==0)
+        {
+            // var ret0 = api.InsertFrhpu010Dto(dataItem);
+            //dataue = new List<Frhue000Dto>();
+            clase = "";
+        }
+        else
+        {
+            //var ret = api.UpdateFrhpu010Dto(dataItem);
+            nv.NavigateTo("/FRHNO203");
+        }
+
+
+    }
+    protected void Cancelar()
+    {
+        nv.NavigateTo("/FRHNO203");
+    }
+    protected async Task Deshacer()
+    {
+        // await CargaRegistro();
+        // await SetPermisos(PaCodigo,IsCodigo);
+        clase = "";
+    }
+    protected void Editar()
+    {
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        //CantSave= false;
+    }
+    protected void Agregar()
+    {
+        clase = "hidden";
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        SelectedItem.IdentityColumn=0;
+        // SelectedItem.a = "000";
+        // SelectedItem.Pasnomb = "xx";
+        // SelectedItem.PasUserid = "xx";
+        // SelectedItem.PasFecRe = DateTime.Today;
+        // SelectedItem.PasFecEx = DateTime.Today;
+        // SelectedItem.PasEsEmp = "N";
+        SelectedItem.CreatedBy = "N";
+        SelectedItem.CreatedOn = DateTime.Today;
+        SelectedItem.ChangedOn = DateTime.Today;
+        SelectedItem.ChangedBy = "N";
+        CantSave = false;
+    }
+    // Propiedad que manejará el estatus seleccionado
+    private string Estatus { get; set; } = "A"; // Valor por defecto "A" para Activo
+    // Propiedad que manejará el campo EsEmpleado
+    bool EsPorFecha { get; set; } = false;
+
+    bool EsPorOficina { get; set; } = false;
+    bool EnabledOf { get; set; } = false;
+    bool EnabledFec { get; set; } = false;
+    bool EsPorUbicacion { get; set; } = false;
+    bool EnabledUb { get; set; } = false;
+    bool EsPorClase { get; set; } = false;
+    bool EnabledClase { get; set; } = false;
+    bool EsPorPuesto { get; set; } = false;
+    bool EnabledPuesto { get; set; } = false;
+    bool EnProceso { get; set; } = true;
+    bool Desactivado { get; set; } = true;
+    bool Aprobado { get; set; } = true;
+    bool EnabledExp { get; set; } = false;
+    private string clase { get; set; } = "";
+    // Método que actualiza el valor del estatus al cambiar la selección
+    private void CambiarEstatus(Microsoft.AspNetCore.Components.ChangeEventArgs e)
+    {
+        Estatus = e.Value.ToString();
+    }
+    private void hdFechas(bool value)
+    {
+        EsPorFecha = value;
+        EnabledFec = EsPorFecha;  
+
+    }
+    private void hdOficina(bool value)
+    {
+        EsPorOficina = value;
+        EnabledOf = EsPorOficina;
+
+    }
+    private void hdUbicacion(bool value)
+    {
+        EsPorUbicacion = value;
+        EnabledUb = EsPorUbicacion;
+
+    }
+    private void hdClase(bool value)
+    {
+        EsPorClase = value;
+        EnabledClase = EsPorClase;
+
+    }
+    private void hdPuesto(bool value)
+    {
+        EsPorPuesto = value;
+        EnabledPuesto = EsPorPuesto;
+
+    }
+    private void SetEnProceso(bool value)
+    {
+        EnProceso = value;
+
+    }
+    private void SetAprobado(bool value)
+    {
+        Aprobado = value;
+
+    }
+    private void SetDesactivado(bool value)
+    {
+        Desactivado = value;
+
+    }
+    DxGrid? MyGrid;
+    DxGrid? MyGridNomina;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private IEnumerable<Vfrhma000> empleados;
+    private List<Frhwd010> datarq;
+    private List<Trhof010Dto> oficinas { get; set; }
+    private List<Trhub010Dto> ubicaciones { get; set; }
+    //private List<Trhnz000Dto> modulos { get; set; } =new List<Trhnz000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Frhpu010Dto SelectedItem { get; set; }
+    private List<Trhem000> empresas { get; set; } = new List<Trhem000>();
+    //private List<Trhpa000Dto> perfiles { get; set; } = new List<Trhpa000Dto>();
+    private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+
+    // private List<Frhjo010Dto> puestos { get; set; } = new List<Frhjo010Dto>();
+    // private List<Trhrw000Dto> reportes { get; set; } = new List<Trhrw000Dto>();
+    // private List<Trhrw000Dto> reportes37 { get; set; } = new List<Trhrw000Dto>();
+    // private List<Trhof010Dto> oficinas { get; set; }
+    private IEnumerable<Trhwb010Dto> nominas { get; set; }
+    private Trhwb010Dto Nomina { get; set; }
+    private IEnumerable<Trhwg010Dto> periodos { get; set; }
+    public Trhwg010Dto Periodo { get; set; }
+    private Trhwb010Dto _nominaSeleccionada;
+    private IEnumerable<CsrPreGenDto> csrPreGenList;
+    private IEnumerable<CsrPreGenDto> csrPreGenSelectedList { get; set; } = Enumerable.Empty<CsrPreGenDto>();
+    IReadOnlyList<object> SelectedDataItems { get; set; }
+    private Trhwb010Dto NominaSeleccionada
+    {
+        get => _nominaSeleccionada;
+        set
+        {
+            if (_nominaSeleccionada != value)
+            {
+                _nominaSeleccionada = value;
+                CargarPeriodos();
+            }
+        }
+    }
+    //private List<Trhnp010Dto> clases { get; set; }
+    //private Trhnp010Dto clase_np { get; set; }
+    //private Trhct010Dto categoria_np { get; set; }
+    //private List<Trhct010Dto> categorias { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    async Task CargarDatos()
+    {
+        string tiposEmpl = "F";
+
+        var mapeo = new Dictionary<string, string>
+{
+    { "Regular", "F" },
+    { "Temporero", "T" },
+    { "ExEmpleados", "X" },
+    { "Pensionados", "P" }
+};
+
+        var listaConvertida = TipoEmplSelec
+            .Where(x => mapeo.ContainsKey(x))
+            .Select(x => mapeo[x])
+            .ToList();
+        if (listaConvertida != null)
+        {
+            tiposEmpl = "";
+            foreach (var item in listaConvertida)
+            {
+                tiposEmpl += item + ",";
+            }
+        }
+        if (Token != null)
+        {
+            await Task.Delay(300);
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            //puestos = await api.joGetAllAsync(Token);
+            ubicaciones = await api.ubGetByEmCodigo("01", Token);
+            oficinas = await api.ofGetByEmCodigo("01", Token);
+            nominas =  api.Trhwb010DtoPorEmpresa("01", Token);
+            NominaSeleccionada = nominas.FirstOrDefault();
+            empleados =  api.VFrhma000PorEmpresaTipo("01","000","00000",tiposEmpl,Token); //api.npGetByEmCodigo("01", Token);
+            //categorias = await api.ctGetByEmCodigo("01", Token);
+            //reportes = await api.rwGetAllAsync(Token);
+            //reportes37 = reportes.Where(rp => rp.DrCodigo == "037" && rp.RwEstatus=="A").ToList();
+            await InvokeAsync(StateHasChanged);
+            StateHasChanged();
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+    private async Task CargarPeriodos()
+    {
+        if (Token != null)
+        {
+            //await Task.Delay(600);
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            //puestos = await api.joGetAllAsync(Token);
+            //ubicaciones = await api.ubGetByEmCodigo("01", Token);
+            //oficinas = await api.ofGetByEmCodigo("01", Token);
+            //nominas = api.Trhwb010DtoPorEmpresa("01", Token);
+            var obj = SelectedDataItems;
+            // string tiposEmpl = "F";
+            // if (TipoEmplSelec != null)
+            // {
+            //     tiposEmpl = "";
+            //     foreach (var item in TipoEmplSelec)
+            //     {
+            //         tiposEmpl += item + ",";
+            //     }
+            // }
+
+            string tiposEmpl = "F";
+
+            var mapeo = new Dictionary<string, string>
+{
+    { "Regular", "F" },
+    { "Temporero", "T" },
+    { "ExEmpleados", "X" },
+    { "Pensionados", "P" }
+};
+
+            var listaConvertida = TipoEmplSelec
+                .Where(x => mapeo.ContainsKey(x))
+                .Select(x => mapeo[x])
+                .ToList();
+            if (listaConvertida != null)
+            {
+                tiposEmpl = "";
+                foreach (var item in listaConvertida)
+                {
+                    tiposEmpl += item + ",";
+                }
+            }
+
+            if (NominaSeleccionada != null)
+            {
+                //Nomina = nominas.FirstOrDefault();
+
+
+                periodos = await api.Trhwg010PorEmpresa(NominaSeleccionada.EmEmpresa, NominaSeleccionada.WbCodigo, anoref, Token); //.Where(p => p.WsEstatus.StartsWith("E") || p.WsEstatus.StartsWith("P"));
+                periodos = periodos.Where(p => p.WsEstatus.StartsWith("E") || p.WsEstatus.StartsWith("P")).ToList();
+                Periodo = periodos.FirstOrDefault();
+                csrPreGenList = api.Trhwc010PorEmpresa(NominaSeleccionada.EmEmpresa, NominaSeleccionada.WbCodigo, Token).OrderBy(w=>w.WcInvisib).ThenByDescending(w=>w.WcTipoTr).ToList();
+
+                ubicaciones = await api.ubGetByEmCodigo(NominaSeleccionada.EmEmpresa, Token);
+                oficinas = await api.ofGetByEmCodigo(NominaSeleccionada.EmEmpresa, Token);
+
+                empleados = api.VFrhma000PorEmpresaTipo(NominaSeleccionada.EmEmpresa,Oficina,Ubicacion, tiposEmpl, Token); //api.npGetByEmCodigo("01", Token);
+
+                SelectedDataItems = csrPreGenList.Take(3).ToList();
+            }
+            //clases = await api.npGetByEmCodigo("01", Token);
+            //categorias = await api.ctGetByEmCodigo("01", Token);
+            //reportes = await api.rwGetAllAsync(Token);
+            //reportes37 = reportes.Where(rp => rp.DrCodigo == "037" && rp.RwEstatus=="A").ToList();
+            // await InvokeAsync(StateHasChanged);
+            StateHasChanged();
+            MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+
+    private async Task ProcesarNomina()
+    {
+        if (Token != null)
+        {
+            //await Task.Delay(600);
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            //puestos = await api.joGetAllAsync(Token);
+            //ubicaciones = await api.ubGetByEmCodigo("01", Token);
+            //oficinas = await api.ofGetByEmCodigo("01", Token);
+            //nominas = api.Trhwb010DtoPorEmpresa("01", Token);
+            var obj = SelectedDataItems;
+            string tiposEmpl = "F";
+
+            var mapeo = new Dictionary<string, string>
+{
+    { "Regular", "F" },
+    { "Temporero", "T" },
+    { "ExEmpleados", "X" },
+    { "Pensionados", "P" }
+};
+
+            var listaConvertida = TipoEmplSelec
+                .Where(x => mapeo.ContainsKey(x))
+                .Select(x => mapeo[x])
+                .ToList();
+            if (listaConvertida != null)
+            {
+                tiposEmpl = "";
+                foreach (var item in listaConvertida)
+                {
+                    tiposEmpl += item + ",";
+                }
+            }
+            if (NominaSeleccionada == null)
+            {
+                //Nomina = nominas.FirstOrDefault();
+
+
+
+                return;
+            }
+            if (SelectedDataItems != null)
+            {
+                var trn = SelectedDataItems.Cast<CsrPreGenDto>();
+                csrPreGenSelectedList = trn;  //(IEnumerable<CsrPreGenDto>)SelectedDataItems;
+                datarq = await api.PayrollProcessAsync(csrPreGenSelectedList, NominaSeleccionada.EmEmpresa, Oficina, Ubicacion, tiposEmpl, NominaSeleccionada.WbCodigo, (int)Periodo.WgAnoRef, (int)Periodo.WgSecuen, Empleado, Token);
+            }   
+            StateHasChanged();
+            MyGridNomina.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+
+    private Task<List<CsrPreGenDto>> ObtenerDatosMock()
+    {
+        return Task.FromResult(new List<CsrPreGenDto>
+        {
+            new CsrPreGenDto
+            {
+                Chk = 0,
+                Generada = "N",
+                WbCodigo = "001",
+                WcCodigo = "101",
+                WcDescri = "Transacción de prueba",
+                WcInvisib = "N",
+                WcTipoTr = "I",
+                WjPeriodo = 0,
+                WjSiempre = "S"
+            }
+        });
+    }
+    public IEnumerable<string> TipoEmpl { get; set; } = new List<string>() {
+        "Regular",
+        "Temporero",
+        "ExEmpleados",
+        "Pensionados"
+    };
+    public IEnumerable<string> TipoEmplSelec { get; set; } = new List<string>() {"Regular",
+        "Temporero",
+        "ExEmpleados",
+        "Pensionados"};
+    //TipoEmplSelec=TipoEmpl.Take(2).ToList();
+    
+    public enum FiltroBusqueda
+    {
+        [Display(Name = "Todos los empleados")]
+        Todos,
+
+        [Display(Name = "Una oficina")]
+        Oficina,
+
+        [Display(Name = "Un departamento")]
+        Departamento,
+
+        [Display(Name = "Un empleado")]
+        Empleado
+    }
+    private string _filtroSeleccionado = "Todos";
+
+    public string filtroSeleccionado
+    {
+        get => _filtroSeleccionado;
+        set
+        {
+            if (_filtroSeleccionado != value)
+            {
+                _filtroSeleccionado = value;
+
+                // Resetear combos si cambia el filtro
+                Oficina = null;
+                Ubicacion = null;
+                Empleado = null;
+                EsPorOficina = value == "Oficina";
+                EsPorUbicacion = value == "Departamento";  
+                EsPorClase = value == "Empleado";
+            }
+        }
+    }
+
+    IEnumerable<string> opciones = new[] { "Todos","Oficina", "Departamento", "Empleado" };
+   // FiltroBusqueda filtroSeleccionado = FiltroBusqueda.Todos;
+
+    Dictionary<FiltroBusqueda, string> opcionesDicc = new()
+{
+    { FiltroBusqueda.Todos, "Todos los empleados" },
+    { FiltroBusqueda.Oficina, "Una oficina" },
+    { FiltroBusqueda.Departamento, "Un departamento" },
+    { FiltroBusqueda.Empleado, "Un empleado" }
+};
+
+    // // private rrhel006 report;
+    // // private Rptrrhel006a report2;
+    // // async Task ReporteRrwel006()
+    // // {
+    // //     isPopupVisible = true;
+    // //     var data = await api.GetDataRrhel006("A");
+    // //     //reportViewer.Report = report;
+    // //      //isPopupVisible = true;
+    // //     report = new rrhel006();
+    // //     report.LoadData(data);
+    // //     Report = report;
+
+    // //     // Si el ReportViewer ya está renderizado, recargar manualmente
+    // //     if (reportViewer != null)
+    // //     {  
+    // //         await reportViewer.OpenReportAsync(report);
+    // //     }
+    // // }
+    // // async Task ReporteRrwel006a()
+    // // {
+    // //     isPopupVisible = true;
+    // //     var data = await api.GetDataRrhel006a(Oficina,Ubicacion,Clase,Puesto,"01" );
+    // //     report2 = new Rptrrhel006a();
+    // //     report2.LoadData(data);
+    // //     Report = report2;
+
+    // //     // Si el ReportViewer ya está renderizado, recargar manualmente
+    // //     if (reportViewer != null)
+    // //     {    //isPopupVisible = true;
+    // //         await reportViewer.OpenReportAsync(report2);
+    // //     }
+    // // }
+    protected override async Task OnInitializedAsync()
+    {
+       // fecha1s = DateTime.Today.AddDays(-7);
+        fecha2s = DateTime.Today;
+    
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+            empleados = api.VFrhma000PorEmpresaTipo("01","000","00000", "F", Token);
+            //csrPreGenList = await ObtenerDatosMock();
+        }
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        // data = await HttpClient.GetFromJsonAsync<List<Frhpu010Dto>>(ApiBaseUrl + "Frhpu010");
+        // empresas = await HttpClient.GetFromJsonAsync<List<Trhem000>>(ApiBaseUrl + "Trhem000");
+         //puestos = await api.joGetAllAsync(Token);
+        // ubicaciones = await api.ubGetByEmCodigo("01", Token);
+        // oficinas = await api.ofGetByEmCodigo("01", Token);
+        // clases = await api.npGetByEmCodigo("01", Token);
+       //  categorias = await api.ctGetByEmCodigo("01", Token);
+       // reportes = await api.rwGetAllAsync(Token);
+       // reportes37 = reportes.Where(rp => rp.DrCodigo == "037" && rp.RwEstatus == "A").ToList();
+         // perfiles = await HttpClient.GetFromJsonAsync<List<Trhpa000Dto>>(ApiBaseUrl + "Trhpa000");
+         // data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+         // set permisos
+       //  await SetPermisos(PaCodigo, IsCodigo);
+         //modulos = await api.GetTrhnz000Dtos();
+        // //  await CargaRegistro();
+        // // if (id==0)
+        // // { data = await api.GetTrhps000Dtos(); }
+        // // else
+        // // { SelectedItem = await api.GetByIdTrhps000Dtos(id);
+        // //     data = new List<Trhps000Dto>();
+        // //     data.Add(SelectedItem);
+        // //     Estatus = SelectedItem.PasUserE;
+        // //     EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+        // //     EnabledEmp = EsEmpl;
+        // //     Expira = SelectedItem.PasExpira == "S" ? true : false;
+        // //     EnabledExp = Expira;
+        // //     dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        // // }
+        // // modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "Trhnz000");
+    }
+
+    void Grid_CustomizeElement(GridCustomizeElementEventArgs e)
+    {
+        if (e.ElementType == GridElementType.DataRow && e.Grid.GetRowValue(e.VisibleIndex, "WcTipoTr").ToString().Contains("I"))
+        {
+            e.CssClass = "highlighted-item-I";
+        }
+        else
+        {
+            e.CssClass = "highlighted-item-D";
+        }
+        if (e.ElementType == GridElementType.DataRow && e.Grid.GetRowValue(e.VisibleIndex, "WcInvisib").ToString().Contains("S"))
+        {
+            e.CssClass = "highlighted-item-inv";
+        }
+        // if (e.ElementType == GridElementType.DataCell && e.Column.Name == "Total")
+        // {
+        //     e.Style = "font-weight: 800";
+        // }
+        // if (e.ElementType == GridElementType.GroupRow && e.Column.Name == "Country")
+        // {
+        //     var summaryItems = e.Grid.GetGroupSummaryItems().Select(i => e.Grid.GetGroupSummaryDisplayText(i, e.VisibleIndex));
+        //     e.Attributes["title"] = string.Join(", ", summaryItems);
+        // }
+    }
+
+   
+}
+
+
+

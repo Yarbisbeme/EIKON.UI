@@ -1,0 +1,198 @@
+@layout MainLayout
+@page "/FRHMA528"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Cuentas de Bancos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhma528-form">
+        <!-- Main Fields Section -->
+        <div class="fields-section">
+            <!-- Row 1: Número + Empleado -->
+            <div class="row-layout row-1">
+                <div class="input numero-field">
+                    <label>Número</label>
+                    <DxTextBox @bind-Text="@Numero"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNumero" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+                <div class="input empleado-field">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@Empleado" ReadOnly="true" />
+                </div>
+            </div>
+
+            <!-- Row 2: No Entrada + Banco -->
+            <div class="row-layout row-2">
+                <div class="input">
+                    <label>No Entrada</label>
+                    <DxTextBox @bind-Text="@NoEntrada" />
+                </div>
+                <div class="input banco-field">
+                    <label>Banco</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Banco"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchBanco" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Nómina + Tipo cuenta -->
+            <div class="row-layout row-3">
+                <div class="input">
+                    <label>Nómina</label>
+                    <DxComboBox Data="@NominaOptions"
+                                @bind-Value="@Nomina"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+                <div class="input">
+                    <label>Tipo cuenta</label>
+                    <DxComboBox Data="@TipoCuentaOptions"
+                                @bind-Value="@TipoCuenta"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+            </div>
+
+            <!-- Row 4: No. Cuenta + Porcentaje + Fecha -->
+            <div class="row-layout row-4">
+                <div class="input cuenta-porcentaje-wrapper">
+                    <label>No. Cuenta</label>
+                    <div class="cuenta-porcentaje-fields">
+                        <DxTextBox @bind-Text="@NoCuenta" CssClass="cuenta-textbox" />
+                        <span class="porcentaje-symbol">%</span>
+                        <DxSpinEdit @bind-Value="@Porcentaje"
+                                    MinValue="0"
+                                    MaxValue="100"
+                                    DisplayFormat="N0"
+                                    CssClass="porcentaje-spin" />
+                    </div>
+                </div>
+                <div class="input">
+                    <label>Fecha</label>
+                    <DxDateEdit @bind-Date="@Fecha"
+                                NullText="d/M"
+                                DisplayFormat="d/M">
+                    </DxDateEdit>
+                </div>
+            </div>
+
+            <!-- Row 5: Checkboxes -->
+            <div class="checkboxes-row">
+                <DxCheckBox @bind-Checked="@DepositoNomina">Depósito nómina</DxCheckBox>
+                <DxCheckBox @bind-Checked="@CuentaActiva">Cuenta Activa</DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Grid Section -->
+        <div class="grid-section">
+            <DxGrid Data="@CuentasData"
+                    CssClass="cuentas-grid"
+                    ShowFilterRow="false"
+                    AllowSelectRowByClick="true"
+                    PageSize="20">
+                <Columns>
+                    <DxGridDataColumn FieldName="EntradaNo" Caption="EntradaNo" Width="120px" />
+                    <DxGridDataColumn FieldName="IdNomina" Caption="IdNómina" Width="120px" />
+                    <DxGridDataColumn FieldName="Banco" Caption="Banco" />
+                    <DxGridDataColumn FieldName="Cuenta" Caption="Cuenta" Width="180px" />
+                    <DxGridDataColumn FieldName="Porcentaje" Caption="Porcentaje" Width="120px" />
+                    <DxGridDataColumn FieldName="Estatu" Caption="Estatu" Width="100px" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+        <div class="divider"></div>
+        <!-- Bottom Bar: Ordenado por -->
+        <div class="bottom-bar">
+            <div class="select" style="width:50%">
+                <label>Ordenado por</label>
+                <DxComboBox Data="@OrdenadoOptions"
+                            @bind-Value="@OrdenadoPor"
+                            NullText="Seleccione..."
+                            CssClass="ordenado-combo" />
+            </div>
+            <div class="navigation-buttons">
+                <DxButton IconCssClass="fi fi-rr-print" CssClass="nav-btn" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Main Fields
+    private string? Numero { get; set; }
+    private string? Empleado { get; set; }
+    private string? NoEntrada { get; set; }
+    private string? Banco { get; set; }
+    private string? Nomina { get; set; }
+    private string? TipoCuenta { get; set; }
+    private string? NoCuenta { get; set; }
+    private int Porcentaje { get; set; } = 0;
+    private DateTime? Fecha { get; set; }
+    private bool DepositoNomina { get; set; } = false;
+    private bool CuentaActiva { get; set; } = false;
+
+    // Grid Data
+    private List<CuentaBancoItem> CuentasData { get; set; } = new();
+
+    // Bottom Bar
+    private string? OrdenadoPor { get; set; } = "Número de Emplea";
+
+    // Dropdown Options
+    private List<string> BancoOptions = new() { "Banco Popular", "Banco BHD", "Banco Reservas", "Banesco", "Scotiabank" };
+    private List<string> NominaOptions = new() { "Nómina Regular", "Nómina Quincenal", "Nómina Mensual" };
+    private List<string> TipoCuentaOptions = new() { "Ahorro", "Corriente", "Nómina" };
+    private List<string> OrdenadoOptions = new() { "Número de Emplea", "Nombre", "Banco", "Fecha" };
+
+    // Event Handlers
+    private void HandleAdd() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+
+    private void OnSearchNumero() { }
+    private void OnSearchBanco() { }
+
+    protected override void OnInitialized()
+    {
+        // Sample data for grid
+        CuentasData = new List<CuentaBancoItem>
+        {
+            new CuentaBancoItem { EntradaNo = "001", IdNomina = "NOM001", Banco = "Banco Popular", Cuenta = "123456789", Porcentaje = "100", Estatu = "Activo" },
+            new CuentaBancoItem { EntradaNo = "002", IdNomina = "NOM002", Banco = "Banco BHD", Cuenta = "987654321", Porcentaje = "50", Estatu = "Activo" }
+        };
+    }
+
+    // Data Model
+    public class CuentaBancoItem
+    {
+        public string? EntradaNo { get; set; }
+        public string? IdNomina { get; set; }
+        public string? Banco { get; set; }
+        public string? Cuenta { get; set; }
+        public string? Porcentaje { get; set; }
+        public string? Estatu { get; set; }
+    }
+}

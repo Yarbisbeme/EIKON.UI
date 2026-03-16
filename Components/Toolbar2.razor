@@ -1,0 +1,61 @@
+﻿@using EIKON.UI.Interfaces
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+<div class="toolbar">
+    @if (options.Contains("add"))
+    {
+        <div class="toolbar-item" @onclick="OnAdd">
+            <i class="fi fi-rr-plus"></i>
+        </div>
+    }
+    @if (options.Contains("save"))
+    {
+        <div class="toolbar-item" @onclick="OnSave">
+            <i class="fi fi-rr-disk"></i>
+        </div>
+    }
+    @if (options.Contains("remove"))
+    {
+        <span class="toolbar-divider"></span>
+        <div class="toolbar-item" @onclick="OnRemove">
+            <i class="fi fi-rr-trash"></i>
+        </div>
+    }
+    @if (options.Contains("leave"))
+    {
+        <div class="toolbar-item" @onclick="OnLeave">
+            <i class="fi fi-rr-rotate-reverse"></i>
+        </div>
+    }
+    @if (options.Contains("procesar"))
+    {
+        <div class="toolbar-item" @onclick="OnProccess">
+            <i class="fi fi-rr-check"></i>
+        </div>
+    }
+    @if (options.Contains("audit"))
+    {
+        <div class="toolbar-item" @onclick="OnAudit">
+            <i class="fi fi-rr-shield-check"></i>
+        </div>
+    }
+    <span class="toolbar-divider"></span>
+    <div class="toolbar-item" @onclick="OnClose">
+        <i class="fi fi-rr-cross"></i>
+    </div>
+</div>
+
+@code {
+    //[Parameter] public string[] options { get; set; } = [];
+
+    // Parámetros para las funciones
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnRemove { get; set; }
+    [Parameter] public EventCallback OnLeave { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnProccess { get; set; }
+    [Parameter] public EventCallback OnAudit { get; set; }
+    public string[] options { get; set; } = [];
+}

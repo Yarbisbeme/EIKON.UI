@@ -1,0 +1,95 @@
+﻿@* @inject IJSRuntime JS *@
+
+@* @rendermode InteractiveServer
+ *@
+<aside class="e-sidebar">
+
+  @*   <div class="top">
+        <div class="expediente">
+            <div class="options-collapse @(!isCollapsed ? "open active" : "")" @onclick="StoreData">
+                <div class=" option-logo">
+                    <i class="fi fi-tr-folder-tree"></i>
+                    <span>Mi expediente</span>
+                </div>
+                <i class="fi fi-br-angle-small-down"></i>
+            </div>
+            <ul class="expediente-list @(isCollapsed ? "collapsed" : "")">
+                <li class="active">
+                    <a href="/requisicion"> Requisicion</a>
+                </li>
+                <li class="">
+                    <a href="/generacion-nomina"> Generacion Nomina</a>
+                </li>
+                <li class="">
+                    <a href="/verificacion-transacciones">Verificación de Transacciones</a>
+                </li>
+                <li class="">
+                    <a href="/pre-generation-config"> Pre-Generación</a>
+                </li>
+                <li class="">
+                    <a href="/perfil"> Mis Datos</a>
+                </li>
+                <li>
+                    <a href="#">Mis Compensaciones</a>
+                </li>
+                <li>
+                    <a href="#">Mis Habilidades</a>
+                </li>
+                <li>
+                    <a href="#">Mis Ahorros/Préstamos</a>
+                </li>
+                <li>
+                    <a href="#">Mi Expediente Médico</a>
+                </li>
+            </ul>
+        </div>
+        <div class="expediente">
+            <div class="options-collapse">
+                <div class="option-logo">
+                    <i class="fi fi-tr-megaphone-announcement-leader"></i>
+                    <span>Supervisor</span>
+                </div>
+                <i class="fi fi-br-angle-small-down"></i>
+            </div>
+        </div>
+        <div class="expediente">
+            <div class="options-collapse">
+                <div class="option-logo">
+                    <i class="fi fi-tr-assign"></i>
+                    <span>RRHH</span>
+                </div>
+                <i class="fi fi-br-angle-small-down"></i>
+            </div>
+        </div>
+    </div> *@
+    <MenuTree />
+</aside>
+
+@code {
+    private bool isCollapsed = false;
+    private int currentCount = 0;
+    private string storedData = "";
+    private string dataKey = "defaultColor";
+    private async Task StoreData()
+    {
+        // await localStorage.SetItemAsync(dataKey, "#007BFF");
+        // await JS.InvokeVoidAsync("applyAccentColorToSidebar");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // await JS.InvokeVoidAsync("applyAccentColorToSidebar");
+        }
+    }
+    private async Task RetrieveData()
+    {
+        // storedData = await localStorage.GetItemAsync<string>(dataKey);
+    }
+
+    private void Collapse()
+    {
+        isCollapsed = !isCollapsed;
+    }
+}

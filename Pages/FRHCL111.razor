@@ -1,0 +1,348 @@
+﻿@page "/FRHCL111"
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+<PageTitle>Centros</PageTitle>
+<Alert2 @ref="alertInfo" />
+<DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+    <DxTabPage Text="Mantenimiento">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Centro de Costos" BackUrl="/dash" />
+            </div>
+            <Toolbar formulario="FRHCL111" OnProccess="BuscarTool" OnAdd="AgregarTool" OnSave="GuardaTool" OnRemove="EliminarTool" OnAudit="OnAuditTool" />
+        </div>
+        <br />
+        <EditForm Context="GcContext" Model="@editModel" OnValidSubmit="GuardaTool">
+            <DataAnnotationsValidator />
+            <DxFormLayout>
+                <DxFormLayoutItem Caption="Código">
+                    <DxTextBox @bind-Text="@editModel.CcCodigo" MaxLength="3" ReadOnly ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="BuscarTool" />
+                        </Buttons>
+                    </DxTextBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Descripción">
+                    <DxTextBox @bind-Text="@editModel.CcDescri" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Contable">
+                    <DxTextBox @bind-Text="@editModel.CcContabl" MaxLength="25" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Costo">
+                    <DxTextBox @bind-Text="@editModel.CcCosto" MaxLength="20" />
+                </DxFormLayoutItem>
+
+                
+
+                <DxFormLayoutItem Caption="Desde">
+                    <DxDateEdit @bind-Date="@editModel.CcDesde" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Hasta">
+                    <DxDateEdit @bind-Date="@editModel.CcHasta" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Empresa">
+                    @* <DxTextBox @bind-Text="@editModel.EmEmpresa" MaxLength="2" /> *@
+                    <DxComboBox id="empresa" Data="@empresas" ValueFieldName="EmCodigo" TextFieldName="EmDescri" @bind-Value="editModel.EmEmpresa"></DxComboBox>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Estatus">
+                    <DxCheckBox @bind-Checked="@editModel.CcEstatus">Activo</DxCheckBox>
+                </DxFormLayoutItem>
+            </DxFormLayout>
+        </EditForm>
+    </DxTabPage>
+    <DxTabPage Text="Consulta">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Centro de Costos" BackUrl="/dash" />
+            </div>
+            <Toolbar formulario="FRHCL111" OnAdd="AgregarTool"  />
+        </div>
+        <DxGrid Data="@ccList" @ref="MyGrid"
+                CssClass="mw-1100"
+                EditMode="GridEditMode.EditRow"
+                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+            <Columns>
+                <DxGridCommandColumn Width="160px" VisibleIndex="1" NewButtonVisible="false">
+                    <CellDisplayTemplate>
+                        <a @onclick="@(() => ShowEditRecord((Trhcc010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    </CellDisplayTemplate>
+                </DxGridCommandColumn>
+                <DxGridDataColumn Caption="Código" FieldName="CcCodigo" Width="100px" VisibleIndex="3" />
+                <DxGridDataColumn Caption="Descripción" FieldName="CcDescri" Width="300px" VisibleIndex="4" />
+                <DxGridDataColumn Caption="Costo" FieldName="CcCosto" Width="160px" VisibleIndex="5" />
+                <DxGridDataColumn Caption="Activo" FieldName="CcEstatus" VisibleIndex="8" Width="130px" />
+            </Columns>
+            <ToolbarTemplate>
+                <DxToolbar>
+                    <DxToolbarItem Text="Export to XLSX" Click="ExportXlsx_Click" BeginGroup="true" />
+                    <DxToolbarItem Context="itemCcx" Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                        <Template>
+                            <DxCheckBox @bind-Checked="@ExportSelectedRowsOnly">Export Selected Rows Only</DxCheckBox>
+                        </Template>
+                    </DxToolbarItem>
+                </DxToolbar>
+            </ToolbarTemplate>
+
+        </DxGrid>
+    </DxTabPage>
+</DxTabs>
+
+<ConfirmDialog @ref="confirmDialog" Title="Confirmar Eliminación"
+               Message="¿Seguro deseas eliminar este Centro de Costo?"
+               OnConfirm="OnConfirmDelete" />
+
+<DxPopup @bind-Visible="@isPopupVisible"
+         HeaderText="@popupTitle"
+         ShowCloseButton="true"
+         ShowFooter="true"
+         Width="600px">
+    <BodyTemplate Context="popupCtx">
+@*         <EditForm Context="editpop" Model="@editModel">
+            <DataAnnotationsValidator /> *@
+            <DxFormLayout>
+                <DxFormLayoutItem Caption="Creado por:">
+                    <DxTextBox @bind-Text="@editModel.CreatedBy" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Creado el:">
+                    <DxDateEdit @bind-Date="@editModel.CreatedOn" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Modificado por:">
+                    <DxTextBox @bind-Text="@editModel.ChangedBy" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Modificado el:">
+                    <DxDateEdit @bind-Date="@editModel.ChangedOn" ReadOnly />
+                </DxFormLayoutItem>
+            </DxFormLayout>
+@*         </EditForm> *@
+    </BodyTemplate>
+    <FooterTemplate>
+        <DxButton Text="Salir" RenderStyle="ButtonRenderStyle.Secondary" Click="@OnCancelPopup" />
+    </FooterTemplate>
+</DxPopup>
+
+@code {
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+    private Trhcc010Dto editModel = new();
+    private List<Trhem000Dto> empresas = new();
+    private string[] ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    private ConfirmDialog confirmDialog;
+    private List<Trhcc010Dto> ccList;
+    bool ExportSelectedRowsOnly { get; set; }
+
+    DxGrid MyGrid = new();
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    private bool IsNewRecord = false;
+    private bool isPopupVisible = false;
+    private string popupTitle = "Categoría Salariales";
+
+    async Task ExportXlsx_Click()
+    {
+        await MyGrid.ExportToXlsxAsync("ExportResult", new GridXlExportOptions()
+        {
+            ExportSelectedRowsOnly = ExportSelectedRowsOnly,
+            CustomizeCell = OnCustomizeXlCell
+        });
+    }
+
+    void OnCustomizeXlCell(GridExportCustomizeCellEventArgs args)
+    {
+        if (args.ColumnFieldName == "CtDescri" && args.AreaType == SheetAreaType.DataArea)
+            args.Formatting.Font = new XlCellFont() { Italic = true };
+        args.Handled = true;
+    }
+
+    protected void AgregarTool()
+    {
+        editModel = new Trhcc010Dto();
+        editModel.EmEmpresa = "01";
+        editModel.CcCodigo = "000000";
+        editModel.CreatedBy = auth.userId;
+        editModel.CreatedOn = DateTime.Now;
+        editModel.CcDesde = DateTime.Now;
+        editModel.CcHasta = DateTime.Now.AddMonths(12);
+        ActiveTabIndex = 0;
+    }
+
+    protected async Task GuardaTool()
+    {
+        try
+        {
+
+            if (editModel.IdentityColumn == 0)
+            {
+                var ret0 = await api.ccAddAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                alertInfo.Show("Agregado con exito!!!", "success");
+                await CargarDatos();
+            }
+            else
+            {
+                var ret = await api.ccUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                alertInfo.Show("Modificado con exito!!!", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ActiveTabIndex = 1;
+            StateHasChanged();
+            Console.Write("Esto es un error al guardar..." + ex.Message);
+        }
+    }
+
+    protected void EliminarTool()
+    {
+        confirmDialog.Show();
+    }
+
+    private async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            try
+            {
+                // Lógica de eliminación si el usuario confirma
+                editModel.CcEstatus = false;
+                var ret = await api.ccUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                Console.WriteLine("Error al eliminar..." + ex.Message);
+            }
+        }
+        else
+        {
+            alertInfo.Show("Eliminación cancelada");
+        }
+    }
+
+    private void ShowNewRecordPopup()
+    {
+        editModel = new Trhcc010Dto();
+        ActiveTabIndex = 0;
+    }
+
+    private void ShowEditRecord(Trhcc010Dto record)
+    {
+        editModel = record;
+        editModel.ChangedBy = auth.userId;
+        editModel.ChangedOn = DateTime.Now;
+        ActiveTabIndex = 0;
+    }
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+        ActiveTabIndex = newIndex;
+    }
+
+    void BuscarTool()
+    {
+        ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+    }
+
+    private void OnCancelPopup()
+    {
+        isPopupVisible = false;
+    }
+
+    private void OnAuditTool()
+    {
+        isPopupVisible = true;
+    }
+
+
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+
+            api.SetToken(Token);
+            StateHasChanged();
+
+            await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //ToolbarOptions = ToolbarOptions.Append("add").ToArray();
+        //ToolbarOptions = ToolbarOptions.Append("save").ToArray();
+        //ToolbarOptions = ToolbarOptions.Append("remove").ToArray();
+        //ToolbarOptions = ToolbarOptions.Append("audit").ToArray();
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            // api.ObtenerTokenAsync();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //var api2 = new Trhcc010Client(ApiBaseUrl, HttpClient);
+        ccList = (List<Trhcc010Dto>)await api.Trhcc010DtoGetAll(Token);
+        empresas = (List<Trhem000Dto>)await api.Trhem000DtoGetAll(Token);
+        ActiveTabIndex = 1;
+    }
+
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            var api2 = new Trhcc010Client(ApiBaseUrl, HttpClient);
+
+            ccList = (List<Trhcc010Dto>)await api.Trhcc010DtoGetAll(Token);
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}
+
+
+

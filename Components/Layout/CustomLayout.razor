@@ -1,0 +1,11 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Web
+@namespace EIKON.UI.Pages
+    <EIKON.UI.Components.Navbar />
+    <main class="content">
+    <EIKON.UI.Components.Sidebar />
+        <div class="main-content">
+            @Body
+        </div>
+    </main>
+    <Componentshowcase />

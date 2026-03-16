@@ -1,0 +1,398 @@
+@page "/FRHNO216"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO216 - Corrección de Cierre Individual" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-search">
+            <div class="input-search">
+                <label>Empleado</label>
+                <DxTextBox @bind-Text="@searchText"
+                           NullText="ID Empleado"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleadoClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Información del Empleado -->
+        <div class="employee-section">
+            <div class="employee-row">
+                <div class="input-field">
+                    <label>Nombre</label>
+                    <DxTextBox @bind-Text="@NombreValue" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Oficina</label>
+                    <DxTextBox @bind-Text="@OficinaValue" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Ubicación</label>
+                    <DxTextBox @bind-Text="@UbicacionValue" />
+                </div>
+            </div>
+
+            <div class="employee-row">
+                <div class="input-field">
+                    <label>Cargo</label>
+                    <DxTextBox @bind-Text="@CargoValue" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Nómina</label>
+                    <DxComboBox Data="@NominasList" 
+                               @bind-Value="@SelectedNomina" 
+                               NullText="Seleccionar nómina"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Período</label>
+                    <DxComboBox Data="@PeriodosList" 
+                               @bind-Value="@SelectedPeriodo" 
+                               NullText="Seleccionar período"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Transacción -->
+        <div class="transaction-section">
+            <div class="transaction-row">
+                <div class="input-field">
+                    <label>Transacción</label>
+                    <DxTextBox @bind-Text="@TransaccionValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchTransaccionClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input-field">
+                    <label>Cantidad</label>
+                    <DxSpinEdit @bind-Value="@CantidadValue" 
+                               MinValue="0m" 
+                               MaxValue="9999.99m" />
+                </div>
+
+                <div class="input-field">
+                    <label>Monto</label>
+                    <DxSpinEdit @bind-Value="@MontoValue" 
+                               MinValue="0m" 
+                               MaxValue="999999.99m" />
+                </div>
+
+                <div class="input-field">
+                    <label>Aplicar</label>
+                    <DxComboBox Data="@AplicarList" 
+                               @bind-Value="@SelectedAplicar" 
+                               NullText="Seleccionar"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <div class="transaction-row">
+                <div class="input-field">
+                    <label>Pago Neto</label>
+                    <DxSpinEdit @bind-Value="@PagoNetoValue" 
+                               MinValue="0m" 
+                               MaxValue="999999.99m" />
+                </div>
+
+                <div class="radio-section">
+                    <div class="radio-group">
+                        <DxRadio GroupName="tipo-transaccion" @bind-GroupValue="@TipoTransaccion" Value="@ingresoValue">Ingreso</DxRadio>
+                        <DxRadio GroupName="tipo-transaccion" @bind-GroupValue="@TipoTransaccion" Value="@deduccionValue">Deducción</DxRadio>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Datos -->
+        <div class="grid-section">
+            <DxGrid Data="@TransaccionesData"
+                    PageSize="15"
+                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                    TextWrapEnabled="false"
+                    CssClass="transacciones-grid"
+                    PagerVisible="true">
+                <Columns>
+                    <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="15%" />
+                    <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" Width="45%" />
+                    <DxGridDataColumn FieldName="Cantidad" Caption="Cantidad" Width="20%" DisplayFormat="N2" TextAlignment="GridTextAlignment.Right" />
+                    <DxGridDataColumn FieldName="Monto" Caption="Monto" Width="20%" DisplayFormat="C2" TextAlignment="GridTextAlignment.Right" />
+                </Columns>
+            </DxGrid>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    /* Sección de empleado */
+    .employee-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .employee-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    /* Sección de transacción */
+    .transaction-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .transaction-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    /* Radio buttons */
+    .radio-section {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 8px;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+    }
+
+    /* Grid section */
+    .grid-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        height: 400px;
+    }
+
+    .transacciones-grid {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-spin-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-spin-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1200px) {
+        .employee-row,
+        .transaction-row {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .input-field {
+            min-width: 200px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .employee-row,
+        .transaction-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .radio-group {
+            justify-content: center;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .employee-section,
+        .transaction-section,
+        .grid-section {
+            padding: 15px;
+        }
+
+        .grid-section {
+            height: 300px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private string searchText { get; set; } = "";
+    
+    // Campos de empleado
+    private string NombreValue { get; set; } = "";
+    private string OficinaValue { get; set; } = "";
+    private string UbicacionValue { get; set; } = "";
+    private string CargoValue { get; set; } = "";
+    private int? SelectedNomina { get; set; }
+    private int? SelectedPeriodo { get; set; }
+    
+    // Campos de transacción
+    private string TransaccionValue { get; set; } = "";
+    private decimal CantidadValue { get; set; } = 0.00m;
+    private decimal MontoValue { get; set; } = 0.00m;
+    private int? SelectedAplicar { get; set; }
+    private decimal PagoNetoValue { get; set; } = 0.00m;
+    
+    // Radio button para tipo de transacción
+    private string TipoTransaccion { get; set; } = "ingreso";
+    private string ingresoValue = "ingreso";
+    private string deduccionValue = "deduccion";
+    
+    // Listas de datos
+    private List<NominaItem> NominasList = new List<NominaItem>
+    {
+        new NominaItem { Id = 1, Name = "NOMINA ADMINISTRATIVA" },
+        new NominaItem { Id = 2, Name = "NOMINA OPERATIVA" },
+        new NominaItem { Id = 3, Name = "NOMINA EJECUTIVA" },
+        new NominaItem { Id = 4, Name = "NOMINA ESPECIAL" },
+        new NominaItem { Id = 5, Name = "NOMINA TEMPORAL" }
+    };
+
+    private List<PeriodoItem> PeriodosList = new List<PeriodoItem>
+    {
+        new PeriodoItem { Id = 1, Name = "PERIODO 01 - ENERO" },
+        new PeriodoItem { Id = 2, Name = "PERIODO 02 - FEBRERO" },
+        new PeriodoItem { Id = 3, Name = "PERIODO 03 - MARZO" },
+        new PeriodoItem { Id = 4, Name = "PERIODO 04 - ABRIL" },
+        new PeriodoItem { Id = 5, Name = "PERIODO 05 - MAYO" },
+        new PeriodoItem { Id = 6, Name = "PERIODO 06 - JUNIO" },
+        new PeriodoItem { Id = 7, Name = "PERIODO 07 - JULIO" },
+        new PeriodoItem { Id = 8, Name = "PERIODO 08 - AGOSTO" },
+        new PeriodoItem { Id = 9, Name = "PERIODO 09 - SEPTIEMBRE" },
+        new PeriodoItem { Id = 10, Name = "PERIODO 10 - OCTUBRE" },
+        new PeriodoItem { Id = 11, Name = "PERIODO 11 - NOVIEMBRE" },
+        new PeriodoItem { Id = 12, Name = "PERIODO 12 - DICIEMBRE" }
+    };
+
+    private List<AplicarItem> AplicarList = new List<AplicarItem>
+    {
+        new AplicarItem { Id = 1, Name = "INMEDIATO" },
+        new AplicarItem { Id = 2, Name = "PRÓXIMO PERÍODO" },
+        new AplicarItem { Id = 3, Name = "FECHA ESPECÍFICA" }
+    };
+
+    private List<TransaccionItem> TransaccionesData = new List<TransaccionItem>
+    {
+        new TransaccionItem { Codigo = "001", Descripcion = "SALARIO BASE", Cantidad = 1.00m, Monto = 45000.00m },
+        new TransaccionItem { Codigo = "002", Descripcion = "HORAS EXTRAS", Cantidad = 8.00m, Monto = 3600.00m },
+        new TransaccionItem { Codigo = "003", Descripcion = "BONO PRODUCTIVIDAD", Cantidad = 1.00m, Monto = 5000.00m },
+        new TransaccionItem { Codigo = "101", Descripcion = "IHSS LABORAL", Cantidad = 1.00m, Monto = -1350.00m },
+        new TransaccionItem { Codigo = "102", Descripcion = "IR SOBRE SUELDOS", Cantidad = 1.00m, Monto = -4500.00m }
+    };
+    
+    public class NominaItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class PeriodoItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class AplicarItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class TransaccionItem
+    {
+        public string Codigo { get; set; } = "";
+        public string Descripcion { get; set; } = "";
+        public decimal Cantidad { get; set; }
+        public decimal Monto { get; set; }
+    }
+    
+    private void OnSearchEmpleadoClick()
+    {
+        Console.WriteLine($"Buscando empleado: {searchText}");
+    }
+    
+    private void OnSearchTransaccionClick()
+    {
+        Console.WriteLine($"Buscando transacción: {TransaccionValue}");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Corrección de Cierre Individual guardada!");
+    }
+}

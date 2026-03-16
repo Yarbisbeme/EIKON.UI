@@ -1,0 +1,214 @@
+@page "/FRHUT135"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Mantenimiento personas" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhut135-container">
+
+        <div class="frhut135-form">
+            <div class="field-row">
+                <div class="input">
+                    <label>No Persona</label>
+                    <DxTextBox @bind-Text="@NoPersona" NullText="">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchPersona" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label>Solicitud</label>
+                    <DxTextBox @bind-Text="@Solicitud" NullText="">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchSolicitud" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+            <div class="field-row">
+
+                <div class="input">
+                    <label>Sexo</label>
+                    <DxComboBox Data="@SexoOptions"
+                                @bind-Value="@SelectedSexo"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <div class="input cedula-input">
+                    <label>Cédula Nueva</label>
+                    <div class="cedula-controls">
+                        <DxTextBox @bind-Text="@CedulaNueva" NullText="" CssClass="cedula-textbox" />
+                    </div>
+                </div>
+            </div>
+            <div class="field-row">
+
+                <div class="input">
+                    <label>Nombres</label>
+                    <DxTextBox @bind-Text="@Nombres" NullText="" />
+                </div>
+
+                <div class="input">
+                    <label>Apellidos</label>
+                    <DxTextBox @bind-Text="@Apellidos" NullText="" />
+                </div>
+            </div>
+            <div class="field-row">
+
+                <div class="input">
+                    <label>Código empleado</label>
+                    <DxTextBox @bind-Text="@CodigoEmpleado" NullText="">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label>Ex - número</label>
+                    <DxTextBox @bind-Text="@ExNumero" NullText="" />
+                </div>
+            </div>
+            <div class="field-row">
+
+                <div class="input">
+                    <label>Tipo</label>
+                    <DxComboBox Data="@TipoOptions"
+                                @bind-Value="@SelectedTipo"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <div class="input">
+                    <label>Elegible</label>
+                    <DxComboBox Data="@ElegibleOptions"
+                                @bind-Value="@SelectedElegible"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Left column properties
+    private string NoPersona { get; set; } = string.Empty;
+    private string Solicitud { get; set; } = string.Empty;
+    private string Nombres { get; set; } = string.Empty;
+    private string Apellidos { get; set; } = string.Empty;
+    private string CodigoEmpleado { get; set; } = string.Empty;
+    private string ExNumero { get; set; } = string.Empty;
+    private string? SelectedTipo { get; set; }
+    private string? SelectedElegible { get; set; }
+
+    // Right column properties
+    private string? SelectedSexo { get; set; }
+    private string CedulaNueva { get; set; } = string.Empty;
+
+    // ComboBox options
+    private List<string> TipoOptions { get; set; } = new List<string>
+    {
+        "Tipo 1",
+        "Tipo 2",
+        "Tipo 3"
+    };
+
+    private List<string> ElegibleOptions { get; set; } = new List<string>
+    {
+        "Sí",
+        "No"
+    };
+
+    private List<string> SexoOptions { get; set; } = new List<string>
+    {
+        "Masculino",
+        "Femenino"
+    };
+
+    // Search handlers
+    private void OnSearchPersona()
+    {
+        // Implementar búsqueda de persona
+    }
+
+    private void OnSearchSolicitud()
+    {
+        // Implementar búsqueda de solicitud
+    }
+
+    private void OnSearchEmpleado()
+    {
+        // Implementar búsqueda de empleado
+    }
+
+    // Cedula increment/decrement
+    private void IncrementCedula()
+    {
+        if (int.TryParse(CedulaNueva, out int value))
+        {
+            CedulaNueva = (value + 1).ToString();
+        }
+    }
+
+    private void DecrementCedula()
+    {
+        if (int.TryParse(CedulaNueva, out int value) && value > 0)
+        {
+            CedulaNueva = (value - 1).ToString();
+        }
+    }
+
+    // Toolbar action handlers
+    private void HandleAdd()
+    {
+        // Implementar agregar
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardar
+    }
+
+    private void HandleDocument()
+    {
+        // Implementar documento
+    }
+
+    private void HandleFolder()
+    {
+        // Implementar abrir carpeta
+    }
+
+    private void HandleSearch()
+    {
+        // Implementar búsqueda
+    }
+
+    private void HandleNext()
+    {
+        // Implementar siguiente
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

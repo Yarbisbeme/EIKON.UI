@@ -1,0 +1,363 @@
+﻿@page "/verificacion-transacciones"
+@using EIKON.UI.Components
+@* @rendermode InteractiveServer *@
+
+<div class="verificacion-transacciones">
+    <Breadcrumb Title="Verificación de Transacciones" BackUrl="/dash" />
+    <div class="header">
+        <div class="requisicion-search">
+            <div class="input-search">
+                <label for="user">Empleado</label>
+                <DxTextBox @bind-Text="@searchText"
+                           NullText="ID Empleado"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+        <div class="requisicion-toolbar">
+            <Toolbar formulario="FRHxxx999" />
+        </div>
+    </div>
+
+    <div style="display:flex;width:100%;align-items:center;gap:20px; height:180px;">
+        <div style="width:100%;display:flex;gap:10px;flex-direction:column;">
+            <div class="input">
+                <label for="user">Nombre</label>
+                <DxTextBox NullText="Nombre empleado" @bind-Text="@TextValue" />
+            </div>
+            <div class="input">
+                <label for="user">Cargo</label>
+                <DxTextBox NullText="Cargo empleado" @bind-Text="@TextValue" />
+            </div>
+        </div>
+
+        <div style="width:200px;height:100%;padding:10px;border:1px solid #E5E5EA;display:flex; align-items:center; justify-content:center;flex-direction:column;position:relative;border-radius:4px;">
+            <p id="radio-group-overview-label" class="" style="position:absolute;left:10px;top:-10px;background-color:#FBF9F9;">Tipo de Transacción</p>
+            <DxRadioGroup aria-labelledby="radio-group-overview-label"
+                          Items="@Languages"
+                          @bind-Value="@PreferredLanguage"
+                          CssClass="dx-demo-radio-group" />
+        </div>
+    </div>
+
+
+    <div class="input">
+        <label for="user">Área</label>
+        <DxTextBox NullText="Cargo empleado" @bind-Text="@TextValue" />
+    </div>
+    <div class="input">
+        <label for="user">Nómina</label>
+        <DxTextBox NullText="Cargo empleado" @bind-Text="@TextValue" />
+    </div>
+
+    <div style="display:flex;width:100%;align-items:center;gap:20px; height:250px;">
+        <div style="display:flex;flex-direction:column; width:100%;gap:20px;">
+            <div class="input">
+                <label for="user">Transacción</label>
+                <div class="search-field" style="display:flex; gap:20px;">
+                    <DxTextBox @bind-Text="@searchText"
+                               NullText="ID requisición"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+
+        <div style="display:flex; gap:10px;">
+
+            <div class="input">
+                <label for="user">Cantidad</label>
+                <DxSpinEdit @bind-Value="@DecimalValue"
+                            CssClass="cw-320"
+                            InputId="seOverview" />
+            </div>
+
+            <div class="input">
+                <label for="user">Monto</label>
+                <DxSpinEdit @bind-Value="@DecimalValue"
+                            CssClass="cw-320"
+                            InputId="seOverview" />
+            </div>
+
+            <div class="input">
+                <label for="user">Aplicar</label>
+                <DxSpinEdit @bind-Value="@DecimalValue"
+                            CssClass="cw-320"
+                            InputId="seOverview" />
+            </div>
+        </div>
+
+
+        <div style="display:flex; gap:10px;">
+
+            <div class="input">
+                <label for="user">Pago neto</label>
+                <DxSpinEdit @bind-Value="@DecimalValue"
+                            CssClass="cw-320"
+                            InputId="seOverview" />
+            </div>
+
+            <div class="input">
+                <label for="user">Periodo</label>
+                <DxSpinEdit @bind-Value="@DecimalValue"
+                            CssClass="cw-320"
+                            InputId="seOverview" />
+            </div>
+        </div>
+        </div>
+
+
+        <div style="width:200px;height:100%;padding:10px;border:1px solid #E5E5EA;display:flex; align-items:center; justify-content:center;flex-direction:column;position:relative;border-radius:4px;">
+            <p id="radio-group-overview-label" class="" style="position:absolute;left:10px;top:-10px;background-color:#FBF9F9;">Aplicación</p>
+            <DxRadioGroup aria-labelledby="radio-group-overview-label"
+                          Items="@PeriodOptions"
+                          @bind-Value="@PreferredOption"
+                          CssClass="dx-demo-radio-group" />
+        </div>
+    </div>
+
+    <div class="input">
+        <label for="user">Nómina</label>
+        <DxMemo NullText="Ingrese observaciones adicionales..."
+                @bind-Text="@Observations"
+                Rows="6"
+                ResizeMode="MemoResizeMode.Vertical"
+                MaxLength="1000" />
+    </div>
+
+
+    <DxGrid Data="@TransactionData"
+            PageSize="10"
+            ColumnResizeMode="GridColumnResizeMode.NextColumn"
+            TextWrapEnabled="false"
+            CssClass="custom-grid"
+            PagerVisible="true">
+        <Columns>
+            <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100%" />
+            <DxGridDataColumn FieldName="Transaccion" Caption="Transacción" Width="100%" />
+            <DxGridDataColumn FieldName="Cantidad" Caption="Cantidad" Width="100%" DisplayFormat="N2" />
+            <DxGridDataColumn FieldName="Monto" Caption="Monto" Width="100%" DisplayFormat="C2" />
+            <DxGridCommandColumn Width="100px">
+                <HeaderTemplate>
+                    <span>Acciones</span>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <DxButton Text="⋮"
+                              RenderStyle="ButtonRenderStyle.None"
+                              Click="@(() => PopupVisible = true)"
+                              CssClass="action-menu-btn" />
+                </CellDisplayTemplate>
+            </DxGridCommandColumn>
+        </Columns>
+    </DxGrid>
+
+<DxPopup @bind-Visible="@PopupVisible"
+        ShowFooter="true"
+        HeaderText="Planes de Pago"
+        Width="720"
+        Height="auto">
+    <BodyContentTemplate>
+        <div style="display:flex;flex-direction:column;gap: 20px;">
+            <div style="width:100%; display:flex; justify-content:flex-end">
+
+                <Toolbar formulario="FRHxxx999" />
+            </div>
+
+                <div style="display:flex;gap:10px;">
+                    <div class="select">
+                        <label for="company">Planes de Pago</label>
+                        <DxComboBox Data="@empresas"
+                                    @bind-Value="@empresaSeleccionada"
+                                    TextFieldName="@nameof(Empresa.Nombre)"
+                                    ValueFieldName="@nameof(Empresa.Id)"
+                                    CssClass="mi-combobox"
+                                    NullText="Seleccionar Motivo"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Cantidad</label>
+                        <DxSpinEdit @bind-Value="@DecimalValue"
+                                    CssClass="cw-320"
+                                    InputId="seOverview" />
+                    </div>
+                </div>
+
+                <DxGrid Data="@Data"
+                        PageSize="10"
+                        ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                        TextWrapEnabled="false"
+                        CssClass="custom-grid"
+                        FilterRowCondition="GridFilterRowCondition.Equals"
+                        PagerVisible="true"
+                        PagerNavigationMode="PagerNavigationMode.InputBox"
+                        PagerSwitchToInputBoxButtonCount="5">
+                    <Columns>
+                        <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100%" />
+                        <DxGridDataColumn FieldName="Prestamo" Caption="Prestamo" Width="100%" />
+                        <DxGridDataColumn FieldName="Monto" Caption="Monto" Width="100%" DisplayFormat="F4" TextAlignment="GridTextAlignment.Right" />
+                    </Columns>
+                </DxGrid>
+
+            </div>
+    </BodyContentTemplate>
+    <FooterContentTemplate>
+        <div style="text-align: right; padding: 10px;">
+            <DxButton Text="Cerrar" 
+                     Click="@(() => PopupVisible = false)"
+                     CssClass="mr-1" />
+        </div>
+    </FooterContentTemplate>
+</DxPopup>
+
+</div>
+
+
+@code {
+    bool PopupVisible { get; set; }
+    private string searchText = string.Empty;
+    private int? empresaSeleccionada = null;
+
+    private List<Empresa> empresas = new List<Empresa>
+    {
+        new Empresa { Id = 1, Nombre = "Empresa 1", Codigo = "EMP001", Activa = true },
+        new Empresa { Id = 2, Nombre = "Empresa 2", Codigo = "EMP002", Activa = true },
+        new Empresa { Id = 3, Nombre = "Empresa 3", Codigo = "EMP003", Activa = true },
+        new Empresa { Id = 4, Nombre = "Empresa 4", Codigo = "EMP004", Activa = false },
+        new Empresa { Id = 5, Nombre = "Empresa 5", Codigo = "EMP005", Activa = true }
+    };
+
+    string PreferredLanguage { get; set; } = "Ingreso";
+    string Observations { get; set; } = string.Empty;
+    private Decimal DecimalValue { get; set; } = 0.00m;
+    string PreferredOption { get; set; } = "Defecto";
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    IEnumerable<string> Languages = new[] { "Ingreso", "Deducción" };
+    IEnumerable<string> PeriodOptions = new[] { "Siempre", "Este Periodo", "Este Cierre", "Defecto", "Nunca" };
+    private string TextValue { get; set; } = string.Empty;
+    string GetLegendCssClass(SizeMode sizeMode)
+    {
+        var result = "dx-demo-radio-group-label";
+        if (sizeMode != SizeMode.Medium)
+            result += sizeMode == SizeMode.Large ? " dx-demo-large" : " dx-demo-small";
+        return result;
+    }
+    public class TransactionItem
+    {
+        public string Codigo { get; set; }
+        public string Transaccion { get; set; }
+        public decimal Cantidad { get; set; }
+        public decimal Monto { get; set; }
+    }
+
+    // En tu código C#
+    public List<TransactionItem> TransactionData { get; set; } = new()
+{
+    new() { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Cantidad = 0.00m, Monto = 30000.00m },
+    new() { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Cantidad = 0.00m, Monto = 30000.00m },
+    new() { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Cantidad = 0.00m, Monto = 30000.00m },
+    new() { Codigo = "00001", Transaccion = "SALARIO QUINCENAL", Cantidad = 0.00m, Monto = 30000.00m }
+};
+
+    private List<PrestamoItem> Data = new List<PrestamoItem>
+    {
+        new PrestamoItem
+        {
+            Codigo = "0000000001",
+            Prestamo = "DESCUENTO PRESTAMOS",
+            Monto = 0.0000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000002",
+            Prestamo = "PRESTAMO PERSONAL",
+            Monto = 1500.5000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000003",
+            Prestamo = "PRESTAMO VEHICULAR",
+            Monto = 25000.0000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000004",
+            Prestamo = "PRESTAMO HIPOTECARIO",
+            Monto = 85000.7500m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000005",
+            Prestamo = "PRESTAMO ESTUDIANTIL",
+            Monto = 12000.2500m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000006",
+            Prestamo = "ANTICIPO SUELDO",
+            Monto = 800.0000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000007",
+            Prestamo = "PRESTAMO EMERGENCIA",
+            Monto = 3000.0000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000008",
+            Prestamo = "DESCUENTO NOMINA",
+            Monto = 0.0000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000009",
+            Prestamo = "PRESTAMO COOPERATIVA",
+            Monto = 5500.7800m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000010",
+            Prestamo = "ADELANTO VACACIONES",
+            Monto = 2200.0000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000011",
+            Prestamo = "PRESTAMO FONDO EMPLEADOS",
+            Monto = 4800.5000m
+        },
+        new PrestamoItem
+        {
+            Codigo = "0000000012",
+            Prestamo = "DESCUENTO ESPECIAL",
+            Monto = 750.2500m
+        }
+    };
+
+    private void ShowActionMenu(object dataItem)
+    {
+        var transaction = dataItem as TransactionItem;
+    }
+
+    public class PrestamoItem
+    {
+        public string Codigo { get; set; }
+        public string Prestamo { get; set; }
+        public decimal Monto { get; set; }
+    }
+
+    public class Empresa
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Codigo { get; set; }
+        public bool Activa { get; set; }
+    }
+}

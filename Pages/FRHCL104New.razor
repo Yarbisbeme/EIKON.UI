@@ -1,0 +1,295 @@
+﻿@layout MainLayout
+@page "/FRHCL104New"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+
+    <Breadcrumb Title="Requisición de personal" BackUrl="/dash" />
+    <div class="page-header">
+
+        <div class="page-search">
+            <div class="input-search">
+                <label for="user">Requisición No.</label>
+                <DxTextBox @bind-Text="@searchText"
+                           NullText="ID requisición"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search"
+                                        Click="@OnSearchClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+
+            <div class="input">
+                <label for="user">Fecha de emision.</label>
+                <DxDateEdit @bind-Date="@DateTimeValue"
+                            CssClass="cw-320"
+                            IconCssClass="fi fi-rr-search"
+                            InputId="deOverview" />
+            </div>
+        </div>
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHCL104" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="page-info">
+        <div class="left" style="">
+            <div class="input">
+                <label for="user">Titulo Puesto</label>
+                <DxTextBox NullText="Requisicion" @bind-Text="@TextValue" />
+            </div>
+            <div class="input">
+                <label for="user">Puesto base</label>
+                <div class="search-field">
+                    <DxTextBox @bind-Text="@searchText"
+                               NullText="ID requisición"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchClick" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+
+            <div class="input">
+                <label for="user">Puesto base</label>
+                <div class="search-field">
+                    <DxTextBox @bind-Text="@searchText"
+                               NullText="ID requisición"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchClick" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+        </div>
+
+        <div class="right" style="">
+            <div class="input">
+                <label for="user">Puesto base</label>
+                <div class="search-field">
+                    <DxTextBox @bind-Text="@searchText"
+                               NullText="ID requisición"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchClick" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+            <div class="input">
+                <label for="user">Puesto base</label>
+                <div class="search-field">
+                    <DxTextBox @bind-Text="@searchText"
+                               NullText="ID requisición"
+                               CssClass="searchInput"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchClick" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+
+            <div class="input">
+                <label for="user">Titulo Puesto</label>
+                <DxTextBox NullText="Requisicion" @bind-Text="@TextValue" />
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="Tab-Panel">
+        <DxTabs>
+            <DxTab Text="Requisición" TabIconCssClass="tabs-icon-basics tabs-icon"></DxTab>
+            <DxTab Text="Especificaciones Básicas" TabIconCssClass="tabs-icon-locators tabs-icon"></DxTab>
+            <DxTab Text="Comentarios" TabIconCssClass="tabs-icon-license tabs-icon"></DxTab>
+        </DxTabs>
+
+        <div class="tab-content">
+            <div class="left">
+                <div class="input">
+                    <label for="user">Fecha de emision.</label>
+                    <DxDateEdit @bind-Date="@DateTimeValue"
+                                CssClass="cw-320"
+                                IconCssClass="fi fi-rr-search"
+                                InputId="deOverview" />
+                </div>
+                <div class="select">
+                    <label for="company">Motivo</label>
+                    <DxComboBox Data="@empresas"
+                                @bind-Value="@empresaSeleccionada"
+                                TextFieldName="@nameof(Empresa.Nombre)"
+                                ValueFieldName="@nameof(Empresa.Id)"
+                                CssClass="mi-combobox"
+                                NullText="Seleccionar Motivo"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+                <div class="input">
+                    <label for="user">Fecha tope contrato</label>
+                    <DxDateEdit @bind-Date="@DateTimeValue"
+                                CssClass="cw-320"
+                                IconCssClass="fi fi-rr-search"
+                                InputId="deOverview" />
+                </div>
+            </div>
+
+            <div class="right">
+             @*    <CustomSelector Label="Prioridad" Options="@priorityOptions" @bind-SelectedValue="@selectedPriority" />
+                <CustomSelector Label="Tipo de Contraro" Options="@statusOptions" @bind-SelectedValue="@selectedStatus" /> *@
+                <div class="input">
+                    <label for="user">Titulo Puesto</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@searchText"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchClick" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Aprobar Requisición *@
+    <div style="max-width:max-content">
+        <DxCheckBox @bind-Checked="@IsChecked">Aprobar Requisición</DxCheckBox>
+    </div>
+
+    @* RRHH Section *@
+    <div class="RRHH-section">
+        <span>
+            Para ser completado por Recursos Humanos
+        </span>
+        <div class="left">
+            <div class="select">
+                <label for="company">Motivo</label>
+                <DxComboBox Data="@empresas"
+                            @bind-Value="@empresaSeleccionada"
+                            TextFieldName="@nameof(Empresa.Nombre)"
+                            ValueFieldName="@nameof(Empresa.Id)"
+                            CssClass="mi-combobox"
+                            NullText="Seleccionar Motivo"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+            <div class="input">
+                <label for="user">Fecha de emision.</label>
+                <DxDateEdit @bind-Date="@DateTimeValue"
+                            CssClass="cw-320"
+                            IconCssClass="fi fi-rr-search"
+                            InputId="deOverview" />
+            </div>
+            <div class="input">
+                <label for="user">Fecha de emision.</label>
+                <DxDateEdit @bind-Date="@DateTimeValue"
+                            CssClass="cw-320"
+                            IconCssClass="fi fi-rr-search"
+                            InputId="deOverview" />
+            </div>
+        </div>
+        <div class="right">
+
+            <div class="approved-quantity">
+                <div class="input">
+                    <label for="user">Cantidad aprobada.</label>
+                    <DxSpinEdit @bind-Value="@DecimalValue"
+                                CssClass="cw-320"
+                                InputId="seOverview" />
+                </div>
+                <div style="max-width:max-content">
+                    <DxCheckBox @bind-Checked="@IsChecked2">Creación</DxCheckBox>
+                </div>
+            </div>
+            <div class="select">
+                <label for="company">Analista RRHH</label>
+                <DxComboBox Data="@empresas"
+                            @bind-Value="@empresaSeleccionada"
+                            TextFieldName="@nameof(Empresa.Nombre)"
+                            ValueFieldName="@nameof(Empresa.Id)"
+                            CssClass="mi-combobox"
+                            NullText="Seleccionar Motivo"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+            <div class="select">
+                <label for="company">Proceso Asociado</label>
+                <DxComboBox Data="@empresas"
+                            @bind-Value="@empresaSeleccionada"
+                            TextFieldName="@nameof(Empresa.Nombre)"
+                            ValueFieldName="@nameof(Empresa.Id)"
+                            CssClass="mi-combobox"
+                            NullText="Seleccionar Motivo"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+        </div>
+    </div>
+
+</div>
+@code {
+    private DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private Decimal DecimalValue { get; set; } = 15;
+    private bool IsChecked = true;
+    private bool IsChecked2 = true;
+    private string selectedPriority = "Normal";
+    private string selectedStatus = "Indefinido";
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private string TextValue { get; set; } = "REQUISICION PUESTO FICTICIO";
+    private string searchText { get; set; } = "00000001";
+    // // private List<CustomSelector.SelectorOption> priorityOptions = new()
+    // {
+    //     new() { Value = "Normal", Text = "Normal" },
+    //     new() { Value = "Urgente", Text = "Urgente" }
+    // };
+
+    // private List<CustomSelector.SelectorOption> statusOptions = new()
+    // {
+    //     new() { Value = "Definido", Text = "Definido" },
+    //     new() { Value = "Indefinido", Text = "Indefinido" }
+    // };
+    private List<Empresa> empresas = new List<Empresa>
+    {
+        new Empresa { Id = 1, Nombre = "Empresa 1", Codigo = "EMP001", Activa = true },
+        new Empresa { Id = 2, Nombre = "Empresa 2", Codigo = "EMP002", Activa = true },
+        new Empresa { Id = 3, Nombre = "Empresa 3", Codigo = "EMP003", Activa = true },
+        new Empresa { Id = 4, Nombre = "Empresa 4", Codigo = "EMP004", Activa = false },
+        new Empresa { Id = 5, Nombre = "Empresa 5", Codigo = "EMP005", Activa = true }
+    };
+
+    // Variable para almacenar la empresa seleccionada
+    private int? empresaSeleccionada = null;
+    private void OnSearchClick()
+    {
+        // Aquí puedes manejar la lógica de búsqueda
+        Console.WriteLine($"Buscando requisición con ID: {searchText}");
+    }
+
+    private async Task HandleClose()
+    {
+        // Lógica para agregar
+        await JSRuntime.InvokeVoidAsync("alert", "¡Hola desde Blazor!");
+
+    }
+
+
+    public class Empresa
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Codigo { get; set; }
+        public bool Activa { get; set; }
+    }
+}

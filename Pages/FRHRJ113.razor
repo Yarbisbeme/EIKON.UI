@@ -1,0 +1,463 @@
+@layout MainLayout
+@page "/FRHRJ113"
+@inject NavigationManager Navigation
+
+<div class="page">
+    <Breadcrumb Title="Asignación Horarios Fijos y Variables" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhrj113-form">
+        <div class="frhrj113-layout">
+            <!-- Panel izquierdo: Lista de empleados -->
+            <div class="employee-list-panel">
+                <div class="employee-list-header">
+                    <DxCheckBox Checked="@CotejarTodos"
+                                CheckedChanged="@(EventCallback.Factory.Create<bool>(this, OnCotejarTodosChanged))">Cotejar todos</DxCheckBox>
+                </div>
+                <div class="employee-list-content">
+                    <div class="employee-list-headers">
+                        <div class="header-col">Número</div>
+                        <div class="header-col">Nombres</div>
+                    </div>
+                    <div class="employee-list-items">
+                        <!-- Lista de empleados se renderizará aquí -->
+                        @foreach (var emp in EmpleadosList)
+                        {
+                            <div class="employee-item">
+                                <DxCheckBox @bind-Checked="@emp.Selected" />
+                                <span class="emp-numero">@emp.Numero</span>
+                                <span class="emp-nombre">@emp.Nombre</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel central: Filtros y Grid -->
+            <div class="main-content-panel">
+                <!-- Filtros superiores -->
+                <div class="filters-section">
+                    <div class="filter-row-dates">
+                        <div class="input">
+                            <label>Desde</label>
+                            <DxDateEdit @bind-Date="@FechaDesde" DisplayFormat="dd/MM/yyyy" NullText="//" />
+                        </div>
+                        <div class="input">
+                            <label>Hasta</label>
+                            <DxDateEdit @bind-Date="@FechaHasta" DisplayFormat="dd/MM/yyyy" NullText="//" />
+                        </div>
+                        <div class="date-checkboxes">
+                            <DxCheckBox Checked="@HoyCheck"
+                                        CheckedChanged="@(EventCallback.Factory.Create<bool>(this, OnHoyChanged))">Hoy</DxCheckBox>
+                            <DxCheckBox Checked="@AyerCheck"
+                                        CheckedChanged="@(EventCallback.Factory.Create<bool>(this, OnAyerChanged))">Ayer</DxCheckBox>
+                        </div>
+                    </div>
+
+                    <div class="first-section">
+                        <div class="filter-row">
+                            <div class="input">
+                                <label>Oficina</label>
+                                <div class="search-field">
+                                    <DxTextBox @bind-Text="@Oficina"
+                                               NullText="ID requisición"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                            Click="@OnSearchOficina" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                    <DxTextBox NullText="ID requisicion" />
+                                </div>
+                            </div>
+                            <div class="input">
+                                <label>Ubicación</label>
+
+                                <div class="search-field">
+                                    <DxTextBox @bind-Text="@Ubicacion"
+                                               NullText="ID requisición"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                            Click="@OnSearchUbicacion" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                    <DxTextBox NullText="ID requisicion" />
+                                </div>
+                            </div>
+                            <div class="input">
+                                <label>Empleado</label>
+                                <div class="search-field">
+                                    <DxTextBox @bind-Text="@Empleado"
+                                               NullText="ID requisición"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                            Click="@OnSearchEmpleado" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                    <DxTextBox NullText="ID requisicion" />
+                                </div>
+                            </div>
+                            <div class="input">
+                                <label>Turno</label>
+                                <div class="search-field">
+                                    <DxTextBox @bind-Text="@Turno"
+                                               NullText="ID requisición"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                            Click="@OnSearchTurno" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                    <DxTextBox NullText="ID requisicion" />
+                                </div>
+                            </div>
+                            <div class="input">
+                                <label>Puesto</label>
+                                <div class="search-field">
+                                    <DxTextBox @bind-Text="@Puesto"
+                                               NullText="ID requisición"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                            Click="@OnSearchPuesto" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                    <DxTextBox NullText="ID requisicion" />
+                                </div>
+                            </div>
+                            <div class="input">
+                                <label>Supervisor</label>
+                                <div class="search-field">
+                                    <DxTextBox @bind-Text="@Supervisor"
+                                               NullText="ID requisición"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                            Click="@OnSearchSupervisor" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                    <DxTextBox NullText="ID requisicion" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="image-panel">
+                            <div class="image-placeholder">
+                                <!-- Área para imagen/mapa -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-row-single">
+                        <div class="input">
+                            <label>Nómina</label>
+                            <DxTextBox @bind-Text="@Nomina" NullText="">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNomina" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tipo de empleado -->
+                <div class="employee-type-section">
+                    <div class="employee-type-checks">
+                        <DxCheckBox @bind-Checked="@RegularCheck">Regular</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@TemporalCheck">Temporal</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@ExempleadoCheck">Exempleado</DxCheckBox>
+                    </div>
+                    <div class="employee-count">
+                        <label>Empleados</label>
+                        <span class="count-value">@EmpleadosCount</span>
+                    </div>
+                </div>
+
+                <!-- Grid de horarios -->
+                <div class="schedule-grid-section">
+                    <div class="grid-toolbar" style="width:50%;">
+                        <div class="input">
+                            <label>Desde</label>
+                            <DxDateEdit @bind-Date="@FechaDesde" DisplayFormat="dd/MM/yyyy" NullText="//" />
+                        </div>
+                        <div class="input">
+                            <label>Hasta</label>
+                            <DxDateEdit @bind-Date="@FechaHasta" DisplayFormat="dd/MM/yyyy" NullText="//" />
+                        </div>
+                    </div>
+                    <DxGrid Data="@ScheduleData"
+                            CssClass="schedule-grid"
+                            ShowFilterRow="false"
+                            AllowColumnResize="true"
+                            PageSize="20">
+                        <Columns>
+                            <DxGridDataColumn FieldName="Fecha" Caption="Fecha" Width="120px">
+                                <CellDisplayTemplate>
+                                    @{
+                                        var record = (ScheduleRecord)context.DataItem;
+                                    }
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" />
+                                        <span>@record.Fecha</span>
+                                    </div>
+                                </CellDisplayTemplate>
+                            </DxGridDataColumn>
+                            <DxGridDataColumn FieldName="Desde" Caption="Desde" Width="80px" />
+                            <DxGridDataColumn FieldName="Hasta" Caption="Hasta" Width="80px" />
+                            <DxGridDataColumn FieldName="Horario" Caption="Horario" Width="100px" />
+                            <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" />
+                            <DxGridDataColumn FieldName="TurnoDia" Caption="Turno Día" Width="100px" />
+                            <DxGridDataColumn FieldName="Alm" Caption="Alm" Width="60px" />
+                            <DxGridDataColumn FieldName="IdTipo" Caption="IdTipo" Width="80px" />
+                            <DxGridDataColumn FieldName="Noct" Caption="Noct" Width="60px" />
+                            <DxGridDataColumn FieldName="Inicio" Caption="Inicio" Width="80px" />
+                            <DxGridDataColumn FieldName="Fin" Caption="Fin" Width="80px" />
+                        </Columns>
+                    </DxGrid>
+                </div>
+
+                <!-- Opciones inferiores -->
+                <div class="bottom-options">
+                    <DxCheckBox @bind-Checked="@EnviarEmpleado">Enviar a Empleado</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ImprimirActivos">Imprimir solo los activos</DxCheckBox>
+                </div>
+
+                <!-- Reporte -->
+                <div class="reporte-section">
+                    <label>Reporte</label>
+                    <DxTextBox @bind-Text="@Reporte" NullText="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Filtros
+    private DateTime? FechaDesde { get; set; }
+    private DateTime? FechaHasta { get; set; }
+    private bool HoyCheck { get; set; } = false;
+    private bool AyerCheck { get; set; } = false;
+
+    private void OnHoyChanged(bool value)
+    {
+        HoyCheck = value;
+        if (value)
+        {
+            AyerCheck = false;
+            FechaDesde = DateTime.Today;
+            FechaHasta = DateTime.Today;
+        }
+        StateHasChanged();
+    }
+
+    private void OnAyerChanged(bool value)
+    {
+        AyerCheck = value;
+        if (value)
+        {
+            HoyCheck = false;
+            FechaDesde = DateTime.Today.AddDays(-1);
+            FechaHasta = DateTime.Today.AddDays(-1);
+        }
+        StateHasChanged();
+    }
+    private string Oficina { get; set; } = "";
+    private string Ubicacion { get; set; } = "";
+    private string Empleado { get; set; } = "";
+    private string Turno { get; set; } = "";
+    private string Puesto { get; set; } = "";
+    private string Supervisor { get; set; } = "";
+    private string Nomina { get; set; } = "";
+
+    // Tipo de empleado
+    private bool RegularCheck { get; set; } = true;
+    private bool TemporalCheck { get; set; } = false;
+    private bool ExempleadoCheck { get; set; } = false;
+    private int EmpleadosCount { get; set; } = 0;
+
+    // Empleados
+    private bool CotejarTodos { get; set; } = false;
+    private List<EmpleadoItem> EmpleadosList { get; set; } = new();
+
+    private void OnCotejarTodosChanged(bool value)
+    {
+        CotejarTodos = value;
+        foreach (var emp in EmpleadosList)
+        {
+            emp.Selected = value;
+        }
+        StateHasChanged();
+    }
+
+    // Opciones inferiores
+    private bool EnviarEmpleado { get; set; } = false;
+    private bool ImprimirActivos { get; set; } = false;
+    private string Reporte { get; set; } = "";
+
+    // Grid data
+    private List<ScheduleRecord> ScheduleData { get; set; } = new();
+
+    // Event handlers
+    private void OnSearchOficina() { }
+    private void OnSearchUbicacion() { }
+    private void OnSearchEmpleado() { }
+    private void OnSearchTurno() { }
+    private void OnSearchPuesto() { }
+    private void OnSearchSupervisor() { }
+    private void OnSearchNomina() { }
+
+    private void OnProyectar()
+    {
+        // Lógica para proyectar horarios
+    }
+
+    private void OnReplicar()
+    {
+        // Lógica para replicar horarios
+    }
+
+    private void OnScheduleCheckChanged(ScheduleRecord record, bool value)
+    {
+        record.Selected = value;
+        StateHasChanged();
+    }
+
+    private void HandleSave()
+    {
+        // Lógica para guardar
+    }
+
+    private void HandleClose()
+    {
+        Navigation.NavigateTo("/dash");
+    }
+
+    protected override void OnInitialized()
+    {
+        // Initialize with sample data
+        EmpleadosList = new List<EmpleadoItem>
+        {
+            new EmpleadoItem { Numero = "001", Nombre = "Juan Perez", Selected = false },
+            new EmpleadoItem { Numero = "002", Nombre = "Maria Garcia", Selected = false },
+            new EmpleadoItem { Numero = "003", Nombre = "Carlos Rodriguez", Selected = false },
+            new EmpleadoItem { Numero = "004", Nombre = "Ana Martinez", Selected = false },
+            new EmpleadoItem { Numero = "005", Nombre = "Pedro Sanchez", Selected = false },
+            new EmpleadoItem { Numero = "006", Nombre = "Laura Gomez", Selected = false },
+            new EmpleadoItem { Numero = "007", Nombre = "Miguel Torres", Selected = false },
+            new EmpleadoItem { Numero = "008", Nombre = "Sofia Ramirez", Selected = false }
+        };
+
+        ScheduleData = new List<ScheduleRecord>
+        {
+            new ScheduleRecord
+            {
+                Selected = false,
+                Fecha = "01/11/2025",
+                Desde = "08:00",
+                Hasta = "17:00",
+                Horario = "H001",
+                Descripcion = "Horario Regular Administrativo",
+                TurnoDia = "Dia",
+                Alm = "60",
+                IdTipo = "1",
+                Noct = "0",
+                Inicio = "08:00",
+                Fin = "17:00"
+            },
+            new ScheduleRecord
+            {
+                Selected = false,
+                Fecha = "02/11/2025",
+                Desde = "08:00",
+                Hasta = "17:00",
+                Horario = "H001",
+                Descripcion = "Horario Regular Administrativo",
+                TurnoDia = "Dia",
+                Alm = "60",
+                IdTipo = "1",
+                Noct = "0",
+                Inicio = "08:00",
+                Fin = "17:00"
+            },
+            new ScheduleRecord
+            {
+                Selected = false,
+                Fecha = "03/11/2025",
+                Desde = "08:00",
+                Hasta = "17:00",
+                Horario = "H001",
+                Descripcion = "Horario Regular Administrativo",
+                TurnoDia = "Dia",
+                Alm = "60",
+                IdTipo = "1",
+                Noct = "0",
+                Inicio = "08:00",
+                Fin = "17:00"
+            },
+            new ScheduleRecord
+            {
+                Selected = false,
+                Fecha = "04/11/2025",
+                Desde = "22:00",
+                Hasta = "06:00",
+                Horario = "H002",
+                Descripcion = "Horario Nocturno",
+                TurnoDia = "Noche",
+                Alm = "30",
+                IdTipo = "2",
+                Noct = "1",
+                Inicio = "22:00",
+                Fin = "06:00"
+            },
+            new ScheduleRecord
+            {
+                Selected = false,
+                Fecha = "05/11/2025",
+                Desde = "08:00",
+                Hasta = "17:00",
+                Horario = "H001",
+                Descripcion = "Horario Regular Administrativo",
+                TurnoDia = "Dia",
+                Alm = "60",
+                IdTipo = "1",
+                Noct = "0",
+                Inicio = "08:00",
+                Fin = "17:00"
+            }
+        };
+
+        EmpleadosCount = EmpleadosList.Count;
+    }
+
+    public class EmpleadoItem
+    {
+        public bool Selected { get; set; }
+        public string Numero { get; set; } = "";
+        public string Nombre { get; set; } = "";
+    }
+
+    public class ScheduleRecord
+    {
+        public bool Selected { get; set; }
+        public string Fecha { get; set; } = "";
+        public string Desde { get; set; } = "";
+        public string Hasta { get; set; } = "";
+        public string Horario { get; set; } = "";
+        public string Descripcion { get; set; } = "";
+        public string TurnoDia { get; set; } = "";
+        public string Alm { get; set; } = "";
+        public string IdTipo { get; set; } = "";
+        public string Noct { get; set; } = "";
+        public string Inicio { get; set; } = "";
+        public string Fin { get; set; } = "";
+    }
+}

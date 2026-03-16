@@ -1,0 +1,161 @@
+﻿@page "/dashRol"
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+<div class="w-100 overview-chart">
+    <div class="row">
+        <div>
+            <DxChart Data="@roles"
+                     Width="50%">
+                <DxChartTitle Text="Usuarios por Roles" />
+                <DxChartCommonSeries NameField="@((Frhue000Dto s) => s.PaCodigo)"
+                                     ArgumentField="@(s => s.PaCodigo)"
+                                     ValueField="@(s => s.IdentityColumn)"
+                                     SummaryMethod="Enumerable.Count"
+                                     SeriesType="ChartSeriesType.Bar" />
+                <DxChartLegend Position="RelativePosition.Outside"
+                               HorizontalAlignment="HorizontalAlignment.Right" />
+                <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+                    <div class="m-2">
+                        <div class="fw-bold text-center">
+                            Roles @context.Point.SeriesName
+                        </div>
+                        <div>
+                            @context.Point.Argument: @string.Format("{0:0,.#}", (double)context.Point.Value)
+                        </div>
+                    </div>
+                </DxChartTooltip>
+            </DxChart>
+        </div>
+    </div>
+    <div class="row mt-4">
+        @{
+            DrawDonutChart(usuariosEstatus, "Usuarios Por Estatus");
+           // DrawDonutChart(LSalesData, "London Sales");
+           // DrawDonutChart(BSalesData, "Berlin Sales");
+           // DrawDonutChart(TSalesData, "Tokyo");
+        }
+    </div>
+</div>
+@{
+    void DrawDonutChart<T>(IEnumerable<T> data, string titleText)
+    {
+        <div class="chart-item">
+            <DxPieChart Data="data"
+                        Width="100%"
+                        InnerDiameter="0.5">
+                <DxChartTitle Text="@titleText" />
+                <DxPieChartSeries T="DonutDataItem"
+                                  TArgument="string"
+                                  TValue="int"
+                                  ArgumentField="s => s.Estatus"
+                                  ValueField="s => s.Amount"
+                                  SummaryMethod="Enumerable.Sum">
+                    <DxChartSeriesLabel Visible="true"
+                                        Position="RelativePosition.Inside"
+                                        ValueFormat='ChartElementFormat.FromLdmlString("$#K")' />
+                </DxPieChartSeries>
+                <DxChartLegend VerticalAlignment="VerticalEdge.Bottom"
+                               Position="RelativePosition.Outside" />
+                <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+                    
+                </DxChartTooltip>
+            </DxPieChart>
+        </div>
+    }
+
+}
+
+@code {
+    public string Token { get; set; } = "";
+
+    class DonutDataItem
+    {
+        public string Estatus { get; }
+        public int Amount { get; }
+        public DonutDataItem(string estatus, int amount)
+        {
+            (Estatus, Amount) = (estatus, amount);
+        }
+    }
+    private IEnumerable<Trhps000Dto> usuarios;
+    private IEnumerable<Frhue000Dto> roles;
+    private IEnumerable<Trhnc000Dto> nac;
+
+    IEnumerable<DonutDataItem> usuariosEstatus;
+    IEnumerable<DonutDataItem> LSalesData;
+    IEnumerable<DonutDataItem> BSalesData;
+    IEnumerable<DonutDataItem> TSalesData;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            api.SetToken(Token);
+            // Token = await auth.GetTokenAsync();
+            StateHasChanged();
+
+            // Forzar un nuevo renderizado si es necesario
+            // api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            //ApiBaseUrl = api.GetApiBaseUrl();
+            //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            usuarios = await api.Trhps000DtoGetAll(Token);
+            nac = await api.Trhnc000DtoGetAll(Token);
+            roles = await api.Frhue000DtoGetAll(Token);
+            usuariosEstatus = new List<DonutDataItem>
+        {
+            new DonutDataItem("Activos", usuarios.Count(u => u.PasUserE == "A")),
+            new DonutDataItem("Inactivos", usuarios.Count(u => u.PasUserE == "I"))
+
+        };
+
+            await InvokeAsync(StateHasChanged);
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Token = auth.tkn;
+        if (Token == "" || Token == null)
+        {
+            //api.ObtenerTokenAsync();
+            Token = api.GetToken();
+        }
+
+        @* WWSalesData = await Sales.GetSalesAsync();
+        Func<SaleInfo, DonutDataItem> selector = si => new(si.Date.Year, si.Amount / 1000d);
+        NYSalesData = WWSalesData.Where(s => s.City == "New York").Select(selector);
+        LSalesData = WWSalesData.Where(s => s.City == "London").Select(selector);
+        BSalesData = WWSalesData.Where(s => s.City == "Berlin").Select(selector);
+        TSalesData = WWSalesData.Where(s => s.City == "Tokyo").Select(selector); *@
+        //usuarios = await api.Trhps000DtoGetAll("token");
+        //roles = await api.Frhue000DtoGetAll("fff0");
+        //usuariosEstatus = new List<DonutDataItem>
+        //{
+        //    new DonutDataItem("Activos", usuarios.Count(u => u.PasUserE == "A")),
+       //     new DonutDataItem("Inactivos", usuarios.Count(u => u.PasUserE == "I"))
+       //     
+       // };
+    }
+}

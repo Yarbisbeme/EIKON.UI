@@ -1,0 +1,364 @@
+/* FRHMA535 - Excepciones Contables en la nómina */
+
+.frhma535-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* No. Relación Field */
+.frhma535-form .relacion-field {
+    max-width: 150px;
+}
+
+/* Débito % Field */
+.frhma535-form .debito-percent-field {
+    max-width: 150px;
+}
+
+/* Standard Input Fields */
+.frhma535-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma535-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Filters Section (Blue background area) */
+.frhma535-form .filters-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* Dual Field Row (Empleado, Área, Oficina) */
+.frhma535-form .dual-field-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhma535-form .field-label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    text-align: left;
+}
+
+.frhma535-form .dual-field-container {
+    display: grid;
+    grid-template-columns: 100px 1fr 40px;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhma535-form .codigo-input {
+    width: 100%;
+}
+
+.frhma535-form .nombre-input {
+    width: 100%;
+}
+
+/* Search Button */
+.frhma535-form .search-button {
+    width: 40px;
+    height: 36px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhma535-form .search-button:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.frhma535-form .search-button i {
+    font-size: 16px;
+}
+
+/* Distribuir cuenta button */
+.frhma535-form .distribuir-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.frhma535-form .distribuir-button {
+    padding: 10px 24px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.frhma535-form .distribuir-button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.frhma535-form .distribuir-button:active {
+    transform: scale(0.98);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-button:hover {
+    background-color: #f8f9fa;
+    color: #dc3545;
+}
+
+.close-button i {
+    font-size: 16px;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-secondary {
+    padding: 8px 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #33363f;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+/* Grid Styles */
+.distribucion-grid {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+/* DevExpress Component Overrides */
+.frhma535-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma535-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma535-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma535-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma535-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma535-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma535-form ::deep .dx-numberbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma535-form ::deep .dx-numberbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma535-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhma535-form .filters-section {
+        padding: 15px;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma535-form {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .frhma535-form .relacion-field,
+    .frhma535-form .debito-percent-field {
+        max-width: 100%;
+    }
+
+    .frhma535-form .dual-field-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .frhma535-form .field-label {
+        text-align: left;
+    }
+
+    .frhma535-form .dual-field-container {
+        grid-template-columns: 80px 1fr 40px;
+    }
+
+    .frhma535-form .filters-section {
+        padding: 12px;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .modal-header {
+        padding: 15px;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma535-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhma535-form .input label,
+    .frhma535-form .field-label {
+        font-size: 13px;
+    }
+
+    .frhma535-form .dual-field-container {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .frhma535-form .search-button {
+        width: 100%;
+        height: 36px;
+    }
+
+    .frhma535-form .filters-section {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhma535-form .distribuir-button {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 98%;
+        max-height: 95vh;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,158 @@
+@layout MainLayout
+@page "/FRHMA538"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA538 - Fluctuaciones tasa cambio" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma538-form">
+
+        <!-- Código Período -->
+        <div class="input codigo-field">
+            <label>Código Período</label>
+            <DxTextBox @bind-Text="@CodigoPeriodo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchPeriodo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Descripción -->
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <!-- Tipo Modena -->
+        <div class="input">
+            <label>Tipo Modena</label>
+            <DxComboBox Data="@TiposModena"
+                        @bind-Value="@TipoModenaSeleccionado"
+                        NullText="Seleccione tipo de moneda"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+            </DxComboBox>
+        </div>
+
+        <!-- Periodo desde/Hasta -->
+        <div class="periodo-row">
+            <div class="input periodo-field">
+                <label>Periodo desde</label>
+                <DxDateEdit @bind-Date="@PeriodoDesde"
+                            DisplayFormat="dd/MM/yyyy"
+                            NullText="dd/mm/yyyy"
+                            CssClass="date-input" />
+            </div>
+            <div class="input periodo-field">
+                <label>Hasta</label>
+                <DxDateEdit @bind-Date="@PeriodoHasta"
+                            DisplayFormat="dd/MM/yyyy"
+                            NullText="dd/mm/yyyy"
+                            CssClass="date-input" />
+            </div>
+        </div>
+
+        <!-- Tasa Mercado -->
+        <div style="display:flex; gap:10px">
+
+            <div class="input tasa-field">
+                <label>Tasa Mercado</label>
+                <DxSpinEdit @bind-Value="@TasaMercado"
+                            MinValue="0m"
+                            DisplayFormat="N2"
+                            Increment="0.01m"
+                            NullText="0.00" />
+            </div>
+
+            <!-- Tasa Tope -->
+            <div class="input tasa-field">
+                <label>Tasa Tope</label>
+                <DxSpinEdit @bind-Value="@TasaTope"
+                            MinValue="0m"
+                            DisplayFormat="N2"
+                            Increment="0.01m"
+                            NullText="0.00" />
+            </div>
+        </div>
+
+        <!-- Data Grid -->
+        <div class="grid-container">
+            <DxGrid Data="@Fluctuaciones"
+                    CssClass="fluctuaciones-grid"
+                    PageSize="15"
+                    ShowFilterRow="false">
+                <Columns>
+                    <DxGridDataColumn FieldName="CodigoDescripcion" Caption="Código/Descripción" Width="60%" />
+                    <DxGridDataColumn FieldName="Modena" Caption="Modena" Width="15%" />
+                    <DxGridDataColumn FieldName="Desde" Caption="Desde" Width="25%" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Fields
+    private string CodigoPeriodo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string TipoModenaSeleccionado { get; set; } = string.Empty;
+    private DateTime? PeriodoDesde { get; set; }
+    private DateTime? PeriodoHasta { get; set; }
+    private decimal TasaMercado { get; set; } = 0.00m;
+    private decimal TasaTope { get; set; } = 0.00m;
+
+    // Dropdown data
+    private List<string> TiposModena = new List<string>
+    {
+        "01 - Córdoba",
+        "02 - Dólar estadounidense",
+        "03 - Euro",
+        "04 - Peso mexicano"
+    };
+
+    // Grid data
+    private List<Fluctuacion> Fluctuaciones = new List<Fluctuacion>
+    {
+        new Fluctuacion { CodigoDescripcion = "06C01 2da QUINCENA DE JULIO 04", Modena = "02", Desde = "01/01/2004" },
+        new Fluctuacion { CodigoDescripcion = "00C02 2da QUINCENA DE JULIO 04", Modena = "02", Desde = "16/07/2004" },
+        new Fluctuacion { CodigoDescripcion = "00C03 1ra Mínima", Modena = "02", Desde = "01/11/2004" },
+        new Fluctuacion { CodigoDescripcion = "00C04 2da Quincena de Julio", Modena = "02", Desde = "16/10/2004" },
+        new Fluctuacion { CodigoDescripcion = "00C05 1ra Quincena de Noviembre 2004", Modena = "02", Desde = "01/11/2004" },
+        new Fluctuacion { CodigoDescripcion = "00C06 2da Quincena Noviembre 2004", Modena = "02", Desde = "16/11/2004" },
+        new Fluctuacion { CodigoDescripcion = "00C07 1ra Quincena Diciembre 2004", Modena = "02", Desde = "01/12/2004" }
+    };
+
+    private void OnSearchPeriodo() { }
+    private void OnCalendarDesdeClick() { }
+    private void OnCalendarHastaClick() { }
+    private void HandleSave() { }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class Fluctuacion
+    {
+        public string CodigoDescripcion { get; set; } = string.Empty;
+        public string Modena { get; set; } = string.Empty;
+        public string Desde { get; set; } = string.Empty;
+    }
+}

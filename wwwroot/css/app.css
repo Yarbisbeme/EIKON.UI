@@ -1,0 +1,467 @@
+@import url("https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css");
+@import url("https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css");
+@import url("https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css");
+@import url("https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-chubby/css/uicons-regular-chubby.css");
+:root {
+  /* Colores principales */
+  --azul-primario: #78bdff; /* Azul primario hover */
+  --azul-primario-normal: #0074ff; /* Azul primario normal */
+  --azul-primario-selected: #003c99; /* Azul primario selected */
+
+  /* Colores Eikon */
+  --naranja-eikon-hover: #e8a7a3; /* Naranja Eikon hover */
+  --naranja-eikon-normal: #b9351c; /* Naranja Eikon normal */
+  --naranja-eikon-selected: #762718; /* Naranja Eikon selected (más oscuro) */
+
+  /* Variantes de gris */
+  --oscuro-eikon: #3f4346; /* Oscuro Eikon */
+  --gris-eikon: #6c757d; /* Gris Eikon */
+  --gris-claro-eikon: #e9ecef; /* Gris Claro Eikon */
+  --gris-fondo-eikon: #f8f9fa; /* Gris Fondo Eikon */
+  --azul-claro-eikon: #e3f2fd; /* Azul Claro Eikon */
+
+  /* Colores de alerta */
+  --color-exito: #28a745; /* Verde - Éxito */
+  --color-error: #dc3545; /* Rojo - Error */
+  --color-advertencia: #ffc107; /* Amarillo - Advertencia */
+
+  /* Códigos hexadecimales adicionales de la imagen */
+  --azul-hover-codigo: #78bdff; /* #78BDFF */
+  --azul-normal-codigo: #0074ff; /* #0074FF */
+  --azul-selected-codigo: #003c99; /* #003C99 */
+  --naranja-hover-codigo: #e8a7a3; /* #E8A7A3 */
+  --naranja-normal-codigo: #bc3c23; /* #BC3C23 */
+  --naranja-selected-codigo: #762718; /* #762718 */
+  --oscuro-codigo: #3f4346; /* #3F4346 */
+  --gris-codigo: #6c757d; /* #6C757D */
+  --gris-claro-codigo: #e9ecef; /* #E9ECEF */
+  --gris-fondo-codigo: #f8f9fa; /* #F8F9FA */
+  --exito-codigo: #28a745; /* #28A745 */
+  --error-codigo: #dc3545; /* #DC3545 */
+  --advertencia-codigo: #ffc107; /* #FFC107 */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  scrollbar-width: none;
+  background-color: #fbf9f9;
+  font-family: "Open Sans-Regular", Helvetica;
+}
+
+*::selection {
+  background-color: var(--naranja-eikon-normal);
+  color: #ffffff;
+}
+
+.no-native-icon::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+.e-container {
+  width: 100%;
+}
+
+/* Login page */
+.e-login {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .e-login .e-nav {
+        display: flex;
+        position: relative;
+        z-index: 10;
+        background-color: #fbf9f9;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        height: 100px;
+        width: 100%;
+    }
+
+        .e-login .e-nav .e-nav-logo {
+            width: 140px;
+        }
+
+            .e-login .e-nav .e-nav-logo img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+
+        .e-login .e-nav .e-nav-links {
+            display: flex;
+            height: 100%;
+            align-items: center;
+        }
+
+            .e-login .e-nav .e-nav-links ul {
+                display: flex;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                gap: 20px;
+            }
+
+                .e-login .e-nav .e-nav-links ul li a {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-weight: 500;
+                    text-decoration: none;
+                    transition: all 0.3s;
+                    border-bottom: 1px solid transparent;
+                    color: #33363f;
+                }
+
+                    .e-login .e-nav .e-nav-links ul li a:hover {
+                        border-color: var(--naranja-eikon-normal);
+                    }
+
+                    .e-login .e-nav .e-nav-links ul li a i {
+                        font-size: 24px;
+                        line-height: 0%;
+                    }
+
+    .e-login .e-login-body {
+        display: flex;
+        width: 100%;
+        height: calc(100dvh - 110px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .e-login .e-login-body .left {
+            height: min(736px, 100%);
+            width: min(627px, 50%);
+            display: flex;
+            justify-content: center;
+        }
+
+            .e-login .e-login-body .left .hr-img {
+                background-image: url("/images/HR.png");
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center;
+                width: 100%;
+            }
+
+        .e-login .e-login-body .middle {
+            width: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .e-login .e-login-body .middle .line {
+                width: 3px;
+                background-color: #e5e5ea;
+                border-radius: 20px;
+                height: 400px;
+            }
+
+        .e-login .e-login-body .right {
+            height: 100%;
+            width: min(100%, 352px);
+            display: flex;
+            gap: 24px;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .e-login .e-login-body .right .e-img {
+                width: 40px;
+                height: 40px;
+            }
+
+                .e-login .e-login-body .right .e-img img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+            .e-login .e-login-body .right h1 {
+                font-size: 40px;
+                font-weight: bold;
+            }
+
+            .e-login .e-login-body .right p {
+                color: #6c757d;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .e-login .e-login-body .right .login-form {
+                display: flex;
+                width: 100%;
+                flex-direction: column;
+                gap: 25px;
+            }
+
+                .e-login .e-login-body .right .login-form .input {
+                    display: flex;
+                    gap: 7px;
+                    width: min(352px, 100%);
+                    flex-direction: column;
+                }
+
+                    .e-login .e-login-body .right .login-form .input label {
+                        color: #33363f;
+                    }
+
+                    .e-login .e-login-body .right .login-form .input input {
+                        height: 42px;
+                        padding: 0 22px;
+                        width: 100%;
+                        background: transparent;
+                        transition: border-color 0.3s, box-shadow 0.3s;
+                        font-size: 14px;
+                        border: 1px solid #bfbfbf;
+                        border-radius: 4px;
+                        outline: none;
+                    }
+
+                        .e-login .e-login-body .right .login-form .input input::placeholder {
+                            color: #bfbfbf;
+                        }
+
+                        .e-login .e-login-body .right .login-form .input input:focus {
+                            border-color: #007bff;
+                        }
+
+                        .e-login .e-login-body .right .login-form .input input:active,
+                        .e-login .e-login-body .right .login-form .input input:hover {
+                            border-color: #6c757d;
+                        }
+
+
+                /* select*/
+                .e-login .e-login-body .right .login-form .select {
+                    display: flex;
+                    gap: 7px;
+                    flex-direction: column;
+                    position: relative;
+                    width: min(352px, 100%);
+                }
+
+                    .e-login .e-login-body .right .login-form .select label {
+                        color: #33363f;
+                    }
+
+                    .e-login .e-login-body .right .login-form .select select {
+                        height: 42px;
+                        padding: 0 22px;
+                        outline: none;
+                        width: 100%;
+                        appearance: none;
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        background: transparent;
+                        transition: border-color 0.3s ease;
+                        font-size: 14px;
+                        border: 1px solid #bfbfbf;
+                        border-radius: 4px;
+                    }
+
+                        .e-login
+                        .e-login-body
+                        .right
+                        .login-form
+                        .select
+                        select:has(option:first-child:checked) {
+                            color: #bfbfbf;
+                        }
+
+                        .e-login .e-login-body .right .login-form .select select > option:first-child {
+                            color: #bfbfbf !important;
+                        }
+
+                        .e-login
+                        .e-login-body
+                        .right
+                        .login-form
+                        .select
+                        select > option:not(:first-child) {
+                            color: #33363f !important;
+                        }
+
+                        .e-login .e-login-body .right .login-form .select select:focus {
+                            border-color: #007bff;
+                        }
+
+                        .e-login .e-login-body .right .login-form .select select:active,
+                        .e-login .e-login-body .right .login-form .select select:hover {
+                            border-color: #6c757d;
+                        }
+
+                    .e-login
+                    .e-login-body
+                    .right
+                    .login-form
+                    .select:has(select option:first-child:checked)
+                    .icon {
+                        color: #bfbfbf;
+                    }
+
+                    .e-login .e-login-body .right .login-form .select .icon {
+                        position: absolute;
+                        right: 22px;
+                        top: 50px;
+                        transition: color 0.3s ease;
+                        color: #33363f;
+                        transform: translateY(-50%);
+                        pointer-events: none;
+                        font-size: 22px;
+                    }
+
+
+                .e-login .e-login-body .right .login-form .form-btn {
+                    cursor: pointer;
+                    height: 42px;
+                    width: min(352px, 100%);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    transition: all 0.3s;
+                    border: none;
+                    border-radius: 4px;
+                    background: #b9351c;
+                    color: #ffffff;
+                }
+
+                    .e-login .e-login-body .right .login-form .form-btn:hover {
+                        background-color: #8b2815;
+                    }
+
+            .e-login .e-login-body .right .login-support {
+                color: #33363f;
+                line-height: normal;
+            }
+
+                .e-login .e-login-body .right .login-support > span {
+                    text-decoration: underline;
+                    color: #004a99;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    text-decoration-line: underline;
+                    text-decoration-style: solid;
+                    text-decoration-skip-ink: none;
+                    text-decoration-thickness: 5%;
+                    text-underline-offset: 20%;
+                    cursor: pointer;
+                }
+
+@media (max-width: 1030px) {
+    .e-login .e-login-body .middle {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .e-login .e-nav .e-nav-links ul li a span {
+        margin-top: auto;
+        display: none;
+    }
+
+    .e-login .e-login-body {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+    }
+
+        .e-login .e-login-body .middle,
+        .e-login .e-login-body .left {
+            display: none;
+        }
+
+        .e-login .e-login-body .right {
+            max-width: 100%;
+        }
+
+    .e-login-body .right {
+        display: flex;
+        justify-content: center;
+    }
+
+        .e-login-body .right p,
+        .e-login-body .right h1 {
+            text-align: center;
+        }
+
+    .e-login .e-login-body .right .e-img {
+        margin-inline: auto;
+    }
+
+    .e-login .e-login-body .right .login-form {
+        align-items: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .e-login .e-login-body {
+        height: calc(100vh - 100px);
+        justify-content: center;
+    }
+
+        .e-login .e-login-body .right .login-form {
+            width: 90%;
+            margin-inline: auto;
+        }
+
+            .e-login
+            .e-login-body
+            .right
+            .login-form
+            .select:has(select option:first-child:checked)
+            .icon {
+                background-color: #fbf9f9;
+                color: #bfbfbf;
+            }
+}
+
+
+@media (min-width: 40rem) {
+  .e-container {
+    max-width: 40rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .e-container {
+    max-width: 48rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .e-container {
+    max-width: 64rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  .e-container {
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 96rem) {
+  .e-container {
+    max-width: 1400px;
+  }
+}

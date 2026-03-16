@@ -1,0 +1,135 @@
+/* FRHMA522 - Tipos de requerimientos */
+
+.frhma522-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Código Field */
+.frhma522-form .codigo-field {
+    max-width: 200px;
+}
+
+/* Standard Input Fields */
+.frhma522-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma522-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Estimados Row */
+.frhma522-form .estimados-row {
+    display: grid;
+    grid-template-columns: 150px 200px 1fr;
+    gap: 15px;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.frhma522-form .dias-field {
+    max-width: 150px;
+}
+
+.frhma522-form .costo-field {
+    max-width: 200px;
+}
+
+.frhma522-form .checkboxes-group {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* DevExpress Component Overrides */
+.frhma522-form ::deep .dx-textbox-container,
+.frhma522-form ::deep .dx-dropdownedit-input-wrapper,
+.frhma522-form ::deep .dx-memo {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma522-form ::deep .dx-textbox-container:focus-within,
+.frhma522-form ::deep .dx-dropdownedit-input-wrapper:focus-within,
+.frhma522-form ::deep .dx-memo:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma522-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma522-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma522-form ::deep .dxbl-checkbox-text {
+    color: #33363f;
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma522-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhma522-form .estimados-row {
+        grid-template-columns: 140px 180px 1fr;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma522-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhma522-form .codigo-field {
+        max-width: 100%;
+    }
+
+    .frhma522-form .estimados-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhma522-form .dias-field,
+    .frhma522-form .costo-field {
+        max-width: 100%;
+    }
+
+    .frhma522-form .checkboxes-group {
+        padding-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma522-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhma522-form .input label {
+        font-size: 13px;
+    }
+
+    .frhma522-form .checkboxes-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}

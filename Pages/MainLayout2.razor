@@ -1,0 +1,30 @@
+@using Microsoft.AspNetCore.Components.Web
+@namespace EIKON.UI.Pages
+@inherits LayoutComponentBase
+
+<EIKON.UI.Components.Navbar />
+<main class="content">
+    <EIKON.UI.Components.Sidebar />
+    <div class="main-content">
+        @Body
+    </div>
+</main>
+   @*  <main class="content">
+    <div class="sidebar-dx">
+    <DxMenu Orientation="Orientation.Vertical" CssClass="custom-menu" DisplayMode="MenuDisplayMode.Auto">
+        <Items>
+                <DxMenuItem Text="Inicio" IconCssClass="fi fi-tr-house-chimney" NavigateUrl="/dash" />
+                <DxMenuItem Text="Requisicion" IconCssClass="fi fi-tr-add-document" NavigateUrl="/requisicion" />
+                <DxMenuItem Text="Generacion de Nomina" IconCssClass="fi fi-tr-calculator" NavigateUrl="/generacion-nomina" />
+            <DxMenuItem Text="Verificacion de Transacciones" IconCssClass="fi fi-rr-dollar" NavigateUrl="/verificacion-transacciones" />
+                <DxMenuItem Text="Pre Configuracion" IconCssClass="fi fi-rs-settings" NavigateUrl="/pre-generation-config" />
+                <DxMenuItem Text="Verificacion de Partidas" IconCssClass="fi fi-rr-check-circle" NavigateUrl="/verificacion-partidas" />
+                <DxMenuItem Text="Perfil" IconCssClass="fi fi-ts-users" NavigateUrl="/perfil" />
+        </Items>
+    </DxMenu>
+</div>
+
+        <div class="main-content">
+            @Body
+        </div>
+    </main> *@

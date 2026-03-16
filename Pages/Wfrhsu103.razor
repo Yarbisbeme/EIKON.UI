@@ -1,0 +1,53 @@
+﻿@page "/WFRHSU103"
+@layout MainLayout
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+<h3>Formulario WFRHSU103 - Pendiente de Implementar</h3>
+<p>Mis Habilidades</p>
+@code {
+
+    private Trher000Dto er = new Trher000Dto();
+    private Trhan000Dto an = new Trhan000Dto();
+    //**  private Trhfw000Dto fw = new Trhfw000Dto();
+    private Trhmt000Dto mt = new Trhmt000Dto();
+    //**  private Frhcg010Dto cg = new Frhcg010Dto();
+    //**  private Trhvf000Dto vf = new Trhvf000Dto();
+
+
+    //**  private Frhgu010Dto cg;
+    private Trhgu000Dto vf;
+
+    private Trhpc000Dto pc;
+
+
+    //**  private Trhpo000Dto po;
+    //**  private Trhtw000Dto tw;
+    private Trhbe000Dto be;
+    private Trham000Dto am;
+    private Trhoi000Dto oi;
+    //**  private Trhtk000Dto tk;
+    private Trhic000Dto ic;
+
+    //**  private Trhmd010Dto md;
+    //**  private Frhfi010Dto fi;
+    //**  private Trhwa010Dto wa;
+    private Trhme000Dto me;  //'MESES'
+    //**  private Trhtp010Dto tp; //'TPLAN'
+    //**  private Frhpe010Dto pe;  //'PLAN_DESCUENTO'
+    private Trhcy000Dto cy;  //'TOMONEDAS'
+    private Trhrw000Dto rw;   //'TREPORTES'
+    //**  private Frhpj010Dto pj;  //'DETALLEPLANES'
+    //**  private Trhpe000Dto pe;  //'TCLASIFICADO'
+    //**  private Trhtp010Dto tp;  //'TPRESTAMOS'
+
+    private Frhrj010Dto frhrj010Dto;
+
+    //**  private Frhwj010Dto frhwj010Dto;  //'TRANSPERIODO'
+    //**  private Frhcj010Dto frhcj010Dto;   //'CONT_DETALLES_ALL'
+
+}

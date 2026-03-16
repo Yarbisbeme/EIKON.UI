@@ -1,0 +1,207 @@
+/* FRHMA508 - Definición Cambio/Acciones de personal */
+
+.frhma508-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Código y Estatus Row */
+.frhma508-form .codigo-estatus-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+}
+
+.frhma508-form .codigo-field {
+    flex: 0 0 200px;
+}
+
+.frhma508-form .estatus-field {
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+}
+
+.type-group{
+display:flex;
+gap:10px;
+}
+
+/* Standard Input Fields */
+.frhma508-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma508-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Group Box Styling */
+.frhma508-form .group-box {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 15px;
+    width: 100%;
+}
+
+.frhma508-form .group-box-title {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+/* Radio Group Styling */
+.frhma508-form .radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+.frhma508-form .horizontal-radio ::deep .dxbl-radio-group {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+/* Checkbox Grid for Reporte Section */
+.frhma508-form .checkbox-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.frhma508-form .checkbox-row {
+    display: flex;
+    gap: 20px;
+    flex-direction:column;
+    flex-wrap: wrap;
+}
+
+
+/* DevExpress Component Overrides */
+.frhma508-form ::deep .dx-textbox-container,
+.frhma508-form ::deep .dx-dropdownedit-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma508-form ::deep .dx-textbox-container:focus-within,
+.frhma508-form ::deep .dx-dropdownedit-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma508-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma508-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Radio Button Styling */
+.frhma508-form ::deep .dxbl-radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.frhma508-form ::deep .dxbl-radio-item-text {
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Checkbox Styling */
+.frhma508-form ::deep .dxbl-checkbox-text {
+    color: #33363f;
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+/* ComboBox Dropdown */
+.frhma508-form ::deep .dx-dropdownedit-dropdown {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma508-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhma508-form .codigo-field {
+        flex: 0 0 180px;
+    }
+
+    .frhma508-form .checkbox-row ::deep .dxbl-checkbox {
+        min-width: 130px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma508-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .type-group{
+        flex-wrap:wrap;
+    }
+    .frhma508-form .codigo-estatus-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .frhma508-form .codigo-field {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .frhma508-form .estatus-field {
+        margin-bottom: 0;
+    }
+
+    .frhma508-form .horizontal-radio ::deep .dxbl-radio-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .frhma508-form .checkbox-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .frhma508-form .checkbox-row ::deep .dxbl-checkbox {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma508-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhma508-form .group-box {
+        padding: 12px;
+    }
+
+    .frhma508-form .group-box-title {
+        font-size: 13px;
+    }
+
+    .frhma508-form .input label {
+        font-size: 13px;
+    }
+}

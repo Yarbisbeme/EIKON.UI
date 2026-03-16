@@ -1,0 +1,284 @@
+@layout MainLayout
+@page "/FRHRE701"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Contratación Masiva" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="contratacion-masiva-form">
+        
+        <!-- Selectores de criterios -->
+        <div class="criterios-section">
+            <div class="criterios-header">
+                <div class="criterio-item">
+                    <label>Criterio</label>
+                    <DxComboBox Data="@criteriosList"
+                               @bind-Value="@ContratacionData.Criterio"
+                               TextFieldName="Text"
+                               ValueFieldName="Value"
+                               NullText="Seleccionar..."
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               CssClass="criterio-combo" />
+                </div>
+                
+                <div class="criterio-item">
+                    <label>Operador</label>
+                    <DxComboBox Data="@operadoresList"
+                               @bind-Value="@ContratacionData.Operador"
+                               TextFieldName="Text"
+                               ValueFieldName="Value"
+                               NullText="Seleccionar..."
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               CssClass="criterio-combo" />
+                </div>
+                
+                <div class="criterio-item">
+                    <label>Constante o Expresión</label>
+                    <DxComboBox Data="@constantesList"
+                               @bind-Value="@ContratacionData.ConstanteExpresion"
+                               TextFieldName="Text"
+                               ValueFieldName="Value"
+                               NullText="Seleccionar..."
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               CssClass="criterio-combo" />
+                </div>
+                
+                <div class="criterio-item">
+                    <label>Conector</label>
+                    <DxComboBox Data="@conectoresList"
+                               @bind-Value="@ContratacionData.Conector"
+                               TextFieldName="Text"
+                               ValueFieldName="Value"
+                               NullText="Seleccionar..."
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               CssClass="criterio-combo" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de radio buttons -->
+        <div class="radio-section">
+            <div class="radio-group">
+                <div class="operacion-radio-group">
+                    <DxRadio GroupName="tipoOperacion"
+                             @bind-GroupValue="@ContratacionData.TipoOperacion"
+                             Value="@("solexterna")"
+                             CssClass="dx-demo-radio">
+                        Sol Externa
+                    </DxRadio>
+                    <DxRadio GroupName="tipoOperacion"
+                             @bind-GroupValue="@ContratacionData.TipoOperacion"
+                             Value="@("ingresos")"
+                             CssClass="dx-demo-radio">
+                        Ingresos
+                    </DxRadio>
+                    <DxRadio GroupName="tipoOperacion"
+                             @bind-GroupValue="@ContratacionData.TipoOperacion"
+                             Value="@("reingresos")"
+                             CssClass="dx-demo-radio">
+                        Reingresos
+                    </DxRadio>
+                    <DxRadio GroupName="tipoOperacion"
+                             @bind-GroupValue="@ContratacionData.TipoOperacion"
+                             Value="@("salidas")"
+                             CssClass="dx-demo-radio">
+                        Salidas
+                    </DxRadio>
+                    <DxRadio GroupName="tipoOperacion"
+                             @bind-GroupValue="@ContratacionData.TipoOperacion"
+                             Value="@("liquidacion")"
+                             CssClass="dx-demo-radio">
+                        Liquidación
+                    </DxRadio>
+                </div>
+            </div>
+        </div>
+
+        <!-- TextArea debajo de radio buttons -->
+        <div class="textarea-section">
+            <DxMemo @bind-Text="@ContratacionData.ConsultaTexto"
+                   NullText="Escriba aquí su consulta..."
+                   Rows="4"
+                   CssClass="consulta-memo" />
+        </div>
+
+        <!-- Sección inferior con checkbox y botón ejecutar -->
+        <div class="footer-section">
+            <div class="importar-section">
+                <DxCheckBox @bind-Checked="@ContratacionData.Importar"
+                           CssClass="importar-checkbox" >
+                    Importar
+                       </DxCheckBox>
+                <DxTextBox @bind-Text="@ContratacionData.ImportarTexto"
+                          NullText="Archivo o ruta..."
+                          CssClass="importar-textbox" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private ContratacionMasivaDto ContratacionData { get; set; } = new ContratacionMasivaDto();
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    private DxGrid? CriteriosGrid { get; set; }
+    private List<CriterioDto> criteriosData { get; set; } = new List<CriterioDto>();
+    
+    // Listas para los ComboBox
+    private List<ComboBoxItem> criteriosList { get; set; } = new List<ComboBoxItem>();
+    private List<ComboBoxItem> operadoresList { get; set; } = new List<ComboBoxItem>();
+    private List<ComboBoxItem> conectoresList { get; set; } = new List<ComboBoxItem>();
+    private List<ComboBoxItem> constantesList { get; set; } = new List<ComboBoxItem>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPlaceholderData();
+    }
+
+    private async Task LoadPlaceholderData()
+    {
+        await Task.Delay(100);
+        
+        ContratacionData = new ContratacionMasivaDto
+        {
+            TipoOperacion = "ingresos",
+            Importar = false
+        };
+
+        // Cargar lista para Constante o Expresión
+        constantesList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "valor1", Text = "Valor 1" },
+            new ComboBoxItem { Value = "valor2", Text = "Valor 2" },
+            new ComboBoxItem { Value = "expresion", Text = "Expresión" },
+            new ComboBoxItem { Value = "formula", Text = "Fórmula" }
+        };
+
+        // Cargar criterios disponibles
+        criteriosList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "departamento", Text = "Departamento" },
+            new ComboBoxItem { Value = "cargo", Text = "Cargo" },
+            new ComboBoxItem { Value = "salario", Text = "Salario" },
+            new ComboBoxItem { Value = "fechaingreso", Text = "Fecha de Ingreso" },
+            new ComboBoxItem { Value = "estado", Text = "Estado" },
+            new ComboBoxItem { Value = "sucursal", Text = "Sucursal" }
+        };
+
+        // Cargar operadores
+        operadoresList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "igual", Text = "Igual a" },
+            new ComboBoxItem { Value = "diferente", Text = "Diferente de" },
+            new ComboBoxItem { Value = "mayor", Text = "Mayor que" },
+            new ComboBoxItem { Value = "menor", Text = "Menor que" },
+            new ComboBoxItem { Value = "contiene", Text = "Contiene" },
+            new ComboBoxItem { Value = "entre", Text = "Entre" }
+        };
+
+        // Cargar conectores
+        conectoresList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "y", Text = "Y" },
+            new ComboBoxItem { Value = "o", Text = "O" },
+            new ComboBoxItem { Value = "", Text = "" }
+        };
+
+        // Cargar datos de ejemplo en el grid
+        criteriosData = new List<CriterioDto>
+        {
+            new CriterioDto 
+            { 
+                Id = 1, 
+                Criterio = "departamento", 
+                Operador = "igual", 
+                ConstanteExpresion = "Recursos Humanos", 
+                Conector = "y" 
+            },
+            new CriterioDto 
+            { 
+                Id = 2, 
+                Criterio = "salario", 
+                Operador = "mayor", 
+                ConstanteExpresion = "50000", 
+                Conector = "" 
+            }
+        };
+    }
+
+    private void OnAddCriterio()
+    {
+        var newId = criteriosData.Count > 0 ? criteriosData.Max(x => x.Id) + 1 : 1;
+        criteriosData.Add(new CriterioDto 
+        { 
+            Id = newId, 
+            Criterio = "", 
+            Operador = "", 
+            ConstanteExpresion = "", 
+            Conector = "" 
+        });
+        
+        StateHasChanged();
+    }
+
+    private void OnRemoveCriterio()
+    {
+        if (criteriosData.Count > 0)
+        {
+            criteriosData.RemoveAt(criteriosData.Count - 1);
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnEjecutarClick()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Ejecutando contratación masiva...");
+    }
+
+    private async Task OnExportClick()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Exportando resultados...");
+    }
+
+    private async Task OnConfigClick()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Abriendo configuración...");
+    }
+
+    private void HandleClose() { }
+
+    public class ContratacionMasivaDto
+    {
+        public string TipoOperacion { get; set; } = "";
+        public bool Importar { get; set; }
+        public string Criterio { get; set; } = "";
+        public string Operador { get; set; } = "";
+        public string ConstanteExpresion { get; set; } = "";
+        public string Conector { get; set; } = "";
+        public string ConsultaTexto { get; set; } = "";
+        public string ImportarTexto { get; set; } = "";
+    }
+
+    public class CriterioDto
+    {
+        public int Id { get; set; }
+        public string Criterio { get; set; } = "";
+        public string Operador { get; set; } = "";
+        public string ConstanteExpresion { get; set; } = "";
+        public string Conector { get; set; } = "";
+    }
+
+    public class ComboBoxItem
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+}

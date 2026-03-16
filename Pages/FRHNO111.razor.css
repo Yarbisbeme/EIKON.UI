@@ -1,0 +1,53 @@
+/* Transacciones form styling */
+.transacciones-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form fields styling */
+.transacciones-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.transacciones-form .input label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+}
+
+/* Search field styling */
+.search-field {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Descripción field - make it wider */
+.descripcion-field {
+    width: 100% !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .transacciones-form {
+        max-width: none;
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .search-field {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 480px) {
+    .transacciones-form {
+        padding: 10px;
+        gap: 12px;
+    }
+}

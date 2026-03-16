@@ -1,0 +1,184 @@
+﻿@page "/perfil"
+@using EIKON.UI.Components
+
+<div class="perfil">
+
+    <Breadcrumb Title="Datos Empleados" BackUrl="/dash" />
+
+    <div class="requisicion-header">
+        <div class="requisicion-search">
+
+            <div class="input-search">
+                <label for="user">No. Empleado</label>
+                <div class="inputs">
+                    <input type="text" id="user" placeholder="ID requisicion" value="00000001" />
+                    <i class="fi fi-rr-search"></i>
+                </div>
+            </div>
+            <div class="input">
+                <label for="user">Nombre Empleado</label>
+                <input type="text" id="user" placeholder="ID requisicion" value="SEGURA PANIAGUA JOSE ALEJANDRO" />
+            </div>
+        </div>
+
+        <div class="requisicion-toolbar">
+            <Toolbar formulario="FRHxxx999" />
+        </div>
+    </div>
+
+    <div class="employee-info">
+
+        <div class="profile-img">
+            <img src="https://t3.ftcdn.net/jpg/03/53/11/00/360_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
+                 alt="Unknown user">
+        </div>
+
+        <div class="emp-data">
+            <div class="left">
+                <div class="input">
+                    <label for="user">Nombres</label>
+                    <input type="text" id="user" placeholder="ID requisicion" value="JOSE ALEJANDRO" />
+                </div>
+                <div class="input">
+                    <label for="user">Cédula</label>
+                    <input type="text" id="user" placeholder="ID requisicion" value="001-0000333-3" />
+                </div>
+                <div class="input">
+                    <label for="user">Papa</label>
+                    <input type="text" id="user" placeholder="ID requisicion" value="001-0000333-3" />
+                </div>
+                <div class="input">
+                    <label for="user">Apodo</label>
+                    <input type="text" id="user" placeholder="Apodo" value="" />
+                </div>
+            </div>
+            <div class="right">
+                <div class="input">
+                    <label for="user">Apellidos</label>
+                    <input type="text" id="user" placeholder="ID requisicion" value="SEGURA PANIAGUA" />
+                </div>
+
+                <div class="select">
+                    <label for="company">Sexo</label>
+                    <select name="company" id="company">
+                        <option value="">Seleccionar sexo</option>
+                        <option value="1">Masculino</option>
+                        <option value="2">Femenino</option>
+                    </select>
+                    <i class="icon fi fi-rr-angle-small-down"></i>
+                </div>
+
+                <div class="input">
+                    <label for="user">Mama</label>
+                    <input type="text" id="user" placeholder="ID requisicion" value="001-0000333-3" />
+                </div>
+                <div class="input">
+                    <label for="user">Referencia</label>
+                    <input type="text" id="user" placeholder="Referencia" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="Tab-Panel">
+        <DxTabs>
+            <DxTab Text="Básicos" TabIconCssClass="tabs-icon-basics tabs-icon"></DxTab>
+            <DxTab Text="Localizadores" TabIconCssClass="tabs-icon-locators tabs-icon"></DxTab>
+            <DxTab Text="Licencia de Conducir" TabIconCssClass="tabs-icon-license tabs-icon"></DxTab>
+            <DxTab Text="Familia" TabIconCssClass="tabs-icon-family tabs-icon"></DxTab>
+            <DxTab Text="Enfermedad" TabIconCssClass="tabs-icon-medical tabs-icon"></DxTab>
+            <DxTab Text="Diversos" TabIconCssClass="tabs-icon-misc tabs-icon"></DxTab>
+            <DxTab Text="Comentarios" TabIconCssClass="tabs-icon-comments tabs-icon"></DxTab>
+        </DxTabs>
+        <div class="tab-content">
+            <CustomSelector Label="Prioridad" Options="@priorityOptions" @bind-SelectedValue="@selectedPriority" />
+            <div class="selector-content">
+                <div class="left">
+
+                    <div class="input">
+                        <label for="user">Titulo Puesto</label>
+                        <div class="search-field">
+                            <div class="inputs">
+                                <input type="text" id="user" placeholder="ID requisicion" />
+                                <i class="fi fi-rr-search"></i>
+                            </div>
+                            <input type="text" id="user" placeholder="ID requisicion" />
+                        </div>
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Nombres</label>
+                        <input type="text" id="user" placeholder="ID requisicion" value="JOSE ALEJANDRO" />
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Nombres</label>
+                        <input type="text" id="user" placeholder="ID requisicion" value="JOSE ALEJANDRO" />
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Nombres</label>
+                        <input type="text" id="user" placeholder="ID requisicion" value="JOSE ALEJANDRO" />
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Nombres</label>
+                        <input type="text" id="user" placeholder="ID requisicion" value="JOSE ALEJANDRO" />
+                    </div>
+                </div>
+
+                <div class="right">
+
+                    <div class="select">
+                        <label for="company">Sexo</label>
+                        <select name="company" id="company">
+                            <option value="">Seleccionar sexo</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                        </select>
+                        <i class="icon fi fi-rr-angle-small-down"></i>
+                    </div>
+
+                    <div class="select">
+                        <label for="company">Sexo</label>
+                        <select name="company" id="company">
+                            <option value="">Seleccionar sexo</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                        </select>
+                        <i class="icon fi fi-rr-angle-small-down"></i>
+                    </div>
+
+                    <div class="select">
+                        <label for="company">Sexo</label>
+                        <select name="company" id="company">
+                            <option value="">Seleccionar sexo</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                        </select>
+                        <i class="icon fi fi-rr-angle-small-down"></i>
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Fecha de emision.</label>
+                        <input type="date" class="no-native-icon" id="user" placeholder="ID requisicion" />
+                        <i class="fi fi-tr-calendar-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "leave" };
+    private string selectedPriority = "BASICOS";
+    private List<CustomSelector.SelectorOption> priorityOptions = new()
+    {
+        new() { Value = "BASICOS", Text = "BASICOS" },
+        new() { Value = "DIRECCION", Text = "DIRECCION" }
+    };
+
+}

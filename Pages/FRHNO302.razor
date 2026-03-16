@@ -1,0 +1,221 @@
+@layout MainLayout
+@page "/FRHNO302"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Reporte de Transacciones" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhno302-form">
+                <!-- Año -->
+                <div class="input" style="width:30%;">
+                    <label>Año</label>
+                    <DxComboBox Data="@AnoOptions"
+                                @bind-Value="@Ano"
+                                NullText="2025"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+        <!-- Main Grid: 3 Columns -->
+        <div class="main-grid">
+            <!-- Left Column -->
+            <div class="column column-left">
+                <!-- Nómina -->
+                <div class="input-group">
+                    <label>Nómina</label>
+                    <DxCheckBox @bind-Checked="@TodasNominas">Todas</DxCheckBox>
+                    <DxComboBox Data="@NominaOptions"
+                                @bind-Value="@Nomina"
+                                NullText="Seleccione..."
+                                Enabled="@(!TodasNominas)"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Cierres -->
+                <div class="input-group">
+                    <label>Cierres</label>
+                    <DxCheckBox @bind-Checked="@TodosCierres">Todas</DxCheckBox>
+                    <DxComboBox Data="@CierresOptions"
+                                @bind-Value="@Cierres"
+                                NullText="Seleccione..."
+                                Enabled="@(!TodosCierres)"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Checkboxes Group -->
+                <div class="checkboxes-group">
+                    <DxCheckBox @bind-Checked="@Regulares">Regulares</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@Temporeros">Temporeros</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@EEmpleados">E-Empleados</DxCheckBox>
+                </div>
+
+                <!-- Valuables Radio Group -->
+                <div class="valuables-section">
+                    <label>Valuables</label>
+                    <div class="radio-group">
+                        <DxRadio GroupName="accion"
+                                 @bind-GroupValue="@Accion"
+                                 Value="@("resumen")">
+                            Resumen
+                        </DxRadio>
+                        <DxRadio GroupName="accion"
+                                 @bind-GroupValue="@Accion"
+                                 Value="@("detalle")">
+                            Detalle
+                        </DxRadio>
+                    </div>
+                </div>
+            </div>
+            <!-- Center Column -->
+            <div class="column column-center">
+                <!-- Transacciones -->
+                <div class="input-group">
+                    <label>Transacciones</label>
+                    <DxCheckBox @bind-Checked="@TodasTransacciones">Todas</DxCheckBox>
+                    <div class="transacciones-inputs">
+                        <DxTextBox @bind-Text="@TransaccionCodigo"
+                                   CssClass="trans-codigo"
+                                   Enabled="@(!TodasTransacciones)" />
+                        <DxTextBox @bind-Text="@TransaccionDescripcion"
+                                   CssClass="trans-descripcion"
+                                   Enabled="@(!TodasTransacciones)"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchTransaccion" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <!-- Oficina -->
+                <div class="input-group">
+                    <label>Oficina</label>
+                    <DxCheckBox @bind-Checked="@TodasOficinas">Todas</DxCheckBox>
+                    <DxComboBox Data="@OficinaOptions"
+                                @bind-Value="@Oficina"
+                                NullText="Seleccione..."
+                                Enabled="@(!TodasOficinas)"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Ubicación -->
+                <div class="input-group">
+                    <label>Ubicación</label>
+                    <DxCheckBox @bind-Checked="@TodasUbicaciones">Todas</DxCheckBox>
+                    <DxComboBox Data="@UbicacionOptions"
+                                @bind-Value="@Ubicacion"
+                                NullText="Seleccione..."
+                                Enabled="@(!TodasUbicaciones)"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Ubicación por búsqueda -->
+                <div class="checkbox-single">
+                    <DxCheckBox @bind-Checked="@UbicacionPorBusqueda">Ubicación por búsqueda</DxCheckBox>
+                </div>
+
+                <!-- Checkboxes Group Right -->
+                <div class="checkboxes-group-right">
+                    <DxCheckBox @bind-Checked="@Resumen">Resumen</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@EnfDiario">Enf. Diario</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@Vertical">Vertical</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ValuablesCheck">Valuables</DxCheckBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-section">
+            <!-- Reporte Complementario -->
+            <div class="complementario-section">
+                <DxCheckBox @bind-Checked="@ReporteComplementario">Reporte Complementario</DxCheckBox>
+            </div>
+
+            <!-- Disco Section -->
+            <div class="disco-section">
+                <div class="disco-fields">
+                    <div class="input disco-tipo">
+                        <label style="font-weight:600;">Disco</label>
+                        <label class="sub-label">Tipo</label>
+                        <DxComboBox Data="@TipoDiscoOptions"
+                                    @bind-Value="@TipoDisco"
+                                    NullText="Seleccione..."
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                    </div>
+                    <div class="input disco-nombre">
+                        <label>Nombre</label>
+                        <DxTextBox @bind-Text="@DiscoNombre"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton Text="..." Click="@OnBrowseDisco" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <div class="action-buttons">
+                        <DxButton IconCssClass="fi fi-rr-check"
+                                  CssClass="action-btn" />
+                        <DxButton IconCssClass="fi fi-rr-cross"
+                                  Click="@HandleClose"
+                                  CssClass="action-btn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close" };
+    private string Accion { get; set; } = "imprimir";
+
+    // Left Column
+    private string? Ano { get; set; } = "2025";
+    private bool TodasNominas { get; set; } = false;
+    private string? Nomina { get; set; }
+    private bool TodosCierres { get; set; } = false;
+    private string? Cierres { get; set; }
+    private bool Regulares { get; set; } = true;
+    private bool Temporeros { get; set; } = true;
+    private bool EEmpleados { get; set; } = true;
+    private string Valuables { get; set; } = "Resumen";
+
+    // Center Column
+    private bool TodasTransacciones { get; set; } = false;
+    private string? TransaccionCodigo { get; set; }
+    private string? TransaccionDescripcion { get; set; }
+    private bool TodasOficinas { get; set; } = false;
+    private string? Oficina { get; set; }
+    private bool TodasUbicaciones { get; set; } = false;
+    private string? Ubicacion { get; set; }
+    private bool UbicacionPorBusqueda { get; set; } = true;
+    private bool Resumen { get; set; } = false;
+    private bool EnfDiario { get; set; } = false;
+    private bool Vertical { get; set; } = false;
+    private bool ValuablesCheck { get; set; } = false;
+
+    // Bottom Section
+    private bool ReporteComplementario { get; set; } = false;
+    private string? TipoDisco { get; set; }
+    private string? DiscoNombre { get; set; }
+
+    // Dropdown Options
+    private List<string> AnoOptions = new() { "2024", "2025", "2026" };
+    private List<string> NominaOptions = new() { "Nómina 1", "Nómina 2", "Nómina 3" };
+    private List<string> CierresOptions = new() { "Cierre 1", "Cierre 2", "Cierre 3" };
+    private List<string> OficinaOptions = new() { "Oficina 1", "Oficina 2", "Oficina 3" };
+    private List<string> UbicacionOptions = new() { "Ubicación 1", "Ubicación 2", "Ubicación 3" };
+    private List<string> TipoDiscoOptions = new() { "Tipo 1", "Tipo 2", "Tipo 3" };
+
+    // Event Handlers
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+    private void OnSearchTransaccion() { }
+    private void OnBrowseDisco() { }
+}

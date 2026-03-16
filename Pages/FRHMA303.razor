@@ -1,0 +1,1001 @@
+@page "/FRHMA303"
+
+
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="SIRH - Empresa" BackUrl="/dash" />
+    <Alert2 @ref="alertInfo" TypeAlert="info" Message="Actualización de Empresas" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHMA303" OnClose="HandleClose" OnSave="Guarda" />
+        </div>
+    </div>
+
+    <div class="Tab-Panel">
+        <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+            <DxTab Text="Generales"></DxTab>
+            <DxTab Text="Otros datos"></DxTab>
+            <DxTab Text="Descripción"></DxTab>
+            <DxTab Text="Lista Empresas"></DxTab>
+        </DxTabs>
+        @if (editModel == null)
+
+    {
+
+        <p><em>Loading...</em></p>
+
+    }
+
+    else
+
+    {
+        <div class="tab-content">
+            @if (ActiveTabIndex == 0)
+            {
+                <!-- Tab Generales -->
+                <div class="selector-content">
+                    <div class="left">
+                        @* <div class="input">
+                            <label for="codigo">Código</label>
+                            <DxTextBox @bind-Text="@editModel.EmCodigo"
+                                       NullText="Código"
+                                       ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                    Click="@OnSearchCodigoClick" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div> *@
+
+                        <div class="input">
+                            <label for="nombre-empresa">Nombre de la Empresa</label>
+                            <DxTextBox @bind-Text="@editModel.EmDescri"
+                                       NullText="Nombre de la empresa" ReadOnly />
+                        </div>
+
+                        <div class="input">
+                            <label for="nombre-comercial">Nombre Comercial</label>
+                            <DxTextBox @bind-Text="@editModel.EmNombrec"
+                                       NullText="Nombre comercial" />
+                        </div>
+
+                        <div class="select">
+                            <label for="grupo-corporativo">Grupo Corporativo</label>
+                            <DxComboBox id="hqcodigo" Data="@trhhq000" ValueFieldName="HqCodigo" TextFieldName="HqDescri" @bind-Value="editModel.HqCodigo"></DxComboBox>
+                            @* <DxComboBox Data="@trhhq000"
+                                        @bind-Value="@editModel.HqCodigo"
+                                        TextFieldName="HqCodigo"
+                                        ValueFieldName="HqDescri"
+                                        NullText="Seleccionar grupo"
+                                        ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never" /> *@
+                        </div>
+
+                        <div class="input">
+                            <label for="alterno">Alterno</label>
+                            <DxTextBox @bind-Text="@editModel.EmDesalterno"
+                                       NullText="Alterno" />
+                        </div>
+                            <div class="input">
+                                <label for="actividad-industrial">Actividad Industrial</label>
+                                <DxTextBox @bind-Text="@editModel.Actividad"
+                                           NullText="Actividad Industrial" />
+                            </div>
+
+                            <div class="input">
+                                <label for="numero-idss">Número IDSS</label>
+                                <DxTextBox @bind-Text="@editModel.EmNoidss"
+                                           NullText="Número IDSS" />
+                            </div>
+
+                            <div class="input">
+                                <label for="poliza">Póliza Accidente No.</label>
+                                <DxTextBox @bind-Text="@editModel.EmPoliza"
+                                           NullText="Póliza Accidente" />
+                            </div>
+
+                    </div>
+
+                    <div class="right">
+                        <div class="status-section">
+                            <label>Estatus</label>
+                            <div class="status-options">
+                                <DxRadioGroup @bind-Value="@editModel.Activo"
+                                              Items="@EstatusOptions"
+                                              ValueFieldName="Value"
+                                              TextFieldName="Text"
+                                              Layout="RadioGroupLayout.Horizontal" />
+                            </div>
+
+                            <div class="logo-upload-section">
+                                <div id="logoDropZone" class="custom-drop-zone logo-drop-zone">
+                                    <span class="drop-file-icon fi fi-ss-image mb-3"></span>
+                                    <span class="drop-file-label">Logo de Empresa</span>
+                                    <span class="m-1">or</span>
+                                    <DxButton Id="logoSelectButton"
+                                              CssClass="m-1"
+                                              RenderStyle="ButtonRenderStyle.Primary"
+                                              Text="Select Logo" />
+                                </div>
+                                <DxFileInput
+                                    Visible="@LogoUploadVisible"
+                                    ExternalSelectButtonCssSelector="#logoSelectButton"
+                                    ExternalDropZoneCssSelector="#logoDropZone"
+                                    ExternalDropZoneDragOverCssClass="custom-drop-zone-hover"
+                                    MaxFileSize="5000000"
+                                    FilesUploading="OnLogoFilesUploading"
+                                    SelectedFilesChanged="@LogoSelectedFilesChanged">
+                                </DxFileInput>
+                            </div>
+                        </div>
+
+                        @* <div class="additional-right-fields"> *@
+                           
+                    </div>
+                        <div class="left">
+                            
+                            <div class="input">
+                                <label for="registro-industrial">Registro Industrial</label>
+                                <DxTextBox @bind-Text="@editModel.Registro"
+                                           NullText="Registro Industrial" />
+                            </div>
+
+                            <div class="input">
+                                <label for="rama">Rama</label>
+                                <DxTextBox @bind-Text="@editModel.Actividad"
+                                           NullText="Rama" />
+                            </div>
+
+                            <div class="input">
+                                <label for="provincia">Provincia</label>
+                                <DxTextBox @bind-Text="@editModel.Provincia"
+                                           NullText="Provincia" />
+                            </div>
+
+                            <div class="input">
+                                <label for="rnc">RNC</label>
+                                <DxTextBox @bind-Text="@editModel.EmRnc"
+                                           NullText="RNC" />
+                            </div>
+
+                            <div class="input">
+                                <label for="capital">Capital Suscrito</label>
+                                <DxSpinEdit @bind-Value="@editModel.Capital"
+                                            DisplayFormat="F2"
+                                            NullText="0.00" />
+                            </div>
+
+                            <div class="input date-group">
+                                <label for="cierre-fiscal">Cierre Fiscal (dd/mm)</label>
+                                <div class="date-inputs">
+                                    <DxTextBox @bind-Text="@editModel.EmFiscal"
+                                               NullText="31/12" />
+                                </div>
+                            </div>
+
+                            <div class="input">
+                                <label for="aniversario">Aniversario</label>
+                                <DxDateEdit @bind-Date="@editModel.EmAnivers"
+                                            DisplayFormat="d"
+                                            NullText="--/--/----" />
+                            </div>
+                        </div>
+                </div>
+            }
+            else if (ActiveTabIndex == 1)
+            {
+                <!-- Tab Otros datos -->
+                <div class="selector-content">
+                    <div class="left">
+                        <h4 style="margin-bottom: 20px;">Localizadores</h4>
+                        
+                        <div class="input">
+                            <label for="telefono">Teléfono</label>
+                            <DxTextBox @bind-Text="@editModel.Telefono"
+                                      
+                                      NullText="(000) 000-0000" />
+                        </div>
+
+                        <div class="input">
+                            <label for="fax">Fax</label>
+                            <DxTextBox @bind-Text="@editModel.Fax"
+                                      
+                                      NullText="(000) 000-0000" />
+                        </div>
+
+                        <div class="input">
+                            <label for="email">E-Mail</label>
+                            <DxTextBox @bind-Text="@editModel.EmEMail"
+                                      InputType="DevExpress.Blazor.DataEditorInputType.Email"
+                                      NullText="correo@empresa.com" />
+                        </div>
+                            <div class="input">
+                                <label for="direccion">Dirección</label>
+                                <DxTextBox @bind-Text="@editModel.Direcc"
+                                           NullText="Dirección completa" />
+                            </div>
+
+                            <div class="input">
+                                <label for="apartado">A. Postal</label>
+                                <DxTextBox @bind-Text="@editModel.Apostal"
+                                           NullText="Apartado Postal" />
+                            </div>
+
+                            <div class="select">
+                                <label for="pais">País</label>
+                                <DxComboBox Data="trhnc000"
+                                            ValueFieldName="NcCodigo"
+                                            TextFieldName="NcDescri"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            EditFormat="{0} {1}"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                            @bind-Value="editModel.NcCodigo">
+                                    <Columns>
+                                        <DxListEditorColumn FieldName="NcCodigo" Caption="Código" />
+                                        <DxListEditorColumn FieldName="NcDescri" Caption="Descripcion" />
+                                    </Columns>
+                                </DxComboBox>
+                            </div>
+
+                            <div class="input">
+                                <label for="timbre">Timbre para fines de carta</label>
+                                <DxTextBox @bind-Text="@editModel.EmTimbre"
+                                           NullText="Timbre" />
+                            </div>
+
+                            <div class="input">
+                                <label for="imagen-escritorio">Imagen de escritorio</label>
+                                <DxTextBox @bind-Text="@editModel.EmSplash"
+                                           NullText="Ruta imagen"
+                                           ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never">
+                                    <Buttons>
+                                        <DxEditorButton IconCssClass="fi fi-rr-menu-dots"
+                                                        Click="@OnImagenEscritorioClick" />
+                                    </Buttons>
+                                </DxTextBox>
+                            </div>
+
+                    </div>
+
+                    <div class="right">
+                        <div class="image-upload-section">
+                            <div id="empresaDropZone" class="custom-drop-zone">
+                                <span class="drop-file-icon fi fi-ss-upload mb-3"></span>
+                                <span class="drop-file-label">Drag and Drop Image Here</span>
+                                <span class="m-1">or</span>
+                                <DxButton Id="empresaSelectButton"
+                                          CssClass="m-1"
+                                          RenderStyle="ButtonRenderStyle.Primary"
+                                          Text="Select Image" />
+                            </div>
+                            <DxFileInput
+                                Visible="@UploadVisible"
+                                ExternalSelectButtonCssSelector="#empresaSelectButton"
+                                ExternalDropZoneCssSelector="#empresaDropZone"
+                                ExternalDropZoneDragOverCssClass="custom-drop-zone-hover"
+                                MaxFileSize="15000000"
+                                FilesUploading="OnFilesUploading"
+                                SelectedFilesChanged="@SelectedFilesChanged">
+                            </DxFileInput>
+                        </div>
+                        
+                        <div class="additional-fields">
+                                                    </div>
+                    </div>
+                </div>
+            }
+            else if (ActiveTabIndex == 2)
+            {
+                <!-- Tab Descripción -->
+                <div class="descripcion-tab">
+                    <h4 style="margin-bottom: 20px;">Descripción de la empresa</h4>
+                    <div class="input full-width">
+                        <DxMemo @bind-Text="@editModel.EmComenta"
+                                Rows="15"
+                                NullText="Escriba aquí la descripción detallada de la empresa..."
+                                style="width: 100%; min-height: 350px;" />
+                    </div>
+                </div>
+            }
+                else if (ActiveTabIndex == 3)
+                {
+                    <!-- Tab Descripción -->
+                    <div class="descripcion-tab">
+                        <h4 style="margin-bottom: 20px;" class="text-info">Lista de Grupos Corporativos</h4>
+                        
+                        <DxGrid Data="@trhhq000" @ref="MyGrid1"
+                                CssClass="mw-1100"
+                                AllowSelectRowByClick="true"
+                                SelectionMode="GridSelectionMode.Single"
+                                SelectedDataItemChanged="OnRowSelectedHQ"
+                                >
+                            <Columns>
+                                
+                                <DxGridDataColumn Caption="Grupo Id" FieldName="HqCodigo" Width="120px" VisibleIndex="1" />
+                                <DxGridDataColumn Caption="Descripción" FieldName="HqDescri" Width="300px" VisibleIndex="2" />
+                                
+                                <DxGridDataColumn Caption="Activo" FieldName="HqEstatus" VisibleIndex="3" Width="130px" />
+                            </Columns>
+                            
+                        </DxGrid>
+                        <br />
+                        <h4 style="margin-bottom: 20px;" class="text-info">Lista de Empresas</h4>
+
+                        <DxGrid Data="@trhem000" @ref="MyGrid2"
+                                CssClass="mw-1100"
+                                AllowSelectRowByClick="true"
+                                SelectionMode="GridSelectionMode.Single"
+                                SelectedDataItemChanged="OnRowSelectedEM">
+                            <Columns>
+
+                                <DxGridDataColumn Caption="Empresa Id" FieldName="EmCodigo" Width="120px" VisibleIndex="1" />
+                                <DxGridDataColumn Caption="Descripción" FieldName="EmDescri" Width="300px" VisibleIndex="2" />
+
+                                <DxGridDataColumn Caption="A=Activa I=Inactiva" FieldName="Status" VisibleIndex="3" Width="130px" />
+                            </Columns>
+
+                        </DxGrid>
+                        <br />
+                        <h4 style="margin-bottom: 20px;" class="text-info">Lista de Oficinas</h4>
+
+                        <DxGrid Data="@trhof010" @ref="MyGrid3"
+                                CssClass="mw-1100"
+                                AllowSelectRowByClick="true"
+                                SelectionMode="GridSelectionMode.Single"
+                                SelectedDataItemChanged="OnRowSelectedOF">
+                            <Columns>
+
+                                <DxGridDataColumn Caption="Oficina Id" FieldName="OfCodigo" Width="120px" VisibleIndex="1" />
+                                <DxGridDataColumn Caption="Descripción" FieldName="OfDescri" Width="300px" VisibleIndex="2" />
+
+                                <DxGridDataColumn Caption="Activa" FieldName="OfEstatus" VisibleIndex="3" Width="130px" />
+                            </Columns>
+
+                        </DxGrid>
+                        <br />
+                        <h4 style="margin-bottom: 20px;" class="text-info">Lista de Ubicaciones</h4>
+
+                        <DxGrid Data="@trhub010" @ref="MyGrid4"
+                                CssClass="mw-1100"
+                                AllowSelectRowByClick="true"
+                                SelectionMode="GridSelectionMode.Single"
+                                SelectedDataItemChanged="OnRowSelectedOF">
+                            <Columns>
+
+                                <DxGridDataColumn Caption="Ubicación Id" FieldName="UbCodigo" Width="120px" VisibleIndex="1" />
+                                <DxGridDataColumn Caption="Descripción" FieldName="UbDescri" Width="300px" VisibleIndex="2" />
+
+                                <DxGridDataColumn Caption="Activa" FieldName="UbEstatus" VisibleIndex="3" Width="130px" />
+                            </Columns>
+
+                        </DxGrid>
+                        
+                    </div>
+                }
+
+        </div>}
+    </div>
+</div>
+
+<style>
+    .Tab-Panel .tab-content {
+        flex-direction: column;
+        padding: 10px 20px;
+        min-height: 400px;
+    }
+
+    .Tab-Panel .tab-content .selector-content {
+        display: flex;
+        gap: 50px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .Tab-Panel .tab-content .selector-content .left,
+    .Tab-Panel .tab-content .selector-content .right {
+        flex: 1;
+        display: flex;
+        gap: 15px;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Ensure tabs take full width */
+    .Tab-Panel {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .dx-tabs-wrapper {
+        width: 100% !important;
+    }
+
+    .tab-content {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Status section styling */
+    .status-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .status-section label {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .status-options {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .radio-option span {
+        color: #555;
+    }
+
+    /* Logo upload section */
+    .logo-upload-section {
+        margin-top: 20px;
+    }
+
+    .logo-drop-zone {
+        border: 2px dashed #ced4da;
+        border-radius: 8px;
+        padding: 20px 15px;
+        text-align: center;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+        max-width: 200px;
+    }
+
+    .logo-drop-zone .drop-file-icon {
+        font-size: 32px;
+        color: #6c757d;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .logo-drop-zone .drop-file-label {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .additional-right-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    /* Image upload section for otros datos tab */
+    .image-upload-section {
+        margin-bottom: 30px;
+    }
+
+    .custom-drop-zone {
+        border: 2px dashed #ced4da;
+        border-radius: 8px;
+        padding: 30px 20px;
+        text-align: center;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .custom-drop-zone-hover {
+        border-color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.05);
+    }
+
+    .drop-file-icon {
+        font-size: 48px;
+        color: #6c757d;
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .drop-file-label {
+        display: block;
+        font-size: 16px;
+        color: #495057;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .m-1 {
+        margin: 0.25rem;
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+
+    .additional-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Date inputs styling */
+    .date-group .date-inputs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 120px;
+    }
+
+    .date-inputs .dx-spin-edit {
+        flex: 1;
+        width: 40px;
+    }
+
+    .date-inputs span {
+        font-weight: bold;
+        color: #6c757d;
+        font-size: 16px;
+    }
+
+    /* Descripción tab */
+    .descripcion-tab {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
+    .descripcion-tab h4 {
+        color: #333;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+    }
+
+    .full-width {
+        width: 100% !important;
+    }
+
+    /* Tabs styling override */
+    .dx-tabs .dx-tab {
+        padding: 12px 25px !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        color: #6c757d !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent !important;
+    }
+
+    .dx-tabs .dx-tab:hover {
+        background-color: rgba(220, 53, 69, 0.05) !important;
+        color: #dc3545 !important;
+    }
+
+    .dx-tabs .dx-tab.dx-state-active {
+        color: #dc3545 !important;
+        border-bottom: 3px solid #dc3545 !important;
+        background-color: rgba(220, 53, 69, 0.02) !important;
+    }
+
+    .dx-tabs-wrapper {
+        border-bottom: 1px solid #e0e0e0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Responsive Design */
+    media only screen and (max-width: 768px) {
+        .Tab-Panel .tab-content .selector-content {
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .status-section {
+            margin-bottom: 15px;
+        }
+
+        .status-options {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .image-upload-section {
+            margin-bottom: 20px;
+        }
+        
+        .custom-drop-zone {
+            padding: 20px 15px;
+        }
+        
+        .drop-file-icon {
+            font-size: 36px;
+        }
+        
+        .additional-fields {
+            gap: 12px;
+        }
+
+        .logo-drop-zone {
+            max-width: 150px;
+            padding: 15px 10px;
+        }
+        
+        .logo-drop-zone .drop-file-icon {
+            font-size: 28px;
+        }
+        
+        .additional-right-fields {
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .dx-tabs .dx-tab {
+            padding: 10px 15px !important;
+            font-size: 13px;
+        }
+    }
+
+    media only screen and (max-width: 480px) {
+        .Tab-Panel .tab-content {
+            padding: 20px 15px;
+        }
+        
+        .descripcion-tab {
+            padding: 0 15px;
+        }
+
+        .Tab-Panel .tab-content .selector-content {
+            gap: 20px;
+        }
+
+        .dx-tabs .dx-tab {
+            padding: 8px 12px !important;
+            font-size: 12px;
+        }
+
+        .descripcion-tab textarea {
+            min-height: 250px !important;
+        }
+    }
+</style>
+
+@code {
+
+
+
+
+
+
+
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private int ActiveTabIndex = 0;
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    // definicion de data que vienen de WebAPI
+    DxGrid? MyGrid1;
+    DxGrid? MyGrid2;
+    DxGrid? MyGrid3;
+    DxGrid? MyGrid4;
+    private IEnumerable<Trhem000Dto> trhem000;
+    private IEnumerable<Trhhq000Dto> trhhq000;
+    private IEnumerable<Trhof010Dto> trhof010;
+    private IEnumerable<Trhub010Dto> trhub010;
+    private IEnumerable<Trhnc000Dto> trhnc000;
+    private IEnumerable<Trher000Dto> trher000;
+    private IEnumerable<Trhcy000Dto> trhcy000;
+    private Trhem000Dto editModel;
+    private Trhhq000Dto trhhq000Selected;
+    private Trhpv000Dto trhpv000Selected;
+    private Trhnc000Dto trhnc000Selected;
+    private Trher000Dto trher000Selected;
+    // Campos del formulario - Tab Generales
+    private string CodigoValue { get; set; } = "";
+    private string NombreEmpresaValue { get; set; } = "";
+    private string NombreComercialValue { get; set; } = "";
+    private int? SelectedGrupoCorporativo { get; set; }
+    private string AlternoValue { get; set; } = "";
+    private string ActividadIndustrialValue { get; set; } = "";
+    private string NumeroIdssValue { get; set; } = "";
+    private string PolizaAccidenteValue { get; set; } = "";
+    private string RegistroIndustrialValue { get; set; } = "";
+    private string RamaValue { get; set; } = "";
+    private string ProvinciaValue { get; set; } = "";
+    private string RncValue { get; set; } = "";
+    private decimal CapitalSuscritoValue { get; set; } = 0.00m;
+    private int CierreFiscalDia { get; set; } = 31;
+    private int CierreFiscalMes { get; set; } = 12;
+    private DateTime? AniversarioValue { get; set; } = DateTime.Now;
+    private bool ActivoOption { get; set; } = true;
+    private bool InactivoOption { get; set; } = false;
+
+    // Campos del formulario - Tab Otros datos
+    private string TelefonoValue { get; set; } = "";
+    private string FaxValue { get; set; } = "";
+    private string EmailValue { get; set; } = "";
+    private string DireccionValue { get; set; } = "";
+    private string ApartadoPostalValue { get; set; } = "";
+    private int? SelectedPais { get; set; }
+    private string TimbreCartaValue { get; set; } = "";
+    private string ImagenEscritorioValue { get; set; } = "";
+
+    // Campos del formulario - Tab Descripción
+    private string DescripcionEmpresaValue { get; set; } = "";
+
+    // File Upload - Imagen de empresa
+    private bool UploadVisible { get; set; } = false;
+
+    // File Upload - Logo
+    private bool LogoUploadVisible { get; set; } = false;
+
+    // Máscaras
+    private string TelefonoMask = "(999) 999-9999";
+
+    // Listas de datos
+    private List<OptionItem> GruposCorporativosList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Grupo Empresarial A" },
+        new OptionItem { Id = 2, Name = "Corporación Internacional B" },
+        new OptionItem { Id = 3, Name = "Holding Financiero C" },
+        new OptionItem { Id = 4, Name = "Conglomerado Industrial D" },
+        new OptionItem { Id = 5, Name = "Grupo Comercial E" }
+    };
+
+    private List<OptionItem> PaisesList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "República Dominicana" },
+        new OptionItem { Id = 2, Name = "Estados Unidos" },
+        new OptionItem { Id = 3, Name = "Colombia" },
+        new OptionItem { Id = 4, Name = "México" },
+        new OptionItem { Id = 5, Name = "España" },
+        new OptionItem { Id = 6, Name = "Panamá" },
+        new OptionItem { Id = 7, Name = "Costa Rica" },
+        new OptionItem { Id = 8, Name = "Puerto Rico" }
+    };
+    public class RadioOption
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    private List<RadioOption> EstatusOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "A", Text = "Activo" },
+        new RadioOption { Value = "I", Text = "Inactivo" }
+        // new RadioOption { Value = "O", Text = "Otro" }
+    };
+    public class OptionItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    private void OnLogoClick() => Console.WriteLine("Seleccionar logo");
+    private void OnImagenEscritorioClick() => Console.WriteLine("Seleccionar imagen de escritorio");
+
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Empresa guardada exitosamente!");
+    }
+    // File upload handlers - Imagen de empresa
+    protected void SelectedFilesChanged(IEnumerable<DevExpress.Blazor.UploadFileInfo> files)
+    {
+        UploadVisible = files.ToList().Count > 0;
+        //InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task OnFilesUploading(DevExpress.Blazor.FilesUploadingEventArgs args)
+    {
+        var file = args.Files[0];
+        using var stream = new System.IO.MemoryStream();
+        await file.OpenReadStream(file.Size).CopyToAsync(stream);
+        Console.WriteLine($"Imagen subida: {file.Name}");
+    }
+
+    // File upload handlers - Logo
+    protected void LogoSelectedFilesChanged(IEnumerable<DevExpress.Blazor.UploadFileInfo> files)
+    {
+        LogoUploadVisible = files.ToList().Count > 0;
+       // InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task OnLogoFilesUploading(DevExpress.Blazor.FilesUploadingEventArgs args)
+    {
+        var file = args.Files[0];
+        using var stream = new System.IO.MemoryStream();
+        await file.OpenReadStream(file.Size).CopyToAsync(stream);
+        Console.WriteLine($"Logo subido: {file.Name}");
+    }
+
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+
+            auth.SetToken(Token);
+           // StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        DateTime currentDateTime = DateTime.Now;
+
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+
+        var tipo = auth.tipo;
+
+        await CargarDatos();
+    }
+    private void OnRowSelectedHQ(object? item)
+    {
+        if (item is not Trhhq000Dto model)
+            return;
+
+        EjecutarMetodoHQ(model);
+    }
+
+    private async Task EjecutarMetodoHQ(Trhhq000Dto model)
+    {
+
+        Console.WriteLine("Empresa: " +model.HqDescri);
+        // Lógica que deseas ejecutar
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            // data = await api.GetFrhpu010Dtos();
+            trhem000 = (List<Trhem000Dto>)await api.GetTrhem000Dtos();
+            trhem000 = trhem000.Where(e => e.HqCodigo == model.HqCodigo).ToList();
+            
+            //await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void OnRowSelectedEM(object? item)
+    {
+        if (item is not Trhem000Dto model)
+            return;
+
+        EjecutarMetodoEM(model);
+    }
+
+    private async Task EjecutarMetodoEM(Trhem000Dto model)
+    {
+
+        Console.WriteLine("Empresa: " + model.EmDescri);
+        // Lógica que deseas ejecutar
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            // data = await api.GetFrhpu010Dtos();
+            trhof010 = (List<Trhof010Dto>)await api.ofGetByEmCodigo(model.EmCodigo,Token);
+            trhub010 = (List<Trhub010Dto>)await api.Trhub010DtoGetByEmpresa(model.EmCodigo, Token);
+
+            //await InvokeAsync(StateHasChanged);
+        }
+    }
+    private void OnRowSelectedOF(object? item)
+    {
+        if (item is not Trhof010Dto model)
+            return;
+
+        EjecutarMetodoOF(model);
+    }
+
+    private void EjecutarMetodoOF(Trhof010Dto model)
+    {
+
+        Console.WriteLine("Empresa: " + model.OfDescri);
+        // Lógica que deseas ejecutar
+    }
+    async Task CargarDatos()
+    {
+
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            // data = await api.GetFrhpu010Dtos();
+            trhem000 = (List<Trhem000Dto>)await api.GetTrhem000Dtos();
+            trhnc000 = (List<Trhnc000Dto>)await api.GetTrhnc000Dtos();
+            
+            trhhq000 = (List<Trhhq000Dto>)await api.GetTrhhq000Dtos();
+            editModel = trhem000.FirstOrDefault();
+
+            //await InvokeAsync(StateHasChanged);
+        }
+
+    }
+    protected void Agregar()
+    {
+        editModel = new Trhem000Dto();
+        editModel.EmCodigo = "01";
+
+    }
+
+    protected async Task Guarda()
+    {
+        try
+        {
+
+
+            {
+                var ret = await api.emUpdateAsync(editModel, Token);
+                alertInfo.Show("Empresa Actualizada con exito!!!", "success");
+                Console.Write("Empresa Actualizada correctamente..." );
+               ActiveTabIndex = 3; // Cambiar a la pestaña de busqueda de oficinas
+
+                await CargarDatos();
+                //StateHasChanged();
+               
+            }
+        }
+        catch (Exception ex)
+        {
+            ActiveTabIndex = 3;
+            //StateHasChanged();
+            Console.Write("Error al guardar Empresa..." + ex.Message);
+            alertInfo.Show("Error al guardar..." + ex.Message, "success");
+
+        }
+    }
+
+}

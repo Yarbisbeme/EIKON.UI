@@ -1,0 +1,267 @@
+/* FRHCL107 - Categorías Salariales */
+
+.frhcl107-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+    /* Standard Input */
+    .frhcl107-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+        .frhcl107-form .input label {
+            font-weight: 500;
+            color: #33363f;
+            font-size: 14px;
+        }
+
+    /* Código field - smaller width */
+    .frhcl107-form .codigo-field {
+        max-width: 200px;
+    }
+
+    /* Alterno field - smaller width */
+    .frhcl107-form .alterno-field {
+        max-width: 300px;
+    }
+
+    /* Dual Row (Base pago + Moneda) */
+    .frhcl107-form .dual-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        align-items: end;
+    }
+
+    /* Banda Salarial Section */
+    .frhcl107-form .banda-salarial-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+        border: 1px solid #bfbfbf;
+        border-radius: 4px;
+    }
+
+    .frhcl107-form .section-label {
+        font-weight: 600;
+        color: #33363f;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    /* Banda Grid */
+    .frhcl107-form .banda-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 10px;
+        align-items: center;
+    }
+
+    .frhcl107-form .banda-header {
+        font-weight: 600;
+        color: #33363f;
+        font-size: 13px;
+        text-align: center;
+        padding: 6px;
+        background-color: #e9ecef;
+        border-radius: 3px;
+    }
+
+    .frhcl107-form .banda-label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+        padding: 6px;
+    }
+
+    .frhcl107-form .banda-cell {
+        display: flex;
+        align-items: center;
+    }
+
+    .frhcl107-form .banda-input {
+        width: 100%;
+    }
+
+    /* Porcentajes Row */
+    .frhcl107-form .porcentajes-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        align-items: end;
+    }
+
+    .frhcl107-form .porcentaje-input {
+        width: 100%;
+    }
+
+    /* Footer Row (Creado + Vigencia + Activo) */
+    .frhcl107-form .footer-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .frhcl107-form .checkbox-container {
+        display: flex;
+        align-items: center;
+        padding-top: 20px;
+    }
+
+    /* DevExpress Component Overrides */
+    .frhcl107-form ::deep .dx-textbox-container {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhcl107-form ::deep .dx-textbox-container:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhcl107-form ::deep .dx-editor-button {
+        background-color: #f8f9fa;
+        border-left: 1px solid #bfbfbf !important;
+    }
+
+        .frhcl107-form ::deep .dx-editor-button:hover {
+            background-color: #e9ecef;
+        }
+
+    .frhcl107-form ::deep .dx-dropdowneditor-input-wrapper {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhcl107-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhcl107-form ::deep .dx-dateedit {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhcl107-form ::deep .dx-dateedit:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhcl107-form ::deep .dx-numberbox {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhcl107-form ::deep .dx-numberbox:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhcl107-form ::deep .dx-checkbox {
+        margin-bottom: 0;
+    }
+
+    .frhcl107-form ::deep .dx-checkbox-icon {
+        border: 1px solid #bfbfbf;
+        border-radius: 3px;
+    }
+
+    .frhcl107-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhcl107-form {
+        max-width: 100%;
+    }
+
+        .frhcl107-form .banda-grid {
+            grid-template-columns: 80px repeat(3, 1fr);
+            gap: 6px;
+        }
+}
+
+@media (max-width: 768px) {
+    .frhcl107-form {
+        gap: 12px;
+    }
+
+        .frhcl107-form .dual-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .frhcl107-form .porcentajes-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .frhcl107-form .footer-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .frhcl107-form .checkbox-container {
+            padding-top: 0;
+        }
+
+        .frhcl107-form .banda-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+        }
+
+        .frhcl107-form .banda-header {
+            font-size: 11px;
+            padding: 4px;
+        }
+
+        .frhcl107-form .banda-label {
+            font-size: 11px;
+            padding: 4px;
+        }
+}
+
+@media (max-width: 480px) {
+    .frhcl107-form {
+        gap: 10px;
+    }
+
+        .frhcl107-form .input label {
+            font-size: 13px;
+        }
+
+        .frhcl107-form .banda-salarial-section {
+            padding: 12px;
+        }
+
+        .frhcl107-form .codigo-field {
+            max-width: 100%;
+        }
+
+        .frhcl107-form .alterno-field {
+            max-width: 100%;
+        }
+
+        .frhcl107-form .banda-grid {
+            grid-template-columns: repeat(1, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .frhcl107-form .banda-header:first-child {
+            display: none;
+        }
+}

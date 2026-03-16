@@ -1,0 +1,114 @@
+@page "/FRHUT131"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Importar a la nómina vía script" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhut131-container">
+        <div class="frhut131-form">
+            <div class="input">
+                <label for="user">Formato</label>
+                <div class="search-field">
+                    <div style="width:15%;">
+                        <DxTextBox @bind-Text="@Formato"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+
+            <div class="input">
+                <label>Archivo</label>
+                <DxTextBox @bind-Text="@Archivo" NullText="" />
+            </div>
+
+            <div class="input">
+                <label>Nómina</label>
+                <DxComboBox Data="@NominaOptions"
+                            @bind-Value="@SelectedNomina"
+                            NullText="Seleccione..."
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+
+            <div class="input">
+                <label>Reportes</label>
+                <DxComboBox Data="@ReportesOptions"
+                            @bind-Value="@SelectedReporte"
+                            NullText="Seleccione..."
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+
+            <div class="input">
+                <label>Fecha</label>
+                <DxDateEdit @bind-Date="@Fecha"
+                            DisplayFormat="dd/MM/yyyy"
+                            NullText="Seleccione fecha..." />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    private string Formato { get; set; } = string.Empty;
+    private string Archivo { get; set; } = string.Empty;
+    private string? SelectedNomina { get; set; }
+    private string? SelectedReporte { get; set; }
+    private DateTime? Fecha { get; set; }
+
+    // Opciones para los ComboBox
+    private List<string> NominaOptions { get; set; } = new List<string>
+    {
+        "Nómina 1",
+        "Nómina 2",
+        "Nómina 3",
+        "Nómina Quincenal",
+        "Nómina Mensual"
+    };
+
+    private List<string> ReportesOptions { get; set; } = new List<string>
+    {
+        "Reporte 1",
+        "Reporte 2",
+        "Reporte 3",
+        "Reporte 4",
+        "Reporte 5"
+    };
+
+    protected override void OnInitialized()
+    {
+        // Inicializar fecha con fecha actual
+        Fecha = DateTime.Now;
+    }
+
+    private void OnSearchFormato()
+    {
+        // Implementar búsqueda de formato
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        // Implementar cierre
+    }
+}

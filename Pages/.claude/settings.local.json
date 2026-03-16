@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.devexpress.com)",
+      "WebFetch(domain:demos.devexpress.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

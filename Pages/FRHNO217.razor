@@ -1,0 +1,561 @@
+@page "/FRHNO217"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO217 - Entrada Pre-Generación" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Header con Año y Botones -->
+        <div class="header-section">
+            <div class="input-field year-field">
+                <label>Año</label>
+                <DxComboBox Data="@YearsList" 
+                           @bind-Value="@SelectedYear" 
+                           NullText="2025"
+                           TextFieldName="Name" 
+                           ValueFieldName="Id" />
+            </div>
+        </div>
+
+        <!-- Campos del Formulario -->
+        <div class="form-fields">
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Nómina</label>
+                    <DxComboBox Data="@NominasList" 
+                               @bind-Value="@SelectedNomina" 
+                               NullText="Seleccionar nómina"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Períodos</label>
+                    <DxComboBox Data="@PeriodosList" 
+                               @bind-Value="@SelectedPeriodo" 
+                               NullText="Seleccionar período"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Transacción</label>
+                    <DxTextBox @bind-Text="@TransaccionValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchTransaccionClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@EmpleadoValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchEmpleadoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Campos numéricos en 2 columnas -->
+            <div class="numeric-fields-section">
+                <div class="numeric-column">
+                    <div class="input-field">
+                        <label>Cantidad</label>
+                        <DxSpinEdit Value="@CantidadValue" 
+                                   ValueChanged="@(async (decimal value) => await OnCantidadChanged(value))"
+                                   MinValue="0m" 
+                                   MaxValue="9999.99m" 
+                                   DisplayFormat="F2" />
+                    </div>
+                    
+                    <div class="input-field">
+                        <label>Valor Unitario</label>
+                        <DxSpinEdit Value="@ValorUnitarioValue" 
+                                   ValueChanged="@(async (decimal value) => await OnValorUnitarioChanged(value))"
+                                   MinValue="0m" 
+                                   MaxValue="999999.99m" 
+                                   DisplayFormat="F2" />
+                    </div>
+                    
+                    <div class="input-field">
+                        <label>Descuento (%)</label>
+                        <DxSpinEdit Value="@DescuentoValue" 
+                                   ValueChanged="@(async (decimal value) => await OnDescuentoChanged(value))"
+                                   MinValue="0m" 
+                                   MaxValue="100m" 
+                                   DisplayFormat="F2" />
+                    </div>
+                </div>
+                
+                <div class="numeric-column">
+                    <div class="input-field">
+                        <label>Monto</label>
+                        <DxSpinEdit Value="@MontoValue" 
+                                   ValueChanged="@(async (decimal value) => await OnMontoChanged(value))"
+                                   MinValue="0m" 
+                                   MaxValue="999999.99m" 
+                                   DisplayFormat="F2" />
+                    </div>
+                    
+                    <div class="input-field">
+                        <label>Impuesto (%)</label>
+                        <DxSpinEdit Value="@ImpuestoValue" 
+                                   ValueChanged="@(async (decimal value) => await OnImpuestoChanged(value))"
+                                   MinValue="0m" 
+                                   MaxValue="100m" 
+                                   DisplayFormat="F2" />
+                    </div>
+                    
+                    <div class="input-field">
+                        <label>Total Final</label>
+                        <DxSpinEdit @bind-Value="@TotalFinalValue" 
+                                   MinValue="0m" 
+                                   MaxValue="999999.99m" 
+                                   DisplayFormat="F2"
+                                   ReadOnly="true" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row details-row">
+                <DxButton Text="Detalles" 
+                         CssClass="details-btn" 
+                         Click="@OnDetallesClick" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Header Section */
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .year-field {
+        min-width: 150px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* Form Fields */
+    .form-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .details-row {
+        justify-content: flex-end;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    /* Sección de campos numéricos */
+    .numeric-fields-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 20px;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .numeric-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Botones de acción */
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .danger-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .danger-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .primary-btn {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .primary-btn:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+    .tertiary-btn {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+    }
+
+    .tertiary-btn:hover {
+        background-color: #5a32a3;
+        border-color: #4c2a85;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    /* .details-btn { */
+    /*     background-color: transparent; */
+    /*     border: 1px solid #007bff; */
+    /*     color: #007bff; */
+    /*     padding: 8px 16px; */
+    /*     border-radius: 6px; */
+    /*     font-size: 14px; */
+    /*     font-weight: 500; */
+    /* } */
+
+    /* .details-btn:hover { */
+    /*     background-color: #007bff; */
+    /*     color: white; */
+    /* } */
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-spin-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-spin-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .header-section {
+            flex-direction: column;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .header-actions {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .year-field {
+            min-width: auto;
+        }
+
+        .numeric-fields-section {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 15px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .header-section,
+        .form-fields {
+            padding: 15px;
+        }
+
+        .header-actions {
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+        }
+
+        .details-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .numeric-fields-section {
+            padding: 12px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private int? SelectedYear { get; set; } = 1;
+    private int? SelectedNomina { get; set; }
+    private int? SelectedPeriodo { get; set; }
+    private string TransaccionValue { get; set; } = "";
+    private string EmpleadoValue { get; set; } = "";
+    
+    // Campos numéricos
+    private decimal CantidadValue { get; set; } = 0.00m;
+    private decimal MontoValue { get; set; } = 0.00m;
+    private decimal ValorUnitarioValue { get; set; } = 0.00m;
+    private decimal ImpuestoValue { get; set; } = 0.00m;
+    private decimal DescuentoValue { get; set; } = 0.00m;
+    private decimal TotalFinalValue { get; set; } = 0.00m;
+    
+    // Listas de datos
+    private List<YearItem> YearsList = new List<YearItem>
+    {
+        new YearItem { Id = 1, Name = "2025" },
+        new YearItem { Id = 2, Name = "2024" },
+        new YearItem { Id = 3, Name = "2023" },
+        new YearItem { Id = 4, Name = "2022" }
+    };
+
+    private List<NominaItem> NominasList = new List<NominaItem>
+    {
+        new NominaItem { Id = 1, Name = "NOMINA ADMINISTRATIVA" },
+        new NominaItem { Id = 2, Name = "NOMINA OPERATIVA" },
+        new NominaItem { Id = 3, Name = "NOMINA EJECUTIVA" },
+        new NominaItem { Id = 4, Name = "NOMINA ESPECIAL" },
+        new NominaItem { Id = 5, Name = "NOMINA TEMPORAL" }
+    };
+
+    private List<PeriodoItem> PeriodosList = new List<PeriodoItem>
+    {
+        new PeriodoItem { Id = 1, Name = "PERIODO 01 - ENERO" },
+        new PeriodoItem { Id = 2, Name = "PERIODO 02 - FEBRERO" },
+        new PeriodoItem { Id = 3, Name = "PERIODO 03 - MARZO" },
+        new PeriodoItem { Id = 4, Name = "PERIODO 04 - ABRIL" },
+        new PeriodoItem { Id = 5, Name = "PERIODO 05 - MAYO" },
+        new PeriodoItem { Id = 6, Name = "PERIODO 06 - JUNIO" },
+        new PeriodoItem { Id = 7, Name = "PERIODO 07 - JULIO" },
+        new PeriodoItem { Id = 8, Name = "PERIODO 08 - AGOSTO" },
+        new PeriodoItem { Id = 9, Name = "PERIODO 09 - SEPTIEMBRE" },
+        new PeriodoItem { Id = 10, Name = "PERIODO 10 - OCTUBRE" },
+        new PeriodoItem { Id = 11, Name = "PERIODO 11 - NOVIEMBRE" },
+        new PeriodoItem { Id = 12, Name = "PERIODO 12 - DICIEMBRE" }
+    };
+    
+    public class YearItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class NominaItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    public class PeriodoItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    // Métodos de eventos
+    private void OnAddClick()
+    {
+        Console.WriteLine("Agregando entrada");
+    }
+    
+    private void OnRefreshClick()
+    {
+        Console.WriteLine("Actualizando datos");
+    }
+    
+    private void OnDeleteClick()
+    {
+        Console.WriteLine("Eliminando entrada");
+    }
+    
+    private void OnPrintClick()
+    {
+        Console.WriteLine("Imprimiendo reporte");
+    }
+    
+    private void OnUploadClick()
+    {
+        Console.WriteLine("Subiendo datos");
+    }
+    
+    private void OnSettingsClick()
+    {
+        Console.WriteLine("Abriendo configuración");
+    }
+    
+    private void OnSearchTransaccionClick()
+    {
+        Console.WriteLine($"Buscando transacción: {TransaccionValue}");
+    }
+    
+    private void OnSearchEmpleadoClick()
+    {
+        Console.WriteLine($"Buscando empleado: {EmpleadoValue}");
+    }
+    
+    private void OnDetallesClick()
+    {
+        Console.WriteLine("Abriendo detalles");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Entrada Pre-Generación guardada!");
+    }
+    
+    // Métodos para manejar cambios en los campos numéricos
+    private async Task OnCantidadChanged(decimal value)
+    {
+        CantidadValue = value;
+        CalculateTotalFinal();
+    }
+    
+    private async Task OnValorUnitarioChanged(decimal value)
+    {
+        ValorUnitarioValue = value;
+        CalculateTotalFinal();
+    }
+    
+    private async Task OnDescuentoChanged(decimal value)
+    {
+        DescuentoValue = value;
+        CalculateTotalFinal();
+    }
+    
+    private async Task OnMontoChanged(decimal value)
+    {
+        MontoValue = value;
+        CalculateTotalFinal();
+    }
+    
+    private async Task OnImpuestoChanged(decimal value)
+    {
+        ImpuestoValue = value;
+        CalculateTotalFinal();
+    }
+    
+    // Método para calcular el total final automáticamente
+    private void CalculateTotalFinal()
+    {
+        // Calcular: Cantidad * Valor Unitario = Subtotal
+        var subtotal = CantidadValue * ValorUnitarioValue;
+        
+        // Aplicar descuento: Subtotal - (Subtotal * Descuento / 100)
+        var totalConDescuento = subtotal - (subtotal * DescuentoValue / 100);
+        
+        // Aplicar impuesto: TotalConDescuento + (TotalConDescuento * Impuesto / 100)
+        TotalFinalValue = totalConDescuento + (totalConDescuento * ImpuestoValue / 100);
+        
+        StateHasChanged();
+    }
+}

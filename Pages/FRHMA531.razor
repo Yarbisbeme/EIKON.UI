@@ -1,0 +1,246 @@
+@page "/FRHMA531"
+@page "/FRHMA531/{id:int}"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHMA532 - SIRH - Relación Nómina/Contabilidad" BackUrl="/dash" />
+    
+    <div class="page-header">
+
+        <div class="page-search">
+            <div class="input-search">
+                <label for="user">No. Relación</label>
+                <DxTextBox @bind-Text="@codigo"
+                           NullText="Código"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+
+        </div>
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal -->
+        <div class="main-section">
+
+            <!-- Segunda fila: Transacción -->
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Transacción</label>
+                    <DxComboBox Data="@transaccionesList"
+                               @bind-Value="@RelacionNomina.TransaccionId"
+                               TextFieldName="Descripcion"
+                               ValueFieldName="Id"
+                               NullText="Seleccionar transacción"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+            </div>
+
+            <!-- Tercera fila: Débito -->
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Débito</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <DxTextBox @bind-Text="@RelacionNomina.CuentaDebito" 
+                                  style="flex: 1;"
+                                  ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="BuscarCuentaDebito" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox @bind-Text="@RelacionNomina.DescripcionDebito" 
+                                  ReadOnly="true"
+                                  style="flex: 2;"
+                                  ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuarta fila: Crédito -->
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Crédito</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <DxTextBox @bind-Text="@RelacionNomina.CuentaCredito" 
+                                  style="flex: 1;"
+                                  ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="BuscarCuentaCredito" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox @bind-Text="@RelacionNomina.DescripcionCredito" 
+                                  ReadOnly="true"
+                                  style="flex: 2;"
+                                  ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quinta fila: Agrupación -->
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Agrupación</label>
+                    <DxComboBox Data="@agrupacionesList"
+                               @bind-Value="@RelacionNomina.AgrupacionId"
+                               TextFieldName="Descripcion"
+                               ValueFieldName="Id"
+                               NullText="Seleccionar agrupación"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private string codigo { get; set; } = "00000001";
+
+    // Toolbar options
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Data objects
+    private RelacionNominaDto RelacionNomina { get; set; } = new RelacionNominaDto();
+    
+    // Data lists
+    private List<TransaccionDto> transaccionesList { get; set; } = new List<TransaccionDto>();
+    private List<AgrupacionDto> agrupacionesList { get; set; } = new List<AgrupacionDto>();
+    private List<CentroCostoDto> centrosCostoList { get; set; } = new List<CentroCostoDto>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPlaceholderData();
+    }
+    
+    // Load placeholder data
+    private async Task LoadPlaceholderData()
+    {
+        // Simulate API delay
+        await Task.Delay(100);
+        
+        // Load transacciones
+        transaccionesList = new List<TransaccionDto>
+        {
+            new TransaccionDto { Id = 1, Descripcion = "Sueldos y Salarios" },
+            new TransaccionDto { Id = 2, Descripcion = "Descuentos de Nómina" },
+            new TransaccionDto { Id = 3, Descripcion = "Contribuciones Patronales" },
+            new TransaccionDto { Id = 4, Descripcion = "Provisiones Laborales" },
+            new TransaccionDto { Id = 5, Descripcion = "Beneficios Sociales" },
+            new TransaccionDto { Id = 6, Descripcion = "Horas Extras" },
+            new TransaccionDto { Id = 7, Descripcion = "Comisiones y Bonos" },
+            new TransaccionDto { Id = 8, Descripcion = "Vacaciones" },
+            new TransaccionDto { Id = 9, Descripcion = "Cesantía" },
+            new TransaccionDto { Id = 10, Descripcion = "Préstamos a Empleados" }
+        };
+        
+        // Load agrupaciones
+        agrupacionesList = new List<AgrupacionDto>
+        {
+            new AgrupacionDto { Id = 1, Descripcion = "Por Departamento" },
+            new AgrupacionDto { Id = 2, Descripcion = "Por Centro de Costo" },
+            new AgrupacionDto { Id = 3, Descripcion = "Por Tipo de Empleado" },
+            new AgrupacionDto { Id = 4, Descripcion = "Por Ubicación" },
+            new AgrupacionDto { Id = 5, Descripcion = "Global" },
+            new AgrupacionDto { Id = 6, Descripcion = "Por Proyecto" },
+            new AgrupacionDto { Id = 7, Descripcion = "Por Sucursal" }
+        };
+        
+        // Load centros de costo
+        centrosCostoList = new List<CentroCostoDto>
+        {
+            new CentroCostoDto { Id = 1, Descripcion = "Administración General" },
+            new CentroCostoDto { Id = 2, Descripcion = "Recursos Humanos" },
+            new CentroCostoDto { Id = 3, Descripcion = "Contabilidad y Finanzas" },
+            new CentroCostoDto { Id = 4, Descripcion = "Operaciones" },
+            new CentroCostoDto { Id = 5, Descripcion = "Tecnología" },
+            new CentroCostoDto { Id = 6, Descripcion = "Marketing y Ventas" },
+            new CentroCostoDto { Id = 7, Descripcion = "Logística" },
+            new CentroCostoDto { Id = 8, Descripcion = "Mantenimiento" }
+        };
+        
+        // Initialize main object
+        RelacionNomina = new RelacionNominaDto
+        {
+            NoRelacion = "REL001",
+            CuentaDebito = "5101001",
+            DescripcionDebito = "Sueldos y Salarios - Personal Administrativo",
+            CuentaCredito = "2101001", 
+            DescripcionCredito = "Nómina por Pagar",
+            Orden = 1,
+            EsAsientoConsolidado = true,
+            Activo = true,
+            Observaciones = "Relación para registro de nómina mensual del personal administrativo."
+        };
+        
+        StateHasChanged();
+    }
+    
+    // Search handlers
+    private async Task BuscarRelacion()
+    {
+        await JS.InvokeVoidAsync("alert", "Buscar relación - Funcionalidad pendiente");
+    }
+    
+    private async Task BuscarCuentaDebito()
+    {
+        await JS.InvokeVoidAsync("alert", "Buscar cuenta débito - Funcionalidad pendiente");
+    }
+    
+    private async Task BuscarCuentaCredito()
+    {
+        await JS.InvokeVoidAsync("alert", "Buscar cuenta crédito - Funcionalidad pendiente");
+    }
+    
+    // DTOs
+    public class RelacionNominaDto
+    {
+        public string NoRelacion { get; set; } = "";
+        public int? TransaccionId { get; set; }
+        public string CuentaDebito { get; set; } = "";
+        public string DescripcionDebito { get; set; } = "";
+        public string CuentaCredito { get; set; } = "";
+        public string DescripcionCredito { get; set; } = "";
+        public int? AgrupacionId { get; set; }
+        public int? CentroCostoId { get; set; }
+        public int Orden { get; set; }
+        public bool EsAsientoIndividual { get; set; }
+        public bool EsAsientoConsolidado { get; set; }
+        public bool Activo { get; set; }
+        public string Observaciones { get; set; } = "";
+    }
+    
+    public class TransaccionDto
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; } = "";
+    }
+    
+    public class AgrupacionDto
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; } = "";
+    }
+    
+    public class CentroCostoDto
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; } = "";
+    }
+}

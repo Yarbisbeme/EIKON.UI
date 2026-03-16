@@ -1,0 +1,136 @@
+@layout MainLayout
+@page "/FRHNO108"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Rangos ISR" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="input ano-field">
+            <label for="ano">Año</label>
+            <div class="search-field">
+                <DxTextBox @bind-Text="@RangosData.Ano"
+                           NullText="Año"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchAnoClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+        
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="rangos-form">
+        <!-- Grid de Rangos ISR -->
+        <div class="grid-container">
+            <DxGrid Data="@rangosISRData"
+                    KeyFieldName="Id"
+                    ShowPager="false"
+                    AllowAdd="true"
+                    AllowEdit="true"
+                    AllowDelete="true"
+                    EditMode="GridEditMode.EditRow"
+                    CssClass="rangos-grid">
+                <Columns>
+                    <DxGridDataColumn FieldName="AnoRef" 
+                                     Caption="Año Ref"
+                                     Width="20%">
+                        <EditSettings>
+                            <DxSpinEditSettings MinValue="1" MaxValue="100" />
+                        </EditSettings>
+                    </DxGridDataColumn>
+                    
+                    <DxGridDataColumn FieldName="LimiteSuperior" 
+                                     Caption="Límite superior"
+                                     Width="20%"
+                                     DisplayFormat="N2">
+                        <EditSettings>
+                            <DxSpinEditSettings MinValue="0" MaxValue="999999999" DisplayFormat="N2" />
+                        </EditSettings>
+                    </DxGridDataColumn>
+                    
+                    <DxGridDataColumn FieldName="LimiteInferior" 
+                                     Caption="Límite inferior"
+                                     Width="20%"
+                                     DisplayFormat="N2">
+                        <EditSettings>
+                            <DxSpinEditSettings MinValue="0" MaxValue="999999999" DisplayFormat="N2" />
+                        </EditSettings>
+                    </DxGridDataColumn>
+                    
+                    <DxGridDataColumn FieldName="Porcentaje" 
+                                     Caption="Porcentaje %"
+                                     Width="20%"
+                                     DisplayFormat="N2">
+                        <EditSettings>
+                            <DxSpinEditSettings MinValue="0" MaxValue="100" DisplayFormat="N2" />
+                        </EditSettings>
+                    </DxGridDataColumn>
+                    
+                    <DxGridDataColumn FieldName="Excedente" 
+                                     Caption="Excedente"
+                                     Width="20%"
+                                     DisplayFormat="N2">
+                        <EditSettings>
+                            <DxSpinEditSettings MinValue="0" MaxValue="999999999" DisplayFormat="N2" />
+                        </EditSettings>
+                    </DxGridDataColumn>
+                </Columns>
+            </DxGrid>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RangosDto RangosData { get; set; } = new RangosDto();
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+
+    private List<RangoISRDto> rangosISRData { get; set; } = new List<RangoISRDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPlaceholderData();
+    }
+
+    private async Task LoadPlaceholderData()
+    {
+        await Task.Delay(100);
+        
+        RangosData = new RangosDto
+        {
+            Ano = DateTime.Now.Year.ToString()
+        };
+
+        // Cargar datos de ejemplo del grid
+        rangosISRData = new List<RangoISRDto>
+        {
+            new RangoISRDto { Id = 1, AnoRef = 1, LimiteSuperior = 416220.00m, LimiteInferior = 0.00m, Porcentaje = 0.00m, Excedente = 0.00m },
+            new RangoISRDto { Id = 2, AnoRef = 2, LimiteSuperior = 624329.00m, LimiteInferior = 416220.01m, Porcentaje = 15.00m, Excedente = 31216.00m },
+            new RangoISRDto { Id = 3, AnoRef = 3, LimiteSuperior = 867123.00m, LimiteInferior = 624329.01m, Porcentaje = 20.00m, Excedente = 79776.00m },
+            new RangoISRDto { Id = 4, AnoRef = 4, LimiteSuperior = 1312084.00m, LimiteInferior = 867123.01m, Porcentaje = 25.00m, Excedente = 128535.00m },
+            new RangoISRDto { Id = 5, AnoRef = 5, LimiteSuperior = 4160000.00m, LimiteInferior = 1312084.01m, Porcentaje = 30.00m, Excedente = 239775.00m }
+        };
+    }
+
+    private void OnSearchAnoClick() { }
+    private void HandleClose() { }
+
+    public class RangosDto
+    {
+        public string Ano { get; set; } = "";
+    }
+
+    public class RangoISRDto
+    {
+        public int Id { get; set; }
+        public int AnoRef { get; set; }
+        public decimal LimiteSuperior { get; set; }
+        public decimal LimiteInferior { get; set; }
+        public decimal Porcentaje { get; set; }
+        public decimal Excedente { get; set; }
+    }
+}

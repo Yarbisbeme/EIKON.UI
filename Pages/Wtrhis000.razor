@@ -1,0 +1,301 @@
+﻿@page "/wtrhis000"
+
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+@inject NavigationManager nv;
+
+<PageTitle>Opciones Menu</PageTitle>
+<h1>Mantenimiento Trhis000...</h1>
+
+@if (data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DxGrid Data="@data" @ref="MyGrid"
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+            DataItemDeleting="OnDataItemDeleting">
+        <Columns>
+            <DxGridCommandColumn Width="60px" >
+                <HeaderTemplate>
+                    <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="text-primary" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    <a class="text-primary" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-trash"></i></a>
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Id" FieldName="IsCodigo" Width="260px"  />
+            <DxGridDataColumn Caption="Descripción" FieldName="IsDescri" Width="300px" />
+           @*  <DxGridDataColumn Caption="NzCodigo" FieldName="NzCodigo" /> *@
+           @*  <DxDataGridComboBoxColumn Field="NzCodigo"
+                                      Caption="Modulo"
+                                      Data="@modulos"
+                                      TextField="NzDescri"
+                                      ValueField="NzCodigo" itemtype="string" >
+            </DxDataGridComboBoxColumn> *@
+            <DxGridDataColumn FieldName="NzCodigo" Caption="Modulo" Width="300px">
+                <EditSettings>
+                    <DxComboBoxSettings Data="modulos"
+                                        ValueFieldName="NzCodigo"
+                                        TextFieldName="NzDescri"
+                                        FilteringMode="DataGridFilteringMode.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </EditSettings>
+            </DxGridDataColumn>
+            <DxGridDataColumn Caption="Tipo" FieldName="IsTipo" />
+            <DxGridDataColumn Caption="Formulario" FieldName="IsForm" />
+            <DxGridDataColumn FieldName="IsSueldo" Caption="Visible" />
+            <DxGridDataColumn Caption="Grupo" FieldName="MCodigo" />
+
+        </Columns>
+    </DxGrid>
+    
+}
+
+<h3 class=""></h3>
+@* <div class="row">
+    <div class="col-md-2">
+ <DxComboBox Data="@empresas"
+            TextFieldName="EmDescri"
+            ValueFieldName="EmCodigo"
+            @bind-Value="SelectedCategoryId"
+            ShowClearButton="true"
+            Placeholder="Select a empresa"
+            Width="300px">
+</DxComboBox> 
+    </div>
+    <div class="col-md-2">
+        <i class="fi fi-rr-plus"></i>Seleccionado:<b> @SelectedCategoryId</b>
+    </div>
+    <div class="col-md-1">
+        <label for="EmDesde" class="demo-text cw-320 mb-1">
+            Fecha
+        </label>
+    </div>
+    <div class="col-md-2">
+        <DxDateEdit @bind-Date="@DateTimeValue"
+                    CssClass=""
+                    InputId="EmDesde" />
+    </div>
+    <div class="col-md-3">
+        Seleccionado: <b>@DateTimeValue.ToString("dddd, dd MMM yyyy")</b>
+    </div>
+    <div class="col-md-2">
+        
+        <DxCheckBox @bind-Checked="@IsChecked">@GetText()</DxCheckBox>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+             <button class="btn btn-primary" @onclick="OpenModal">Registrar Token</button> 
+    </div>
+    <div class="col-md-10">
+         <DxPopup Visible @bind-Value="IsModalVisible" >
+          
+                <div class="modal-content">
+                    <DxTextBox Text="@Token" Placeholder="Ingrese el token" />
+                    <DxButton Text="Aceptar" OnClick="ConfirmToken" />
+                    <DxButton Text="Cancelar" OnClick="Cancel" />
+                </div>
+            </DxPopup> 
+    </div>
+</div> *@
+@code {
+    public bool IsModalVisible { get; set; }
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } ="";
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Trhis000Dto> data;
+    private List<Trhnz000Dto> modulos { get; set; } =new List<Trhnz000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Trhis000Dto SelectedItem { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+                                //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(ApiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("http://localhost:8081/api/Trhem000");
+        // data = await HttpClient.GetFromJsonAsync<List<Trhis000Dto>>(ApiBaseUrl + "Trhis000");
+        data = await api.GetTrhis000Dtos();
+        modulos = await api.GetTrhnz000Dtos();
+        //modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "Trhnz000");
+    }
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            data = await api.GetTrhis000Dtos();
+            await InvokeAsync(StateHasChanged);
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Trhis000Dto)e.DataItem).IdentityColumn;
+        await api.DeleteTrhis000Dto(codigo);
+        //await HttpClient.puDeleteAsync(ApiBaseUrl + "Trhis000/" + ((Trhis000Dto)e.DataItem).IdentityColumn);
+        data = await api.GetTrhis000Dtos();
+        //data = await HttpClient.GetFromJsonAsync<List<Trhis000Dto>>(ApiBaseUrl + "Trhis000");
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            Trhis000Dto newCategory = new Trhis000Dto();
+            SetNewValues(newCategory, (Trhis000Dto)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<DTOs.Trhis000Dto>(ApiBaseUrl + "Trhis000/", newCategory);
+            // HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhis000Dto>(ApiBaseUrl + "Trhis000/", newCategory);
+            var ret = await api.InsertTrhis000Dto(newCategory);
+            // Verifica si la solicitud fue exitosa
+            if (ret)
+            {
+                data = await api.GetTrhis000Dtos();
+            }
+            else
+            {
+               Console.WriteLine($"Error: Insertando ");
+            }
+            
+            //data = await HttpClient.GetFromJsonAsync<List<Trhis000Dto>>(ApiBaseUrl + "Trhis000");
+        }
+        else
+        {
+            var dataItem = (Trhis000Dto)e.DataItem;
+            SetEditValues(dataItem, (Trhis000Dto)e.EditModel);
+            // HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl + "Trhis000/" + dataItem.IsCodigo, dataItem);
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+            //     string responseContent = await response.Content.ReadAsStringAsync();
+            //     // Puedes deserializar el contenido si es un JSON
+            //     // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            // }
+            // else
+            // {
+            //     // La solicitud falló. Puedes manejar el error aquí.
+            //     string errorContent = await response.Content.ReadAsStringAsync();
+            //     Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            // }
+            var ret = await api.UpdateTrhis000Dto(dataItem);
+            if (ret)
+            { data = await api.GetTrhis000Dtos(); }
+            else
+            { Console.WriteLine($"Error: Actualizando"); }
+            //data = await HttpClient.GetFromJsonAsync<List<Trhis000Dto>>(ApiBaseUrl + "Trhis000");
+        }
+
+        void SetNewValues(Trhis000Dto dataItem, Trhis000Dto newValues)
+        {
+            dataItem.IsCodigo = newValues.IsCodigo;
+            dataItem.IsDescri = newValues.IsDescri;
+            dataItem.NzCodigo = newValues.NzCodigo; 
+            dataItem.MCodigo = newValues.MCodigo;
+
+            dataItem.IsGrafico = "N";
+            dataItem.IsForm = newValues.IsForm;
+            dataItem.IsSueldo = newValues.IsSueldo;
+            dataItem.IsTipo = newValues.IsTipo;
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.IsCodigo;
+            dataItem.ChangedOn = DateTime.Today.Date;
+            
+        }
+        void SetEditValues(Trhis000Dto dataItem, Trhis000Dto newValues)
+        {
+            //dataItem.IsCodigo = newValues.IsCodigo;
+            dataItem.IsDescri = newValues.IsDescri;
+            dataItem.NzCodigo = newValues.NzCodigo;
+            dataItem.MCodigo = newValues.MCodigo;
+
+            dataItem.IsGrafico = "N";
+            dataItem.IsForm = newValues.IsForm;
+            dataItem.IsSueldo = newValues.IsSueldo;
+            dataItem.IsTipo = newValues.IsTipo;
+
+            //dataItem.CreatedBy = "Eikon";
+            //dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.IsCodigo;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+    }
+
+   
+}
+
+
+

@@ -1,0 +1,407 @@
+/* FRHCA207 - Check-Out y Salida de Empleado */
+
+.frhca207-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+    padding: 0;
+}
+
+/* Top Section: Left fields + Right box */
+.frhca207-form .top-section {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Left Column */
+.frhca207-form .left-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Standard Input */
+.frhca207-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhca207-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Triple Row (Ingreso + Estatus + Check-Out) */
+.frhca207-form .triple-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+/* Dual Row (F.Aprobación + F.Registro) */
+.frhca207-form .dual-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+/* Search Field (Aprobado por - ID + Nombre) */
+.frhca207-form .search-field {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Right Section */
+.frhca207-form .right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* Estatus Lista Box */
+.frhca207-form .estatus-lista-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    height: fit-content;
+}
+
+.frhca207-form .section-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Tabs Styling */
+.frhca207-form .main-tabs {
+    width: 100%;
+}
+
+.frhca207-form .tab-content {
+    padding: 20px 0;
+    width: 100%;
+}
+
+/* Solicitud Layout (Fields + Checkboxes side by side) */
+.frhca207-form .solicitud-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    width: 100%;
+    align-items: start;
+}
+
+/* Solicitud Fields */
+.frhca207-form .solicitud-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Lista Chequeo Checkboxes */
+.frhca207-form .lista-chequeo-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+}
+
+/* Comentario Section */
+.frhca207-form .comentario-section {
+    width: 100%;
+}
+
+/* Dual-List Container */
+.frhca207-form .dual-list-container {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+}
+
+.frhca207-form .list-box {
+    height: 350px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.frhca207-form .custom-listbox {
+    height: 100%;
+}
+
+/* Navigation Buttons */
+.frhca207-form .navigation-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.frhca207-form .nav-btn {
+    width: 50px;
+    height: 40px;
+    min-width: 50px;
+}
+
+/* Reporte Section */
+.frhca207-form .reporte-section {
+    width: 100%;
+}
+
+.frhca207-form .reporte-field {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhca207-form .reporte-combo {
+    flex: 1;
+}
+
+.frhca207-form .reporte-icons {
+    display: flex;
+    gap: 8px;
+}
+
+.frhca207-form .icon-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+}
+
+/* DevExpress Component Overrides */
+.frhca207-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca207-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca207-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhca207-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhca207-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca207-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca207-form ::deep .dx-dateedit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca207-form ::deep .dx-dateedit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca207-form ::deep .dx-memo-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca207-form ::deep .dx-memo-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca207-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhca207-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhca207-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.frhca207-form ::deep .dx-radio-icon {
+    border: 1px solid #bfbfbf;
+}
+
+.frhca207-form ::deep .dx-radio-checked .dx-radio-icon {
+    border-color: #007bff;
+}
+
+.frhca207-form ::deep .dx-radio-checked .dx-radio-icon::before {
+    background-color: #007bff;
+}
+
+/* ListBox styling */
+.frhca207-form ::deep .dx-list {
+    border: none;
+}
+
+.frhca207-form ::deep .dx-list-item {
+    border-bottom: 1px solid #e9ecef;
+    padding: 10px;
+}
+
+.frhca207-form ::deep .dx-list-item:hover {
+    background-color: #f8f9fa;
+}
+
+.frhca207-form ::deep .dx-list-item-selected {
+    background-color: #e7f3ff;
+    border-left: 3px solid #007bff;
+}
+
+/* Read-only fields */
+.frhca207-form ::deep .dx-textbox[readonly] {
+    background-color: #e9ecef;
+}
+
+.frhca207-form ::deep .dx-textbox[readonly] .dx-texteditor-input {
+    background-color: #e9ecef;
+}
+
+/* Button Styling */
+.frhca207-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhca207-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhca207-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .frhca207-form .top-section {
+        grid-template-columns: 1fr 250px;
+        gap: 20px;
+    }
+
+    .frhca207-form .dual-list-container {
+        grid-template-columns: 1fr 70px 1fr;
+        gap: 12px;
+    }
+
+    .frhca207-form .list-box {
+        height: 300px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .frhca207-form .top-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhca207-form .solicitud-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhca207-form .dual-list-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhca207-form .navigation-buttons {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .frhca207-form .list-box {
+        height: 250px;
+    }
+
+    .frhca207-form .triple-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhca207-form {
+        gap: 15px;
+    }
+
+    .frhca207-form .dual-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca207-form .search-field {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca207-form .reporte-field {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .frhca207-form .reporte-icons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhca207-form {
+        gap: 12px;
+    }
+
+    .frhca207-form .input label {
+        font-size: 13px;
+    }
+
+    .frhca207-form .estatus-lista-box {
+        padding: 12px;
+    }
+
+    .frhca207-form .navigation-buttons {
+        gap: 8px;
+    }
+
+    .frhca207-form .nav-btn {
+        width: 45px;
+        height: 36px;
+        min-width: 45px;
+    }
+
+    .frhca207-form .list-box {
+        height: 200px;
+    }
+}

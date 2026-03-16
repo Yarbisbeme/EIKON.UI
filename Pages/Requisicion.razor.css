@@ -1,0 +1,60 @@
+﻿.page-info > .left,
+.page-info > .right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  flex: 1;
+}
+
+/* Tab Panel */
+.Tab-Panel .tab-content > .left,
+.Tab-Panel .tab-content > .right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+/* RRHH section */
+.RRHH-section {
+  width: 100%;
+  border: 1px solid #e5e5ea;
+  border-radius: 4px;
+  padding: 3rem 2rem;
+  position: relative;
+  display: flex;
+  gap: 20px;
+}
+
+.RRHH-section > span {
+  position: absolute;
+  top: -8px;
+  background: #fbf9f9;
+}
+
+.RRHH-section > .left,
+.RRHH-section > .right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.RRHH-section > .right .approved-quantity {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .RRHH-section span {
+    font-size: 14px;
+    flex-direction: column;
+  }
+
+  .RRHH-section {
+    flex-direction: column;
+  }
+}

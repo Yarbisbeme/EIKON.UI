@@ -1,0 +1,256 @@
+@layout MainLayout
+@page "/FRHCA103"
+@inject IJSRuntime JSRuntime
+@using DevExpress.Blazor
+
+<div class="page">
+    <Breadcrumb Title="Acción de Salida" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca103-form">
+        <!-- Top Section: Employee Data + Image Upload -->
+        <div class="top-section">
+            <div class="employee-data">
+                <!-- Empleado Row -->
+                <div class="input" style="width:30%;">
+                    <label>Empleado</label>
+                    <DxTextBox @bind-Text="@Empleado"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Nombre Empleado -->
+                <div class="input">
+                    <label>Nombre Empleado</label>
+                    <DxTextBox @bind-Text="@NombreEmpleado" ReadOnly="true" />
+                </div>
+
+                <!-- Cargo Empleado -->
+                <div class="input">
+                    <label>Cargo Empleado</label>
+                    <DxTextBox @bind-Text="@CargoEmpleado" ReadOnly="true" />
+                </div>
+
+                <!-- Dual Row: Oficina/Sucursal | Ubicación -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Oficina/Sucursal</label>
+                        <DxTextBox @bind-Text="@OficinaSucursal" ReadOnly="true" />
+                    </div>
+                    <div class="input">
+                        <label>Ubicación</label>
+                        <DxTextBox @bind-Text="@Ubicacion" ReadOnly="true" />
+                    </div>
+                </div>
+
+                <!-- Dual Row: Cédula | Sueldo -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Cédula</label>
+                        <DxTextBox @bind-Text="@Cedula" ReadOnly="true" />
+                    </div>
+                    <div class="input">
+                        <label>Sueldo</label>
+                        <DxTextBox @bind-Text="@Sueldo" ReadOnly="true" />
+                    </div>
+                </div>
+
+                <!-- Dual Row: Ingreso | Estatus -->
+                <div class="dual-row">
+                    <div class="input">
+                        <label>Ingreso</label>
+                        <DxTextBox @bind-Text="@Ingreso" ReadOnly="true" />
+                    </div>
+                    <div class="input">
+                        <label>Estatus</label>
+                        <DxTextBox @bind-Text="@Estatus" ReadOnly="true" />
+                    </div>
+                </div>
+
+                <!-- Nuevo Supervisor -->
+                <div class="input">
+                    <label>Nuevo Supervisor</label>
+                    <DxTextBox @bind-Text="@NuevoSupervisor"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchSupervisor" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Image Upload Area -->
+            <div class="image-area">
+                <div id="frhca103DropZone" class="custom-drop-zone">
+                    <span class="drop-file-icon fi fi-ss-upload mb-3"></span>
+                    <span class="drop-file-label">Drag and Drop File Here</span>
+                    <DxButton Id="frhca103SelectButton"
+                              RenderStyle="ButtonRenderStyle.Primary"
+                              Text="Select File" />
+                </div>
+                <DxFileInput ExternalSelectButtonCssSelector="#frhca103SelectButton"
+                             ExternalDropZoneCssSelector="#frhca103DropZone"
+                             MaxFileSize="15000000"
+                             FilesUploading="OnFilesUploading"
+                             SelectedFilesChanged="@SelectedFilesChanged">
+                </DxFileInput>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <!-- Main Content Section: Form Fields + Checkboxes -->
+        <div class="main-content">
+            <div class="form-fields">
+                <!-- Tipo Separación -->
+                <div class="input">
+                    <label>Tipo Separación</label>
+                    <DxComboBox Data="@TipoSeparacionOptions"
+                                @bind-Value="@TipoSeparacion"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+
+                <!-- Motivo Salida -->
+                <div class="input">
+                    <label>Motivo Salida</label>
+                    <DxComboBox Data="@MotivoSalidaOptions"
+                                @bind-Value="@MotivoSalida"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                    </DxComboBox>
+                </div>
+
+                <!-- Fecha Salida -->
+                <div class="input">
+                    <label>Fecha Salida</label>
+                    <DxDateEdit @bind-Date="@FechaSalida"
+                                CssClass="cw-320"
+                                IconCssClass="fi fi-rr-calendar"
+                                InputId="fechaSalida" />
+                </div>
+            </div>
+
+            <!-- Checkboxes Panel -->
+            <div class="checkboxes-panel">
+                <DxCheckBox @bind-Checked="@PodriaVolver">
+                    Podría volver?
+                </DxCheckBox>
+                <DxCheckBox @bind-Checked="@DejarPuestoVacante">
+                    Dejar puesto actual vacante?
+                </DxCheckBox>
+                <DxCheckBox @bind-Checked="@MostrarFoto">
+                    Mostrar foto en cambio
+                </DxCheckBox>
+                <DxCheckBox @bind-Checked="@ImprimirCambio">
+                    Imprimir cambio
+                </DxCheckBox>
+                <DxCheckBox @bind-Checked="@CartaSeguridad">
+                    Carta Seguridad
+                </DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Comentario Section -->
+        <div class="comentario-section">
+            <div class="input">
+                <label>Comentario</label>
+                <DxMemo @bind-Text="@Comentario"
+                        Rows="10"
+                        CssClass="comentario-memo" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "delete", "close" };
+
+    // Employee Data
+    private string? Empleado { get; set; }
+    private string? NombreEmpleado { get; set; }
+    private string? CargoEmpleado { get; set; }
+    private string? OficinaSucursal { get; set; }
+    private string? Ubicacion { get; set; }
+    private string? Cedula { get; set; }
+    private string? Sueldo { get; set; }
+    private string? Ingreso { get; set; }
+    private string? Estatus { get; set; }
+    private string? NuevoSupervisor { get; set; }
+
+    // Form Fields
+    private string? TipoSeparacion { get; set; }
+    private string? MotivoSalida { get; set; }
+    private DateTime? FechaSalida { get; set; } = DateTime.Now;
+
+    // Checkboxes
+    private bool PodriaVolver { get; set; } = false;
+    private bool DejarPuestoVacante { get; set; } = false;
+    private bool MostrarFoto { get; set; } = false;
+    private bool ImprimirCambio { get; set; } = false;
+    private bool CartaSeguridad { get; set; } = false;
+
+    // Comentario
+    private string? Comentario { get; set; }
+
+    // File Upload
+    bool UploadVisible { get; set; } = false;
+
+    // Options
+    private List<string> TipoSeparacionOptions = new List<string>
+    {
+        "Renuncia",
+        "Despido",
+        "Retiro",
+        "Jubilación",
+        "Fallecimiento"
+    };
+
+    private List<string> MotivoSalidaOptions = new List<string>
+    {
+        "Motivo 1",
+        "Motivo 2",
+        "Motivo 3"
+    };
+
+    // Event Handlers
+    private void OnSearchEmpleado()
+    {
+        // Implement search logic
+    }
+
+    private void OnSearchSupervisor()
+    {
+        // Implement search logic
+    }
+
+    private void OnSearchMotivo()
+    {
+        // Implement search logic
+    }
+
+    private void HandleClose()
+    {
+        // Implement close logic
+    }
+
+    protected void SelectedFilesChanged(IEnumerable<UploadFileInfo> files)
+    {
+        UploadVisible = files.ToList().Count > 0;
+        InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task OnFilesUploading(FilesUploadingEventArgs args)
+    {
+        var file = args.Files[0];
+        using var stream = new System.IO.MemoryStream();
+        await file.OpenReadStream(file.Size).CopyToAsync(stream);
+        // Process the uploaded file here
+    }
+}

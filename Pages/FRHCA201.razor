@@ -1,0 +1,792 @@
+@layout MainLayout
+@page "/FRHCA201"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Modificar Datos Empleados" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca201-form">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="numero-empleado-field">
+                <label>Número Empleado</label>
+                <DxTextBox @bind-Text="@NumeroEmpleado"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+            <div class="nombre-empleado-field">
+                <label>Nombre Empleado</label>
+                <DxTextBox @bind-Text="@NombreEmpleado" ReadOnly="true" />
+            </div>
+        </div>
+
+        <!-- Main Layout: Identificaciones + Nombres + Imagen -->
+        <div class="main-layout">
+            <!-- Identificaciones -->
+            <div class="identificaciones-section">
+                <label class="section-title">Identificaciones</label>
+                <div class="input">
+                    <label>Sexo</label>
+                    <DxComboBox Data="@SexoOptions"
+                                @bind-Value="@Sexo"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                </div>
+                <div class="input">
+                    <label>Cédula</label>
+                    <DxTextBox @bind-Text="@Cedula" />
+                </div>
+                <div class="input">
+                    <label>Cod. Alterno</label>
+                    <DxTextBox @bind-Text="@CodAlterno" />
+                </div>
+                <div class="input">
+                    <label>Otro Doc.</label>
+                    <DxTextBox @bind-Text="@OtroDoc" />
+                </div>
+            </div>
+
+            <!-- Nombres -->
+            <div class="nombres-section">
+                <label class="section-title">Nombres</label>
+                <div class="input">
+                    <label>Nombres</label>
+                    <DxTextBox @bind-Text="@Nombres" />
+                </div>
+                <div class="input">
+                    <label>Apellidos</label>
+                    <DxTextBox @bind-Text="@Apellidos" />
+                </div>
+                <div class="input">
+                    <label>Apodo</label>
+                    <DxTextBox @bind-Text="@Apodo" />
+                </div>
+                <div class="input">
+                    <label>Referencia</label>
+                    <DxTextBox @bind-Text="@Referencia">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-envelope" Click="@OnReferencia" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Imagen Area -->
+            <div class="imagen-area">
+                <div id="frhca201DropZone" class="custom-drop-zone">
+                    <span class="drop-file-icon fi fi-ss-image mb-3"></span>
+                </div>
+                <DxFileInput ExternalDropZoneCssSelector="#frhca201DropZone"
+                             MaxFileSize="15000000"
+                             FilesUploading="OnFilesUploading"
+                             SelectedFilesChanged="@SelectedFilesChanged">
+                </DxFileInput>
+                <div class="imagen-buttons">
+                    <DxButton Text="Limpiar Foto" Click="@OnLimpiarFoto" RenderStyle="ButtonRenderStyle.Secondary" />
+                    <DxButton Text="Foto ..." Click="@OnFoto" RenderStyle="ButtonRenderStyle.Secondary" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Principales -->
+        <div class="tabs-section">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" CssClass="main-tabs">
+                <!-- Tab: Básicos -->
+                <DxTabPage Text="Básicos">
+                    <div class="tab-content">
+                        <div class="basicos-content">
+                            <div class="basicos-fields">
+                                <div class="input">
+                                    <label>Lugar Nacimiento</label>
+                                    <DxTextBox @bind-Text="@LugarNacimiento">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchLugar" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                </div>
+
+                                <div class="fecha-nacimiento-row">
+                                    <div class="input">
+                                        <label>En Fecha</label>
+                                        <DxDateEdit @bind-Date="@FechaNacimiento"
+                                                    NullText="//"
+                                                    DisplayFormat="dd/MM/yyyy" />
+                                    </div>
+                                    <div class="input edad-field">
+                                        <label>Edad</label>
+                                        <DxSpinEdit @bind-Value="@Edad" ReadOnly="true" ShowSpinButtons="false" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Estado Civil</label>
+                                        <DxComboBox Data="@EstadoCivilOptions"
+                                                    @bind-Value="@EstadoCivil"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>Nacionalidad</label>
+                                    <DxComboBox Data="@NacionalidadOptions"
+                                                @bind-Value="@Nacionalidad"
+                                                NullText="Seleccione..." />
+                                </div>
+
+                                <div class="input">
+                                    <label>Rnc</label>
+                                    <DxTextBox @bind-Text="@Rnc" />
+                                </div>
+
+                                <div class="input">
+                                    <label>NSS</label>
+                                    <DxTextBox @bind-Text="@NSS" />
+                                </div>
+
+                                <div class="input">
+                                    <label>Cta c</label>
+                                    <DxTextBox @bind-Text="@CtaC" />
+                                </div>
+
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Tipo Sangre</label>
+                                        <DxComboBox Data="@TipoSangreOptions"
+                                                    @bind-Value="@TipoSangre"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                    <div class="input">
+                                        <label>Fec/Ingreso</label>
+                                        <DxDateEdit @bind-Date="@FecIngreso"
+                                                    DisplayFormat="dd/MM/yyyy">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                                            </Buttons>
+                                        </DxDateEdit>
+                                    </div>
+                                </div>
+
+                                <div class="basicos-buttons">
+                                    <DxButton Text="BASICOS" Click="@OnBasicos" RenderStyle="ButtonRenderStyle.Secondary" />
+                                    <DxButton Text="DIRECCION" Click="@OnDireccion" RenderStyle="ButtonRenderStyle.Secondary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <!-- Tab: Localizadores -->
+                <DxTabPage Text="Localizadores">
+                    <div class="tab-content">
+                        <div class="localizadores-content">
+                            <div class="input">
+                                <label>Tel. Residencia</label>
+                                <DxTextBox @bind-Text="@TelResidencia" />
+                            </div>
+
+                            <div class="input">
+                                <label>Beeper</label>
+                                <DxTextBox @bind-Text="@Beeper" />
+                            </div>
+
+                            <div class="celular-row">
+                                <div class="input">
+                                    <label>Celular</label>
+                                    <DxTextBox @bind-Text="@Celular" />
+                                </div>
+                                <div class="input ext-field">
+                                    <label>Ext.</label>
+                                    <DxSpinEdit @bind-Value="@CelularExt" ShowSpinButtons="false" />
+                                </div>
+                            </div>
+
+                            <div class="emergencia-section">
+                                <label class="section-subtitle">En Caso de Emergencia Contactar</label>
+                                <div class="input">
+                                    <label>Nombre</label>
+                                    <DxTextBox @bind-Text="@EmergenciaNombre" />
+                                </div>
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Parentesco</label>
+                                        <DxComboBox Data="@ParentescoOptions"
+                                                    @bind-Value="@EmergenciaParentesco"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                    <div class="telefono-row">
+                                        <div class="input">
+                                            <label>Teléfono</label>
+                                            <DxTextBox @bind-Text="@EmergenciaTelefono" />
+                                        </div>
+                                        <div class="input ext-field">
+                                            <label>Ext.</label>
+                                            <DxSpinEdit @bind-Value="@EmergenciaExt" ShowSpinButtons="false" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input">
+                                <label>Id Internet</label>
+                                <DxTextBox @bind-Text="@IdInternet" />
+                            </div>
+
+                            <div class="input">
+                                <label>E-Mail</label>
+                                <DxTextBox @bind-Text="@Email" />
+                            </div>
+
+                            <div class="telefono-oficina-row">
+                                <div class="input">
+                                    <label>Tel Oficina</label>
+                                    <DxTextBox @bind-Text="@TelOficina" />
+                                </div>
+                                <div class="input ext-field">
+                                    <label>Ext.</label>
+                                    <DxSpinEdit @bind-Value="@TelOficinaExt" ShowSpinButtons="false" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <!-- Tab: Licencia de Conducir -->
+                <DxTabPage Text="Licencia de Conducir">
+                    <div class="tab-content">
+                        <div class="licencia-content">
+                            <div class="licencia-fields">
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Tipo</label>
+                                        <DxComboBox Data="@TipoLicenciaOptions"
+                                                    @bind-Value="@TipoLicencia"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                    <div class="input">
+                                        <label>Expedición</label>
+                                        <div class="fecha-am-row">
+                                            <DxDateEdit @bind-Date="@LicenciaExpedicion"
+                                                        NullText="//"
+                                                        DisplayFormat="dd/MM/yyyy" />
+                                            <DxCheckBox @bind-Checked="@ExpedicionAM">AM</DxCheckBox>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Restricción</label>
+                                        <DxComboBox Data="@RestriccionOptions"
+                                                    @bind-Value="@Restriccion"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                    <div class="input">
+                                        <label>Fecha Expiración</label>
+                                        <div class="fecha-am-row">
+                                            <DxDateEdit @bind-Date="@LicenciaExpiracion"
+                                                        NullText="//"
+                                                        DisplayFormat="dd/MM/yyyy" />
+                                            <DxCheckBox @bind-Checked="@ExpiracionAM">AM</DxCheckBox>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>Número</label>
+                                    <DxTextBox @bind-Text="@LicenciaNumero" />
+                                </div>
+
+                                <div class="vehiculo-section">
+                                    <label class="section-subtitle">Vehículo Propio</label>
+                                    <div class="input">
+                                        <label>Placa</label>
+                                        <DxTextBox @bind-Text="@VehiculoPlaca" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Marca</label>
+                                        <DxComboBox Data="@MarcaVehiculoOptions"
+                                                    @bind-Value="@VehiculoMarca"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                    <div class="input">
+                                        <label>Descripción</label>
+                                        <DxTextBox @bind-Text="@VehiculoDescripcion" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <!-- Tab: Familia -->
+                <DxTabPage Text="Familia">
+                    <div class="tab-content">
+                        <div class="familia-content">
+                            <div class="familia-fields">
+                                <div class="input">
+                                    <label>Nombre</label>
+                                    <DxTextBox @bind-Text="@FamiliaNombre" />
+                                </div>
+
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Fecha Nac.</label>
+                                        <div class="fecha-edad-row">
+                                            <DxDateEdit @bind-Date="@FamiliaFechaNac"
+                                                        NullText="//"
+                                                        DisplayFormat="dd/MM/yyyy" />
+                                            <span class="edad-label">Edad</span>
+                                        </div>
+                                    </div>
+                                    <div class="input">
+                                        <label>Cédula</label>
+                                        <DxTextBox @bind-Text="@FamiliaCedula" />
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>Sexo</label>
+                                    <DxComboBox Data="@SexoOptions"
+                                                @bind-Value="@FamiliaSexo"
+                                                NullText="Seleccione..." />
+                                </div>
+
+                                <div class="input">
+                                    <label>Dirección</label>
+                                    <DxTextBox @bind-Text="@FamiliaDireccion" />
+                                </div>
+
+                                <div class="familia-detalle-row">
+                                    <div class="input">
+                                        <label>Nombre</label>
+                                        <DxTextBox @bind-Text="@FamiliaDetNombre" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Parentesco</label>
+                                        <DxComboBox Data="@ParentescoOptions"
+                                                    @bind-Value="@FamiliaParentesco"
+                                                    NullText="Seleccione..." />
+                                    </div>
+                                    <div class="input">
+                                        <label>Fecha</label>
+                                        <DxDateEdit @bind-Date="@FamiliaDetFecha"
+                                                    NullText="//"
+                                                    DisplayFormat="dd/MM/yyyy" />
+                                    </div>
+                                    <div class="input edad-small">
+                                        <label>Edad</label>
+                                        <DxSpinEdit @bind-Value="@FamiliaDetEdad" ShowSpinButtons="false" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Teléfono</label>
+                                        <DxTextBox @bind-Text="@FamiliaDetTelefono" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Dirección</label>
+                                        <DxTextBox @bind-Text="@FamiliaDetDireccion" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="familia-buttons">
+                                <DxButton Text="Vencimiento Salud" Click="@OnVencimientoSalud" RenderStyle="ButtonRenderStyle.Secondary" CssClass="familia-btn" />
+                                <DxButton Text="Beneficio" Click="@OnBeneficio" RenderStyle="ButtonRenderStyle.Secondary" CssClass="familia-btn" />
+                                <DxButton Text="Excluir de Plan" Click="@OnExcluirPlan" RenderStyle="ButtonRenderStyle.Secondary" CssClass="familia-btn" />
+                                <DxButton Text="Discapacidad" Click="@OnDiscapacidad" RenderStyle="ButtonRenderStyle.Secondary" CssClass="familia-btn" />
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <!-- Tab: Enfermedad -->
+                <DxTabPage Text="Enfermedad">
+                    <div class="tab-content">
+                        <div class="enfermedad-content">
+                            <div class="input">
+                                <label>Enfermedad</label>
+                                <DxTextBox @bind-Text="@Enfermedad" />
+                            </div>
+
+                            <div class="input">
+                                <label>Comentario</label>
+                                <DxMemo @bind-Text="@EnfermedadComentario" Rows="3" />
+                            </div>
+
+                            <div class="enfermedad-opciones">
+                                <div class="radio-group">
+                                    <label>Mortal</label>
+                                    <DxRadioGroup TData="string" TValue="string"
+                                                  @bind-Value="@Mortal"
+                                                  Orientation="Orientation.Horizontal">
+                                        <Items>
+                                            <DxRadioGroupItem Text="No" Value="@("No")" />
+                                            <DxRadioGroupItem Text="Sí" Value="@("Si")" />
+                                        </Items>
+                                    </DxRadioGroup>
+                                </div>
+                                <div class="radio-group">
+                                    <label>Contagiosa</label>
+                                    <DxRadioGroup TData="string" TValue="string"
+                                                  @bind-Value="@Contagiosa"
+                                                  Orientation="Orientation.Horizontal">
+                                        <Items>
+                                            <DxRadioGroupItem Text="No" Value="@("No")" />
+                                            <DxRadioGroupItem Text="Sí" Value="@("Si")" />
+                                        </Items>
+                                    </DxRadioGroup>
+                                </div>
+                                <div class="input conte-field">
+                                    <label>Conté</label>
+                                    <DxTextBox @bind-Text="@Conte" />
+                                </div>
+                            </div>
+
+                            <div class="enfermedad-grid">
+                                <DxGrid Data="@EnfermedadesData"
+                                        CssClass="enfermedad-data-grid"
+                                        ShowFilterRow="false"
+                                        AllowSelectRowByClick="true">
+                                    <Columns>
+                                        <DxGridDataColumn FieldName="Enfermedad" Caption="Enfermedad" Width="70%" />
+                                        <DxGridDataColumn FieldName="Fecha" Caption="Fecha" Width="30%" />
+                                    </Columns>
+                                </DxGrid>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <!-- Tab: Diversos -->
+                <DxTabPage Text="Diversos">
+                    <div class="tab-content">
+                        <div class="diversos-content">
+                            <div class="diversos-fields">
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Ingreso/Ingreso</label>
+                                        <DxDateEdit @bind-Date="@DiversosIngreso"
+                                                    NullText="//"
+                                                    DisplayFormat="dd/MM/yyyy">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                                            </Buttons>
+                                        </DxDateEdit>
+                                    </div>
+                                    <div class="input">
+                                        <label>O.Otra Paga</label>
+                                        <DxTextBox @bind-Text="@OtraPaga" />
+                                    </div>
+                                </div>
+
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Seguro Social</label>
+                                        <DxTextBox @bind-Text="@SeguroSocial" />
+                                    </div>
+                                    <div class="vencimiento-group">
+                                        <label>Vencimiento Salud</label>
+                                        <DxRadioGroup TData="string" TValue="string"
+                                                      @bind-Value="@VencimientoSaludOpc"
+                                                      Orientation="Orientation.Horizontal">
+                                            <Items>
+                                                <DxRadioGroupItem Text="Fij" Value="@("Fij")" />
+                                                <DxRadioGroupItem Text="E-mail" Value="@("Email")" />
+                                                <DxRadioGroupItem Text="Delante" Value="@("Delante")" />
+                                            </Items>
+                                        </DxRadioGroup>
+                                    </div>
+                                </div>
+
+                                <div class="dual-row">
+                                    <div class="input">
+                                        <label>Cuenta</label>
+                                        <DxTextBox @bind-Text="@DiversosCuenta" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Horario</label>
+                                        <DxTextBox @bind-Text="@Horario" />
+                                    </div>
+                                </div>
+
+                                <div class="triple-row">
+                                    <div class="input">
+                                        <label>Base pago</label>
+                                        <DxTextBox @bind-Text="@BasePago" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Región</label>
+                                        <DxTextBox @bind-Text="@Region" />
+                                    </div>
+                                    <div class="vestuario-group">
+                                        <label>Vestuario</label>
+                                        <DxRadioGroup TData="string" TValue="string"
+                                                      @bind-Value="@Vestuario"
+                                                      Orientation="Orientation.Horizontal">
+                                            <Items>
+                                                <DxRadioGroupItem Text="S" Value="@("S")" />
+                                                <DxRadioGroupItem Text="N" Value="@("N")" />
+                                            </Items>
+                                        </DxRadioGroup>
+                                    </div>
+                                </div>
+
+                                <div class="diversos-row">
+                                    <div class="input">
+                                        <label>Es servidor jugar?</label>
+                                        <DxTextBox @bind-Text="@ServidorJugar" />
+                                    </div>
+                                    <div class="tiempo-group">
+                                        <DxRadioGroup TData="string" TValue="string"
+                                                      @bind-Value="@TiempoTrabajo"
+                                                      Orientation="Orientation.Horizontal">
+                                            <Items>
+                                                <DxRadioGroupItem Text="Full Time" Value="@("FullTime")" />
+                                                <DxRadioGroupItem Text="Part Time" Value="@("PartTime")" />
+                                            </Items>
+                                        </DxRadioGroup>
+                                    </div>
+                                    <div class="input">
+                                        <label>Oficio</label>
+                                        <DxTextBox @bind-Text="@Oficio" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Medio pago</label>
+                                        <DxTextBox @bind-Text="@MedioPago" />
+                                    </div>
+                                </div>
+
+                                <div class="diversos-row-bottom">
+                                    <div class="input">
+                                        <label>Lugar</label>
+                                        <DxTextBox @bind-Text="@DiversosLugar" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Naturaleza</label>
+                                        <DxTextBox @bind-Text="@Naturaleza" />
+                                    </div>
+                                    <div class="normal-group">
+                                        <label>Normal</label>
+                                        <DxRadioGroup TData="string" TValue="string"
+                                                      @bind-Value="@Normal"
+                                                      Orientation="Orientation.Horizontal">
+                                            <Items>
+                                                <DxRadioGroupItem Text="Ambas" Value="@("Ambas")" />
+                                                <DxRadioGroupItem Text="Comb" Value="@("Comb")" />
+                                            </Items>
+                                        </DxRadioGroup>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+
+                <!-- Tab: Comentarios -->
+                <DxTabPage Text="Comentarios">
+                    <div class="tab-content">
+                        <div class="comentarios-content">
+                            <DxTabs @bind-ActiveTabIndex="@ComentariosTabIndex" CssClass="comentarios-tabs">
+                                <DxTabPage Text="General">
+                                    <div class="input">
+                                        <DxMemo @bind-Text="@ComentarioGeneral" Rows="12" />
+                                    </div>
+                                </DxTabPage>
+                                <DxTabPage Text="Organización">
+                                    <div class="input">
+                                        <DxMemo @bind-Text="@ComentarioOrganizacion" Rows="12" />
+                                    </div>
+                                </DxTabPage>
+                                <DxTabPage Text="Referencias">
+                                    <div class="input">
+                                        <DxMemo @bind-Text="@ComentarioReferencias" Rows="12" />
+                                    </div>
+                                </DxTabPage>
+                                <DxTabPage Text="Conocidos">
+                                    <div class="input">
+                                        <DxMemo @bind-Text="@ComentarioConocidos" Rows="12" />
+                                    </div>
+                                </DxTabPage>
+                                <DxTabPage Text="Familiares">
+                                    <div class="input">
+                                        <DxMemo @bind-Text="@ComentarioFamiliares" Rows="12" />
+                                    </div>
+                                </DxTabPage>
+                                <DxTabPage Text="Perfil">
+                                    <div class="input">
+                                        <DxMemo @bind-Text="@ComentarioPerfil" Rows="12" />
+                                    </div>
+                                </DxTabPage>
+                            </DxTabs>
+                        </div>
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Header
+    private string? NumeroEmpleado { get; set; }
+    private string? NombreEmpleado { get; set; }
+
+    // Identificaciones
+    private string? Sexo { get; set; }
+    private string? Cedula { get; set; }
+    private string? CodAlterno { get; set; }
+    private string? OtroDoc { get; set; }
+
+    // Nombres
+    private string? Nombres { get; set; }
+    private string? Apellidos { get; set; }
+    private string? Apodo { get; set; }
+    private string? Referencia { get; set; }
+
+    // Básicos
+    private string? LugarNacimiento { get; set; }
+    private DateTime? FechaNacimiento { get; set; }
+    private int Edad { get; set; }
+    private string? EstadoCivil { get; set; }
+    private string? Nacionalidad { get; set; }
+    private string? Rnc { get; set; }
+    private string? NSS { get; set; }
+    private string? CtaC { get; set; }
+    private string? TipoSangre { get; set; }
+    private DateTime? FecIngreso { get; set; }
+
+    // Localizadores
+    private string? TelResidencia { get; set; }
+    private string? Beeper { get; set; }
+    private string? Celular { get; set; }
+    private int? CelularExt { get; set; }
+    private string? EmergenciaNombre { get; set; }
+    private string? EmergenciaParentesco { get; set; }
+    private string? EmergenciaTelefono { get; set; }
+    private int? EmergenciaExt { get; set; }
+    private string? IdInternet { get; set; }
+    private string? Email { get; set; }
+    private string? TelOficina { get; set; }
+    private int? TelOficinaExt { get; set; }
+
+    // Licencia de Conducir
+    private string? TipoLicencia { get; set; }
+    private string? Restriccion { get; set; }
+    private string? LicenciaNumero { get; set; }
+    private DateTime? LicenciaExpedicion { get; set; }
+    private bool ExpedicionAM { get; set; }
+    private DateTime? LicenciaExpiracion { get; set; }
+    private bool ExpiracionAM { get; set; }
+    private string? VehiculoPlaca { get; set; }
+    private string? VehiculoMarca { get; set; }
+    private string? VehiculoDescripcion { get; set; }
+
+    // Familia
+    private string? FamiliaNombre { get; set; }
+    private DateTime? FamiliaFechaNac { get; set; }
+    private string? FamiliaCedula { get; set; }
+    private string? FamiliaSexo { get; set; }
+    private string? FamiliaDireccion { get; set; }
+    private string? FamiliaDetNombre { get; set; }
+    private string? FamiliaParentesco { get; set; }
+    private DateTime? FamiliaDetFecha { get; set; }
+    private int? FamiliaDetEdad { get; set; }
+    private string? FamiliaDetTelefono { get; set; }
+    private string? FamiliaDetDireccion { get; set; }
+
+    // Enfermedad
+    private string? Enfermedad { get; set; }
+    private string? EnfermedadComentario { get; set; }
+    private string? Mortal { get; set; } = "No";
+    private string? Contagiosa { get; set; } = "No";
+    private string? Conte { get; set; }
+    private List<EnfermedadItem> EnfermedadesData { get; set; } = new();
+
+    // Diversos
+    private DateTime? DiversosIngreso { get; set; }
+    private string? OtraPaga { get; set; }
+    private string? SeguroSocial { get; set; }
+    private string? VencimientoSaludOpc { get; set; } = "Fij";
+    private string? DiversosCuenta { get; set; }
+    private string? Horario { get; set; }
+    private string? BasePago { get; set; }
+    private string? Region { get; set; }
+    private string? Vestuario { get; set; } = "N";
+    private string? ServidorJugar { get; set; }
+    private string? TiempoTrabajo { get; set; } = "FullTime";
+    private string? Oficio { get; set; }
+    private string? MedioPago { get; set; }
+    private string? DiversosLugar { get; set; }
+    private string? Naturaleza { get; set; }
+    private string? Normal { get; set; } = "Ambas";
+
+    // Comentarios
+    private string? ComentarioGeneral { get; set; }
+    private string? ComentarioOrganizacion { get; set; }
+    private string? ComentarioReferencias { get; set; }
+    private string? ComentarioConocidos { get; set; }
+    private string? ComentarioFamiliares { get; set; }
+    private string? ComentarioPerfil { get; set; }
+
+    // Tab indexes
+    private int ActiveTabIndex { get; set; } = 0;
+    private int ComentariosTabIndex { get; set; } = 0;
+
+    // File upload
+    bool UploadVisible { get; set; } = false;
+
+    // Options
+    private List<string> SexoOptions = new() { "Masculino", "Femenino" };
+    private List<string> EstadoCivilOptions = new() { "Soltero(a)", "Casado(a)", "Divorciado(a)", "Viudo(a)", "Unión Libre" };
+    private List<string> NacionalidadOptions = new() { "Dominicana", "Haitiana", "Venezolana", "Estadounidense", "Otra" };
+    private List<string> TipoSangreOptions = new() { "O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-" };
+    private List<string> ParentescoOptions = new() { "Padre", "Madre", "Hijo(a)", "Hermano(a)", "Cónyuge", "Otro" };
+    private List<string> TipoLicenciaOptions = new() { "Tipo 1", "Tipo 2", "Tipo 3", "Tipo 4" };
+    private List<string> RestriccionOptions = new() { "Ninguna", "Lentes", "Otra" };
+    private List<string> MarcaVehiculoOptions = new() { "Toyota", "Honda", "Nissan", "Hyundai", "Ford", "Otra" };
+
+    // Event handlers
+    private void OnSearchEmpleado() { }
+    private void OnReferencia() { }
+    private void OnSearchLugar() { }
+    private void OnBasicos() { }
+    private void OnDireccion() { }
+    private void OnVencimientoSalud() { }
+    private void OnBeneficio() { }
+    private void OnExcluirPlan() { }
+    private void OnDiscapacidad() { }
+    private void OnLimpiarFoto() { }
+    private void OnFoto() { }
+    private void HandleSave() { }
+    private void HandleClose() { }
+
+    protected void SelectedFilesChanged(IEnumerable<UploadFileInfo> files)
+    {
+        UploadVisible = files.ToList().Count > 0;
+        InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task OnFilesUploading(FilesUploadingEventArgs args)
+    {
+        var file = args.Files[0];
+        using var stream = new System.IO.MemoryStream();
+        await file.OpenReadStream(file.Size).CopyToAsync(stream);
+    }
+
+    public class EnfermedadItem
+    {
+        public string? Enfermedad { get; set; }
+        public string? Fecha { get; set; }
+    }
+}

@@ -1,0 +1,179 @@
+@page "/FRHNO214"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO214 - Cierre Anual" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Campos Principales del Formulario -->
+        <div class="main-section">
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Nómina a cerrar</label>
+                    <DxComboBox Data="@NominasList" 
+                               @bind-Value="@SelectedNomina" 
+                               NullText="Seleccionar nómina"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+                <div class="input-field">
+                    <label>Año Fiscal a Cerrar</label>
+                    <DxSpinEdit @bind-Value="@AnoFiscalValue" 
+                               MinValue="2000" 
+                               MaxValue="2099" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Último Estatus</label>
+                    <DxTextBox @bind-Text="@UltimoEstatusValue" />
+                </div>
+                <div class="input-field">
+                    <label>Último año Fiscal cerrado</label>
+                    <DxSpinEdit @bind-Value="@UltimoAnoFiscalValue" 
+                               MinValue="2000" 
+                               MaxValue="2099" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Fecha del último cierre</label>
+                    <DxDateEdit @bind-Date="@FechaUltimoCierre" 
+                               NullText="dd/mm/yyyy" />
+                </div>
+                <div class="input-field">
+                    <label>Responsable del último cierre</label>
+                    <DxTextBox @bind-Text="@ResponsableUltimoCierreValue" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Sección principal */
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-spin-edit,
+    .dx-date-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-spin-edit-container,
+    .dx-date-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within,
+    .dx-date-edit-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .main-section {
+            padding: 15px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .main-section {
+            padding: 15px;
+            gap: 15px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private int? SelectedNomina { get; set; }
+    private int AnoFiscalValue { get; set; } = DateTime.Now.Year;
+    private string UltimoEstatusValue { get; set; } = "";
+    private int UltimoAnoFiscalValue { get; set; } = DateTime.Now.Year - 1;
+    private DateTime? FechaUltimoCierre { get; set; }
+    private string ResponsableUltimoCierreValue { get; set; } = "";
+    
+    // Listas de datos
+    private List<NominaItem> NominasList = new List<NominaItem>
+    {
+        new NominaItem { Id = 1, Name = "NOMINA ADMINISTRATIVA" },
+        new NominaItem { Id = 2, Name = "NOMINA OPERATIVA" },
+        new NominaItem { Id = 3, Name = "NOMINA EJECUTIVA" },
+        new NominaItem { Id = 4, Name = "NOMINA ESPECIAL" },
+        new NominaItem { Id = 5, Name = "NOMINA TEMPORAL" }
+    };
+    
+    public class NominaItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Cierre Anual guardado!");
+    }
+}

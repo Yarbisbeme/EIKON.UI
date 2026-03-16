@@ -1,0 +1,137 @@
+@page "/FRHUT140"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Importar Datos Varios" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhut140-container">
+        <div class="frhut140-form">
+
+            <div class="input">
+                <label for="user">Formato</label>
+                <div class="search-field">
+                    <div style="width:15%;">
+                    <DxTextBox @bind-Text="@Formato"
+                               NullText="ID requisición"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                          />
+                        </Buttons>
+                    </DxTextBox>
+                    </div>
+                    <DxTextBox NullText="ID requisicion" />
+                </div>
+            </div>
+
+            <div class="input ejemplo-area">
+                <label>Ejemplo</label>
+                <DxMemo @bind-Text="@Ejemplo"
+                        Rows="6"
+                        NullText=""
+                        CssClass="ejemplo-memo" />
+            </div>
+
+            <div class="input">
+                <label>Archivo</label>
+                <div class="file-upload-container">
+                    <DxTextBox @bind-Text="@SelectedFileName"
+                               NullText=""
+                               ReadOnly="true"
+                               CssClass="file-path-input" />
+                    <DxButton Text="Subir"
+                              Click="@TriggerFileInput" />
+                    @* <InputFile @ref="fileInputRef" *@
+                    @*            OnChange="@OnFileSelected" *@
+                    @*            class="hidden-file-input" *@
+                    @*            accept="*.*" /> *@
+                </div>
+            </div>
+
+            <div class="select">
+                <label>Reportes</label>
+                <DxComboBox Data="@ReportesOptions"
+                            @bind-Value="@SelectedReporte"
+                            NullText="Seleccione..."
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private InputFile? fileInputRef;
+
+    private string Formato { get; set; } = string.Empty;
+    private string Ejemplo { get; set; } = string.Empty;
+    private string SelectedFileName { get; set; } = string.Empty;
+    private IBrowserFile? SelectedFile { get; set; }
+    private string? SelectedReporte { get; set; }
+
+    // Opciones para el ComboBox de Reportes
+    private List<string> ReportesOptions { get; set; } = new List<string>
+    {
+        "Reporte 1",
+        "Reporte 2",
+        "Reporte 3",
+        "Reporte 4",
+        "Reporte 5"
+    };
+
+    private async Task TriggerFileInput()
+    {
+        // Trigger the hidden file input click using JavaScript
+        await JSRuntime.InvokeVoidAsync("eval", "document.querySelector('.hidden-file-input input').click()");
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        SelectedFile = e.File;
+        SelectedFileName = e.File.Name;
+
+        // Opcional: leer el contenido del archivo
+        // var stream = SelectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB max
+        // using var memoryStream = new MemoryStream();
+        // await stream.CopyToAsync(memoryStream);
+        // var fileBytes = memoryStream.ToArray();
+    }
+
+    private void OnSearchFormato()
+    {
+        // Implementar búsqueda de formato
+    }
+
+    private async Task HandleSave()
+    {
+        // Implementar guardado
+        // Aquí puedes procesar el archivo SelectedFile si fue cargado
+        if (SelectedFile != null)
+        {
+            // Procesar el archivo
+            var stream = SelectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB max
+            // Guardar o procesar el archivo según necesites
+        }
+    }
+
+    private void HandleClose()
+    {
+        // Implementar cierre
+    }
+}

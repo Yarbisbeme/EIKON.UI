@@ -1,0 +1,214 @@
+@layout MainLayout
+@page "/FRHCO103"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHCO103 - Planificar y fraccionar Vacaciones" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhco103-form">
+
+        <!-- Top Row: Número + Checkboxes -->
+        <div class="top-row">
+            <div class="input numero-field">
+                <label>Número</label>
+                <DxTextBox @bind-Text="@Numero">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNumero" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+            <div class="checkboxes-group">
+                <DxCheckBox @bind-Checked="@TotalAcumulado">Total Acumulado</DxCheckBox>
+                <DxCheckBox @bind-Checked="@SoloAnioActual">Solo Año Actual</DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Empleado -->
+        <div class="input">
+            <label>Empleado</label>
+            <DxTextBox @bind-Text="@Empleado" NullText="Empleado" />
+        </div>
+
+        <!-- F. Ingreso + Actual -->
+        <div class="dual-input-row">
+            <div class="input">
+                <label>F. Ingreso</label>
+                <DxDateEdit @bind-Date="@FechaIngreso" DisplayFormat="dd/MM/yyyy" NullText="dd/mm/yyyy" />
+            </div>
+            <div class="input">
+                <label>Actual</label>
+                <DxSpinEdit @bind-Value="@Actual" MinValue="0" DisplayFormat="N2" NullText="0.00" />
+            </div>
+        </div>
+
+        <!-- Ant. Acum + Antigüedad -->
+        <div class="dual-input-row">
+            <div class="input">
+                <label>Ant. Acum</label>
+                <DxTextBox @bind-Text="@AntAcum" NullText="Ant. Acum" />
+            </div>
+            <div class="input">
+                <label>Antigüedad</label>
+                <DxTextBox @bind-Text="@Antiguedad" NullText="Antigüedad" />
+            </div>
+        </div>
+
+        <!-- Triple Row: Pendientes + Tomadas + Total -->
+        <div class="triple-row">
+            <div class="input">
+                <label>Pendientes Calculadas</label>
+                <DxSpinEdit @bind-Value="@PendientesCalculadas" MinValue="0" DisplayFormat="N2" NullText="0.00" />
+            </div>
+            <div class="input">
+                <label>Tomadas</label>
+                <DxSpinEdit @bind-Value="@Tomadas" MinValue="0" DisplayFormat="N2" NullText="0.00" />
+            </div>
+            <div class="input">
+                <label>Total</label>
+                <DxSpinEdit @bind-Value="@Total" MinValue="0" DisplayFormat="N2" NullText="0.00" />
+            </div>
+        </div>
+
+        <!-- Comentario -->
+        <div class="input">
+            <label>Comentario</label>
+            <DxMemo @bind-Text="@Comentario" Rows="4" NullText="Comentario" CssClass="comentario-memo" />
+        </div>
+
+        <!-- Histórico Section -->
+        <div class="historico-section">
+            <label class="section-label">Histórico</label>
+            <!-- Histórico Fields Row -->
+            <div class="historico-fields">
+                <div class="historico-group">
+                    <label>Inicio</label>
+                    <div class="date-group">
+                        <DxDateEdit @bind-Date="@InicioFecha" DisplayFormat="dd/MM/yyyy" NullText="dd/mm/yyyy" />
+                        <DxTextBox @bind-Text="@InicioDias" NullText="Días" CssClass="dias-input" />
+                    </div>
+                </div>
+                <div class="historico-group">
+                    <label>Fin</label>
+                    <DxDateEdit @bind-Date="@FinFecha" DisplayFormat="dd/MM/yyyy" NullText="dd/mm/yyyy" />
+                </div>
+                <div class="historico-group">
+                    <label>Aplica</label>
+                    <DxDateEdit @bind-Date="@AplicaFecha" DisplayFormat="dd/MM/yyyy" NullText="dd/mm/yyyy" />
+                </div>
+                <div class="historico-group">
+                    <label>Puente</label>
+                    <DxDateEdit @bind-Date="@PuenteFecha" DisplayFormat="dd/MM/yyyy" NullText="dd/mm/yyyy" />
+                </div>
+                <div class="historico-group">
+                    <label>Tipo</label>
+                    <DxComboBox Data="@Tipos" @bind-Value="@TipoSeleccionado" NullText="Tipo" />
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <DxGrid Data="@Vacaciones" CssClass="vacaciones-grid" PageSize="10">
+                <Columns>
+                    <DxGridDataColumn FieldName="Inicio" Caption="Inicio" Width="15%" />
+                    <DxGridDataColumn FieldName="Fin" Caption="Fin" Width="15%" />
+                    <DxGridDataColumn FieldName="Tipo" Caption="Tipo" Width="40%" />
+                    <DxGridDataColumn FieldName="Dias" Caption="Días" Width="15%" />
+                    <DxGridDataColumn FieldName="AnoRef" Caption="Ano_Ref" Width="15%" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+        <!-- Agrupar Checkbox -->
+        <div class="agrupar-checkbox">
+            <DxCheckBox @bind-Checked="@Agrupar">Agrupar</DxCheckBox>
+        </div>
+
+        <!-- Reporte Section -->
+        <div class="reporte-section">
+            <div class="reporte-row">
+                <div class="input reporte-dropdown">
+                    <label>Reporte</label>
+                    <DxComboBox Data="@Reportes" @bind-Value="@ReporteSeleccionado" NullText="Seleccione reporte" />
+                </div>
+                <div class="reporte-checkboxes">
+                    <DxCheckBox @bind-Checked="@EnviarEmpleado">Enviar a Empleado</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ImprimirActivas">Imprimir solo las activas</DxCheckBox>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Top fields
+    private string Numero { get; set; } = string.Empty;
+    private bool TotalAcumulado { get; set; } = false;
+    private bool SoloAnioActual { get; set; } = false;
+
+    // Main fields
+    private string Empleado { get; set; } = string.Empty;
+    private DateTime? FechaIngreso { get; set; }
+    private decimal Actual { get; set; } = 0.00m;
+    private string AntAcum { get; set; } = string.Empty;
+    private string Antiguedad { get; set; } = string.Empty;
+    private decimal PendientesCalculadas { get; set; } = 0.00m;
+    private decimal Tomadas { get; set; } = 0.00m;
+    private decimal Total { get; set; } = 0.00m;
+    private string Comentario { get; set; } = string.Empty;
+
+    // Histórico fields
+    private string InicioDias { get; set; } = string.Empty;
+    private DateTime? InicioFecha { get; set; }
+    private DateTime? FinFecha { get; set; }
+    private DateTime? AplicaFecha { get; set; }
+    private DateTime? PuenteFecha { get; set; }
+    private string TipoSeleccionado { get; set; } = string.Empty;
+
+    // Bottom fields
+    private bool Agrupar { get; set; } = false;
+    private string ReporteSeleccionado { get; set; } = string.Empty;
+    private bool EnviarEmpleado { get; set; } = false;
+    private bool ImprimirActivas { get; set; } = false;
+
+    // Dropdown data
+    private List<string> Tipos = new List<string> { "Vacaciones", "Permiso", "Incapacidad" };
+    private List<string> Reportes = new List<string> { "Reporte General", "Reporte Detallado", "Reporte Resumido" };
+
+    // Grid data
+    private List<VacacionHistorico> Vacaciones = new List<VacacionHistorico>
+    {
+        new VacacionHistorico { Inicio = "01/01/2024", Fin = "15/01/2024", Tipo = "Vacaciones", Dias = "15", AnoRef = "2024" },
+        new VacacionHistorico { Inicio = "01/06/2024", Fin = "10/06/2024", Tipo = "Vacaciones", Dias = "10", AnoRef = "2024" }
+    };
+
+    private void OnSearchNumero() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+
+    public class VacacionHistorico
+    {
+        public string Inicio { get; set; } = string.Empty;
+        public string Fin { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+        public string Dias { get; set; } = string.Empty;
+        public string AnoRef { get; set; } = string.Empty;
+    }
+}

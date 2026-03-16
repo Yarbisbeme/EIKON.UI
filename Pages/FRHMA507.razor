@@ -1,0 +1,103 @@
+@layout MainLayout
+@page "/FRHMA507"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA507 - Firmas de Documentos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma507-form">
+
+        <!-- Horizontal Tabs -->
+        <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" CssClass="horizontal-tabs">
+            <DxTabPage Text="Vacacion" />
+            <DxTabPage Text="Contrato" />
+            <DxTabPage Text="Salida" />
+            <DxTabPage Text="Cambio" />
+            <DxTabPage Text="Evaluacion" />
+            <DxTabPage Text="Pre-Cont" />
+            <DxTabPage Text="Historico" />
+            <DxTabPage Text="Beneficio" />
+            <DxTabPage Text="Pergamina" />
+            <DxTabPage Text="Nómina" />
+        </DxTabs>
+
+        <!-- Signatures Section -->
+        <div class="signatures-container">
+            <!-- First Row of Signatures -->
+            <div class="signatures-row">
+                <div class="signature-box">
+                    <div class="signature-area"></div>
+                    <div class="signature-label">Gerente de Area</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-area"></div>
+                    <div class="signature-label">Jefe Inmediato</div>
+                </div>
+            </div>
+
+            <!-- Second Row of Signatures -->
+            <div class="signatures-row">
+                <div class="signature-box">
+                    <div class="signature-area"></div>
+                    <div class="signature-label">Gerente General</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-area"></div>
+                    <div class="signature-label">Jefe Bienestar Social</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Fields -->
+        <div class="input">
+            <label>Nombre</label>
+            <DxTextBox @bind-Text="@Nombre" NullText="Nombre" />
+        </div>
+
+        <div class="bottom-row">
+            <div class="input">
+                <label>Cargo</label>
+                <DxTextBox @bind-Text="@Cargo" NullText="Cargo" />
+            </div>
+            <div class="firmas-button-container">
+                <DxButton Text="Firmas Pre-impresas" Click="OnFirmasPreimpresas"></DxButton>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    private int ActiveTabIndex { get; set; } = 0;
+    private string Nombre { get; set; } = string.Empty;
+    private string Cargo { get; set; } = string.Empty;
+
+    private void OnFirmasPreimpresas()
+    {
+        // Implementar funcionalidad de firmas pre-impresas
+    }
+
+    private void HandleSave() { }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

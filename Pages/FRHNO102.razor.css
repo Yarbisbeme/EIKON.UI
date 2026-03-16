@@ -1,0 +1,435 @@
+/* FRHNO102 - Tipos de Nóminas */
+
+.frhno102-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Main Two-Column Layout */
+.frhno102-form .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 100%;
+}
+
+/* ===== LEFT COLUMN ===== */
+.frhno102-form .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Standard Input Field */
+.frhno102-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno102-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Código Field - Small Width */
+.frhno102-form .codigo-field {
+    max-width: 200px;
+}
+
+/* Static Field (for Períodos and Días) */
+.frhno102-form .static-field {
+    height: 36px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #e9ecef;
+}
+
+.payment-form {
+    display: flex;
+    justify-content: space-between;
+    align-items:flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+/* Radio Group Section */
+.frhno102-form .radio-group-section {
+    width:fit-content !important;
+    margin-top: 5px;
+}
+
+/* Checkbox Section */
+.frhno102-form .checkbox-section {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+/* Bottom Buttons (Ver Estatus, Transacciones) */
+.frhno102-form .bottom-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.frhno102-form .link-button {
+    padding: 0;
+    font-weight: 500;
+}
+
+/* ===== RIGHT COLUMN ===== */
+.frhno102-form .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Alterno + Estatus Row */
+.frhno102-form .alterno-estatus-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: end;
+}
+
+.frhno102-form .estatus-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhno102-form .estatus-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Complex Section: Cierre + Autorización + Sueldos */
+.frhno102-form .complex-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.frhno102-form .section-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhno102-form .group-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.frhno102-form .checkboxes-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Sueldos Section - Special Layout */
+.frhno102-form .sueldos-section {
+    padding-left: 15px;
+}
+
+.frhno102-form .sueldos-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhno102-form .sueldo-label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 13px;
+}
+
+.frhno102-form .sueldos-spin {
+    max-width: 120px;
+}
+
+/* ===== TRANSACCIONES BÁSICAS SECTION ===== */
+.frhno102-form .transacciones-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.frhno102-form .transacciones-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #bfbfbf;
+}
+
+.frhno102-form .section-title {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 15px;
+}
+
+.frhno102-form .email-button {
+    min-width: 40px;
+    min-height: 36px;
+}
+
+/* Transacciones Grid */
+.frhno102-form .transacciones-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.frhno102-form .trans-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 12px;
+    align-items: center;
+}
+
+.frhno102-form .trans-row label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Trans Row with Dots Indicator */
+.frhno102-form .trans-with-dots {
+    grid-template-columns: 140px 1fr auto;
+    gap: 10px;
+}
+
+.frhno102-form .dots-indicator {
+    font-weight: 600;
+    font-size: 16px;
+    color: #33363f;
+    padding-left: 5px;
+}
+
+/* ===== DevExpress Component Overrides ===== */
+.frhno102-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno102-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno102-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno102-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno102-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno102-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Editor Buttons */
+.frhno102-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhno102-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Checkboxes */
+.frhno102-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhno102-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhno102-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Radio Buttons */
+.frhno102-form ::deep .dx-radio-icon {
+    border: 1px solid #bfbfbf;
+}
+
+.frhno102-form ::deep .dx-radio-checked .dx-radio-icon {
+    border-color: #007bff;
+}
+
+.frhno102-form ::deep .dx-radio-checked .dx-radio-icon::before {
+    background-color: #007bff;
+}
+
+.frhno102-form ::deep .dx-radiogroup {
+    gap: 8px;
+}
+
+/* Button Styling */
+.frhno102-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhno102-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhno102-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno102-form ::deep .dx-button-link {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.frhno102-form ::deep .dx-button-link:hover {
+    background-color: transparent;
+    color: #0056b3;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1200px) {
+    .frhno102-form .main-layout {
+        gap: 25px;
+    }
+
+    .frhno102-form .complex-section {
+        gap: 15px;
+        padding: 12px;
+    }
+
+    .frhno102-form .trans-row {
+        grid-template-columns: 120px 1fr;
+    }
+
+    .frhno102-form .trans-with-dots {
+        grid-template-columns: 120px 1fr auto;
+    }
+}
+
+@media (max-width: 1024px) {
+    .frhno102-form .main-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .frhno102-form .alterno-estatus-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno102-form .complex-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhno102-form .sueldos-section {
+        border-left: none;
+        border-top: 1px solid #bfbfbf;
+        padding-left: 0;
+        padding-top: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno102-form {
+        gap: 15px;
+    }
+
+    .frhno102-form .left-column,
+    .frhno102-form .right-column {
+        gap: 12px;
+    }
+
+    .frhno102-form .codigo-field {
+        max-width: 100%;
+    }
+
+    .frhno102-form .bottom-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .frhno102-form .trans-row {
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+    }
+
+    .frhno102-form .trans-with-dots {
+        grid-template-columns: 100px 1fr auto;
+    }
+
+    .frhno102-form .transacciones-section {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhno102-form {
+        gap: 12px;
+    }
+
+    .frhno102-form .input label,
+    .frhno102-form .group-label,
+    .frhno102-form .section-title {
+        font-size: 13px;
+    }
+
+    .frhno102-form .complex-section {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .frhno102-form .trans-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .frhno102-form .trans-with-dots {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno102-form .dots-indicator {
+        display: none;
+    }
+
+    .frhno102-form .transacciones-grid {
+        gap: 10px;
+    }
+
+    .frhno102-form .email-button {
+        min-width: 36px;
+        min-height: 32px;
+    }
+}

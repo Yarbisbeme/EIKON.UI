@@ -1,0 +1,121 @@
+/* FRHCL111 - Centros de Costos */
+
+.frhcl111-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Standard Input */
+.frhcl111-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhcl111-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Código field - smaller width */
+.frhcl111-form .codigo-field {
+    max-width: 300px;
+}
+
+/* Footer Row (Creado + Vigencia + Activo) */
+.frhcl111-form .footer-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.frhcl111-form .checkbox-container {
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+}
+
+/* DevExpress Component Overrides */
+.frhcl111-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhcl111-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhcl111-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhcl111-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhcl111-form ::deep .dx-dateedit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhcl111-form ::deep .dx-dateedit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhcl111-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhcl111-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhcl111-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhcl111-form {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhcl111-form {
+        gap: 12px;
+    }
+
+    .frhcl111-form .footer-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhcl111-form .checkbox-container {
+        padding-top: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhcl111-form {
+        gap: 10px;
+    }
+
+    .frhcl111-form .input label {
+        font-size: 13px;
+    }
+
+    .frhcl111-form .codigo-field {
+        max-width: 100%;
+    }
+}

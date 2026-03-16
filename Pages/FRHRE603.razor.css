@@ -1,0 +1,371 @@
+/* Main form container */
+.frhre603-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* ========== Top Section: Employee Data + Image ========== */
+.top-section {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Employee data section */
+.employee-data-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+
+.validity-period-inputs {
+    flex-direction: row;
+    display: flex;
+    gap: 10px;
+}
+
+/* Standard input field */
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+    .input label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+/* Dual input row */
+.dual-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+/* Image area */
+.image-area {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    background: linear-gradient(135deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%, #f8f9fa),
+                linear-gradient(135deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%, #f8f9fa);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========== Tabs Section ========== */
+::deep .cambio-tabs {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+}
+
+::deep .cambio-tabs .dxbs-tab {
+    background: #f8f9fa;
+    border-right: 1px solid #bfbfbf;
+    color: #33363f;
+    font-weight: 500;
+}
+
+::deep .cambio-tabs .dxbs-tab.dxbs-active {
+    font-weight: 600;
+}
+
+::deep .cambio-tabs .dxbs-tab:hover {
+    background: #e9ecef;
+}
+
+/* ========== Tab "Cambio" Content ========== */
+.cambio-content {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 20px;
+    padding: 15px;
+}
+
+/* Cambio fields (left column) */
+.cambio-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Cambio checkboxes (right column) */
+.cambio-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+/* Comentario section */
+.comentario-section {
+    padding: 15px;
+}
+
+    .comentario-section ::deep .dx-memo {
+        width: 100%;
+    }
+
+/* Dual input row with different column sizes */
+.dual-input-row .input-small {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.dual-input-row .input-large {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+    .dual-input-row .input-small label,
+    .dual-input-row .input-large label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+/* Triple input row for Sueldo base */
+.triple-input-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 1fr;
+    gap: 10px;
+    align-items: start;
+}
+
+    .triple-input-row .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .triple-input-row .input label {
+            font-weight: 500;
+            color: #33363f;
+            font-size: 14px;
+        }
+
+/* Fechas group */
+.fechas-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.fechas-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.fechas-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.fecha-sublabel-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fecha-sublabel {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 13px;
+}
+
+/* Date with AM button */
+.date-with-am {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.am-button {
+    padding: 6px 12px;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+}
+
+    .am-button i {
+        font-size: 11px;
+    }
+
+    .am-button:hover {
+        background: #f8f9fa;
+        border-color: #007bff;
+    }
+
+    .am-button:active {
+        background: #e9ecef;
+    }
+
+/* DevExpress component overrides */
+::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+    ::deep .dx-textbox-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+::deep .dx-texteditor-input {
+    font-size: 14px;
+    color: #33363f;
+}
+
+::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+    ::deep .dx-dateedit-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+::deep .dx-spinbox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+    ::deep .dx-spinbox-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+::deep .dx-combobox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+    ::deep .dx-combobox-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+::deep .dx-checkbox {
+    font-size: 14px;
+    color: #33363f;
+}
+
+::deep .dx-editor-button {
+    background: #f8f9fa;
+    border-left: 1px solid #bfbfbf;
+    transition: all 0.2s;
+}
+
+    ::deep .dx-editor-button:hover {
+        background: #e9ecef;
+    }
+
+::deep .dx-editor-button i {
+    color: #33363f;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .top-section {
+        grid-template-columns: 1fr 200px;
+    }
+
+    .image-placeholder {
+        min-height: 250px;
+    }
+
+    .cambio-content {
+        grid-template-columns: 1fr 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-section {
+        grid-template-columns: 1fr;
+    }
+
+    .image-area {
+        order: -1;
+    }
+
+    .image-placeholder {
+        min-height: 200px;
+    }
+    .validity-period-inputs {
+        flex-direction: column;
+    }
+
+    .cambio-content {
+        grid-template-columns: 1fr;
+    }
+
+    .cambio-checkboxes {
+        order: -1;
+    }
+
+    .dual-input-row {
+        grid-template-columns: 1fr;
+    }
+
+    .triple-input-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fechas-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhre603-form {
+        gap: 15px;
+    }
+
+    .employee-data-section,
+    .cambio-fields,
+    .comentario-section,
+    .fechas-group,
+    .cambio-checkboxes {
+        padding: 12px;
+    }
+
+    .am-button {
+        min-width: 45px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+}

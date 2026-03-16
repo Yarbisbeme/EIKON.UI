@@ -1,0 +1,178 @@
+@layout MainLayout
+@page "/FRHMA526"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA526 - Formas de pago" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma526-form">
+
+        <!-- Código -->
+        <div class="input codigo-field">
+            <label>Código</label>
+            <DxTextBox @bind-Text="@Codigo">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Descripción -->
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <!-- Main Grid Section -->
+        <div class="grid-section">
+            <!-- Left side: Input fields -->
+            <div class="fields-container">
+
+                <!-- Row 1: Periodos/Año + Periodos / Mes -->
+                <div class="field-row">
+                    <div class="input small-field">
+                        <label>Periodos/Año</label>
+                        <DxSpinEdit @bind-Value="@PeriodosAnio"
+                                    MinValue="0"
+                                    MaxValue="365"
+                                    DisplayFormat="N0"
+                                    NullText="0" />
+                    </div>
+                    <div class="input small-field">
+                        <label>Periodos / Mes</label>
+                        <DxSpinEdit @bind-Value="@PeriodosMes"
+                                    MinValue="0"
+                                    MaxValue="31"
+                                    DisplayFormat="N0"
+                                    NullText="0" />
+                    </div>
+                </div>
+
+                <!-- Row 2: Días + Holgura -->
+                <div class="field-row">
+                    <div class="input small-field">
+                        <label>Días</label>
+                        <DxSpinEdit @bind-Value="@Dias"
+                                    MinValue="0"
+                                    MaxValue="365"
+                                    DisplayFormat="N0"
+                                    NullText="0" />
+                    </div>
+                    <div class="input small-field">
+                        <label>Holgura</label>
+                        <DxSpinEdit @bind-Value="@Holgura"
+                                    MinValue="0"
+                                    MaxValue="365"
+                                    DisplayFormat="N0"
+                                    NullText="0" />
+                    </div>
+                </div>
+
+                <!-- Row 3: Factor Simular + Factor Pago -->
+                <div class="field-row">
+                    <div class="input small-field">
+                        <label>Factor Simular</label>
+                        <DxSpinEdit @bind-Value="@FactorSimular"
+                                    MinValue="0m"
+                                    DisplayFormat="N3"
+                                    Increment="0.001m"
+                                    NullText="0.000" />
+                    </div>
+                    <div class="input small-field">
+                        <label>Factor Pago</label>
+                        <DxSpinEdit @bind-Value="@FactorPago"
+                                    MinValue="0m"
+                                    DisplayFormat="N3"
+                                    Increment="0.001m"
+                                    NullText="0.000" />
+                    </div>
+                </div>
+
+                <!-- Row 4: Base Cálculo -->
+                <div class="input base-calculo-field">
+                    <label>Base Cálculo</label>
+                    <DxTextBox @bind-Text="@BaseCalculo" NullText="Base Cálculo" />
+                </div>
+
+            </div>
+
+            <!-- Right side: Radio group + Rangos button -->
+            <div class="controls-container">
+                <div class="base-pago-section">
+                    <label class="section-label">Base pago</label>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Accion"
+                             Value="@("Fijo")">
+                        Imprimir cambio
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Accion"
+                             Value="@("Periodo")">
+                        Salvar Pendiente
+                    </DxRadio>
+                </div>
+
+                <div class="rangos-button-container">
+                    <DxButton Text="Rangos" Click="OnRangosClick"></DxButton>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private string Accion { get; set; } = "Tardanza";
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+
+    // Numeric fields
+    private int PeriodosAnio { get; set; } = 0;
+    private int PeriodosMes { get; set; } = 0;
+    private int Dias { get; set; } = 0;
+    private int Holgura { get; set; } = 0;
+    private decimal FactorSimular { get; set; } = 0;
+    private decimal FactorPago { get; set; } = 0;
+    private string BaseCalculo { get; set; } = string.Empty;
+
+    // Radio group
+    private string BasePago { get; set; } = "Fijo";
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda
+    }
+
+    private void OnRangosClick()
+    {
+        // Implementar funcionalidad de rangos
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

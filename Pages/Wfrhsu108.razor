@@ -1,0 +1,100 @@
+﻿@page "/WFRHSU108"
+@layout MainLayout
+<h3>Requisicion de Personal - Pendiente de Implementar</h3>
+<p>Mis Acumulados</p>
+<EditForm Context="ef" Model="@persona">
+    <DxFormLayout Context="fl" ColCount="4">
+        <!-- define columnas -->
+        <!-- Encabezado -->
+        <DxFormLayoutGroup Caption="Solicitud" CaptionPosition="CaptionPosition.Vertical" >
+            <DxFormLayoutItem Caption="No. Solicitud" ColSpanMd="2" ColSpanLg="2">
+            <DxTextBox @bind-Text="@persona.NoSolicitud" ReadOnly="true" />
+        </DxFormLayoutItem>
+
+            <DxFormLayoutItem Caption="Tipo" ColSpanMd="3" ColSpanLg="3">
+            <DxComboBox Data="@tipos" @bind-Value="@persona.Tipo" />
+        </DxFormLayoutItem>
+
+            <DxFormLayoutItem Caption="Fecha" ColSpanMd="2" ColSpanLg="2">
+            <DxDateEdit @bind-Date="@persona.Fecha" />
+        </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Nombre" ColSpanMd="5" ColSpanLg="5">
+                <DxTextBox @bind-Text="@persona.NombreCompleto" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+        
+
+        <!-- Secciones principales con grupos -->
+        <DxFormLayoutGroup Caption="IDENTIFICADORES" ColSpanMd="5" ColSpanLg="5" ColCount="1">
+            <DxFormLayoutItem Caption="Sexo" ColSpanLg="12">
+                <DxComboBox Data="@sexos" @bind-Value="@persona.Sexo" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Cédula" BeginRow="true" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.Cedula" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Cod. Alterno" BeginRow="true" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.CodAlterno" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Pasaporte" BeginRow="true" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.Pasaporte" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+
+        <DxFormLayoutGroup Caption="NOMBRES" ColSpanMd="5" ColSpanLg="5" ColCount="1">
+            <DxFormLayoutItem Caption="Nombres" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.Nombres" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Apellidos" BeginRow="true" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.Apellidos" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Apodo" BeginRow="true" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.Apodo" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Referencia" BeginRow="true" ColSpanLg="12">
+                <DxTextBox @bind-Text="@persona.Referencia" />
+            </DxFormLayoutItem>
+            
+        </DxFormLayoutGroup>
+        <DxFormLayoutGroup Caption="FOTO" ColSpanMd="2" ColSpanLg="2" ColCount="1">
+            <DxFormLayoutItem >
+                <div class="text-center">
+                    <img src="images/logo-web-eikon.png" class="img-fluid border" style="max-width:150px;" />
+                    @* <p class="small text-muted">Imagen no disponible</p> *@
+                </div>
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+
+        <!-- Imagen a la derecha -->
+        
+
+    </DxFormLayout>
+</EditForm>
+
+@code {
+    Persona persona = new Persona
+    {
+        NoSolicitud = "0000491",
+        Fecha = DateTime.Now,
+        NombreCompleto = "DURÁN VIRELLA V FELIX ANTONIO"
+    };
+
+    List<string> tipos = new() { "Creación de Puesto", "Otro" };
+    List<string> sexos = new() { "Masculino", "Femenino" };
+
+    public class Persona
+    {
+        public string NoSolicitud { get; set; }
+        public string Tipo { get; set; }
+        public DateTime Fecha { get; set; }
+        public string NombreCompleto { get; set; }
+        public string Sexo { get; set; }
+        public string Cedula { get; set; }
+        public string CodAlterno { get; set; }
+        public string Pasaporte { get; set; }
+        public string Nombres { get; set; }
+        public string Apellidos { get; set; }
+        public string Apodo { get; set; }
+        public string Referencia { get; set; }
+    }
+}
+

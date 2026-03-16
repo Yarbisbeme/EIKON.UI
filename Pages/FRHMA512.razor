@@ -1,0 +1,297 @@
+@layout MainLayout
+@page "/FRHMA512"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+
+    <Breadcrumb Title="Ítems de Cálculos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhma512-form">
+
+        <div class="main-content">
+            <!-- Left Column -->
+            <div class="left-column">
+                <div class="input" style="width:30%">
+                    <label for="codigo">Código</label>
+                    <DxTextBox @bind-Text="@Codigo"
+                               NullText="Código"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchTransaccion"
+                                            Tooltip="Buscar transacción" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label for="descripcion">Descripción</label>
+                    <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+                </div>
+
+                <div class="input">
+                    <label for="baseCalculo">Base cálculo</label>
+                    <DxTextBox @bind-Text="@BaseCalculo"
+                               NullText="Base cálculo"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchBaseCalculo"
+                                            Tooltip="Buscar base de cálculo" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label for="transaccion">Transacción</label>
+                    <DxTextBox @bind-Text="@Transaccion"
+                               NullText="Transacción"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchTransaccion"
+                                            Tooltip="Buscar transacción" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label for="trInvisible">Tr. invisible</label>
+                    <DxTextBox @bind-Text="@TrInvisible"
+                               NullText="Tr. invisible"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchTrInvisible"
+                                            Tooltip="Buscar transacción invisible" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="formula-row">
+                    <div class="input">
+                        <label for="formula">Fórmula</label>
+                        <DxTextBox @bind-Text="@Formula" NullText="/" />
+                    </div>
+                    <div class="input">
+                        <label for="vigencia">Vigencia</label>
+                        <DxSpinEdit @bind-Value="@Vigencia" MinValue="0" NullText="0" />
+                    </div>
+                    <div class="input">
+                        <label for="porcentaje">Porcentaje</label>
+                        <DxSpinEdit @bind-Value="@Porcentaje" MinValue="0" MaxValue="100" NullText="0" />
+                    </div>
+                    <div class="input">
+                        <label for="orden">Orden</label>
+                        <DxSpinEdit @bind-Value="@Orden" MinValue="0" NullText="0" />
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <div class="radio-group">
+                    <label class="group-label">Concepto</label>
+                    <div style="display:flex; gap:5px;">
+
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Concepto"
+                             Value="@("Suma")">
+                        Suma
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Concepto"
+                             Value="@("Resta")">
+                        Resta
+                    </DxRadio>
+                    </div>
+                </div>
+
+                <div class="radio-group">
+                    <label class="group-label">Actualizar</label>
+                    <div style="display:flex; gap:5px;">
+
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Concepto"
+                             Value="@("Si")">
+                        Si
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Concepto"
+                             Value="@("No")">
+                        No
+                    </DxRadio>
+                    </div>
+                </div>
+
+                <div class="radio-group">
+                    <label class="group-label">Cuadre Mes</label>
+                    <div style="display:flex; gap:5px;">
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Concepto"
+                             Value="@("Si")">
+                        Si
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@Concepto"
+                             Value="@("No")">
+                        No
+                    </DxRadio>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="group-label">Aplicabilidad</label>
+                    <div class="checkboxes-inline">
+                        <DxCheckBox @bind-Checked="@AplicabilidadVisible">Visible</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@AplicabilidadInvisible">Invisible</DxCheckBox>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="group-label">Usar en</label>
+                    <div class="checkboxes-vertical">
+                        <DxCheckBox @bind-Checked="@UsarPrestaciones">Prestaciones</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@UsarDistrIngreso">Distr. Ingreso</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@UsarAplicarItem">Aplicar ítem</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@UsarSimularReserva">Simular reserva</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="tabs-section">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+                <DxTabPage Text="Descripción General">
+                    <div class="tab-content">
+                        <DxMemo @bind-Text="@DescripcionGeneral"
+                                Rows="10"
+                                NullText="Descripción general..." />
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Script">
+                    <div class="tab-content">
+                        <DxMemo @bind-Text="@Script"
+                                Rows="10"
+                                NullText="Script..." />
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+
+        <!-- Bottom Grids -->
+        <div class="bottom-grids">
+            <div class="grid-container">
+                <div class="grid-header">Transacciones</div>
+                <DxGrid Data="@Transacciones" CssClass="custom-grid">
+                    <Columns>
+                        <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="150px" />
+                        <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" />
+                        <DxGridDataColumn FieldName="Porcentaje" Caption="%" Width="80px" />
+                    </Columns>
+                </DxGrid>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid-header">Acciones de Salida</div>
+                <DxGrid Data="@AccionesSalida" CssClass="custom-grid">
+                    <Columns>
+                        <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="150px" />
+                        <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" />
+                    </Columns>
+                </DxGrid>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+    private int ActiveTabIndex = 0;
+
+    // Left column fields
+    private string Codigo { get; set; } = "";
+    private string Descripcion { get; set; } = "";
+    private string BaseCalculo { get; set; } = "";
+    private string Transaccion { get; set; } = "";
+    private string TrInvisible { get; set; } = "";
+    private string Formula { get; set; } = "/";
+    private int Porcentaje { get; set; } = 0;
+    private int Orden { get; set; } = 0;
+    private int Vigencia { get; set; } = 0;
+
+    // Right column - Radio groups
+    private string Concepto { get; set; } = "Suma";
+    private string Actualizar { get; set; } = "Si";
+    private string CuadreMes { get; set; } = "No";
+
+    // Aplicabilidad
+    private bool AplicabilidadVisible { get; set; } = false;
+    private bool AplicabilidadInvisible { get; set; } = false;
+
+    // Usar en
+    private bool UsarPrestaciones { get; set; } = false;
+    private bool UsarDistrIngreso { get; set; } = false;
+    private bool UsarAplicarItem { get; set; } = false;
+    private bool UsarSimularReserva { get; set; } = false;
+
+    // Tabs content
+    private string DescripcionGeneral { get; set; } = "";
+    private string Script { get; set; } = "";
+
+    // Grid data
+    private List<TransaccionItem> Transacciones = new();
+    private List<AccionSalidaItem> AccionesSalida = new();
+
+    private void OnSearchBaseCalculo()
+    {
+        // TODO: Implement search logic for base calculo
+    }
+
+    private void OnSearchTransaccion()
+    {
+        // TODO: Implement search logic for transaccion
+    }
+
+    private void OnSearchTrInvisible()
+    {
+        // TODO: Implement search logic for tr invisible
+    }
+
+    private void HandleAdd()
+    {
+        // TODO: Implement add logic
+    }
+
+    private void HandleSave()
+    {
+        // TODO: Implement save logic
+    }
+
+    private void HandleClose()
+    {
+        // TODO: Implement close logic
+    }
+
+    public class TransaccionItem
+    {
+        public string Codigo { get; set; } = "";
+        public string Descripcion { get; set; } = "";
+        public string Porcentaje { get; set; } = "";
+    }
+
+    public class AccionSalidaItem
+    {
+        public string Codigo { get; set; } = "";
+        public string Descripcion { get; set; } = "";
+    }
+}

@@ -1,0 +1,175 @@
+﻿
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Sección principal */
+.main-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Form rows */
+.form-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+/* Input fields con label arriba */
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+/* Sección de reporte */
+.report-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.report-controls {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.report-actions {
+    display: flex;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+/* Botones de acción */
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.success-btn {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+.info-btn {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+}
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+.secondary-btn {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+/* Estilos para DevExpress Components */
+.dx-textbox,
+.dx-combobox,
+.dx-date-edit,
+.dx-spin-edit {
+    border-radius: 6px !important;
+}
+
+.dx-textbox-container,
+.dx-combobox-container,
+.dx-date-edit-container,
+.dx-spin-edit-container {
+    border: 1px solid #ced4da !important;
+    border-radius: 6px !important;
+}
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-date-edit-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+/* Responsive Design */
+media (max-width: 768px) {
+    .main-section, .report-section
+
+{
+    padding: 15px;
+}
+
+.form-row {
+    flex-direction: column;
+    gap: 15px;
+}
+
+.report-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+}
+
+.report-actions {
+    justify-content: center;
+}
+
+}
+
+media (max-width: 480px) {
+    .form-container
+
+{
+    gap: 15px;
+}
+
+.main-section,
+.report-section {
+    padding: 15px;
+}
+
+.icon-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+}
+
+.report-actions {
+    gap: 6px;
+}
+
+}

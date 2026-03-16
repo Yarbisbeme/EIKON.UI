@@ -1,0 +1,45 @@
+﻿@namespace EIKON.UI.Components
+<div class="alert @(TypeAlert)">
+    <div class="alert-icon">
+        <span class="bg-icon"></span>
+        @switch (TypeAlert)
+        {
+            case AlertType.Success:
+                <i class="fi fi-sr-check-circle"></i>
+                break;
+
+            case AlertType.Warning:
+                <i class="fi fi-ss-triangle-warning"></i>
+                break;
+
+            case AlertType.Info:
+                <i class="fi fi-ss-info"></i>
+                break;
+
+            case AlertType.Error:
+                <i class="fi fi-sr-exclamation"></i>
+                break;
+
+            default:
+                <i class="fi fi-ss-info"></i>
+                break;
+        }
+    </div>
+    <span>@Message</span>
+</div>
+
+@code {
+
+    [Parameter]
+    public string TypeAlert { get; set; } = "";
+
+    [Parameter]
+    public string Message { get; set; } = "";
+    public static class AlertType
+    {
+        public const string Success = "success";
+        public const string Info = "info";
+        public const string Warning = "warning";
+        public const string Error = "error";
+    }
+}

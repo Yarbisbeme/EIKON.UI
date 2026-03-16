@@ -1,0 +1,282 @@
+/* Main container with vertical toolbar layout */
+.frhut140-container {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Form section */
+.frhut140-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input fields */
+.frhut140-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhut140-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Ejemplo area - larger text area */
+.frhut140-form .ejemplo-area {
+    flex: 1;
+}
+
+/* File upload container - textbox + button */
+.frhut140-form .file-upload-container {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    width: 100%;
+}
+
+.frhut140-form .file-upload-container ::deep .dx-textbox {
+    flex: 1;
+}
+
+/* DxButton styling */
+.frhut140-form .upload-btn {
+    min-width: 80px;
+    white-space: nowrap;
+}
+
+.frhut140-form ::deep .upload-btn.dx-button {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    height: 100%;
+}
+
+.frhut140-form ::deep .upload-btn .dx-button-content {
+    color: #33363f !important;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 20px;
+}
+
+.frhut140-form ::deep .upload-btn.dx-button:hover {
+    background-color: #f8f9fa !important;
+    border-color: #007bff !important;
+}
+
+.frhut140-form ::deep .upload-btn.dx-button:hover .dx-button-content {
+    color: #007bff !important;
+}
+
+.frhut140-form ::deep .upload-btn.dx-button:active {
+    background-color: #e9ecef !important;
+}
+
+/* Hide the native file input */
+.frhut140-form .hidden-file-input {
+    display: none !important;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+/* Vertical toolbar on the right */
+.vertical-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background-color: #d4d4d4;
+    border-left: 1px solid #bfbfbf;
+    padding: 0;
+    min-width: 50px;
+}
+
+.vertical-toolbar .toolbar-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-bottom: 1px solid #bfbfbf;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.vertical-toolbar .toolbar-btn:last-child {
+    border-bottom: none;
+}
+
+.vertical-toolbar .toolbar-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.vertical-toolbar .toolbar-btn:active {
+    transform: scale(0.95);
+}
+
+/* Save button - green */
+.vertical-toolbar .save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Cancel button - red */
+.vertical-toolbar .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Help button - gray */
+.vertical-toolbar .help-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Action button - light blue */
+.vertical-toolbar .action-btn {
+    background-color: #17a2b8;
+    color: white;
+}
+
+/* DevExpress TextBox and ComboBox overrides */
+.frhut140-form ::deep .dx-textbox-container,
+.frhut140-form ::deep .dx-memo-container,
+.frhut140-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhut140-form ::deep .dx-textbox-container:focus-within,
+.frhut140-form ::deep .dx-memo-container:focus-within,
+.frhut140-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhut140-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* ComboBox specific styling */
+.frhut140-form ::deep .dx-dropdowneditor-icon {
+    color: #33363f !important;
+}
+
+.frhut140-form ::deep .dx-dropdowneditor-input-wrapper:hover {
+    border-color: #007bff !important;
+}
+
+/* Search button styling */
+.frhut140-form ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhut140-form ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+/* Memo specific styling */
+.frhut140-form ::deep .ejemplo-memo .dx-memo-container {
+    min-height: 150px;
+}
+
+.frhut140-form ::deep .dx-memo-container textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .frhut140-container {
+        flex-direction: column;
+    }
+
+    .vertical-toolbar {
+        flex-direction: row;
+        border-left: none;
+        border-top: 1px solid #bfbfbf;
+        min-width: 100%;
+    }
+
+    .vertical-toolbar .toolbar-btn {
+        flex: 1;
+        height: 50px;
+        border-bottom: none;
+        border-right: 1px solid #bfbfbf;
+    }
+
+    .vertical-toolbar .toolbar-btn:last-child {
+        border-right: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhut140-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhut140-form .input label {
+        font-size: 13px;
+    }
+
+    .vertical-toolbar .toolbar-btn {
+        font-size: 18px;
+    }
+
+    .frhut140-form .upload-btn {
+        min-width: 70px;
+    }
+
+    .frhut140-form ::deep .upload-btn .dx-button-content {
+        font-size: 13px !important;
+        padding: 0 15px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhut140-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhut140-form .input label {
+        font-size: 12px;
+    }
+
+    .vertical-toolbar .toolbar-btn {
+        min-width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .frhut140-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .frhut140-form .upload-btn {
+        min-width: 60px;
+    }
+
+    .frhut140-form ::deep .upload-btn .dx-button-content {
+        font-size: 12px !important;
+        padding: 0 10px !important;
+    }
+
+    .frhut140-form .file-upload-container {
+        gap: 8px;
+    }
+}

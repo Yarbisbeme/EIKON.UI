@@ -1,0 +1,341 @@
+/* FRHMA528 - Cuentas de Bancos */
+
+.frhma528-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Fields Section */
+.frhma528-form .fields-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Row Layout - Standard */
+.frhma528-form .row-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: end;
+}
+
+/* Row 1: Número (small) + Empleado (large) */
+.frhma528-form .row-1 {
+    grid-template-columns: 200px 1fr;
+}
+
+/* Standard Input Field */
+.frhma528-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma528-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Número Field */
+.frhma528-form .numero-field {
+    max-width: 200px;
+}
+
+/* Empleado Field (read-only) */
+.frhma528-form .empleado-field {
+    flex: 1;
+}
+
+/* Cuenta + Porcentaje Wrapper */
+.frhma528-form .cuenta-porcentaje-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhma528-form .cuenta-porcentaje-fields {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhma528-form .cuenta-textbox {
+    width: 100%;
+}
+
+.frhma528-form .porcentaje-symbol {
+    font-weight: 600;
+    font-size: 16px;
+    color: #33363f;
+}
+
+.frhma528-form .porcentaje-spin {
+    width: 80px;
+}
+
+/* Checkboxes Row */
+.frhma528-form .checkboxes-row {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Grid Section */
+.frhma528-form .grid-section {
+    margin-top: 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.frhma528-form .cuentas-grid {
+    width: 100%;
+    min-height: 300px;
+}
+
+/* Bottom Bar */
+.frhma528-form .bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.frhma528-form .ordenado-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.frhma528-form .ordenado-section label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhma528-form .ordenado-combo {
+    width: 250px;
+}
+
+.frhma528-form .navigation-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.frhma528-form .nav-btn {
+    min-width: 40px;
+    min-height: 36px;
+}
+
+/* ===== DevExpress Component Overrides ===== */
+.frhma528-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma528-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma528-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma528-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma528-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma528-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma528-form ::deep .dx-dateedit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma528-form ::deep .dx-dateedit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Editor Buttons */
+.frhma528-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma528-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Checkboxes */
+.frhma528-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhma528-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhma528-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Read-only Fields */
+.frhma528-form ::deep .dx-textbox[readonly] {
+    background-color: #e9ecef;
+}
+
+.frhma528-form ::deep .dx-textbox[readonly] .dx-texteditor-input {
+    background-color: #e9ecef;
+}
+
+/* Grid Styling */
+.frhma528-form ::deep .dx-datagrid {
+    border: none;
+}
+
+.frhma528-form ::deep .dx-datagrid-headers {
+    border-bottom: 2px solid #bfbfbf;
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.frhma528-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhma528-form ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa;
+}
+
+.frhma528-form ::deep .dx-datagrid-rowsview .dx-selection.dx-row:hover,
+.frhma528-form ::deep .dx-datagrid-rowsview .dx-selection.dx-row {
+    background-color: #e7f3ff;
+}
+
+/* Button Styling */
+.frhma528-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhma528-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhma528-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .frhma528-form .row-layout {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhma528-form .row-1 {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma528-form .numero-field {
+        max-width: 100%;
+    }
+
+    .frhma528-form .bottom-bar {
+        align-items: flex-end;
+        gap: 15px;
+    }
+
+    .frhma528-form .ordenado-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .frhma528-form .ordenado-combo {
+        width: 100%;
+    }
+
+    .frhma528-form .navigation-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma528-form {
+        gap: 15px;
+    }
+
+    .frhma528-form .fields-section {
+        gap: 12px;
+    }
+
+    .frhma528-form .checkboxes-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .frhma528-form .cuenta-porcentaje-fields {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .frhma528-form .porcentaje-symbol {
+        display: none;
+    }
+
+    .frhma528-form .porcentaje-spin {
+        width: 100%;
+    }
+
+    .frhma528-form .cuentas-grid {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma528-form {
+        gap: 12px;
+    }
+
+    .frhma528-form .input label {
+        font-size: 13px;
+    }
+
+    .frhma528-form .bottom-bar {
+        padding: 12px;
+    }
+
+    .frhma528-form .nav-btn {
+        min-width: 36px;
+        min-height: 32px;
+    }
+
+    .frhma528-form .cuentas-grid {
+        min-height: 200px;
+    }
+}

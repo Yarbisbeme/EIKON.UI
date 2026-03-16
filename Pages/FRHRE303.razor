@@ -1,0 +1,338 @@
+@layout MainLayout
+@page "/FRHRE303"
+@inject NavigationManager Navigation
+
+<div class="page">
+    <Breadcrumb Title="Contratación Rápida" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhre303-form">
+        <div class="frhre303-layout">
+            <!-- Columna izquierda: Formulario -->
+            <div class="form-column">
+                <!-- No. Solicitud -->
+                <div class="input">
+                    <label>No. Solicitud</label>
+                    <DxTextBox @bind-Text="@NumeroSolicitud" NullText="">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchSolicitud" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <!-- Nombre -->
+                <div class="input">
+                    <label>Nombre</label>
+                    <DxTextBox @bind-Text="@Nombre" NullText="" />
+                </div>
+
+                <!-- Puesto -->
+                <div class="input">
+                    <label>Puesto</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Puesto"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchPuesto" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+                <!-- Oficina -->
+                <div class="input">
+                    <label>Oficina</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Oficina"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchOficina" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="input">
+                    <label>Ubicación</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Ubicacion"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchUbicacion" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+                <!-- Centro Costo -->
+                <div class="input">
+                    <label>Centro Costo</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@CentroCosto"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchCentroCosto" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+                <!-- Supervisor -->
+                <div class="input">
+                    <label>Supervisor</label>
+                    <div class="search-field">
+                        <DxTextBox @bind-Text="@Supervisor"
+                                   NullText="ID requisición"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchSupervisor" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxTextBox NullText="ID requisicion" />
+                    </div>
+                </div>
+
+                <!-- Tipo Ingreso -->
+                <div class="input">
+                    <label>Tipo Ingreso</label>
+                    <DxComboBox Data="@TipoIngresoOptions"
+                                @bind-Value="@TipoIngresoSeleccionado"
+                                TextFieldName="Text"
+                                ValueFieldName="Value"
+                                NullText="Seleccionar" />
+                </div>
+
+                <!-- Número Empleado y Sueldo Base -->
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label>Número Empleado</label>
+                        <DxSpinEdit @bind-Value="@NumeroEmpleado" DisplayFormat="N2" />
+                    </div>
+                    <div class="input">
+                        <label>Sueldo Base</label>
+                        <DxSpinEdit @bind-Value="@SueldoBase" DisplayFormat="N2" />
+                    </div>
+                </div>
+
+                <!-- Tipo Nómina -->
+                <div style="display:flex; gap:10px;">
+                    <div class="input">
+                        <label>Tipo Nómina</label>
+                        <DxComboBox Data="@TipoNominaOptions"
+                                    @bind-Value="@TipoNominaSeleccionado"
+                                    TextFieldName="Text"
+                                    ValueFieldName="Value"
+                                    NullText="Seleccionar" />
+                    </div>
+
+
+                    <!-- Turno -->
+                    <div class="input">
+                        <label>Turno</label>
+                        <DxComboBox Data="@TipoIngresoOptions"
+                                    @bind-Value="@TipoIngresoSeleccionado"
+                                    TextFieldName="Text"
+                                    ValueFieldName="Value"
+                                    NullText="Seleccionar" />
+                    </div>
+
+                </div>
+
+                <!-- Horario -->
+                <div style="display:flex; gap:10px;">
+                    <div class="input">
+                        <label>Horario</label>
+                        <DxComboBox Data="@TipoIngresoOptions"
+                                    @bind-Value="@TipoIngresoSeleccionado"
+                                    TextFieldName="Text"
+                                    ValueFieldName="Value"
+                                    NullText="Seleccionar" />
+                    </div>
+
+                    <div class="input">
+                        <label>Tipo Contrato</label>
+                        <DxComboBox Data="@TipoContratoOptions"
+                                    @bind-Value="@TipoContratoSeleccionado"
+                                    TextFieldName="Text"
+                                    ValueFieldName="Value"
+                                    NullText="Seleccionar" />
+                    </div>
+
+                </div>
+
+
+                <!-- Fechas (Ingreso y Fin) -->
+                <div class="fechas-section">
+                    <label class="fechas-label">Fechas</label>
+                    <div class="fechas-row">
+                        <div class="input">
+                            <label>Ingreso</label>
+                            <DxDateEdit @bind-Date="@FechaIngreso" DisplayFormat="dd/MM/yyyy" NullText="//">
+                            </DxDateEdit>
+                        </div>
+                        <div class="input">
+                            <label>Fin</label>
+                            <DxDateEdit @bind-Date="@FechaFin" DisplayFormat="dd/MM/yyyy" NullText="//">
+                            </DxDateEdit>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beneficios aplica -->
+                <div class="beneficios-section">
+                    <label>Beneficios aplica</label>
+                    <DxMemo @bind-Text="@BeneficiosAplica" Rows="6" NullText="" />
+                </div>
+
+                <!-- Reporte -->
+                <div class="reporte-section">
+                    <label>Reporte</label>
+                    <div class="reporte-row">
+                        <DxTextBox @bind-Text="@Reporte" NullText="" CssClass="reporte-input" />
+                        <DxButton CssClass="reporte-btn" IconCssClass="fi fi-rr-print"></DxButton>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Imagen y Opciones -->
+            <div class="side-column">
+                <!-- Área de imagen -->
+                <div class="image-area">
+                    <div class="image-placeholder">
+                        <!-- Área para foto del empleado -->
+                    </div>
+                </div>
+
+                <!-- Opciones de impresión -->
+                <div class="print-options">
+                    <DxCheckBox @bind-Checked="@ImprimirNumero">Imprimir Número</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ImprimirFoto">Imprimir Foto</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ImprimirAccion">Imprimir Acción</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@FijarDatosIngreso">Fijar datos ingreso</DxCheckBox>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Campos básicos
+    private string NumeroSolicitud { get; set; } = "";
+    private string Nombre { get; set; } = "";
+    private string Puesto { get; set; } = "";
+    private string Oficina { get; set; } = "";
+    private string Ubicacion { get; set; } = "";
+    private string CentroCosto { get; set; } = "";
+    private string Supervisor { get; set; } = "";
+    private string TipoIngresoSeleccionado { get; set; } = "";
+
+    // Campos numéricos
+    private decimal NumeroEmpleado { get; set; } = 0.00m;
+    private decimal SueldoBase { get; set; } = 0.00m;
+
+    // Campos de selección
+    private string TipoNominaSeleccionado { get; set; } = "";
+    private string Turno { get; set; } = "";
+    private string Horario { get; set; } = "";
+    private string TipoContratoSeleccionado { get; set; } = "";
+
+    // Fechas
+    private DateTime? FechaIngreso { get; set; }
+    private DateTime? FechaFin { get; set; }
+
+    // Beneficios y Reporte
+    private string BeneficiosAplica { get; set; } = "";
+    private string Reporte { get; set; } = "";
+
+    // Checkboxes
+    private bool ImprimirNumero { get; set; } = false;
+    private bool ImprimirFoto { get; set; } = false;
+    private bool ImprimirAccion { get; set; } = false;
+    private bool FijarDatosIngreso { get; set; } = false;
+
+    // Opciones de dropdowns
+    private List<OptionItem> TipoIngresoOptions { get; set; } = new()
+    {
+        new() { Value = "1", Text = "Nuevo" },
+        new() { Value = "2", Text = "Reingreso" }
+    };
+
+    private List<OptionItem> TipoNominaOptions { get; set; } = new()
+    {
+        new() { Value = "1", Text = "Quincenal" },
+        new() { Value = "2", Text = "Mensual" }
+    };
+
+    private List<OptionItem> TipoContratoOptions { get; set; } = new()
+    {
+        new() { Value = "1", Text = "Indefinido" },
+        new() { Value = "2", Text = "Temporal" }
+    };
+
+    // Event handlers
+    private void OnSearchSolicitud()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchPuesto()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchOficina()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchUbicacion()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchCentroCosto()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchSupervisor()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void HandleSave()
+    {
+        // Lógica para guardar
+    }
+
+    private void HandleClose()
+    {
+        Navigation.NavigateTo("/dash");
+    }
+
+    public class OptionItem
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+}

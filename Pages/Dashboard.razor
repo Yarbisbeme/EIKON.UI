@@ -1,0 +1,399 @@
+﻿@layout MainLayout
+@page "/dashx"
+@* @rendermode InteractiveServer *@
+<h1>
+    Custom tab
+</h1>
+<div style="margin-bottom:50px;">
+    <DxTabs>
+        <DxTab Text="Básicos" TabIconCssClass="tabs-icon-basics tabs-icon"></DxTab>
+        <DxTab Text="Localizadores" TabIconCssClass="tabs-icon-locators tabs-icon"></DxTab>
+        <DxTab Text="Licencia de Conducir" TabIconCssClass="tabs-icon-license tabs-icon"></DxTab>
+        <DxTab Text="Familia" TabIconCssClass="tabs-icon-family tabs-icon"></DxTab>
+        <DxTab Text="Enfermedad" TabIconCssClass="tabs-icon-medical tabs-icon"></DxTab>
+        <DxTab Text="Diversos" TabIconCssClass="tabs-icon-misc tabs-icon"></DxTab>
+        <DxTab Text="Comentarios" TabIconCssClass="tabs-icon-comments tabs-icon"></DxTab>
+    </DxTabs>
+</div>
+
+<div class="dash-info">
+    <div>
+
+        <h1>Alertas</h1>
+        <div class="alerts">
+            <Alert Message="Algo no esta del todo bien" TypeAlert="error" />
+
+            <Alert Message="Empleado creado correctamente" TypeAlert="warning" />
+
+            <Alert Message="Empleado creado correctamente" TypeAlert="info" />
+
+            <Alert Message="Empleado creado correctamente" TypeAlert="success" />
+
+        </div>
+    </div>
+
+    <div class="popup-page" style=" display:flex;flex-direction:column; gap:10px;">
+        <h1>Popups</h1>
+
+        <Popup CancelMsg="Cancelar" ConfirmMsg="Sí, cerrar sesión" Desc="¿Estás seguro de que deseas cerrar sesión? Perderás cualquier cambio
+          no guardado." Header="Cerrar Sesión" Type="alert" />
+
+    </div>
+    <div>
+        <h1>
+            Custom toolbar
+        </h1>
+        <Toolbar formulario="FRHxxx999" />
+    </div>
+    <div style="display:flex;flex-direction:column; gap:10px;">
+        <h1>Botones</h1>
+        <DxButton Text="Iniciar sesion" />
+    </div>
+
+    <DxCalendar @bind-SelectedDate="@SelectedDate"
+    CssClass="demo-calendar" />
+
+<div class="cw-320">
+    <fieldset>
+        <legend>Choose your new car options:</legend>
+        <div class="dx-demo-select-all-checkbox">
+            <DxCheckBox @bind-Checked="@SelectAllState">
+                Select All
+            </DxCheckBox>
+        </div>
+        <div class="dx-demo-price-list-content">
+            <div class="dx-demo-row">
+                <DxCheckBox @bind-Checked="@Multimedia">Multimedia</DxCheckBox>
+                <div class="@GetCssClass(Multimedia)">$130</div>
+            </div>
+            <div class="dx-demo-row">
+                <DxCheckBox @bind-Checked="@AirConditioning">Air conditioning</DxCheckBox>
+                <div class="@GetCssClass(AirConditioning)">$800</div>
+            </div>
+            <div class="dx-demo-row">
+                <DxCheckBox @bind-Checked="@ParkingSensors">Parking camera</DxCheckBox>
+                <div class="@GetCssClass(ParkingSensors)">$400</div>
+            </div>
+            <div class="dx-demo-row">
+                <DxCheckBox @bind-Checked="@HeatedSeats">Heated seats</DxCheckBox>
+                <div class="@GetCssClass(HeatedSeats)">$230</div>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+<DxDateEdit @bind-Date="@DateTimeValue"
+            CssClass="cw-320"
+            InputId="deOverview" />
+
+            <DxDateRangePicker @bind-StartDate="@DateTimeStart"
+                   @bind-EndDate="@DateTimeEnd"
+                   CssClass="cw-320"
+                   InputId="deOverview" />
+
+<DxListBox Data="@Data"
+           TextFieldName="@nameof(Employee.Text)"
+           @bind-Value="@Value"
+           CssClass="cw-400 chi-220">
+</DxListBox>
+
+    <DxMaskedInput @bind-Value="@Telephone"
+                   CssClass="cw-320"
+                   InputId="textMaskID"
+                   Mask="(999)000-0000" />
+
+                   <DxMemo @bind-Text="TextValue"
+        CssClass="cw-480"
+        Rows="5"
+        InputId="memoOverview" />
+
+    <fieldset role="radiogroup">
+        <legend class="">Radio Buttons</legend>
+        <div class="">
+            @foreach(var option in GeneralAnswerOptions) {
+                <DxRadio GroupName="general-radio-group"
+                         @bind-GroupValue="@GeneralAnswer"
+                         Value="@option"
+                         CssClass="dx-demo-radio">
+                    @option
+                </DxRadio>
+            }
+        </div>
+    </fieldset>
+
+    <DxRadioGroup aria-labelledby="radio-group-overview-label"
+                  Items="@Languages"
+                  @bind-Value="@PreferredLanguage"
+                  CssClass="dx-demo-radio-group" />
+
+                  <DxSpinEdit @bind-Value="@DecimalValue"
+            CssClass="cw-320"
+            InputId="seOverview" />
+
+            <DxTextBox @bind-Text="@TextValue2"
+           CssClass="cw-320"
+           InputId="tbOverview" />
+
+           <DxTimeEdit @bind-Time="@TimeValue"
+            CssClass="cw-320"
+            InputId="teOverview" />
+
+            <DxPager PageCount="@PageCount" @bind-ActivePageIndex="@ActivePageIndex" />
+            <DxAccordion>
+    <Items>
+        <DxAccordionItem Text="Empleados">
+            <ContentTemplate>
+                <div style="padding: 15px;">
+                    <p>Juan Pérez - Desarrollador</p>
+                    <p>María García - Diseñadora</p>
+                    <p>Carlos López - Analista</p>
+                </div>
+            </ContentTemplate>
+        </DxAccordionItem>
+        
+        <DxAccordionItem Text="Configuración">
+            <ContentTemplate>
+                <div style="padding: 15px;">
+                    <label>Tema:</label>
+                    <select>
+                        <option>Claro</option>
+                        <option>Oscuro</option>
+                    </select>
+                    <br><br>
+                    <input type="checkbox"> Notificaciones
+                </div>
+            </ContentTemplate>
+        </DxAccordionItem>
+    </Items>
+</DxAccordion>
+
+<DxToolbar ItemClick="@OnItemClick">
+    <Items>
+        <DxToolbarItem Name="Item1" Text="Item1" Tooltip="Item1" />
+        <DxToolbarItem Name="Item2" Text="Item2" Tooltip="Item2" />
+        <DxToolbarItem Name="Left" BeginGroup="true" IconCssClass="tb-icon tb-icon-align-left"
+                       Tooltip="Align Left" />
+        <DxToolbarItem Name="Center" IconCssClass="tb-icon tb-icon-align-center"
+                       Tooltip="Align Center" />
+        <DxToolbarItem Name="Right" IconCssClass="tb-icon tb-icon-align-right"
+                       Tooltip="Align Right" />
+        <DxToolbarItem Name="Documentation" Text="Documentation" BeginGroup="true"
+                       IconCssClass="tb-icon tb-icon-info"
+                       Tooltip="Documentation (opened in a new tab)"
+                       Alignment="ToolbarItemAlignment.Right"
+                       NavigateUrl="https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxToolbar"
+                       Target="_blank" />
+    </Items>
+</DxToolbar>
+
+<DxButton 
+Text="Click me" @onclick="() => PopupVisible = true" />
+<div id="overviewDemoDropZone" class="custom-drop-zone">
+    <span class="drop-file-icon fi fi-ss-upload mb-3"></span>
+    <span class="drop-file-label" >Drag and Drop File Here</span><span class="m-1">or</span>
+    <DxButton Id="overviewDemoSelectButton"
+              CssClass="m-1"
+              RenderStyle="ButtonRenderStyle.Primary"
+              Text="Select File" />
+</div>
+<DxFileInput
+          Visible="@UploadVisible"
+          ExternalSelectButtonCssSelector="#overviewDemoSelectButton"
+          ExternalDropZoneCssSelector="#overviewDemoDropZone"
+          ExternalDropZoneDragOverCssClass="custom-drop-zone-hover"
+          MaxFileSize="15000000"
+          FilesUploading="OnFilesUploading"
+          SelectedFilesChanged="@SelectedFilesChanged">
+</DxFileInput>
+
+<DxPager PageCount="1000"
+         ActivePageIndex="5"
+         NavigationMode=@PagerNavigationMode.InputBox />
+
+
+</div>
+
+<div style="width: 20x">
+        <DxMenu Title="DevExpress"
+                Orientation="Orientation"
+                DisplayMode="DisplayMode"
+                CollapseItemsToHamburgerMenu="true">
+            <Items>
+                <DxMenuItem Text="Home" IconCssClass="menu-icon-home menu-icon">
+                    <Items>
+                        <DxMenuItem Text="News">
+                            <Items>
+                                <DxMenuItem Text="Explore our newest features" />
+                                <DxMenuItem Text="Website news" />
+                            </Items>
+                        </DxMenuItem>
+                        <DxMenuItem Text="Our Mission" />
+                        <DxMenuItem Text="Our Customers" />
+                    </Items>
+                </DxMenuItem>
+                <DxMenuItem Text="Components" IconCssClass="menu-icon-products menu-icon">
+                    <Items>
+                        <DxMenuItem Text="Blazor" />
+                        <DxMenuItem Text="ASP.NET MVC" />
+                        <DxMenuItem Text="ASP.NET Web Forms" />
+                        <DxMenuItem Text="ASP.NET Core" />
+                        <DxMenuItem Text="Bootstrap Web Forms" />
+                    </Items>
+                </DxMenuItem>
+                <DxMenuItem Text="Support" IconCssClass="menu-icon-support menu-icon">
+                    <Items>
+                        <DxMenuItem Text="Getting Started" />
+                        <DxMenuItem Text="Documentation" />
+                        <DxMenuItem Text="Support Center" />
+                        <DxMenuItem Text="Code Examples" />
+                        <DxMenuItem Text="Blogs" />
+                    </Items>
+                </DxMenuItem>
+            </Items>
+        </DxMenu>
+</div>
+
+@code {
+    bool PopupVisible { get; set; } = false;
+    bool UploadVisible { get; set; } = false;
+    protected void SelectedFilesChanged(IEnumerable<UploadFileInfo> files) {
+        UploadVisible = files.ToList().Count > 0;
+        InvokeAsync(StateHasChanged);
+    }
+    protected async Task OnFilesUploading(FilesUploadingEventArgs args) {
+        var file = args.Files[0];
+        using var stream = new System.IO.MemoryStream();
+        await file.OpenReadStream(file.Size).CopyToAsync(stream);
+    }
+    MenuDisplayMode DisplayMode { get; set; } = MenuDisplayMode.Desktop;
+    Orientation Orientation { get; set; } = Orientation.Vertical;
+    IObserver<string> toasterRef;
+    int PageCount { get; set; } = 10;
+    int ActivePageIndex { get; set; } = 1;
+    string GeneralAnswer { get; set; }
+    TimeSpan TimeValue { get; set; } = DateTime.Now.TimeOfDay;
+    string TextValue2 { get; set; } = "";
+    Decimal DecimalValue { get; set; } = 15;
+    string PreferredLanguage { get; set; } = "English";
+    IEnumerable<string> Languages = new[] { "English", "简体中文", "Español", "Français", "Deutsch" };
+    IEnumerable<string> GeneralAnswerOptions = new[] {
+        "Yes.",
+        "No, but I plan to develop a WebAssembly app in the near future.",
+        "No."
+    };
+        string GetGroupClass() {
+        var result = "dx-demo-radio-group";
+        if(AOTGroupVisible)
+            result += " dx-demo-radio-group-indented";
+        return result;
+    }
+    string GetLegendCssClass(SizeMode sizeMode) {
+        var result = "dx-demo-radio-group-label";
+        if(sizeMode != SizeMode.Medium)
+            result += sizeMode == SizeMode.Large ? " dx-demo-large" : " dx-demo-small";
+        return result;
+    }
+    void OnItemClick(ToolbarItemClickEventArgs e) {
+        toasterRef.OnNext($"The '{e.ItemName}' button has been clicked");
+    }
+    bool AOTGroupVisible => !string.IsNullOrEmpty(GeneralAnswer) && GeneralAnswer != GeneralAnswerOptions.Last();
+
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    string TextValue { get; set; } =
+        "Prepare 2020 Marketing Plan: We need to double revenues in 2020 "+
+        "and our marketing strategy is going to be key here. " +
+        "R&D is improving existing products and creating new products "+
+        "so we can deliver great AV equipment to our customers. " +
+        "Robert, please make certain to create a PowerPoint presentation "+
+        "for the members of the executive team.";
+    string Telephone { get; set; } = "5625595830";
+    private DateTime SelectedDate { get; set; }
+    DateTime DateTimeStart { get; set; } = DateTime.Today;
+    DateTime DateTimeEnd { get; set; } = DateTime.Today.AddDays(7);
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    bool drawerOpen = true;
+    public List<Employee> Data { get; set; } = new List<Employee>();
+public object Value { get; set; }
+    protected override void OnInitialized()
+{
+    Data = new List<Employee>
+    {
+        new Employee { Text = "Juan Pérez" },
+        new Employee { Text = "María García" },
+        new Employee { Text = "Carlos López" },
+        new Employee { Text = "Ana Martínez" },
+        new Employee { Text = "Pedro Rodríguez" },
+        new Employee { Text = "Luis Fernández" },
+        new Employee { Text = "Carmen Díaz" },
+        new Employee { Text = "Roberto Silva" },
+        new Employee { Text = "Isabel Torres" },
+        new Employee { Text = "Miguel Vega" }
+    };
+}
+    CarOptions options = CarOptions.AirConditioning | CarOptions.HeatedSeats;
+    bool? SelectAllState {
+        get {
+            if(options == CarOptions.None)
+                return false;
+            if(options == CarOptions.All)
+                return true;
+            return null;
+        }
+        set {
+            if(value.HasValue)
+                options = value.Value ? CarOptions.All : CarOptions.None;
+        }
+    }
+    bool AirConditioning {
+        get => options.HasFlag(CarOptions.AirConditioning);
+        set => SetOption(value, CarOptions.AirConditioning);
+    }
+    bool Multimedia {
+        get => options.HasFlag(CarOptions.Multimedia);
+        set => SetOption(value, CarOptions.Multimedia);
+    }
+    bool ParkingSensors {
+        get => options.HasFlag(CarOptions.ParkingSensors);
+        set => SetOption(value, CarOptions.ParkingSensors);
+    }
+    bool HeatedSeats {
+        get => options.HasFlag(CarOptions.HeatedSeats);
+        set => SetOption(value, CarOptions.HeatedSeats);
+    }
+    void SetOption(bool value, CarOptions enumValue) {
+        if(value)
+            options |= enumValue;
+        else
+            options &= ~enumValue;
+    }
+    decimal GetTotalPrice() {
+        decimal price = 0;
+        price += Multimedia ? 130 : 0;
+        price += AirConditioning ? 800 : 0;
+        price += ParkingSensors ? 400 : 0;
+        price += HeatedSeats ? 230 : 0;
+        return price;
+    }
+    string GetCssClass(bool selected) => selected ? string.Empty : " dx-demo-text-strikethrough";
+    string GetLabelCssClass(SizeMode sizeMode) {
+        var result = "dx-demo-label";
+        if(sizeMode != SizeMode.Medium)
+            result += sizeMode == SizeMode.Large ? " dx-demo-large" : " dx-demo-small";
+        return result;
+    }
+    [Flags]
+    enum CarOptions {
+        None = 0x0,
+        AirConditioning = 0x1,
+        Multimedia = 0x2,
+        ParkingSensors = 0x4,
+        HeatedSeats = 0x8,
+        All = AirConditioning | Multimedia | ParkingSensors | HeatedSeats
+    }
+
+    public class Employee
+{
+    public string Text { get; set; }
+}
+
+}

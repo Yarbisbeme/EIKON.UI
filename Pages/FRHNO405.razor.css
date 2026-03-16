@@ -1,0 +1,414 @@
+/* ===========================
+   Main Form Container
+   =========================== */
+.frhno405-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* ===========================
+   Standard Input Fields
+   =========================== */
+.frhno405-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno405-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Full width for dropdowns */
+::deep .full-width {
+    width: 100%;
+}
+
+/* ===========================
+   Dual Input Row - A qué año and Monto
+   =========================== */
+.dual-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+/* ===========================
+   Nómina Section
+   =========================== */
+.nomina-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nomina-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nomina-header label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* ===========================
+   Periodo Section with Boxed Background
+   =========================== */
+.periodo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid #bfbfbf;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.periodo-label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.periodo-inputs {
+    display: grid;
+    grid-template-columns: 80px 80px auto 80px 80px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.periodo-spin {
+    max-width: 80px;
+}
+
+.hasta-label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    text-align: center;
+}
+
+.periodo-checks {
+    display: flex;
+    gap: 8px;
+    margin-left: 15px;
+}
+
+/* ===========================
+   Dual Check Row - Oficina/Ubicación with Action Buttons
+   =========================== */
+.dual-check-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    align-items: start;
+}
+
+.check-with-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-buttons-right {
+    display: flex;
+    gap: 8px;
+    margin-top: 26px;
+}
+
+/* ===========================
+   Employee Types Section with Boxed Background
+   =========================== */
+.employee-types {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    gap: 15px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.action-buttons-side {
+    display: flex;
+    gap: 8px;
+}
+
+/* ===========================
+   Icon Buttons - Generic Action Buttons
+   =========================== */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.icon-btn i {
+    font-size: 16px;
+}
+
+/* ===========================
+   Fecha Aplica Section
+   =========================== */
+.fecha-disco-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.fecha-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fecha-group label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.fecha-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.fecha-input {
+    width: 150px;
+}
+
+.calendar-btn,
+.folder-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.calendar-btn:hover,
+.folder-btn:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+/* ===========================
+   Disco Section with Boxed Background
+   =========================== */
+.disco-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid #bfbfbf;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.disco-section > label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.disco-row {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.input-small,
+.input-large {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-small label,
+.input-large label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.nombre-input {
+    width: 100%;
+}
+
+.disco-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.check-btn,
+.close-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.check-btn {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.check-btn:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.close-btn {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.close-btn:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* ===========================
+   DevExpress Component Overrides
+   =========================== */
+::deep .dx-textbox-container,
+::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+}
+
+::deep .dx-textbox-container:focus-within,
+::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+::deep .dx-textbox,
+::deep .dx-dropdowneditor-input {
+    font-size: 14px !important;
+    color: #33363f !important;
+}
+
+::deep .dx-checkbox {
+    margin: 0 !important;
+}
+
+::deep .dx-checkbox-text {
+    font-size: 14px !important;
+    color: #33363f !important;
+}
+
+/* ===========================
+   Responsive Design - Mobile/Tablet Breakpoints
+   =========================== */
+@media (max-width: 1024px) {
+    .dual-input-row {
+        grid-template-columns: 1fr;
+    }
+
+    .periodo-inputs {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .hasta-label {
+        grid-column: 1 / -1;
+    }
+
+    .periodo-checks {
+        grid-column: 1 / -1;
+        margin-left: 0;
+    }
+
+    .employee-types {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .action-buttons-side {
+        grid-column: 1 / -1;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno405-form {
+        padding: 15px;
+    }
+
+    .dual-check-row {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons-right {
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+
+    .fecha-disco-section {
+        grid-template-columns: 1fr;
+    }
+
+    .disco-row {
+        grid-template-columns: 1fr;
+    }
+
+    .disco-actions {
+        justify-content: flex-end;
+    }
+
+    .employee-types {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .periodo-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .fecha-input-group {
+        flex-wrap: wrap;
+    }
+
+    .nomina-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

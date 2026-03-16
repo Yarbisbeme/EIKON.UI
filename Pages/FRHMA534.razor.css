@@ -1,0 +1,282 @@
+﻿
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Form rows */
+.form-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+/* Input fields */
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 150px;
+}
+
+    .input-field.wide {
+        flex: 3;
+    }
+
+    .input-field.divisor-field {
+        flex: 0 0 200px;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+/* Grid section */
+.grid-section {
+    margin-top: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.moneda-grid {
+    width: 100%;
+    min-height: 400px;
+    border: none;
+}
+
+    /* Grid styling */
+    .moneda-grid .dx-datagrid {
+        border: none;
+        font-family: inherit;
+    }
+
+    .moneda-grid .dx-datagrid-headers {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dc3545;
+    }
+
+    .moneda-grid .dx-datagrid-header-panel {
+        background-color: #f8f9fa;
+    }
+
+    .moneda-grid .dx-header-row {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .moneda-grid .dx-row {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .moneda-grid .dx-row:hover {
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+    .moneda-grid .dx-selection .dx-row {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+
+    .moneda-grid .dx-cell {
+        padding: 12px 15px;
+        border-right: 1px solid #f0f0f0;
+    }
+
+    .moneda-grid .dx-header-cell {
+        padding: 15px;
+        font-weight: 600;
+        color: #333;
+        background-color: #f8f9fa;
+        border-right: 1px solid #e0e0e0;
+    }
+
+/* Grid actions */
+.grid-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    padding: 10px 0;
+}
+
+    .grid-actions .dx-button {
+        min-width: 120px;
+    }
+
+/* DevExpress Components */
+.dx-textbox,
+.dx-spin-edit {
+    border-radius: 6px !important;
+}
+
+.dx-textbox-container,
+.dx-spin-edit-container {
+    border: 1px solid #ced4da !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+    .dx-textbox-container:focus-within,
+    .dx-spin-edit-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+/* Search button styling */
+.dx-editor-button {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: white !important;
+    border-radius: 4px !important;
+}
+
+    .dx-editor-button:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+/* Button styling */
+.dx-button-mode-contained.dx-button-default {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: white !important;
+}
+
+    .dx-button-mode-contained.dx-button-default:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+.dx-button-mode-contained.dx-button-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+    .dx-button-mode-contained.dx-button-success:hover {
+        background-color: #218838 !important;
+        border-color: #1e7e34 !important;
+    }
+
+.dx-button-mode-contained.dx-button-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+    .dx-button-mode-contained.dx-button-danger:hover {
+        background-color: #c82333 !important;
+        border-color: #bd2130 !important;
+    }
+
+/* Spin Edit específico */
+.dx-spin-edit .dx-texteditor-input {
+    text-align: right;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+media (max-width: 1024px) {
+    .form-container
+
+{
+    padding: 15px;
+    gap: 20px;
+}
+
+.form-row {
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.grid-section {
+    margin-top: 12px;
+}
+
+.grid-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+    .grid-actions .dx-button {
+        min-width: 100px;
+    }
+
+}
+
+media (max-width: 768px) {
+    .form-container
+
+{
+    padding: 15px;
+    gap: 15px;
+}
+
+.form-row {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+    min-height: auto;
+}
+
+.input-field {
+    min-width: auto;
+}
+
+    .input-field.wide,
+    .input-field.divisor-field {
+        flex: 1;
+    }
+
+.grid-section {
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.moneda-grid {
+    min-width: 600px;
+}
+
+.grid-actions {
+    flex-direction: column;
+    gap: 10px;
+}
+
+    .grid-actions .dx-button {
+        width: 100%;
+        min-width: auto;
+    }
+
+}
+
+media (max-width: 480px) {
+    .form-container
+
+{
+    gap: 12px;
+    padding: 12px;
+}
+
+.form-row {
+    gap: 12px;
+}
+
+.grid-section {
+    margin-top: 8px;
+}
+
+.input-field label {
+    font-size: 12px;
+}
+
+.moneda-grid .dx-cell,
+.moneda-grid .dx-header-cell {
+    padding: 8px 10px;
+    font-size: 13px;
+}
+
+}

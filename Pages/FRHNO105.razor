@@ -1,0 +1,140 @@
+@layout MainLayout
+@page "/FRHNO105"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO105 - Asignación de Nómina" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhno105-form">
+
+        <!-- Número Empleado -->
+        <div class="input">
+            <label>Número Empleado</label>
+            <DxTextBox @bind-Text="@NumeroEmpleado" NullText="Número Empleado" CssClass="numero-empleado-input">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Nombre -->
+        <div class="emp-info">
+            <div class="input">
+                <label>Nombre</label>
+                <DxTextBox @bind-Text="@Nombre" NullText="Nombre" />
+            </div>
+            <!-- Oficina -->
+            <div class="input">
+                <label>Oficina</label>
+                <DxTextBox @bind-Text="@Oficina" NullText="Oficina" />
+            </div>
+
+        </div>
+
+        <div class="emp-info">
+            <!-- Ubicación -->
+            <div class="input">
+                <label>Ubicación</label>
+                <DxTextBox @bind-Text="@Ubicacion" NullText="Ubicación" />
+            </div>
+
+            <!-- Cargo -->
+            <div class="input">
+                <label>Cargo</label>
+                <DxTextBox @bind-Text="@Cargo" NullText="Cargo" />
+            </div>
+
+            <!-- Nómina Pago -->
+            <div class="input nomina-pago-field">
+                <label>Nómina Pago</label>
+                <DxComboBox Data="@NominaPagoOpciones"
+                            @bind-Value="@NominaPago"
+                            NullText="Seleccione nómina"
+                            CssClass="nomina-pago-combo" />
+            </div>
+
+        </div>
+        <!-- Separador visual -->
+        <div class="separator"></div>
+
+        <!-- Sección Transacciones -->
+        <div class="transacciones-section">
+            <label class="transacciones-label">Transacciones</label>
+
+            <div class="transacciones-controls">
+                <div class="ordenado-container">
+                    <label class="ordenado-label">Ordenado por...</label>
+                    <DxComboBox Data="@OrdenamientoOpciones"
+                                @bind-Value="@Ordenamiento"
+                                NullText="Número de Emplea"
+                                CssClass="ordenamiento-combo" />
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-button" @onclick="OnRefresh" title="Actualizar">
+                        <i class="fi fi-rr-print"></i>
+                    </button>
+                    <button class="action-button" @onclick="OnCopy" title="Copiar">
+                        <i class="fi fi-rr-envelope"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Campos del empleado
+    private string NumeroEmpleado { get; set; } = string.Empty;
+    private string Nombre { get; set; } = string.Empty;
+    private string Oficina { get; set; } = string.Empty;
+    private string Ubicacion { get; set; } = string.Empty;
+    private string Cargo { get; set; } = string.Empty;
+    private string NominaPago { get; set; } = string.Empty;
+
+    // Ordenamiento
+    private string Ordenamiento { get; set; } = "Número de Emplea";
+
+    // Datos dropdown
+    private List<string> NominaPagoOpciones = new List<string>
+    {
+        "Nómina Quincenal",
+        "Nómina Mensual",
+        "Nómina Semanal",
+        "Nómina Especial"
+    };
+
+    private List<string> OrdenamientoOpciones = new List<string>
+    {
+        "Número de Emplea",
+        "Nombre",
+        "Oficina",
+        "Cargo",
+        "Fecha de Ingreso"
+    };
+
+    // Event handlers
+    private void OnSearchEmpleado() { }
+    private void OnRefresh() { }
+    private void OnCopy() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

@@ -1,0 +1,569 @@
+@page "/FRHCL101New"
+@page "/FRHCL101New/{id:int}"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject IMockService<Frhpu010Dto> MockCargosService
+@inject IMockService<Frhrq010Dto> MockRequisicionesService
+@inject IMockService<Frhjo010Dto> MockPuestosService
+@inject IMockService<Trhfm000Dto> MockPermisosService
+@inject IMockService<Trhnp010Dto> MockClasesService
+@inject IMockService<Trhct010Dto> MockCategoriasService
+@inject IMockService<Trhof010Dto> MockOficinasService
+@inject IMockService<Trhem000Dto> MockEmpresasService
+@inject IMockService<Trhub010Dto> MockUbicacionesService
+@inject IMockService<Trhmt000Dto> MockmotivosService
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHCL101 - SIRH - Creación de Cargos" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHCL101" OnAdd="Agregar" OnSave="Guarda" OnRemove="Eliminar" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección superior con campos principales -->
+        <div class="basic-info-section">
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Cargo</label>
+                    <DxTextBox @bind-Text="@SelectedItem.Puenume"
+                               NullText="Cargo"
+                               ReadOnly="true" />
+                </div>
+                
+                <div class="input-field wide">
+                    <label>Título</label>
+                    <DxTextBox @bind-Text="@SelectedItem.Puetitu"
+                               NullText="Título del cargo" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Requisición</label>
+                    <DxTextBox @bind-Text="@SelectedItem.Reqnume"
+                               NullText="Requisición"
+                               ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="BuscarReq" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="select-field">
+                    <label>Oficina</label>
+                    <DxComboBox Data="@oficinas"
+                                @bind-Value="@SelectedItem.OfCodigo"
+                                TextFieldName="OfDescri"
+                                ValueFieldName="OfCodigo"
+                                NullText="Seleccionar oficina"
+                                ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never" />
+                </div>
+                
+                <div class="select-field">
+                    <label>Ubicación</label>
+                    <DxComboBox Data="@ubicaciones"
+                                @bind-Value="@SelectedItem.UbCodigo"
+                                TextFieldName="UbDescri"
+                                ValueFieldName="UbCodigo"
+                                NullText="Seleccionar ubicación"
+                                ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never" />
+                </div>
+                
+                <div class="select-field">
+                    <label>Puesto</label>
+                    <DxComboBox Data="@puestos"
+                                @bind-Value="@SelectedItem.JoNumber"
+                                TextFieldName="JoTitulo"
+                                ValueFieldName="JoNumber"
+                                NullText="Seleccionar puesto"
+                                ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never" />
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="select-field">
+                    <label>Clase</label>
+                    <DxComboBox Data="@clases"
+                                @bind-Value="@SelectedItem.NpCodigo"
+                                TextFieldName="NpDescri"
+                                ValueFieldName="NpCodigo"
+                                NullText="Seleccionar clase"
+                                ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never" />
+                </div>
+                
+                <div class="select-field">
+                    <label>Categoría</label>
+                    <DxComboBox Data="@categorias"
+                                @bind-Value="@categoria_np.CtCodigo"
+                                TextFieldName="CtDescri"
+                                ValueFieldName="CtCodigo"
+                                NullText="Seleccionar categoría"
+                                ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Fec Creación</label>
+                    <DxDateEdit @bind-Date="@SelectedItem.ChangedOn"
+                               DisplayFormat="d"
+                               NullText="--/--/----" />
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Sueldo Entrada</label>
+                    <DxSpinEdit @bind-Value="@categoria_np.Minent"
+                               DisplayFormat="F2"
+                               NullText="0.00" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Período Prueba (Meses)</label>
+                    <DxSpinEdit @bind-Value="@clase_np.NpPeriodo"
+                               MinValue="0"
+                               MaxValue="12"
+                               DisplayFormat="0" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Presupuesto</label>
+                    <DxSpinEdit @bind-Value="@categoria_np.Ptomedio"
+                               DisplayFormat="F2"
+                               NullText="0.00" />
+                </div>
+            </div>
+            
+            <div class="form-row last-row">
+                <div class="status-section">
+                    <label>Estatus</label>
+                    <div class="status-options">
+                        <DxRadio GroupName="status-group" @bind-GroupValue="@SelectedItem.Puevaca" Value="@("I")" CssClass="dx-demo-radio">Inactivo</DxRadio>
+                        <DxRadio GroupName="status-group" @bind-GroupValue="@SelectedItem.Puevaca" Value="@("A")" CssClass="dx-demo-radio">Activo</DxRadio>
+                        <DxRadio GroupName="status-group" @bind-GroupValue="@SelectedItem.Puevaca" Value="@("V")" CssClass="dx-demo-radio">Vacante</DxRadio>
+                        <DxRadio GroupName="status-group" @bind-GroupValue="@SelectedItem.Puevaca" Value="@("P")" CssClass="dx-demo-radio">Proceso</DxRadio>
+                        <DxRadio GroupName="status-group" @bind-GroupValue="@SelectedItem.Puevaca" Value="@("E")" CssClass="dx-demo-radio">Eliminar</DxRadio>
+                    </div>
+                </div>
+                
+                <div class="reproducer-section">
+                    <div class="reproducer-group">
+                        <DxCheckBox @bind-Checked="@ReproducirCargoOption" 
+                                   CssClass="reproducer-checkbox"
+                                   ValueChanged="OnReproducirCargoChanged">¿ Reproducir cargo ?</DxCheckBox>
+                        
+                        <div class="input-field cantidad-field">
+                            <label>Cantidad</label>
+                            <DxSpinEdit @bind-Value="@CantidadValue"
+                                       MinValue="0"
+                                       DisplayFormat="0"
+                                       Enabled="@ReproducirCargoOption" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Sección de información básica */
+    .basic-info-section {
+        padding: 25px 0;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        min-height: 60px;
+        padding: 10px 0;
+    }
+
+    .form-row:first-child {
+        padding-top: 0;
+    }
+    
+    .form-row.last-row {
+        border-top: 1px solid #e0e0e0;
+        margin-top: 15px;
+        padding-top: 20px;
+        align-items: center;
+    }
+
+    /* Input fields */
+    .input-field, .select-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    .input-field label, .select-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Status section */
+    .status-section {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .status-section label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .status-options {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* DxRadio styling */
+    .dx-demo-radio {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+        margin-right: 20px;
+    }
+
+    .dx-demo-radio .dx-radio-icon {
+        accent-color: #dc3545;
+    }
+
+    .dx-demo-radio:hover .dx-radio-icon {
+        border-color: #dc3545 !important;
+    }
+
+    .dx-demo-radio.dx-radio-checked .dx-radio-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    /* Reproducer section */
+    .reproducer-section {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+    }
+
+    .reproducer-group {
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+    }
+
+    .reproducer-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .cantidad-field {
+        min-width: 120px;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-combobox {
+        border-radius: 6px !important;
+        flex: 1;
+    }
+
+    .dx-textbox-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Search button styling */
+    .dx-editor-button {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        border-radius: 4px !important;
+    }
+
+    .dx-editor-button:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+    /* Date and Spin Edit styling */
+    .dx-date-edit,
+    .dx-spin-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-date-edit .dx-textbox-container,
+    .dx-spin-edit .dx-textbox-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-date-edit .dx-textbox-container:focus-within,
+    .dx-spin-edit .dx-textbox-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* ComboBox styling */
+    .dx-combobox .dx-textbox-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-combobox .dx-textbox-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Checkboxes */
+    .dx-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1200px) {
+        .form-container {
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .basic-info-section {
+            padding: 20px;
+        }
+
+        .form-row {
+            flex-wrap: wrap;
+            gap: 15px;
+            min-height: auto;
+        }
+
+        .status-options {
+            gap: 15px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .basic-info-section {
+            padding: 15px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+        
+        .form-row.last-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 20px;
+        }
+
+        .input-field.wide {
+            flex: 1;
+        }
+
+        .status-section {
+            flex: 1;
+        }
+
+        .status-options {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .reproducer-section {
+            justify-content: flex-start;
+        }
+
+        .reproducer-group {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .basic-info-section {
+            padding: 12px;
+        }
+
+        .form-row {
+            gap: 12px;
+        }
+
+        .input-field label, .select-field label {
+            font-size: 12px;
+        }
+
+        .status-options {
+            gap: 8px;
+        }
+
+        .dx-demo-radio {
+            font-size: 13px;
+        }
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    
+    // Toolbar options
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Form fields
+    private int CantidadValue { get; set; } = 0;
+    private bool ReproducirCargoOption { get; set; } = false;
+    
+    // Data objects
+    private Frhpu010Dto SelectedItem { get; set; } = new Frhpu010Dto();
+    private Trhnp010Dto clase_np { get; set; } = new Trhnp010Dto();
+    private Trhct010Dto categoria_np { get; set; } = new Trhct010Dto();
+    
+    // Data lists
+    private List<Trhof010Dto> oficinas { get; set; } = new List<Trhof010Dto>();
+    private List<Trhub010Dto> ubicaciones { get; set; } = new List<Trhub010Dto>();
+    private List<Frhjo010Dto> puestos { get; set; } = new List<Frhjo010Dto>();
+    private List<Trhnp010Dto> clases { get; set; } = new List<Trhnp010Dto>();
+    private List<Trhct010Dto> categorias { get; set; } = new List<Trhct010Dto>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await CargaRegistro();
+    }
+    
+    // Event handlers
+    private void Agregar()
+    {
+        SelectedItem = new Frhpu010Dto
+        {
+            IdentityColumn = 0,
+            CreatedBy = "N",
+            CreatedOn = DateTime.Today,
+            ChangedOn = DateTime.Today,
+            ChangedBy = "N",
+            Puevaca = "A"
+        };
+        Console.WriteLine("Crear nuevo cargo");
+    }
+    
+    private void Guarda()
+    {
+        Console.WriteLine("Guardar cargo");
+    }
+    
+    private void Eliminar()
+    {
+        Console.WriteLine("Eliminar cargo");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Cargo guardado exitosamente!");
+        nv.NavigateTo("/dash");
+    }
+    
+    private async Task BuscarReq()
+    {
+        await JS.InvokeVoidAsync("alert", "Buscar requisición - Funcionalidad pendiente");
+    }
+    
+    private void OnReproducirCargoChanged(bool value)
+    {
+        ReproducirCargoOption = value;
+        if (!value)
+        {
+            CantidadValue = 0; // Reset cantidad cuando se deshabilita
+        }
+        StateHasChanged();
+    }
+    
+    async Task CargaRegistro()
+    {
+        oficinas = await MockOficinasService.GetAllAsync(9);
+        ubicaciones = await MockUbicacionesService.GetAllAsync(9);
+        puestos = await MockPuestosService.GetAllAsync(9);
+        clases = await MockClasesService.GetAllAsync(9);
+        categorias = await MockCategoriasService.GetAllAsync(9);
+        
+        if (id == 0)
+        {
+            SelectedItem = new Frhpu010Dto
+            {
+                Puenume = "000001",
+                Puetitu = "Nuevo Cargo",
+                ChangedOn = DateTime.Today,
+                Puevaca = "A"
+            };
+            clase_np = clases.FirstOrDefault() ?? new Trhnp010Dto { NpPeriodo = 3 };
+            categoria_np = categorias.FirstOrDefault() ?? new Trhct010Dto();
+        }
+        else
+        {
+            var data = await MockCargosService.GetAllAsync(9);
+            SelectedItem = data.FirstOrDefault(pt => pt.IdentityColumn == id) ?? new Frhpu010Dto();
+            clase_np = clases.FirstOrDefault(pt => pt.IdentityColumn == id) ?? new Trhnp010Dto();
+            categoria_np = categorias.FirstOrDefault(pt => pt.IdentityColumn == id) ?? new Trhct010Dto();
+        }
+    }
+}

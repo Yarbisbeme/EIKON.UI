@@ -1,0 +1,132 @@
+﻿@page "/index"
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using Microsoft.AspNetCore.Http
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+@layout LoginLayout
+@inject IJSRuntime JSRuntime
+@inject EIKON.UI.Services.AuthenticationService auth
+
+
+
+<h2 class="pb-2">Eikon.Net</h2>
+<p class="pb-2 mw-1100">
+  Bienvenido, favor ingrese sus credenciales
+</p>
+<div class="pb-2 mw-1100">
+    <img class="fit-width" src="images/logo-web-eikon.png" />
+</div>
+<div class="row">
+    
+    <div class="col-md-2">Usuario *:</div>
+    <div class="col-md-2"><DxTextBox Id="userText" @bind-Text="@user" @onchange="BuscaEmpresas" ></DxTextBox></div>
+    
+</div>
+<div class="row">
+    <div class="col-md-2">Contrasena *:</div>
+    <div class="col-md-2"><DxTextBox Id="userPass" @bind-Text="@pass" Password="false"></DxTextBox></div>
+    
+</div>
+<div class="row">
+    if(@empresas != null && @empresas.Count() > 0)
+    {
+    <div class="col-md-2">Seleccione Empresa:</div>
+    <div class="col-md-2"><button id="btnLogin" @onclick="ConfirmLogin">Login</button></div>
+    }
+    else
+    {
+    <div class="col-md-2">Cargando Empresas...</div>
+    })
+    
+    @* <div class="col-md-3"><DxTextBox Id="userName" Text="@nombre" Enabled="false"></DxTextBox></div> *@
+    <div class="col-md-3">
+        <DxComboBox id="empresa" Data="@empresas" ValueFieldName="EmCodigo" TextFieldName="EmDescri" @bind-Value="empresa" ValidationEnabled="true"
+                    ShowValidationIcon="true"
+                    ShowValidationSuccessState="true"></DxComboBox>
+    </div>
+</div>
+<h2 class="mb-4 mt-4">Olvidó su contraseña?</h2>
+<div class="row">
+    <div class="col-md-2"><button id="btnRecuperar" @onclick="Recuperar">Recuperar Contraseña</button></div>
+</div>
+
+
+@code {
+    public string user { get; set; } = "00000376";
+    public string pass { get; set; } = "eikon";
+    public string nombre { get; set; } = " ";
+    public string Token { get; set; } = "";
+    public string empresa { get; set; } = "01";
+    private IEnumerable<LoginDto> login { get; set; } = Enumerable.Empty<LoginDto>();
+    private List<DxMnItemDto> MenuItems;
+    private List<Trhem000Dto> empresas;
+    //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    //var user = authState.User;
+    protected override async Task OnInitializedAsync()
+    {
+        // private  IHttpContextAccessor _httpContextAccessor;
+        HttpContext httpContext = null;
+        user = "00000375";
+        //empresas = api.Trhem000PorUsurio(user);
+        //httpContext.Session.SetString("token", "s");
+
+        // EikonDataServices eikonDataServices =  null;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            // Token = await auth.GetTokenAsync();
+            await JSRuntime.InvokeVoidAsync("cookieInterop.deleteCookie", "AuthToken"); // 7 días de expiración
+
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            // api.SetToken(Token);
+        }
+    }
+    private async void ConfirmLogin()
+    {
+        //var auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        try
+        {
+            login = api.Frhma010Login(user, pass, empresa);
+            nombre = login.FirstOrDefault().UsrName;
+            api.SetUser(user);
+            var authToken = login.FirstOrDefault().UsrTk;
+
+            // Llama al método JS Interop para establecer la cookie
+            await JSRuntime.InvokeVoidAsync("cookieInterop.setCookie", "AuthToken", authToken, 1); // 7 días de expiración
+            Token = await auth.GetTokenAsync();
+            //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            api.SetToken(Token);
+            api.SetTipo(login.FirstOrDefault().Tipo);
+            auth.tkn = Token;
+
+            var ruta = "/FRHRE101";
+            Navigation.NavigateTo(ruta);
+
+        }
+        catch (Exception)
+        {
+            nombre = "Ha ocurrido un error verifique sus datos";
+            MenuItems = await api.GetDxMenuForRole("00000000",Token);
+        }
+
+    }
+    private void Recuperar()
+    {
+        Navigation.NavigateTo("/recuperar");
+    }
+    private async Task BuscaEmpresas(ChangeEventArgs e)
+    {
+        string valor = e.Value?.ToString();
+        empresas = await api.Trhem000PorUsurio(valor);
+    }
+
+}

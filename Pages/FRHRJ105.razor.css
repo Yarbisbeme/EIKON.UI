@@ -1,0 +1,183 @@
+/* Contenedor principal */
+.frhrj105-container {
+    display: flex;
+    width: 100%;
+    gap: 0;
+}
+
+/* Contenido principal */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Campos superiores */
+.top-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Sección de grids */
+.grids-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.grid-header {
+    background-color: #e9ecef;
+    color: #33363f;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.jornada-grid,
+.horario-grid {
+    min-height: 250px;
+}
+
+/* DevExpress Grid overrides */
+.frhrj105-container ::deep .dx-datagrid {
+    border: none !important;
+}
+
+.frhrj105-container ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+    font-weight: 600;
+}
+
+.frhrj105-container ::deep .dx-header-row td {
+    color: #33363f !important;
+    font-size: 13px;
+    border-bottom: 1px solid #bfbfbf;
+    padding: 8px;
+}
+
+.frhrj105-container ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.frhrj105-container ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+.frhrj105-container ::deep .dx-datagrid-rowsview .dx-selection.dx-row {
+    background-color: #e9ecef !important;
+}
+
+/* DevExpress TextBox overrides */
+.frhrj105-container ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhrj105-container ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhrj105-container ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+.frhrj105-container ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+.frhrj105-container ::deep .dx-textbox.dx-state-readonly .dx-textbox-container {
+    background-color: #f8f9fa !important;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .grids-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .top-fields {
+        gap: 10px;
+    }
+
+    .field-row{
+        flex-direction:column
+    }
+
+    .jornada-grid,
+    .horario-grid {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .top-fields {
+        gap: 8px;
+    }
+
+    .input label {
+        font-size: 13px;
+    }
+
+    .grid-header {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .frhrj105-container ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .jornada-grid,
+    .horario-grid {
+        min-height: 180px;
+    }
+}

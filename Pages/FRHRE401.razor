@@ -1,0 +1,307 @@
+@layout MainLayout
+@page "/FRHRE401"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Consulta Por Selección - Solicitud Externa" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="consulta-form">
+        
+        <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+            <DxTabPage Text="Condiciones">
+                <div class="condiciones-content">
+                    <div class="grid-container">
+                        <div class="grid-header-row">
+                            <div class="grid-header-cell">Criterio</div>
+                            <div class="grid-header-cell">Operador</div>
+                            <div class="grid-header-cell">Constante o Expresión</div>
+                            <div class="grid-header-cell">Conector</div>
+                        </div>
+                        <div class="grid-data-row">
+                            <div class="grid-data-cell">
+                                <DxComboBox Data="@criteriosList"
+                                           @bind-Value="@CondicionActual.Criterio"
+                                           TextFieldName="Text"
+                                           ValueFieldName="Value"
+                                           NullText=""
+                                           CssClass="grid-combo" />
+                            </div>
+                            <div class="grid-data-cell">
+                                <DxComboBox Data="@operadoresList"
+                                           @bind-Value="@CondicionActual.Operador"
+                                           TextFieldName="Text"
+                                           ValueFieldName="Value"
+                                           NullText=""
+                                           CssClass="grid-combo" />
+                            </div>
+                            <div class="grid-data-cell">
+                                <DxTextBox @bind-Text="@CondicionActual.ConstanteExpresion"
+                                          CssClass="grid-textbox" />
+                            </div>
+                            <div class="grid-data-cell">
+                                <DxComboBox Data="@conectoresList"
+                                           @bind-Value="@CondicionActual.Conector"
+                                           TextFieldName="Text"
+                                           ValueFieldName="Value"
+                                           NullText=""
+                                           CssClass="grid-combo" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Área SQL -->
+                    <div class="input">
+                        <label for="user">SQL</label>
+                        <DxMemo @bind-Text="@ConsultaData.SqlText"
+                               Rows="10"
+                               CssClass="sql-textarea" />
+                    </div>
+                </div>
+            </DxTabPage>
+
+            <DxTabPage Text="Orden">
+                <div class="orden-content">
+                    <!-- Paneles de transferencia -->
+                    <div class="transfer-container">
+                        <div class="transfer-panel">
+                            <DxListBox Data="@camposDisponiblesOrden"
+                                      @bind-Values="@selectedCamposDisponibles"
+                                      TextFieldName="Text"
+                                      ValueFieldName="Value"
+                                      SelectionMode="ListBoxSelectionMode.Multiple"
+                                      CssClass="transfer-listbox" />
+                        </div>
+                        
+                        <div class="transfer-buttons">
+                            <DxButton Text="▶" CssClass="transfer-btn" />
+                            <DxButton Text="▶▶" CssClass="transfer-btn" />
+                            <DxButton Text="◀" CssClass="transfer-btn" />
+                            <DxButton Text="◀◀" CssClass="transfer-btn" />
+                        </div>
+                        
+                        <div class="transfer-panel">
+                            <DxListBox Data="@camposSeleccionadosOrden"
+                                      @bind-Values="@selectedCamposSeleccionados"
+                                      TextFieldName="Text"
+                                      ValueFieldName="Value"
+                                      SelectionMode="ListBoxSelectionMode.Multiple"
+                                      CssClass="transfer-listbox" />
+                        </div>
+                    </div>
+
+                    <!-- Radio buttons y toolbar -->
+                    <div class="orden-footer">
+                        <div class="radio-group">
+                            <DxRadio GroupName="ordenDirection"
+                                    @bind-GroupValue="@ConsultaData.DireccionOrden"
+                                    Value="@("asc")"
+                                    CssClass="orden-radio">
+                                Ascendente
+                            </DxRadio>
+                            <DxRadio GroupName="ordenDirection"
+                                    @bind-GroupValue="@ConsultaData.DireccionOrden"
+                                    Value="@("desc")"
+                                    CssClass="orden-radio">
+                                Descendente
+                            </DxRadio>
+                        </div>
+                    </div>
+                </div>
+            </DxTabPage>
+
+            <DxTabPage Text="Datos a Presentar">
+                <div class="datos-content">
+                    <!-- Paneles de transferencia -->
+                    <div class="transfer-container">
+                        <div class="transfer-panel">
+                            <DxListBox Data="@camposDisponiblesDatos"
+                                      @bind-Values="@selectedCamposDisponiblesDatos"
+                                      TextFieldName="Text"
+                                      ValueFieldName="Value"
+                                      SelectionMode="ListBoxSelectionMode.Multiple"
+                                      CssClass="transfer-listbox" />
+                        </div>
+                        
+                        <div class="transfer-buttons">
+                            <DxButton Text="▶" CssClass="transfer-btn" />
+                            <DxButton Text="▶▶" CssClass="transfer-btn" />
+                            <DxButton Text="◀" CssClass="transfer-btn" />
+                            <DxButton Text="◀◀" CssClass="transfer-btn" />
+                        </div>
+                        
+                        <div class="transfer-panel">
+                            <DxListBox Data="@camposSeleccionadosDatos"
+                                      @bind-Values="@selectedCamposSeleccionadosDatos"
+                                      TextFieldName="Text"
+                                      ValueFieldName="Value"
+                                      SelectionMode="ListBoxSelectionMode.Multiple"
+                                      CssClass="transfer-listbox" />
+                        </div>
+                    </div>
+
+                    <!-- Controles inferiores -->
+                    <div class="datos-footer">
+                        <div class="cantidad-section">
+                            <label class="cantidad-label">Cantidad de Records Máximo</label>
+                            <div class="cantidad-controls">
+                                <DxCheckBox @bind-Checked="@ConsultaData.SeleccionarTodos"
+                                           CssClass="todos-checkbox">
+                                       Todos
+                                       </DxCheckBox>
+                                <div class="cantidad-input-group">
+                                    <label>Cantidad Records</label>
+                                    <DxSpinEdit @bind-Value="@ConsultaData.CantidadRecords"
+                                               MinValue="1"
+                                               MaxValue="10000"
+                                               CssClass="cantidad-input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </DxTabPage>
+        </DxTabs>
+
+    </div>
+</div>
+
+@code {
+    private ConsultaSeleccionDto ConsultaData { get; set; } = new ConsultaSeleccionDto();
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private int ActiveTabIndex = 0;
+    
+    private CondicionDto CondicionActual { get; set; } = new CondicionDto();
+    
+    // Listas para ComboBox
+    private List<ComboBoxItem> criteriosList { get; set; } = new List<ComboBoxItem>();
+    private List<ComboBoxItem> operadoresList { get; set; } = new List<ComboBoxItem>();
+    private List<ComboBoxItem> conectoresList { get; set; } = new List<ComboBoxItem>();
+    
+    // Campos para orden
+    private List<CampoItem> camposDisponiblesOrden { get; set; } = new List<CampoItem>();
+    private List<CampoItem> camposSeleccionadosOrden { get; set; } = new List<CampoItem>();
+    private IEnumerable<object> selectedCamposDisponibles = new List<object>();
+    private IEnumerable<object> selectedCamposSeleccionados = new List<object>();
+    
+    // Campos para datos
+    private List<CampoItem> camposDisponiblesDatos { get; set; } = new List<CampoItem>();
+    private List<CampoItem> camposSeleccionadosDatos { get; set; } = new List<CampoItem>();
+    private IEnumerable<object> selectedCamposDisponiblesDatos = new List<object>();
+    private IEnumerable<object> selectedCamposSeleccionadosDatos = new List<object>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        await Task.Delay(100);
+        
+        ConsultaData = new ConsultaSeleccionDto
+        {
+            DireccionOrden = "asc",
+            SeleccionarTodos = false,
+            CantidadRecords = 100
+        };
+
+        // Cargar listas para condiciones
+        criteriosList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "numero", Text = "Número" },
+            new ComboBoxItem { Value = "nombre", Text = "Nombre" },
+            new ComboBoxItem { Value = "apellido", Text = "Apellido" },
+            new ComboBoxItem { Value = "cedula", Text = "Cédula" },
+            new ComboBoxItem { Value = "fecha", Text = "Fecha" },
+            new ComboBoxItem { Value = "estatus", Text = "Estatus" }
+        };
+
+        operadoresList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "=", Text = "Igual" },
+            new ComboBoxItem { Value = "!=", Text = "Diferente" },
+            new ComboBoxItem { Value = ">", Text = "Mayor que" },
+            new ComboBoxItem { Value = "<", Text = "Menor que" },
+            new ComboBoxItem { Value = "LIKE", Text = "Contiene" }
+        };
+
+        conectoresList = new List<ComboBoxItem>
+        {
+            new ComboBoxItem { Value = "AND", Text = "Y" },
+            new ComboBoxItem { Value = "OR", Text = "O" },
+            new ComboBoxItem { Value = "", Text = "" }
+        };
+
+        // Cargar campos para orden (según imagen 2)
+        camposDisponiblesOrden = new List<CampoItem>
+        {
+            new CampoItem { Value = "numero", Text = "Número" },
+            new CampoItem { Value = "nombre", Text = "Nombre" },
+            new CampoItem { Value = "apellido", Text = "Apellido" },
+            new CampoItem { Value = "nacimiento", Text = "Nacimiento" },
+            new CampoItem { Value = "fecha", Text = "Fecha" },
+            new CampoItem { Value = "estatus", Text = "Estatus" }
+        };
+
+        // Cargar campos para datos (según imagen 3)
+        camposDisponiblesDatos = new List<CampoItem>
+        {
+            new CampoItem { Value = "numero", Text = "Número" },
+            new CampoItem { Value = "nombre", Text = "Nombre" },
+            new CampoItem { Value = "apellido", Text = "Apellido" },
+            new CampoItem { Value = "cedula", Text = "Cedula" },
+            new CampoItem { Value = "sexo", Text = "Sexo" },
+            new CampoItem { Value = "calle", Text = "Calle" },
+            new CampoItem { Value = "barrio", Text = "Barrio" },
+            new CampoItem { Value = "ciudad", Text = "Ciudad" },
+            new CampoItem { Value = "sueldo", Text = "Sueldo" },
+            new CampoItem { Value = "fnacimiento", Text = "FNacimiento" },
+            new CampoItem { Value = "edad", Text = "Edad" }
+        };
+
+        camposSeleccionadosOrden = new List<CampoItem>();
+        camposSeleccionadosDatos = new List<CampoItem>();
+    }
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        ActiveTabIndex = newIndex;
+    }
+
+    private void HandleClose() { }
+
+    // DTOs
+    public class ConsultaSeleccionDto
+    {
+        public string DireccionOrden { get; set; } = "";
+        public bool SeleccionarTodos { get; set; }
+        public int CantidadRecords { get; set; }
+        public string SqlText { get; set; } = "";
+    }
+
+    public class CondicionDto
+    {
+        public string Criterio { get; set; } = "";
+        public string Operador { get; set; } = "";
+        public string ConstanteExpresion { get; set; } = "";
+        public string Conector { get; set; } = "";
+    }
+
+    public class ComboBoxItem
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+
+    public class CampoItem
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+}

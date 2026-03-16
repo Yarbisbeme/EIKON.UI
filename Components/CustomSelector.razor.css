@@ -1,0 +1,30 @@
+﻿.custom-selector {
+    display: flex;
+    gap: 7px;
+    position: relative;
+    flex-direction: column;
+}
+
+    .custom-selector > .selector-options {
+        display: flex;
+        padding: 5px;
+        height: 42px;
+        max-width: max-content;
+        border-radius: 4px;
+        border: 1px solid #e5e5ea;
+        gap: 5px;
+    }
+
+        .custom-selector > .selector-options div {
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            cursor:pointer;
+            border-radius: 4px;
+        }
+
+        .custom-selector > .selector-options > .active {
+            color: #ffffff;
+            /*            background-color: var(--naranja-eikon-normal);*/
+            background-color: #b9351c;
+        }

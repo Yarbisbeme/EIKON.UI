@@ -1,0 +1,219 @@
+/* FRHMA538 - Fluctuaciones tasa cambio */
+
+.frhma538-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Código Field */
+.frhma538-form .codigo-field {
+    max-width: 150px;
+}
+
+/* Tasa Fields */
+.frhma538-form .tasa-field {
+    max-width: 150px;
+}
+
+/* Standard Input Fields */
+.frhma538-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma538-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Periodo Row */
+.frhma538-form .periodo-row {
+    display: flex;
+    gap: 15px;
+    align-items: start;
+}
+
+.frhma538-form .periodo-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhma538-form .date-with-button {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    gap: 8px;
+    align-items: center;
+}
+
+.frhma538-form .date-input {
+    width: 100%;
+}
+
+/* Calendar Button */
+.frhma538-form .calendar-button {
+    width: 40px;
+    height: 36px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhma538-form .calendar-button:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.frhma538-form .calendar-button i {
+    font-size: 16px;
+}
+
+/* Grid Container */
+.frhma538-form .grid-container {
+    margin-top: 10px;
+    min-height: 400px;
+}
+
+.frhma538-form .fluctuaciones-grid {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+/* DevExpress Component Overrides */
+.frhma538-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma538-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma538-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma538-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma538-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma538-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma538-form ::deep .dx-numberbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma538-form ::deep .dx-numberbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma538-form ::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma538-form ::deep .dx-dateedit-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Grid styling */
+.frhma538-form ::deep .dx-datagrid-headers {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 2px solid #bfbfbf;
+}
+
+.frhma538-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhma538-form ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa;
+}
+
+.frhma538-form ::deep .dx-datagrid-rowsview .dx-data-row.dx-state-hover {
+    background-color: #e7f3ff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma538-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhma538-form .grid-container {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma538-form {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .frhma538-form .codigo-field,
+    .frhma538-form .tasa-field {
+        max-width: 100%;
+    }
+
+    .frhma538-form .periodo-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhma538-form .grid-container {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma538-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhma538-form .input label {
+        font-size: 13px;
+    }
+
+    .frhma538-form .date-with-button {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .frhma538-form .calendar-button {
+        width: 100%;
+        height: 36px;
+    }
+
+    .frhma538-form .grid-container {
+        min-height: 250px;
+    }
+}

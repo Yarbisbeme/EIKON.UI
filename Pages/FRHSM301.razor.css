@@ -1,0 +1,245 @@
+/* Main form container */
+.frhsm301-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 25px;
+}
+
+/* Search section - two columns */
+.search-section {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 30px;
+}
+
+/* Left panel - Radio buttons */
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px;
+    gap:20px;
+    border-right: 1px solid #e9ecef;
+}
+
+.search-type-radio ::deep .dx-radiogroup-item {
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.search-type-radio ::deep .dx-radiobutton-text {
+    font-size: 13px;
+    color: #33363f;
+    font-weight: 500;
+}
+
+.search-type-radio ::deep .dx-radiobutton-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.search-type-radio ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+/* Right panel - Search fields */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input fields */
+.frhsm301-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+    .frhsm301-form .input label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+/* Mes row - special layout */
+.mes-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.ejecutar-btn {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 2px;
+}
+
+    .ejecutar-btn ::deep .btn-ejecutar.dx-button {
+        min-width: 100px;
+        height: 38px;
+        font-weight: 500;
+    }
+
+/* Grid section */
+.grid-section {
+    width: 100%;
+}
+
+.resultados-grid {
+    min-height: 400px;
+}
+
+.frhsm301-form ::deep .dx-datagrid {
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhsm301-form ::deep .dx-datagrid-header-panel {
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #007bff !important;
+}
+
+.frhsm301-form ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+    font-weight: 600;
+}
+
+.frhsm301-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+    .frhsm301-form ::deep .dx-datagrid-rowsview .dx-row:hover {
+        background-color: #f8f9fa !important;
+    }
+
+/* DevExpress overrides */
+.frhsm301-form ::deep .dx-textbox-container,
+.frhsm301-form ::deep .dx-numberbox-container,
+.frhsm301-form ::deep .dx-dropdownedit-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+    .frhsm301-form ::deep .dx-textbox-container:focus-within,
+    .frhsm301-form ::deep .dx-numberbox-container:focus-within,
+    .frhsm301-form ::deep .dx-dropdownedit-input-wrapper:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    }
+
+.frhsm301-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* Search button styling */
+.frhsm301-form ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+    .frhsm301-form ::deep .dx-button:hover {
+        background-color: #f0f0f0 !important;
+    }
+
+.frhsm301-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .search-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .left-panel {
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+        padding-right: 0;
+        padding-bottom: 15px;
+    }
+
+    .mes-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .ejecutar-btn {
+        grid-column: 1 / -1;
+        justify-content: center;
+    }
+
+        .ejecutar-btn ::deep .btn-ejecutar.dx-button {
+            width: 100%;
+        }
+}
+
+@media (max-width: 768px) {
+    .frhsm301-form {
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .search-section {
+        padding: 15px;
+    }
+
+    .right-panel {
+        gap: 12px;
+    }
+
+    .frhsm301-form .input label {
+        font-size: 13px;
+    }
+
+    .search-type-radio ::deep .dx-radiobutton-text {
+        font-size: 12px;
+    }
+
+    .mes-row {
+        grid-template-columns: 1fr;
+    }
+
+    .ejecutar-btn {
+        padding-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhsm301-form {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .search-section {
+        padding: 12px;
+    }
+
+    .right-panel {
+        gap: 10px;
+    }
+
+    .frhsm301-form .input label {
+        font-size: 12px;
+    }
+
+    .frhsm301-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .search-type-radio ::deep .dx-radiobutton-text {
+        font-size: 11px;
+    }
+
+    .ejecutar-btn ::deep .btn-ejecutar.dx-button {
+        min-width: auto;
+        height: 36px;
+    }
+
+    .resultados-grid {
+        min-height: 300px;
+    }
+}

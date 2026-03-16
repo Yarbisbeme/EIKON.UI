@@ -1,0 +1,82 @@
+﻿@page "/Recuperar"
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using Microsoft.AspNetCore.Http
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+@layout LoginLayout
+
+<h2 class="pb-2">Eikon.Net</h2>
+<p class="pb-2 mw-1100">
+  Recuperar Contraseña, favor ingrese su usuario
+</p>
+<div class="pb-2 mw-1100">
+    <img class="fit-width" src="images/logo-web-eikon.png" />
+</div>
+<div class="row">
+    
+    <div class="col-md-2">Usuario:</div>
+    <div class="col-md-2"><DxTextBox Id="userText"  @bind-Text="@user"></DxTextBox></div>
+    
+</div>
+
+<div class="row">
+    <div class="col-md-2"><button id="btnLogin" @onclick="ConfirmLogin">Recuperar</button></div>
+    <div class="col-md-3"><DxTextBox Id="userName" Text="@nombre" Enabled="false"></DxTextBox></div>
+</div>
+
+
+
+@code {
+    public string user { get; set; } = "";
+    public string pass { get; set; } = "eikon";
+    public string nombre { get; set; } = " ";
+    private IEnumerable<LoginDto> login { get; set; } = Enumerable.Empty<LoginDto>();
+    private List<DxMnItemDto> MenuItems;
+    private SendEmailRequest mensaje;
+    //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    //var user = authState.User;
+    protected override async Task OnInitializedAsync()
+    {
+        // private  IHttpContextAccessor _httpContextAccessor;
+        HttpContext httpContext = null;
+        user = "";
+        //httpContext.Session.SetString("token", "s");
+
+        // EikonDataServices eikonDataServices =  null;
+    }
+
+    private async void ConfirmLogin()
+    {
+        //var auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        try
+        {
+           // login = api.Frhma010Recuperar(user, pass);
+
+           // nombre = login.FirstOrDefault().usrName;
+            // api.SetUser(user);
+            // MenuItems = await api.GetDxMenuForRole(user);
+            //mensaje = new("Su contraseña ha sido recuperada", "Su Nueva Clave=****", "ydelarosa@eikon.com.do");
+            mensaje.To = "ydelarosa@eikon.com.do";
+            mensaje.Subject = "Recuperación de Contraseña Eikon.Net";
+            mensaje.Body = "Su Nueva Clave=****";   
+            var resultado = api.EnviarCorreo(mensaje);
+            Navigation.NavigateTo("/");
+            //mensaje = new("Su contraseña ha sido recuperada", "Su Nueva Clave=" + login.FirstOrDefault().usrPa, login.FirstOrDefault().usrEmail);
+
+
+        }
+        catch (Exception)
+        {
+            nombre = "Ha ocurrido un error verifique sus datos";
+            MenuItems = await api.GetDxMenuForRole("00000000","xyz");
+        }
+
+    }
+   
+}

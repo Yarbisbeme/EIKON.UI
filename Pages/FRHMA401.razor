@@ -1,0 +1,141 @@
+@layout MainLayout
+@page "/FRHMA401REF"
+@page "/TBREFERENCIA"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA401 - Tablas de referencia" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma401-form">
+
+        <!-- Sección Buscar por -->
+        <div class="search-section">
+            <div class="search-header">Buscar por:</div>
+
+            <div class="search-options">
+                <div class="search-row">
+                    <div class="radio-options-search">
+                        <div class="radio-item">
+                            <DxRadio GroupName="searchType"
+                                     @bind-GroupValue="SearchType"
+                                     Value="@("nombre")">
+                                Nombre
+                            </DxRadio>
+                        </div>
+                        <div class="radio-item">
+                            <DxRadio GroupName="searchType"
+                                     @bind-GroupValue="SearchType"
+                                     Value="@("descripcion")">
+                                Descripción
+                            </DxRadio>
+                        </div>
+                    </div>
+
+                    <div class="search-inputs">
+                        <DxTextBox @bind-Text="@SearchNombre"
+                                   NullText="Buscar por nombre"
+                                   Enabled="@(SearchType == "nombre")" />
+
+                        <DxTextBox @bind-Text="@SearchDescripcion"
+                                   NullText="Buscar por descripción"
+                                   Enabled="@(SearchType == "descripcion")" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de resultados -->
+        <div class="grid-section">
+            <DxGrid Data="@TablasReferencia"
+                    CssClass="tablas-grid"
+                    PageSize="20"
+                    ShowAllRows="false">
+                <Columns>
+                    <DxGridDataColumn FieldName="Nombre" Caption="Nombre" Width="150px" />
+                    <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" />
+                    <DxGridCommandColumn Width="80px">
+                        <HeaderTemplate>
+                            <span></span>
+                        </HeaderTemplate>
+                        <CellDisplayTemplate>
+                            @{
+                                var tabla = (TablaReferenciaItem)context.DataItem;
+                            }
+                            <DxButton IconCssClass="fi fi-rr-search" @onclick="() => ViewItem(tabla)" />
+       
+                        </CellDisplayTemplate>
+                    </DxGridCommandColumn>
+                </Columns>
+            </DxGrid>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Search
+    private string SearchType { get; set; } = "nombre";
+    private string SearchNombre { get; set; } = string.Empty;
+    private string SearchDescripcion { get; set; } = string.Empty;
+
+    // Data
+    private List<TablaReferenciaItem> TablasReferencia = new List<TablaReferenciaItem>
+    {
+        new TablaReferenciaItem { Nombre = "TRHAA000", Descripcion = "TABLA TB TRHAA000" },
+        new TablaReferenciaItem { Nombre = "TRHAL000", Descripcion = "TABLA TB TRHAL000" },
+        new TablaReferenciaItem { Nombre = "TRHAP000", Descripcion = "TABLA TB TRHAP000" },
+        new TablaReferenciaItem { Nombre = "TRHAT000", Descripcion = "GRUPOS DE CUENTAS" },
+        new TablaReferenciaItem { Nombre = "TRHBL000", Descripcion = "CLASIFICACIÓN DE LOS BENEFICIOS" },
+        new TablaReferenciaItem { Nombre = "TRHCD000", Descripcion = "TABLA TB TRHCD000" },
+        new TablaReferenciaItem { Nombre = "TRHCI000", Descripcion = "ESTADOS CIVIL" },
+        new TablaReferenciaItem { Nombre = "TRHCJ000", Descripcion = "TABLA TB TRHCJ000" },
+        new TablaReferenciaItem { Nombre = "TRHCO000", Descripcion = "TABLA TB TRHCO000" },
+        new TablaReferenciaItem { Nombre = "TRHCP000", Descripcion = "CONCEPTOS DE PRODUCCIÓN" },
+        new TablaReferenciaItem { Nombre = "TRHCP010", Descripcion = "TABLA TB TRHCP010" }
+    };
+
+    private void EncontrarTodos()
+    {
+        // Implementar búsqueda general
+    }
+
+    private void ViewItem(TablaReferenciaItem tabla)
+    {
+        // Implementar visualización de item
+        if (tabla != null)
+        {
+            // Navegar o mostrar detalles
+        }
+    }
+
+    private void HandleAdd() { }
+    private void HandleSave() { }
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class TablaReferenciaItem
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+    }
+}

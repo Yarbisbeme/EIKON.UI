@@ -1,0 +1,287 @@
+﻿/* ============================================================
+   HRPayrollApp — Dashboard Premium A
+   Diseño Unificado para TODOS los Dashboards
+   Autor: Arquitecto EIKON.UI
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   VARIABLES (Opcionales para futura expansión)
+------------------------------------------------------------ */
+:root {
+    --eikon-primary: var(--bs-primary);
+    --eikon-radius: 16px;
+    --eikon-shadow-sm: 0 2px 6px rgba(0,0,0,0.05);
+    --eikon-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --eikon-border-thin: 3px solid var(--eikon-primary); /* borde premium */
+}
+
+/* ------------------------------------------------------------
+   TARJETAS BASE (Usado en TODOS los dashboards)
+------------------------------------------------------------ */
+.dashboard-card, .dashboard-panel {
+    background: var(--bs-white);
+    border-radius: var(--eikon-radius);
+    padding: 18px;
+    box-shadow: var(--eikon-shadow-sm);
+    border-left: var(--eikon-border-thin);
+}
+
+    .dashboard-card .header,
+    .dashboard-panel-title {
+        font-weight: 600;
+        color: var(--eikon-primary);
+        margin-bottom: .35rem;
+        font-size: 1.05rem;
+    }
+
+/* ------------------------------------------------------------
+   KPI REUTILIZABLE (Premium)
+------------------------------------------------------------ */
+.ess-kpi {
+    background: var(--bs-white);
+    border-radius: var(--eikon-radius);
+    padding: 20px;
+    box-shadow: var(--eikon-shadow-md);
+    border-left: var(--eikon-border-thin);
+}
+
+.ess-kpi-title {
+    font-size: .95rem;
+    font-weight: 600;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ess-kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.kpi-success {
+    color: var(--bs-success);
+}
+
+.kpi-warning {
+    color: var(--bs-warning);
+}
+
+.kpi-danger {
+    color: var(--bs-danger);
+}
+
+.ess-kpi-sub {
+    font-size: .8rem;
+    color: #777;
+}
+
+/* ------------------------------------------------------------
+   SECTION TITLE
+------------------------------------------------------------ */
+.section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: .75rem;
+}
+
+/* ------------------------------------------------------------
+   PROFILE CARD (ESS)
+------------------------------------------------------------ */
+.ess-card-profile {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--eikon-shadow-md);
+    border-left: var(--eikon-border-thin);
+    gap: 20px;
+}
+
+.ess-photo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--eikon-primary);
+    object-fit: cover;
+}
+
+.ess-name {
+    margin: 0;
+    color: var(--eikon-primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.ess-role {
+    color: #444;
+    font-size: 1rem;
+}
+
+.ess-meta {
+    color: #777;
+    font-size: .85rem;
+}
+
+.ess-profile-btn {
+    margin-left: auto;
+    background: var(--eikon-primary);
+    color: white;
+    border-radius: 30px;
+    padding: 8px 22px;
+    border: none;
+    transition: .2s;
+}
+
+    .ess-profile-btn:hover {
+        filter: brightness(0.9);
+    }
+
+/* ------------------------------------------------------------
+   QUICK ACTION TILES — UNIVERSALES
+------------------------------------------------------------ */
+.ess-tile {
+    background: white;
+    border-radius: 18px;
+    padding: 28px 12px;
+    cursor: pointer;
+    transition: all .25s ease;
+    box-shadow: var(--eikon-shadow-sm);
+    border: 1px solid rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+    .ess-tile:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--eikon-shadow-md);
+    }
+
+.ess-tile-icon {
+    font-size: 2.3rem;
+    color: var(--eikon-primary);
+}
+
+.ess-tile-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 8px;
+    color: var(--eikon-primary);
+}
+
+.ess-tile-sub {
+    font-size: .85rem;
+    color: #777;
+}
+
+/* ------------------------------------------------------------
+   ORGANIGRAMA (universal para HR, ESS, R&S)
+------------------------------------------------------------ */
+.ess-person-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+}
+
+.ess-person-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--eikon-primary);
+    background: rgba(182,60,46,0.12);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    color: var(--eikon-primary);
+}
+
+.ess-person-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.ess-person-role {
+    font-size: .85rem;
+    color: #666;
+}
+
+.ess-person-meta {
+    font-size: .75rem;
+    color: #777;
+}
+
+/* Version Mini */
+.ess-person-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.02);
+}
+
+.ess-person-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(182,60,46,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--eikon-primary);
+}
+
+.ess-person-mini-name {
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.ess-person-mini-role {
+    font-size: .75rem;
+    color: #666;
+}
+
+/* ------------------------------------------------------------
+   FEED SOCIAL / NOTIFICACIONES
+------------------------------------------------------------ */
+.ess-feed {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+    .ess-feed li {
+        padding: 4px 0;
+        font-size: .9rem;
+    }
+
+.ess-feed-date {
+    font-weight: 600;
+    margin-right: 6px;
+    color: var(--eikon-primary);
+}
+
+.ess-feed-text {
+    color: #444;
+}
+
+/* ------------------------------------------------------------
+   MODALES
+------------------------------------------------------------ */
+.ess-modal-header {
+    background: var(--eikon-primary);
+    color: white;
+}
+
+/* ------------------------------------------------------------
+   DASHBOARD ROW SPACING
+------------------------------------------------------------ */
+.dashboard-row {
+    margin-bottom: 1.4rem;
+}

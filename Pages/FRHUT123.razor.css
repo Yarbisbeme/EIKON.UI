@@ -1,0 +1,343 @@
+/* Main container */
+.frhut123-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Custom toolbar at top right */
+.frhut123-toolbar {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhut123-toolbar ::deep .toolbar-action-btn.dx-button {
+    min-width: 40px;
+    height: 40px;
+    padding: 8px;
+    background-color: #f8f9fa !important;
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhut123-toolbar ::deep .toolbar-action-btn.dx-button:hover {
+    background-color: #e9ecef !important;
+    border-color: #007bff !important;
+}
+
+.frhut123-toolbar ::deep .toolbar-action-btn .dx-icon {
+    font-size: 18px;
+    color: #33363f !important;
+}
+
+.frhut123-toolbar ::deep .toolbar-action-btn.dx-button:hover .dx-icon {
+    color: #007bff !important;
+}
+
+/* Form layout - two columns */
+.frhut123-form {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Left column */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Right column - options panel */
+.right-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.options-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.option-group .group-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+/* Radio groups */
+.option-group ::deep .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.option-group ::deep .dx-radiogroup-item {
+    margin-bottom: 4px;
+}
+
+.option-group ::deep .dx-radiobutton-text {
+    font-size: 13px;
+    color: #33363f;
+}
+
+/* Checkbox groups */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkbox-group ::deep .dx-checkbox {
+    margin-bottom: 4px;
+}
+
+.checkbox-group ::deep .dx-checkbox-text {
+    font-size: 13px;
+    color: #33363f;
+}
+
+/* Input fields */
+.frhut123-container .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhut123-container .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Código field with checkbox */
+.codigo-with-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.codigo-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.codigo-container ::deep .codigo-checkbox {
+    flex-shrink: 0;
+}
+
+.codigo-container ::deep .codigo-input {
+    flex: 1;
+    max-width: 200px;
+}
+
+/* Ejemplo section - full width */
+.ejemplo-section {
+    width: 100%;
+}
+
+.ejemplo-section ::deep .ejemplo-memo .dx-memo-container {
+    min-height: 120px;
+}
+
+.ejemplo-section ::deep .dx-memo-container textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Bottom section with Archivo and Base fields */
+.bottom-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    width: 100%;
+}
+
+.bottom-section .archivo-input {
+    grid-column: 1;
+}
+
+.bottom-section .base-input {
+    grid-column: 2;
+}
+
+/* DevExpress TextBox, Memo, and SpinEdit overrides */
+.frhut123-container ::deep .dx-textbox-container,
+.frhut123-container ::deep .dx-memo-container,
+.frhut123-container ::deep .dx-numberbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhut123-container ::deep .dx-textbox-container:focus-within,
+.frhut123-container ::deep .dx-memo-container:focus-within,
+.frhut123-container ::deep .dx-numberbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhut123-container ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* Search button styling */
+.frhut123-container ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhut123-container ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.frhut123-container ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+/* Radio button and checkbox styling */
+.frhut123-container ::deep .dx-radiobutton-icon,
+.frhut123-container ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhut123-container ::deep .dx-radiobutton-checked .dx-radiobutton-icon,
+.frhut123-container ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .frhut123-form {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhut123-container {
+        padding: 15px;
+    }
+
+    .frhut123-toolbar {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .options-panel {
+        margin-top: 15px;
+    }
+
+    .bottom-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .bottom-section .archivo-input,
+    .bottom-section .base-input {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhut123-container {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .frhut123-container .input label,
+    .option-group .group-label {
+        font-size: 13px;
+    }
+
+    .left-column {
+        gap: 12px;
+    }
+
+    .options-panel {
+        gap: 15px;
+        padding: 12px;
+    }
+
+    .frhut123-toolbar ::deep .toolbar-action-btn.dx-button {
+        min-width: 38px;
+        height: 38px;
+    }
+
+    .frhut123-toolbar ::deep .toolbar-action-btn .dx-icon {
+        font-size: 16px;
+    }
+
+    .codigo-container ::deep .codigo-input {
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhut123-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhut123-container .input label,
+    .option-group .group-label {
+        font-size: 12px;
+    }
+
+    .left-column {
+        gap: 10px;
+    }
+
+    .options-panel {
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .option-group ::deep .dx-radiobutton-text,
+    .checkbox-group ::deep .dx-checkbox-text {
+        font-size: 12px;
+    }
+
+    .frhut123-toolbar ::deep .toolbar-action-btn.dx-button {
+        min-width: 36px;
+        height: 36px;
+    }
+
+    .frhut123-toolbar ::deep .toolbar-action-btn .dx-icon {
+        font-size: 14px;
+    }
+
+    .frhut123-container ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .codigo-container {
+        gap: 6px;
+    }
+
+    .codigo-container ::deep .codigo-input {
+        max-width: 120px;
+    }
+
+    .ejemplo-section ::deep .ejemplo-memo .dx-memo-container {
+        min-height: 100px;
+    }
+}

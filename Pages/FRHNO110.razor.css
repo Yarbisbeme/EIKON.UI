@@ -1,0 +1,114 @@
+/* Acciones form styling */
+.acciones-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Primera fila: Acción y Período */
+.form-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    gap: 20px;
+    width: 10%;
+}
+
+/* Campo Acción */
+.accion-field {
+    width: 250px;
+}
+
+/* Sección Período */
+.periodo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Radio buttons styling */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    flex-direction:column;
+}
+
+/* Form fields styling */
+.acciones-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.acciones-form .input label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+}
+
+/* Search field styling */
+.search-field {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Descripción field - full width */
+.descripcion-field {
+    width: 100% !important;
+}
+
+/* Transacción field - partial width */
+.transaccion-field {
+    width: 70%;
+    max-width: 500px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .acciones-form {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .form-row-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .accion-field {
+        width: 100%;
+    }
+    
+    .periodo-section {
+        align-items: stretch;
+    }
+    
+    .radio-group {
+        justify-content: flex-start;
+    }
+    
+    .transaccion-field {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .acciones-form {
+        padding: 10px;
+        gap: 12px;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}

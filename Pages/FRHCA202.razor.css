@@ -1,0 +1,367 @@
+/* FRHCA202 - Modificar Históricos Administrativos */
+
+.frhca202-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Main Layout: Left fields + Right section */
+.frhca202-form .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 25px;
+}
+
+/* Left Column */
+.frhca202-form .left-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Número field with progress bar style */
+.frhca202-form .numero-field {
+    position: relative;
+}
+
+.frhca202-form .numero-input ::deep .dx-textbox {
+    background: linear-gradient(to right, #007bff 0%, #007bff 30%, transparent 30%);
+    background-size: 100% 4px;
+    background-position: left bottom;
+    background-repeat: no-repeat;
+}
+
+/* Standard Input */
+.frhca202-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhca202-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Dual Row */
+.frhca202-form .dual-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+/* Right Section */
+.frhca202-form .right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+/* Numeric Fields */
+.frhca202-form .numeric-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Dual Field Row (numeric + checkbox/combo) */
+.frhca202-form .dual-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.frhca202-form .checkbox-field {
+    display: flex;
+    align-items: center;
+    padding-top: 22px;
+}
+
+/* Action Buttons */
+.frhca202-form .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.frhca202-form .action-btn {
+    width: 100%;
+}
+
+/* Tabs Section */
+.frhca202-form .tabs-section {
+    margin-top: 20px;
+}
+
+.frhca202-form .tab-content {
+    padding: 20px;
+    min-height: 300px;
+}
+
+.frhca202-form .tab-placeholder {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* Grid Section */
+.frhca202-form .grid-section {
+    margin-bottom: 20px;
+}
+
+.frhca202-form .vocaciones-grid {
+    width: 100%;
+    border: 1px solid #bfbfbf;
+}
+
+/* Filtros Section */
+.frhca202-form .filtros-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.frhca202-form .filtros-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.frhca202-form .filtros-checkboxes {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Reporte Section */
+.frhca202-form .reporte-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.frhca202-form .reporte-checkbox {
+    padding-left: 5px;
+}
+
+/* DevExpress Component Overrides */
+.frhca202-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca202-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca202-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhca202-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhca202-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca202-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca202-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca202-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca202-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhca202-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhca202-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.frhca202-form ::deep .dx-dateedit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca202-form ::deep .dx-dateedit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Tabs Styling */
+.frhca202-form ::deep .dx-tabs {
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.frhca202-form ::deep .dx-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+}
+
+.frhca202-form ::deep .dx-tab-active {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #007bff;
+    font-weight: 500;
+}
+
+/* Read-only fields */
+.frhca202-form ::deep .dx-textbox[readonly] {
+    background-color: #e9ecef;
+}
+
+.frhca202-form ::deep .dx-textbox[readonly] .dx-texteditor-input {
+    background-color: #e9ecef;
+}
+
+/* Grid styling */
+.frhca202-form ::deep .dx-datagrid {
+    border: 1px solid #bfbfbf;
+}
+
+.frhca202-form ::deep .dx-datagrid-headers {
+    border-bottom: 2px solid #bfbfbf;
+    background-color: #f8f9fa;
+    font-weight: 500;
+}
+
+.frhca202-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhca202-form ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa;
+}
+
+/* Button Styling */
+.frhca202-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhca202-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhca202-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .frhca202-form .main-layout {
+        grid-template-columns: 1fr 350px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .frhca202-form .main-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhca202-form .right-section {
+        padding: 12px;
+    }
+
+    .frhca202-form .filtros-checkboxes {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhca202-form {
+        gap: 15px;
+    }
+
+    .frhca202-form .dual-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca202-form .dual-field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhca202-form .checkbox-field {
+        padding-top: 0;
+    }
+
+    .frhca202-form .tab-content {
+        padding: 15px;
+        min-height: 250px;
+    }
+
+    .frhca202-form .filtros-checkboxes {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhca202-form {
+        gap: 12px;
+    }
+
+    .frhca202-form .input label {
+        font-size: 13px;
+    }
+
+    .frhca202-form .tab-content {
+        padding: 10px;
+        min-height: 200px;
+    }
+
+    .frhca202-form .action-buttons {
+        gap: 8px;
+    }
+
+    .frhca202-form ::deep .dx-tab {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}

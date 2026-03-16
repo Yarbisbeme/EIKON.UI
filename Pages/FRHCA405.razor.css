@@ -1,0 +1,207 @@
+/* Main form container */
+.frhca405-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Fecha Reporte Section */
+.fecha-reporte-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    width: 100%;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.fecha-inputs {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.fecha-checkboxes {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Search Fields Section */
+.search-fields-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.search-field-item {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-inputs {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+}
+
+/* Disco Checkboxes */
+.disco-checkboxes {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid #bfbfbf;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+/* Disco Section */
+.disco-section {
+    display: grid;
+    grid-template-columns: 200px 200px;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.nombre-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-check,
+.btn-cancel {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 16px;
+    color: #33363f;
+    transition: all 0.2s;
+}
+
+.btn-check:hover {
+    color: #28a745;
+}
+
+.btn-cancel:hover {
+    color: #dc3545;
+}
+
+/* Input styling */
+.frhca405-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhca405-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 2px;
+}
+
+::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 2px;
+}
+
+::deep .dx-dateedit-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-dropdownedit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 2px;
+}
+
+::deep .dx-dropdownedit-container:focus-within {
+    border-color: #007bff !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .fecha-reporte-section {
+        flex-direction: column;
+    }
+
+    .search-field-item {
+        grid-template-columns: 120px 1fr;
+    }
+
+    .disco-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhca405-form {
+        padding: 15px;
+    }
+
+    .fecha-reporte-section {
+        align-items:flex-start;
+    }
+    .fecha-inputs {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .fecha-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-field-item {
+        grid-template-columns: 1fr;
+    }
+
+    .search-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .disco-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .disco-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhca405-form {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .fecha-reporte-section {
+        gap: 15px;
+    }
+
+    .search-fields-section {
+        gap: 10px;
+    }
+}

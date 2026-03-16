@@ -1,0 +1,335 @@
+@layout MainLayout
+@page "/FRHMA513"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+
+    <Breadcrumb Title="Compensación y Beneficios Ofrecidos por la Empresa" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhma513-form">
+
+        <div class="main-content">
+            <!-- Left Column -->
+            <div class="left-column">
+                <div class="input">
+                    <label for="codigo">Código</label>
+                    <DxTextBox @bind-Text="@Codigo"
+                               NullText="Código"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchCodigo"
+                                            Tooltip="Buscar código" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label for="descripcion">Descripción</label>
+                    <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+                </div>
+
+                <div class="input">
+                    <label for="clasificacion">Clasificación</label>
+                    <DxComboBox Data="@ClasificacionList"
+                                @bind-Value="@Clasificacion"
+                                NullText="Seleccionar clasificación"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+
+                <div class="input">
+                    <label for="periodicidad">Periodicidad</label>
+                    <DxTextBox @bind-Text="@Periodicidad" NullText="Periodicidad" />
+                </div>
+
+                <div class="input">
+                    <label for="formulaTotal">Fórmula Total</label>
+                    <DxComboBox Data="@FormulaList"
+                                @bind-Value="@FormulaTotal"
+                                NullText="Seleccionar fórmula"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+
+                <div class="input">
+                    <label for="formBenefic">Fórm. Benefic</label>
+                    <DxComboBox Data="@FormulaList"
+                                @bind-Value="@FormBenefic"
+                                NullText="Seleccionar fórmula"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+
+                <div class="input">
+                    <label for="aplicarSegun">Aplicar según</label>
+                    <DxComboBox Data="@AplicarSegunList"
+                                @bind-Value="@AplicarSegun"
+                                NullText="Seleccionar opción"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+
+                <div class="input">
+                    <label for="forIndexacion">Fór.Indexación</label>
+                    <DxComboBox Data="@FormulaList"
+                                @bind-Value="@ForIndexacion"
+                                NullText="Seleccionar fórmula"
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+                </div>
+
+                <!-- Montos Row -->
+                <div class="montos-row">
+                    <div class="input">
+                        <label for="montoTotal">Monto total</label>
+                        <DxSpinEdit @bind-Value="@MontoTotal"
+                                    MinValue="0"
+                                    DisplayFormat="N2"
+                                    NullText="0.00" />
+                    </div>
+                    <div class="input">
+                        <label for="pagaEmpresa">Paga Empresa</label>
+                        <DxSpinEdit @bind-Value="@PagaEmpresa"
+                                    MinValue="0"
+                                    DisplayFormat="N2"
+                                    NullText="0.00" />
+                    </div>
+                    <div class="input">
+                        <label for="pagaEmpleado">Paga Empleado</label>
+                        <DxSpinEdit @bind-Value="@PagaEmpleado"
+                                    MinValue="0"
+                                    DisplayFormat="N2"
+                                    NullText="0.00" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <div class="radio-group">
+                    <label class="group-label">Tipo</label>
+                    <DxRadioGroup TData="string" TValue="string"
+                                  @bind-Value="@Tipo"
+                                  CssClass="radio-buttons-vertical">
+                        <Items>
+                            <DxListEditorItem Value="@("Compensación")" Text="Compensación" />
+                            <DxListEditorItem Value="@("Beneficio")" Text="Beneficio" />
+                        </Items>
+                    </DxRadioGroup>
+                </div>
+
+                <div class="radio-group">
+                    <label class="group-label">Origen</label>
+                    <DxRadioGroup TData="string" TValue="string"
+                                  @bind-Value="@Origen"
+                                  CssClass="radio-buttons-vertical">
+                        <Items>
+                            <DxListEditorItem Value="@("Legal")" Text="Legal" />
+                            <DxListEditorItem Value="@("Marginal")" Text="Marginal" />
+                        </Items>
+                    </DxRadioGroup>
+                </div>
+
+                <div class="checkbox-group">
+                    <DxCheckBox @bind-Checked="@IndexadoSueldo">Indexado a Sueldo</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@Activo">Activo</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@PartesSueldo">Partes Sueldo</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@Factor">Factor</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@Retroactivo">Retroactivo</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@AnadirIngreso">Añadir al ingreso</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarManual">Mostrar en manual</DxCheckBox>
+                </div>
+
+                <div class="action-buttons">
+                    <DxButton IconCssClass="fi fi-rr-copy"
+                              Click="@OnCopyClick"
+                              RenderStyle="ButtonRenderStyle.Light"
+                              Tooltip="Copiar" />
+                    <DxButton IconCssClass="fi fi-rr-envelope"
+                              Click="@OnSendClick"
+                              RenderStyle="ButtonRenderStyle.Light"
+                              Tooltip="Enviar" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="description-section">
+            <div class="description-container">
+                <div class="description-header">
+                    <label>Descripción de la política que lo sustenta</label>
+                    <div class="aplicar-spinner">
+                        <label>Aplicar</label>
+                        <DxSpinEdit @bind-Value="@Aplicar"
+                                    MinValue="0"
+                                    MaxValue="100"
+                                    Width="80px" />
+                    </div>
+                </div>
+                <DxMemo @bind-Text="@DescripcionPolitica"
+                        Rows="8"
+                        NullText="Descripción de la política..." />
+            </div>
+
+            <div class="tabs-imagen-container">
+                <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+                    <DxTabPage Text="Categorías">
+                        <div class="tab-content">
+                            <DxGrid Data="@CategoriasList"
+                                    CssClass="custom-grid"
+                                    ShowGroupPanel="false">
+                                <Columns>
+                                    <DxGridSelectionColumn Width="40px" />
+                                    <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100px" />
+                                    <DxGridDataColumn FieldName="Categoria" Caption="Categoría" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                    </DxTabPage>
+                    <DxTabPage Text="Puestos">
+                        <div class="tab-content">
+                            <DxGrid Data="@PuestosList"
+                                    CssClass="custom-grid"
+                                    ShowGroupPanel="false">
+                                <Columns>
+                                    <DxGridSelectionColumn Width="40px" />
+                                    <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100px" />
+                                    <DxGridDataColumn FieldName="Puesto" Caption="Puestos" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                    </DxTabPage>
+                </DxTabs>
+
+                <div class="imagen-section">
+                    <label>Imagen</label>
+                    <div class="imagen-input">
+                        <DxTextBox @bind-Text="@ImagenPath" NullText="Ruta de imagen..." />
+                        <DxButton Text="X"
+                                  Click="@OnClearImage"
+                                  RenderStyle="ButtonRenderStyle.Secondary"
+                                  SizeMode="SizeMode.Small" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+    private int ActiveTabIndex = 0;
+
+    // Left column fields
+    private string Codigo { get; set; } = "";
+    private string Descripcion { get; set; } = "";
+    private string Clasificacion { get; set; } = "";
+    private string Periodicidad { get; set; } = "";
+    private string FormulaTotal { get; set; } = "";
+    private string FormBenefic { get; set; } = "";
+    private string AplicarSegun { get; set; } = "";
+    private string ForIndexacion { get; set; } = "";
+    private decimal MontoTotal { get; set; } = 0.00m;
+    private decimal PagaEmpresa { get; set; } = 0.00m;
+    private decimal PagaEmpleado { get; set; } = 0.00m;
+
+    // Right column - Radio buttons
+    private string Tipo { get; set; } = "Compensación";
+    private string Origen { get; set; } = "Legal";
+
+    // Checkboxes
+    private bool IndexadoSueldo { get; set; } = false;
+    private bool Activo { get; set; } = false;
+    private bool PartesSueldo { get; set; } = false;
+    private bool Factor { get; set; } = false;
+    private bool Retroactivo { get; set; } = false;
+    private bool AnadirIngreso { get; set; } = false;
+    private bool MostrarManual { get; set; } = false;
+
+    // Description section
+    private string DescripcionPolitica { get; set; } = "";
+    private int Aplicar { get; set; } = 0;
+
+    // Image section
+    private string ImagenPath { get; set; } = "";
+
+    // Dropdown data
+    private List<string> ClasificacionList = new() { "Opción 1", "Opción 2", "Opción 3" };
+    private List<string> FormulaList = new() { "Fórmula 1", "Fórmula 2", "Fórmula 3" };
+    private List<string> AplicarSegunList = new() { "Opción A", "Opción B", "Opción C" };
+
+    // Grid data
+    private List<CategoriaItem> CategoriasList = new()
+    {
+        new CategoriaItem { Codigo = "000", Categoria = "No especificado" },
+        new CategoriaItem { Codigo = "002", Categoria = "NIVEL 02" },
+        new CategoriaItem { Codigo = "003", Categoria = "NIVEL 03" },
+        new CategoriaItem { Codigo = "004", Categoria = "NIVEL 04" },
+        new CategoriaItem { Codigo = "005", Categoria = "NIVEL 05" },
+        new CategoriaItem { Codigo = "006", Categoria = "NIVEL 06" },
+        new CategoriaItem { Codigo = "001", Categoria = "NIVEL 01" }
+    };
+
+    private List<PuestoItem> PuestosList = new()
+    {
+        new PuestoItem { Codigo = "000000", Puesto = "FICTICIO" },
+        new PuestoItem { Codigo = "000001", Puesto = "Analista de Inventario" },
+        new PuestoItem { Codigo = "000002", Puesto = "Analista de Inventario" },
+        new PuestoItem { Codigo = "000003", Puesto = "Asistente de Kiosco" },
+        new PuestoItem { Codigo = "000004", Puesto = "Asistente de presidencia" },
+        new PuestoItem { Codigo = "000005", Puesto = "Asistente de Recursos Humanos" },
+        new PuestoItem { Codigo = "000006", Puesto = "Auxiliar Contable" },
+        new PuestoItem { Codigo = "000007", Puesto = "Ayudante de Bodega" },
+        new PuestoItem { Codigo = "000008", Puesto = "Ayudante de cocina" }
+    };
+
+    private void OnSearchCodigo()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnCopyClick()
+    {
+        // TODO: Implement copy logic
+    }
+
+    private void OnSendClick()
+    {
+        // TODO: Implement send logic
+    }
+
+    private void OnClearImage()
+    {
+        ImagenPath = "";
+    }
+
+    private void HandleAdd()
+    {
+        // TODO: Implement add logic
+    }
+
+    private void HandleSave()
+    {
+        // TODO: Implement save logic
+    }
+
+    private void HandleClose()
+    {
+        // TODO: Implement close logic
+    }
+
+    public class CategoriaItem
+    {
+        public string Codigo { get; set; } = "";
+        public string Categoria { get; set; } = "";
+    }
+
+    public class PuestoItem
+    {
+        public string Codigo { get; set; } = "";
+        public string Puesto { get; set; } = "";
+    }
+}

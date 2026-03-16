@@ -1,0 +1,214 @@
+/* Main form container */
+.frhca102-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Employee Information Section */
+.frhca102-form .employee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.frhca102-form .info-row-1,
+.frhca102-form .info-row-2,
+.frhca102-form .info-row-3,
+.frhca102-form .info-row-4,
+.frhca102-form .info-row-5,
+.frhca102-form .info-row-6 {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.frhca102-form .info-row-1 {
+    position: relative;
+}
+
+.frhca102-form .enviar-expediente-btn {
+}
+
+/* Input field styles */
+.frhca102-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhca102-form .input.small-input {
+    max-width: 200px;
+}
+
+.frhca102-form .input label {
+    font-weight: 500;
+    color: var(--text-color, #33363f);
+    font-size: 14px;
+}
+
+/* Three Panels Section */
+.frhca102-form .panels-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.frhca102-form .panel {
+    border: 1px solid var(--border-color, #bfbfbf);
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.frhca102-form .panel-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-light, #e9ecef);
+}
+
+.frhca102-form .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Radio buttons horizontal */
+.frhca102-form .radio-buttons-horizontal {
+    display: flex;
+    gap: 15px;
+}
+
+/* Grid Section */
+.frhca102-form .grid-section {
+    width: 100%;
+}
+
+.frhca102-form .registros-grid {
+    border: 1px solid var(--border-color, #bfbfbf);
+    min-height: 300px;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-textbox-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-spin-edit-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-spin-edit-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-dateedit-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-dateedit-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-timeedit-container {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-timeedit-container:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-memo {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-memo:focus-within {
+    border-color: var(--accent-color, #007bff) !important;
+}
+
+::deep .dx-checkbox {
+    color: var(--text-color, #33363f);
+}
+
+::deep .dx-grid {
+    border: 1px solid var(--border-color, #bfbfbf) !important;
+}
+
+::deep .dx-grid-header {
+    background-color: var(--background-light, #f8f9fa);
+    font-weight: 600;
+}
+
+::deep .dxbs-grid-header-content {
+    color: var(--text-color, #33363f);
+}
+
+::deep .dx-radio-button-list {
+    display: flex;
+    gap: 15px;
+}
+
+::deep .dx-radio-button {
+    color: var(--text-color, #33363f);
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .frhca102-form .panels-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) {
+    .frhca102-form .info-row-1,
+    .frhca102-form .info-row-2,
+    .frhca102-form .info-row-3,
+    .frhca102-form .info-row-4,
+    .frhca102-form .info-row-5,
+    .frhca102-form .info-row-6 {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .frhca102-form .input.small-input {
+        max-width: 100%;
+    }
+
+    .frhca102-form .enviar-expediente-btn {
+        position: static;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhca102-form {
+        padding: 15px;
+    }
+
+    .frhca102-form .panels-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhca102-form {
+        padding: 10px;
+        gap: 20px;
+    }
+
+    .frhca102-form .input label {
+        font-size: 13px;
+    }
+
+    .frhca102-form .radio-buttons-horizontal {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

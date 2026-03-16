@@ -1,0 +1,221 @@
+@page "/FRHRJ112"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Reportes de Cierres Procesados" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhrj112-form">
+        <div class="header-label">Rango de Fecha Cierre</div>
+
+        <div class="date-row">
+            <div class="input">
+                <label for="user">Desde</label>
+                <DxDateEdit @bind-Date="@DateTimeValue"
+                            CssClass="cw-320"
+                            IconCssClass="fi fi-rr-search"
+                            InputId="deOverview" />
+            </div>
+
+            <div class="input">
+                <label for="user">Hasta</label>
+                <DxDateEdit @bind-Date="@DateTimeValue"
+                            CssClass="cw-320"
+                            IconCssClass="fi fi-rr-search"
+                            InputId="deOverview" />
+            </div>
+
+            <div class="date-checks">
+                <DxCheckBox @bind-Checked="@CheckHoy">Hoy</DxCheckBox>
+                <DxCheckBox @bind-Checked="@CheckAyer">Ayer</DxCheckBox>
+            </div>
+        </div>
+
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckOficina">Oficina</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckUbicacion">Ubicación</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+        </div>
+
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckEmpleado">Empleado</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckTurno">Turno</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckPuesto">Puesto</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:space-between; align-items:center">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckSupervisor">Supervisor</DxCheckBox>
+            <div style="display:flex; gap:10px; width:100%">
+                <div style="width:150px;">
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                </DxTextBox>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="import-section">
+            <label>Importar Punches</label>
+            <div class="import-section-checks">
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckPuesto">Importar Ponches</DxCheckBox>
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckPuesto">Regular</DxCheckBox>
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckPuesto">Temporero</DxCheckBox>
+            <DxCheckBox style="width:200px;" @bind-Checked="@CheckPuesto">Exempleado</DxCheckBox>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="filter-item">
+            <DxCheckBox @bind-Checked="@CheckNomina">Nómina</DxCheckBox>
+            <DxComboBox Data="@PeriodoOptions"
+                        @bind-Value="@SelectedPeriodo"
+                        NullText="">
+            </DxComboBox>
+        </div>
+
+        <div class="filter-item">
+            <DxCheckBox @bind-Checked="@CheckPeriodo">Período</DxCheckBox>
+            <DxComboBox Data="@PeriodoOptions"
+                        @bind-Value="@SelectedPeriodo"
+                        NullText="">
+            </DxComboBox>
+        </div>
+
+        <div class="report-row">
+            <div class="select" style="width:50%;">
+                <label>Reporte</label>
+                <DxComboBox Data="@ReporteOptions"
+                            @bind-Value="@SelectedReporte"
+                            NullText="">
+                </DxComboBox>
+            </div>
+
+                <DxButton IconCssClass="fi fi-rr-print"/>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close" };
+    private DateTime DateTimeValue { get; set; } = DateTime.Now;
+
+    private string Desde { get; set; } = "27/06/2025";
+    private string Hasta { get; set; } = "27/06/2025";
+    private bool CheckHoy { get; set; } = false;
+    private bool CheckAyer { get; set; } = false;
+
+    private bool CheckOficina { get; set; } = true;
+    private string Oficina { get; set; } = string.Empty;
+    private bool CheckUbicacion { get; set; } = true;
+    private string Ubicacion { get; set; } = string.Empty;
+    private bool CheckEmpleado { get; set; } = true;
+    private string Empleado { get; set; } = string.Empty;
+    private bool CheckTurno { get; set; } = true;
+    private string Turno { get; set; } = string.Empty;
+    private bool CheckPuesto { get; set; } = true;
+    private string Puesto { get; set; } = string.Empty;
+    private bool CheckSupervisor { get; set; } = true;
+    private string Supervisor { get; set; } = string.Empty;
+
+    private string ImportMode { get; set; } = "Regular";
+
+    private bool CheckNomina { get; set; } = true;
+    private string Nomina { get; set; } = string.Empty;
+    private bool CheckPeriodo { get; set; } = true;
+    private string SelectedPeriodo { get; set; } = string.Empty;
+    private List<string> PeriodoOptions { get; set; } = new();
+
+    private string SelectedReporte { get; set; } = string.Empty;
+    private List<string> ReporteOptions { get; set; } = new();
+
+    private void OnSearchNomina() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

@@ -1,0 +1,509 @@
+@page "/FRHUT138"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHUT138 - SIRH - Rutinas del Sistema" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección superior con campos básicos -->
+        <div class="basic-info-section">
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Código</label>
+                    <DxTextBox @bind-Text="@CodigoValue"
+                               NullText="Código"
+                               ClearButtonDisplayMode="DevExpress.Blazor.DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="OnSearchCodigoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+                
+                <div class="input-field wide">
+                    <label>Descripción</label>
+                    <DxTextBox @bind-Text="@DescripcionValue"
+                               NullText="Descripción de la rutina" />
+                </div>
+                
+                <div class="radio-section">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="tipoRutina" @bind="@ScriptOption" />
+                            <span>Script</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="tipoRutina" @bind="@LinealOption" />
+                            <span>Lineal</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Clasificación</label>
+                    <DxTextBox @bind-Text="@ClasificacionValue"
+                               NullText="Clasificación" />
+                </div>
+                
+                <div class="input-field">
+                    <label>Nombre Rutina</label>
+                    <div class="name-with-system">
+                        <DxTextBox @bind-Text="@NombreRutinaValue"
+                                   NullText="Nombre de la rutina" />
+                        <DxCheckBox @bind-Checked="@SistemaOption" 
+                                   CssClass="sistema-checkbox">Sistema</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Tabs -->
+        <div class="Tab-Panel">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex">
+                <DxTab Text="Comentario"></DxTab>
+                <DxTab Text="SQL"></DxTab>
+            </DxTabs>
+
+            <div class="tab-content">
+                @if (ActiveTabIndex == 0)
+                {
+                    <!-- Tab Comentario -->
+                    <div class="tab-content-area">
+                        <div class="memo-section">
+                            <DxMemo @bind-Text="@ComentarioValue"
+                                    Rows="18"
+                                    NullText="Escriba aquí los comentarios sobre la rutina del sistema..."
+                                    CssClass="comentario-memo" />
+                        </div>
+                    </div>
+                }
+                else if (ActiveTabIndex == 1)
+                {
+                    <!-- Tab SQL -->
+                    <div class="tab-content-area">
+                        <div class="memo-section">
+                            <DxMemo @bind-Text="@SqlValue"
+                                    Rows="18"
+                                    NullText="Escriba aquí el código SQL de la rutina..."
+                                    CssClass="sql-memo" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Sección de información básica */
+    .basic-info-section {
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 25px 0;
+        box-shadow: none;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        min-height: 60px;
+        padding: 10px 0;
+    }
+
+    .form-row:first-child {
+        padding-top: 0;
+    }
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Name with system checkbox */
+    .name-with-system {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .name-with-system .dx-textbox {
+        flex: 1;
+    }
+
+    .sistema-checkbox {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Radio section */
+    .radio-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        flex: 0 0 200px;
+        align-items: flex-start;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .radio-option input[type="radio"] {
+        margin: 0;
+        cursor: pointer;
+        accent-color: #dc3545;
+    }
+
+    .radio-option span {
+        color: #555;
+    }
+
+    .config-btn {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+        border-radius: 6px !important;
+    }
+
+    /* Tabs styling */
+    .Tab-Panel {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .dx-tabs-wrapper {
+        border-bottom: 1px solid #e0e0e0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Tab content */
+    .tab-content {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tab-content-area {
+        padding: 0;
+        height: calc(100% - 40px);
+        width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .memo-section {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    /* Memo styling */
+    .comentario-memo,
+    .sql-memo {
+        width: 80% !important;
+        height: 100% !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        flex: 1 !important;
+        resize: none !important;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-combobox {
+        border-radius: 6px !important;
+        flex: 1;
+    }
+
+    .dx-textbox-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Search button styling */
+    .dx-editor-button {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        border-radius: 4px !important;
+    }
+
+    .dx-editor-button:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+    /* Checkboxes */
+    .dx-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Button styling */
+    .dx-button-mode-contained.dx-button-default {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+    }
+
+    .dx-button-mode-contained.dx-button-default:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1024px) {
+        .form-container {
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .basic-info-section {
+            padding: 20px 0;
+        }
+
+        .form-row {
+            flex-wrap: wrap;
+            gap: 15px;
+            min-height: auto;
+        }
+
+        .radio-section {
+            flex: 1 1 100%;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tab-content {
+            height: 400px;
+            padding: 15px;
+        }
+
+        .tab-content-area {
+            padding: 0;
+            height: calc(100% - 30px);
+        }
+
+        .comentario-memo,
+        .sql-memo {
+            min-height: 350px !important;
+        }
+    }
+
+    media (max-width: 768px) {
+        .basic-info-section {
+            padding: 15px 0;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        .input-field.wide {
+            flex: 1;
+        }
+
+        .radio-section {
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .radio-group {
+            justify-content: space-around;
+        }
+
+        .name-with-system {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .sistema-checkbox {
+            align-self: flex-start;
+        }
+
+        .Tab-Panel .dx-tabs .dx-tab {
+            padding: 12px 20px !important;
+            font-size: 13px;
+        }
+
+        .tab-content {
+            height: 350px;
+            padding: 12px;
+        }
+
+        .tab-content-area {
+            padding: 0;
+            height: calc(100% - 24px);
+        }
+
+        .comentario-memo,
+        .sql-memo {
+            min-height: 300px !important;
+        }
+    }
+
+    media (max-width: 480px) {
+        .basic-info-section {
+            padding: 12px 0;
+        }
+
+        .form-row {
+            gap: 12px;
+        }
+
+        .input-field label {
+            font-size: 12px;
+        }
+
+        .config-btn {
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px !important;
+            font-size: 12px !important;
+        }
+
+        .Tab-Panel .dx-tabs .dx-tab {
+            padding: 10px 15px !important;
+            font-size: 12px;
+        }
+
+        .tab-content {
+            height: 300px;
+            padding: 10px;
+        }
+
+        .tab-content-area {
+            padding: 0;
+            height: calc(100% - 20px);
+        }
+
+        .comentario-memo,
+        .sql-memo {
+            min-height: 250px !important;
+            font-size: 13px !important;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private int ActiveTabIndex = 0;
+    
+    // Campos del formulario
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private string ClasificacionValue { get; set; } = "";
+    private string NombreRutinaValue { get; set; } = "";
+    private bool ScriptOption { get; set; } = true;
+    private bool LinealOption { get; set; } = false;
+    private bool SistemaOption { get; set; } = false;
+    
+    // Contenido de los tabs
+    private string ComentarioValue { get; set; } = "";
+    private string SqlValue { get; set; } = "";
+    
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    private void OnConfigClick() => Console.WriteLine("Abrir configuraciones");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Rutina del sistema guardada exitosamente!");
+    }
+
+    // Manejo de radio buttons
+    protected override void OnInitialized()
+    {
+        // Asegurar que solo uno esté seleccionado
+        if (ScriptOption && LinealOption)
+        {
+            LinealOption = false;
+        }
+    }
+}

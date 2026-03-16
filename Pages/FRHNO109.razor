@@ -1,0 +1,350 @@
+@layout MainLayout
+@page "/FRHNO109"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+
+    <Breadcrumb Title="Planes de Descuentos (Ahorros y Préstamos)" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhno109-form">
+
+        <div class="main-layout">
+            <!-- Left Column -->
+            <div class="left-column">
+                <div class="input">
+                    <label for="numero">Número</label>
+                    <DxTextBox @bind-Text="@Numero"
+                               NullText="Número"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchNumero"
+                                            Tooltip="Buscar" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label for="nombre">Nombre</label>
+                    <DxTextBox @bind-Text="@Nombre" NullText="Nombre" />
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="noPlan">No. de Plan</label>
+                        <DxTextBox @bind-Text="@NoPlan" NullText="" />
+                    </div>
+                    <div class="input">
+                        <label for="tipoPlan">Tipo de Plan</label>
+                        <DxTextBox @bind-Text="@TipoPlan" NullText="">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchTipoPlan"
+                                                Tooltip="Buscar" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="noReferencia">No. Referencia</label>
+                        <DxTextBox @bind-Text="@NoReferencia" NullText="" />
+                    </div>
+                    <div class="input">
+                        <label for="fechaInicio">Fecha inicio</label>
+                        <DxDateEdit @bind-Date="@FechaInicio"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//" />
+                    </div>
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="monto">Monto</label>
+                        <DxSpinEdit @bind-Value="@Monto"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00" />
+                    </div>
+                    <div class="input">
+                        <label for="fechaFin">Fecha Fin</label>
+                        <DxDateEdit @bind-Date="@FechaFin"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//" />
+                    </div>
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="saldo">Saldo</label>
+                        <DxSpinEdit @bind-Value="@Saldo"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00" />
+                    </div>
+                    <div class="input">
+                        <label for="noCuotas">No. Cuotas</label>
+                        <DxSpinEdit @bind-Value="@NoCuotas"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00" />
+                    </div>
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="cuotaMes">Cuota Mes</label>
+                        <DxSpinEdit @bind-Value="@CuotaMes"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00" />
+                    </div>
+                    <div class="input">
+                        <label for="cuotaPeriodo">Cuota Periodo</label>
+                        <DxSpinEdit @bind-Value="@CuotaPeriodo"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00">
+                        </DxSpinEdit>
+                    </div>
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="abono">Abono</label>
+                        <DxSpinEdit @bind-Value="@Abono"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00" />
+                    </div>
+                    <div class="input">
+                        <label for="interesCuota">Interés cuota</label>
+                        <DxSpinEdit @bind-Value="@InteresCuota"
+                                    DisplayFormat="N4"
+                                    MinValue="0"
+                                    NullText="0.0000" />
+                    </div>
+                </div>
+
+                <div class="dual-input-row">
+                    <div class="input">
+                        <label for="moneda">Moneda</label>
+                        <DxTextBox @bind-Text="@Moneda" NullText="" />
+                    </div>
+                    <div class="input">
+                        <label for="finPlan">Fin del plan</label>
+                        <DxTextBox @bind-Text="@FinPlan" NullText="">
+                        </DxTextBox>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <div class="image-section">
+                    <div class="image-placeholder"></div>
+                </div>
+
+                <div class="controls-section">
+                    <div class="radio-group">
+                        <label class="group-label">Clase Plan</label>
+                        <div style="display:flex; gap:10px;">
+                            <DxRadio GroupName="clasePlan"
+                                     @bind-GroupValue="@ClasePlan"
+                                     Value="@("Préstamos")">
+                                Préstamos
+                            </DxRadio>
+                            <DxRadio GroupName="clasePlan"
+                                     @bind-GroupValue="@ClasePlan"
+                                     Value="@("Ahorro")">
+                                Ahorro
+                            </DxRadio>
+                        </div>
+                    </div>
+
+                    <div class="input">
+                        <label>Ordenar por</label>
+                        <DxComboBox Data="@OrdenarPorList"
+                                    @bind-Value="@OrdenarPor"
+                                    NullText="Tipo de Prestan..."
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@OnSearchOrdenar"
+                                                Tooltip="Buscar" />
+                            </Buttons>
+                        </DxComboBox>
+                    </div>
+
+                    <div class="radio-group">
+                        <label class="group-label">Reportes</label>
+                        <div style="display:flex; gap:10px;">
+                            <DxRadio GroupName="reportes"
+                                     @bind-GroupValue="@Reportes"
+                                     Value="@("Reportes")">
+                                Reportes
+                            </DxRadio>
+                            <DxRadio GroupName="reportes"
+                                     @bind-GroupValue="@Reportes"
+                                     Value="@("Todos")">
+                                Todos
+                            </DxRadio>
+                            <DxRadio GroupName="reportes"
+                                     @bind-GroupValue="@Reportes"
+                                     Value="@("Actual")">
+                                Actual
+                            </DxRadio>
+                        </div>
+                    </div>
+
+                    <DxCheckBox @bind-Checked="@TasaEstandar">Tasa Estándar</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@TasaBase">Tasa Base</DxCheckBox>
+
+                    <div class="action-buttons">
+                        <DxButton Text="Recalcular interés"
+                                  Click="@OnRecalcularInteres" />
+                        <DxButton Text="Histórico"
+                                  Click="@OnHistorico" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input">
+            <label>Comentario</label>
+            <DxMemo @bind-Text="@Comentario"
+                    Rows="4"
+                    NullText="Comentario..." />
+        </div>
+
+        <div style="display:flex;gap:20px;">
+            <DxCheckBox @bind-Checked="@FijarModoDigitacion">Fijar Modo de digitación</DxCheckBox>
+            <DxCheckBox @bind-Checked="@PresentarSoloActivos">Presentar solo los activos</DxCheckBox>
+        </div>
+        <!-- Grid Section -->
+        <div class="grid-section">
+            <DxGrid Data="@PlanesList"
+                    CssClass="planes-grid"
+                    ShowGroupPanel="false">
+                <Columns>
+                    <DxGridSelectionColumn Width="40px" />
+                    <DxGridDataColumn FieldName="NoPlan" Caption="NoPlan" Width="100px" />
+                    <DxGridDataColumn FieldName="NoRef" Caption="NoRef" Width="100px" />
+                    <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" />
+                    <DxGridDataColumn FieldName="Monto" Caption="Monto" Width="120px" />
+                    <DxGridDataColumn FieldName="Saldo" Caption="Saldo" Width="120px" />
+                    <DxGridDataColumn FieldName="Estatus" Caption="Estatus" Width="100px" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Left column fields
+    private string Numero { get; set; } = "";
+    private string Nombre { get; set; } = "";
+    private string NoPlan { get; set; } = "";
+    private string TipoPlan { get; set; } = "";
+    private string NoReferencia { get; set; } = "";
+    private DateTime? FechaInicio { get; set; }
+    private decimal Monto { get; set; } = 0.00m;
+    private DateTime? FechaFin { get; set; }
+    private decimal Saldo { get; set; } = 0.00m;
+    private decimal NoCuotas { get; set; } = 0.00m;
+    private decimal CuotaMes { get; set; } = 0.00m;
+    private decimal CuotaPeriodo { get; set; } = 0.00m;
+    private decimal Abono { get; set; } = 0.00m;
+    private decimal InteresCuota { get; set; } = 0.0000m;
+    private string Moneda { get; set; } = "";
+    private string FinPlan { get; set; } = "";
+    private string Comentario { get; set; } = "";
+    private bool FijarModoDigitacion { get; set; } = false;
+
+    // Right column - Radio buttons
+    private string ClasePlan { get; set; } = "Préstamos";
+    private string Reportes { get; set; } = "Todos";
+    private string OrdenarPor { get; set; } = "";
+
+    // Checkboxes
+    private bool TasaEstandar { get; set; } = false;
+    private bool TasaBase { get; set; } = false;
+    private bool PresentarSoloActivos { get; set; } = true;
+
+    // Dropdown data
+    private List<string> OrdenarPorList = new() { "Tipo de Prestamo", "Fecha", "Monto" };
+
+    // Grid data
+    private List<PlanItem> PlanesList = new();
+
+    private void OnSearchNumero()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchTipoPlan()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnCopyCuotaPeriodo()
+    {
+        // TODO: Implement copy logic
+    }
+
+    private void OnCopyFinPlan()
+    {
+        // TODO: Implement copy logic
+    }
+
+    private void OnSearchOrdenar()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnRecalcularInteres()
+    {
+        // TODO: Implement recalculate logic
+    }
+
+    private void OnHistorico()
+    {
+        // TODO: Implement historical view logic
+    }
+
+    private void HandleAdd()
+    {
+        // TODO: Implement add logic
+    }
+
+    private void HandleSave()
+    {
+        // TODO: Implement save logic
+    }
+
+    private void HandleClose()
+    {
+        // TODO: Implement close logic
+    }
+
+    public class PlanItem
+    {
+        public string NoPlan { get; set; } = "";
+        public string NoRef { get; set; } = "";
+        public string Descripcion { get; set; } = "";
+        public string Monto { get; set; } = "";
+        public string Saldo { get; set; } = "";
+        public string Estatus { get; set; } = "";
+    }
+}

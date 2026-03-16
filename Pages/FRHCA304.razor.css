@@ -1,0 +1,354 @@
+.consulta-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Sección Condiciones */
+.condiciones-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 15px;
+    padding: 20px;
+}
+
+.grid-container {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.grid-header-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.grid-header-cell {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #33363f;
+    border-right: 1px solid #bfbfbf;
+    text-align: center;
+}
+
+    .grid-header-cell:last-child {
+        border-right: none;
+    }
+
+.grid-data-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    background-color: white;
+    min-height: 42px;
+}
+
+.grid-data-cell {
+    padding: 4px;
+    border-right: 1px solid #bfbfbf;
+    display: flex;
+    align-items: center;
+}
+
+    .grid-data-cell:last-child {
+        border-right: none;
+    }
+
+.grid-combo,
+.grid-textbox {
+    width: 100% !important;
+    border: none !important;
+}
+
+.condiciones-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.toolbar-button {
+    height: 32px !important;
+    min-height: 32px !important;
+    border-radius: 4px !important;
+}
+
+.sql-label {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: #33363f;
+    margin-right: 8px;
+}
+
+.sql-container {
+    flex: 1;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: white;
+    padding: 8px;
+}
+
+.sql-textarea {
+    width: 100% !important;
+    height: 100% !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 12px !important;
+    border: none !important;
+    background-color: white !important;
+    resize: none !important;
+}
+
+/* Sección Orden */
+.orden-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 20px;
+    padding: 20px;
+}
+
+.transfer-container {
+    flex: 1;
+    display: flex;
+    gap: 15px;
+    align-items: stretch;
+}
+
+.transfer-panel {
+    flex: 1;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.transfer-listbox {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    font-size: 14px !important;
+    background-color: white !important;
+}
+
+.transfer-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    min-width: 50px;
+}
+
+.transfer-btn {
+    width: 40px !important;
+    height: 32px !important;
+    min-width: 40px !important;
+    min-height: 32px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+}
+
+.orden-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.orden-radio {
+    font-size: 14px !important;
+    color: #33363f !important;
+}
+
+.section-toolbar {
+    display: flex;
+    gap: 8px;
+}
+
+/* Sección Datos a Presentar */
+.datos-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 20px;
+    padding: 20px;
+}
+
+.datos-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 15px 0;
+}
+
+.cantidad-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cantidad-label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #33363f !important;
+    margin: 0 !important;
+}
+
+.cantidad-controls {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #e5e5ea;
+}
+
+.todos-checkbox {
+    font-size: 14px !important;
+    color: #33363f !important;
+}
+
+.cantidad-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .cantidad-input-group label {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #33363f !important;
+        white-space: nowrap;
+        margin: 0 !important;
+    }
+
+.cantidad-input {
+    width: 100px !important;
+    border-radius: 4px !important;
+}
+
+/* DevExpress ListBox styling */
+.dx-listbox {
+    font-size: 14px !important;
+    border: none !important;
+}
+
+.dx-listbox-item {
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    border-bottom: none !important;
+    color: #33363f !important;
+}
+
+    .dx-listbox-item:hover {
+        background-color: #007bff !important;
+        color: white !important;
+    }
+
+.dx-listbox-item-selected {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+/* DevExpress Button styling */
+.dx-button {
+    border-radius: 4px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+/* DevExpress Tabs styling */
+.dx-tabs {
+    border-radius: 4px !important;
+}
+
+/* DevExpress other components */
+.dx-combobox,
+.dx-textbox,
+.dx-memo,
+.dx-checkbox,
+.dx-radiobutton,
+.dx-spinedit {
+    border-radius: 4px !important;
+    font-size: 14px !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .consulta-form {
+        height: calc(100vh - 180px);
+    }
+
+    .condiciones-content,
+    .orden-content,
+    .datos-content {
+        padding: 15px;
+    }
+
+    .transfer-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .transfer-buttons {
+        flex-direction: row;
+        min-width: auto;
+    }
+
+    .transfer-panel {
+        min-height: 200px;
+    }
+
+    .datos-footer {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .cantidad-controls {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .consulta-form {
+        height: calc(100vh - 160px);
+    }
+
+    .condiciones-content,
+    .orden-content,
+    .datos-content {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .transfer-panel {
+        min-height: 150px;
+    }
+
+    .grid-header-cell,
+    .grid-data-cell {
+        padding: 4px 6px;
+        font-size: 12px;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}

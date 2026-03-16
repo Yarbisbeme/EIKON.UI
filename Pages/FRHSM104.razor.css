@@ -1,0 +1,285 @@
+/* Main form container */
+.frhsm104-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Tabs styling */
+.frhsm104-tabs ::deep .dx-tab {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Tab content */
+.tab-content {
+    padding: 20px 0;
+}
+
+/* Main layout - 2 columns */
+.main-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Left section */
+.left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.employee-data {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Dual input row */
+.dual-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+/* Triple input row */
+.triple-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+/* Input fields */
+.frhsm104-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhsm104-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Nested tabs section */
+.nested-tabs-section {
+    margin: 15px 0;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.nested-tabs ::deep .dx-tab {
+    font-size: 13px;
+    font-weight: 500;
+    background-color: #f8f9fa;
+}
+
+.nested-tabs ::deep .dx-tab.dx-tab-selected {
+    background-color: white;
+    border-bottom: 2px solid #007bff;
+}
+
+.nested-tab-content {
+    padding: 15px;
+    background-color: white;
+}
+
+/* Grids */
+.afiliado-grid,
+.dependientes-grid {
+    min-height: 150px;
+}
+
+.frhsm104-form ::deep .dx-datagrid {
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhsm104-form ::deep .dx-datagrid-header-panel {
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #007bff !important;
+}
+
+.frhsm104-form ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+    font-weight: 600;
+}
+
+.frhsm104-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+/* Right section - Image panel */
+.right-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.image-panel {
+    background-color: #f8f9fa;
+    border: 2px dashed #bfbfbf;
+    border-radius: 4px;
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.no-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    color: #6c757d;
+}
+
+.no-image i {
+    font-size: 48px;
+    color: #adb5bd;
+}
+
+.no-image p {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* DevExpress overrides */
+.frhsm104-form ::deep .dx-textbox-container,
+.frhsm104-form ::deep .dx-memo-container,
+.frhsm104-form ::deep .dx-dateedit-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhsm104-form ::deep .dx-textbox-container:focus-within,
+.frhsm104-form ::deep .dx-memo-container:focus-within,
+.frhsm104-form ::deep .dx-dateedit-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhsm104-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* Search button styling */
+.frhsm104-form ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhsm104-form ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.frhsm104-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+/* Checkbox styling */
+.frhsm104-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhsm104-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .triple-input-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .image-panel {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhsm104-form {
+        padding: 15px;
+    }
+
+    .dual-input-row,
+    .triple-input-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .employee-data {
+        gap: 10px;
+    }
+
+    .nested-tab-content {
+        padding: 12px;
+    }
+
+    .nested-tabs ::deep .dx-tab {
+        font-size: 12px;
+    }
+
+    .frhsm104-form .input label {
+        font-size: 13px;
+    }
+
+    .image-panel {
+        min-height: 150px;
+        padding: 20px;
+    }
+
+    .no-image i {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhsm104-form {
+        padding: 10px;
+    }
+
+    .tab-content {
+        padding: 15px 0;
+    }
+
+    .nested-tab-content {
+        padding: 10px;
+    }
+
+    .nested-tabs ::deep .dx-tab {
+        font-size: 11px;
+    }
+
+    .frhsm104-form .input label {
+        font-size: 12px;
+    }
+
+    .frhsm104-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .no-image i {
+        font-size: 32px;
+    }
+
+    .no-image p {
+        font-size: 12px;
+    }
+}

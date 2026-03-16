@@ -1,0 +1,65 @@
+﻿@page "/ComboBoxMultiColumn"
+
+@using DevExpress.Blazor
+@using EIKON.UI.Interfaces
+@inject EIKON.UI.Services.EikonDataServices api
+
+<DxComboBox Data="@Employees"
+            @bind-Value="@SelectedEmployee"
+            TextFieldName="@nameof(Employee.FirstName)"
+            ValueFieldName="@nameof(Employee.ID)"
+            CssClass="cw-480">
+    <Columns>
+        <DxListEditorColumn FieldName="@nameof(Employee.FirstName)" Caption="First Name" />
+        <DxListEditorColumn FieldName="@nameof(Employee.LastName)" Caption="Last Name" />
+        <DxListEditorColumn FieldName="@nameof(Employee.City)" Caption="City" />
+    </Columns>
+</DxComboBox>
+<br />
+<DxComboBox Data="@nominas"
+            @bind-Value="@nomina"
+            TextFieldName="@nameof(Trhwb010Dto.WbDescri)"
+            ValueFieldName="@nameof(Trhwb010Dto.WbCodigo)"
+            CssClass="cw-480">
+    <Columns>
+        <DxListEditorColumn FieldName="@nameof(Trhwb010Dto.WbDescri)" Caption="Nomina" />
+        <DxListEditorColumn FieldName="@nameof(Trhwb010Dto.WbCodigo)" Caption="Codigo" />
+        <DxListEditorColumn FieldName="@nameof(Trhwb010Dto.EmEmpresa)" Caption="Empresa" />
+    </Columns>
+</DxComboBox>
+
+
+<div class="mt-3">
+    Selected Employee: @(SelectedEmployee != null ? $"{SelectedEmployee.FirstName} {SelectedEmployee.LastName}" : "None")
+</div>
+
+@code {
+    public class Employee
+    {
+        public int ID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string City { get; set; }
+    }
+
+    private Employee SelectedEmployee { get; set; }
+    private List<Employee> Employees { get; set; }
+    private IEnumerable<Trhwb010Dto> nominas { get; set; }
+    private Trhwb010Dto nomina { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Employees = new List<Employee>() {
+            new Employee { ID = 1, FirstName = "John", LastName = "Doe", City = "New York" },
+            new Employee { ID = 2, FirstName = "Jane", LastName = "Smith", City = "Boston" },
+            new Employee { ID = 3, FirstName = "Bob", LastName = "Johnson", City = "Chicago" },
+            new Employee { ID = 4, FirstName = "Alice", LastName = "Williams", City = "Miami" },
+            new Employee { ID = 5, FirstName = "David", LastName = "Brown", City = "Los Angeles" }
+        };
+
+        SelectedEmployee = Employees.FirstOrDefault();
+
+        nominas = api.Trhwb010DtoPorEmpresa("01", "x");
+        nomina = nominas.FirstOrDefault();  
+    }
+}

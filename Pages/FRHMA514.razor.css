@@ -1,0 +1,275 @@
+/* FRHMA514 - Direcciones */
+
+.frhma514-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Main Layout: 2 columnas (Mapa + Formulario) */
+.frhma514-form .main-layout {
+    display: grid;
+    grid-template-columns: 550px 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Map Section */
+.frhma514-form .map-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.frhma514-form .map-container {
+    width: 100%;
+    height: 650px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+    .frhma514-form .map-container > img{
+        object-fit:fill;
+        object-position:center;
+    }
+
+    .frhma514-form .map-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+    }
+
+/* Form Section */
+.frhma514-form .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Fields Grid 2x2 */
+.frhma514-form .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+}
+
+.frhma514-form .codigo-field {
+    grid-column: span 1;
+}
+
+/* Standard Input Fields */
+.frhma514-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma514-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Arrastrar al Mapa Section */
+.frhma514-form .arrastrar-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.frhma514-form .btn-download {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhma514-form .btn-download:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.frhma514-form .btn-download i {
+    font-size: 14px;
+}
+
+/* Grid Section */
+.frhma514-form .grid-section {
+    margin-top: 10px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+    flex: 1;
+}
+
+.frhma514-form .direcciones-grid {
+    width: 100%;
+    min-height: 300px;
+}
+
+/* Bottom Buttons */
+.frhma514-form .bottom-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 10px;
+}
+
+/* DevExpress Component Overrides */
+.frhma514-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma514-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma514-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma514-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma514-form ::deep .dx-grid {
+    border: none;
+}
+
+.frhma514-form ::deep .dx-grid-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #bfbfbf;
+    font-weight: 600;
+}
+
+.frhma514-form ::deep .dx-grid-data-row {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhma514-form ::deep .dx-grid-data-row:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .frhma514-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhma514-form .main-layout {
+        grid-template-columns: 400px 1fr;
+        gap: 15px;
+    }
+
+    .frhma514-form .map-container {
+        height: 500px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .frhma514-form .main-layout {
+        grid-template-columns: 350px 1fr;
+        gap: 15px;
+    }
+
+    .frhma514-form .map-container {
+        height: 450px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma514-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhma514-form .main-layout {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhma514-form .map-container {
+        height: 400px;
+    }
+
+    .frhma514-form .fields-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma514-form .codigo-field {
+        grid-column: span 1;
+    }
+
+    .frhma514-form .direcciones-grid {
+        min-height: 250px;
+    }
+
+    .frhma514-form .bottom-buttons {
+        flex-direction: column;
+    }
+
+    .frhma514-form .icon-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma514-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhma514-form .input label {
+        font-size: 13px;
+    }
+
+    .frhma514-form .map-container {
+        height: 300px;
+    }
+
+    .frhma514-form .map-placeholder i {
+        font-size: 48px;
+    }
+
+    .frhma514-form .map-placeholder span {
+        font-size: 16px;
+    }
+
+    .frhma514-form .map-placeholder p {
+        font-size: 12px;
+    }
+
+    .frhma514-form .arrastrar-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .frhma514-form .btn-download {
+        width: 100%;
+    }
+
+    .frhma514-form .direcciones-grid {
+        min-height: 200px;
+    }
+}

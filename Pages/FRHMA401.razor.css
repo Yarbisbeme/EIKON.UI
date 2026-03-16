@@ -1,0 +1,213 @@
+/* FRHMA401 - Tablas de referencia */
+
+.frhma401-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Search Section */
+.frhma401-form .search-section {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.frhma401-form .search-header {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.frhma401-form .search-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.frhma401-form .search-row {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 15px;
+    align-items: start;
+}
+
+.frhma401-form .radio-options-search {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma401-form .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.frhma401-form .radio-item input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.frhma401-form .radio-item label {
+    margin: 0;
+    font-weight: 400;
+    cursor: pointer;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhma401-form .search-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma401-form .btn-encontrar-todos {
+    padding: 8px 16px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: fit-content;
+    margin-top: 4px;
+}
+
+.frhma401-form .btn-encontrar-todos:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Grid Section */
+.frhma401-form .grid-section {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.frhma401-form .tablas-grid {
+    width: 100%;
+    min-height: 400px;
+}
+
+.frhma401-form .btn-action {
+    padding: 6px 12px;
+    border: 1px solid #28a745;
+    border-radius: 4px;
+    background-color: #28a745;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhma401-form .btn-action:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.frhma401-form .btn-action i {
+    font-size: 14px;
+}
+
+/* DevExpress Component Overrides */
+.frhma401-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.frhma401-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma401-form ::deep .dx-textbox:disabled,
+.frhma401-form ::deep .dx-textbox-container.dx-state-disabled {
+    background-color: #e9ecef !important;
+    opacity: 0.6;
+}
+
+.frhma401-form ::deep .dx-grid {
+    border: none;
+}
+
+.frhma401-form ::deep .dx-grid-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #bfbfbf;
+    font-weight: 600;
+}
+
+.frhma401-form ::deep .dx-grid-data-row {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhma401-form ::deep .dx-grid-data-row:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma401-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhma401-form .search-row {
+        grid-template-columns: 110px 1fr auto;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma401-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhma401-form .search-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhma401-form .btn-encontrar-todos {
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .frhma401-form .tablas-grid {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma401-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhma401-form .search-section {
+        padding: 12px;
+    }
+
+    .frhma401-form .search-header {
+        font-size: 13px;
+    }
+
+    .frhma401-form .btn-encontrar-todos {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+
+    .frhma401-form .radio-item label {
+        font-size: 13px;
+    }
+}

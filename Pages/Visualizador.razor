@@ -1,0 +1,84 @@
+﻿@layout MainLayoutLogin
+@page "/Visualizador"
+
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using EIKON.UI.Components
+
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+<link rel="stylesheet" href="_content/DevExpress.Blazor.Reporting.Viewer/css/dx-blazor-reporting-components.bs5.css">
+<style>
+    .my-report-viewer-width {
+        width: 100%; /* Or any other desired width */
+    }
+</style>
+<PageTitle>Reporte</PageTitle>
+
+<div style="width:100%; height:100vh;">
+    <DxReportViewer Report="@Report" RootCssClasses="my-report-viewer-width" />
+</div>
+@* <DxReportViewer Report="@Report" Style="width:100%; height:100vh;" /> *@
+
+@code {
+    XtraReport Report;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        // Puedes extraer parámetros de la query string
+        var Oficina = query["oficina"];
+        var Ubicacion = query["ubicacion"];
+        var Clase = query["clase"];
+        var Puesto = query["puesto"];
+        var Empresa = query["empresa"];
+        var Rep = query["rep"];
+
+        // Obtener datos según parámetros y generar el reporte
+        
+        if (Rep == "130")
+        {
+            var data = await api.GetDataRrhel006a(Oficina, Ubicacion, Clase, Puesto, Empresa);
+            Report = CrearReporte(data); }
+                else if (Rep == "162")
+        {
+            var data = await api.GetDataRrhel006("A");
+            // Aquí puedes crear otro reporte si es necesario
+           //** Report = CrearReporteEst(data);
+        }
+        else
+        {
+            // Manejar el caso donde no se encuentra el reporte
+            throw new Exception("Reporte no encontrado");
+        }
+        //Report.PrintingSystem.Document.ScaleFactor = 0.5F;
+        // Report.PageHeight = 297; // A4 height in mm
+       // Report.PageWidth = 210; // A4 width in mm
+       
+    }
+
+    
+
+    // private XtraReport CrearReporte(List<Rrhel006aDto> data)
+    // {
+    //     var reporte = new Rptrrhel006a(); // o el que corresponda
+    //     reporte.LoadData(data);
+    //     return reporte;
+    // }
+    // private XtraReport CrearReporteEst(List<RptPuestosEstatus> data)
+    // {
+    //     var reporte = new rrhel006(); // o el que corresponda
+    //     reporte.LoadData(data);
+    //     return reporte;
+    // }
+}

@@ -1,0 +1,26 @@
+@page "/reportviewer/"
+
+@using DevExpress.Blazor.Reporting
+@using DevExpress.XtraReports.UI
+@using EIKON.UI.PredefinedReports
+@inject EIKON.UI.Services.EikonDataServices DataService
+<link href="/css/custom/eikon-style.css" rel="stylesheet" />
+@* <link href="_content/DevExpress.Blazor.Reporting.Viewer/css/dx-blazor-reporting-components.bs5.css" rel="stylesheet" />
+ *@
+<DxReportViewer @ref="reportViewer" Report="Report" RootCssClasses="w-90 h-100" />
+
+@code {
+    DxReportViewer reportViewer;
+    XtraReport Report;
+    protected override async Task OnInitializedAsync()
+    {
+        //Report = new rrhel006();
+        Report = new Rptrrhel006a();
+
+        // Obtener datos desde el servicio
+       //- var data = await DataService.GetDataRrhel006a("001","0","0","0","01");
+
+        // Asignar el DataSource al reporte
+      //-  ((Rptrrhel006a)Report).LoadData(data);
+    }
+}

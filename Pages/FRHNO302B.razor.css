@@ -1,0 +1,397 @@
+/* FRHNO302B - Reportes de Nóminas en estatus Pagada */
+
+.frhno302b-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Main Layout: Content + Action Buttons */
+.frhno302b-form .main-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+}
+
+/* Content Area (Left) */
+.frhno302b-form .content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Standard Input Field */
+.frhno302b-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno302b-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Nomina Row */
+.frhno302b-form .nomina-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.frhno302b-form .nomina-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhno302b-form .nomina-group > label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhno302b-form .checkbox-with-combo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhno302b-form .imagen-group {
+    padding-top: 28px;
+}
+
+/* Section Groups (Fieldsets) */
+.frhno302b-form .section-group {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.frhno302b-form .section-header {
+    margin-bottom: 10px;
+}
+
+.frhno302b-form .section-header label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhno302b-form .section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Mensaje Section */
+.frhno302b-form .mensaje-section .section-content {
+    gap: 0;
+}
+
+.frhno302b-form .mensaje-memo {
+    width: 100%;
+}
+
+/* Cheque Section */
+.frhno302b-form .cheque-section {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhno302b-form .cheque-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhno302b-form .cheque-spin {
+    max-width: 150px;
+}
+
+/* Transacciones Section */
+.frhno302b-form .transacciones-inputs {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.frhno302b-form .trans-codigo {
+    max-width: 80px;
+}
+
+.frhno302b-form .trans-btn {
+    min-width: 44px;
+    min-height: 36px;
+}
+
+/* Otros Criterios Section */
+.frhno302b-form .criterio-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.frhno302b-form .criterio-combo {
+    width: 100%;
+}
+
+/* Employee Checkboxes */
+.frhno302b-form .employee-checkboxes {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+/* Disco Section */
+.frhno302b-form .disco-section {
+    margin-top: 5px;
+}
+
+.frhno302b-form .disco-fields {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.frhno302b-form .disco-tipo {
+    max-width: 150px;
+}
+
+.frhno302b-form .sub-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #33363f;
+    margin-top: -2px;
+}
+
+/* Action Buttons Panel (Right) */
+.frhno302b-form .action-buttons-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 32px;
+}
+
+.frhno302b-form .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* ===== DevExpress Component Overrides ===== */
+.frhno302b-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno302b-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhno302b-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno302b-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* SpinEdit */
+.frhno302b-form ::deep .dx-spin-edit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno302b-form ::deep .dx-spin-edit-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Memo */
+.frhno302b-form ::deep .dx-memo-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhno302b-form ::deep .dx-memo-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Editor Buttons */
+.frhno302b-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhno302b-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Checkboxes */
+.frhno302b-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhno302b-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhno302b-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Button Styling */
+.frhno302b-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhno302b-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhno302b-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhno302b-form ::deep .dx-button-success {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: #fff;
+}
+
+.frhno302b-form ::deep .dx-button-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.frhno302b-form ::deep .dx-button-danger {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #fff;
+}
+
+.frhno302b-form ::deep .dx-button-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .frhno302b-form .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302b-form .action-buttons-panel {
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 15px;
+    }
+
+    .frhno302b-form .disco-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302b-form .disco-tipo {
+        max-width: 100%;
+    }
+
+    .frhno302b-form .cheque-section {
+        grid-template-columns: auto 1fr;
+    }
+
+    .frhno302b-form .cheque-spin {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno302b-form {
+        gap: 15px;
+    }
+
+    .frhno302b-form .content-area {
+        gap: 12px;
+    }
+
+    .frhno302b-form .nomina-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302b-form .imagen-group {
+        padding-top: 0;
+    }
+
+    .frhno302b-form .transacciones-inputs {
+        grid-template-columns: 70px 1fr auto;
+    }
+
+    .frhno302b-form .criterio-row {
+        grid-template-columns: 80px 1fr;
+    }
+
+    .frhno302b-form .employee-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .frhno302b-form .action-buttons-panel {
+        flex-wrap: wrap;
+    }
+
+    .frhno302b-form .cheque-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhno302b-form {
+        gap: 12px;
+    }
+
+    .frhno302b-form .input label,
+    .frhno302b-form .section-header label,
+    .frhno302b-form .cheque-section label {
+        font-size: 13px;
+    }
+
+    .frhno302b-form .transacciones-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .frhno302b-form .trans-btn {
+        width: 100%;
+    }
+
+    .frhno302b-form .criterio-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .frhno302b-form .action-buttons-panel {
+        flex-direction: column;
+    }
+
+    .frhno302b-form .action-btn {
+        width: 100%;
+    }
+}

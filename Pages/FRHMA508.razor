@@ -1,0 +1,220 @@
+@layout MainLayout
+@page "/FRHMA508"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA508 - Definición Cambio/Acciones de personal" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma508-form">
+
+        <!-- Código y Estatus -->
+        <div class="codigo-estatus-row">
+            <div class="input codigo-field">
+                <label>Código</label>
+                <DxTextBox @bind-Text="@Codigo">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="input">
+            <label>Descripción</label>
+            <DxTextBox @bind-Text="@Descripcion" NullText="Descripción" />
+        </div>
+
+        <!-- Acción Base -->
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+        <div class="input">
+            <label>Acción Base</label>
+            <DxComboBox Data="@AccionBaseOptions"
+                        @bind-Value="@AccionBase"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        NullText="Seleccione acción base" />
+        </div>
+        <DxCheckBox @bind-Checked="@Estatus">Estatus</DxCheckBox>
+        </div>
+
+        <div style="display:flex; gap:10px">
+        <!-- Fórmula -->
+        <div class="input">
+            <label>Fórmula</label>
+            <DxComboBox Data="@AccionBaseOptions"
+                        @bind-Value="@AccionBase"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        NullText="Seleccione formula" />
+        </div>
+
+        <!-- Asistencia -->
+        <div class="input">
+            <label>Asistencia</label>
+            <DxComboBox Data="@AsistenciaOptions"
+                        @bind-Value="@Asistencia"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        NullText="Seleccione asistencia" />
+        </div>
+        </div>
+
+        <div class="type-group">
+
+        <!-- Tipo Contrato -->
+        <div class="group-box">
+            <div class="group-box-title">Tipo Contrato</div>
+            <div class="radio-group horizontal-radio">
+                <DxRadioGroup @bind-Value="@TipoContrato" Items="@TipoContratoOptions"
+                              ValueFieldName="Value" TextFieldName="Text" />
+            </div>
+        </div>
+
+        <!-- Tipo Acción -->
+        <div class="group-box">
+            <div class="group-box-title">Tipo Acción</div>
+            <div class="radio-group horizontal-radio">
+                <DxRadioGroup @bind-Value="@TipoAccion" Items="@TipoAccionOptions"
+                              ValueFieldName="Value" TextFieldName="Text" />
+            </div>
+        </div>
+
+        <!-- Tipo salida -->
+        <div class="group-box">
+            <div class="group-box-title">Tipo salida</div>
+            <div class="radio-group horizontal-radio">
+                <DxRadioGroup @bind-Value="@TipoSalida" Items="@TipoSalidaOptions"
+                              ValueFieldName="Value" TextFieldName="Text" />
+            </div>
+        </div>
+        </div>
+        
+        <!-- Mostrar en Reporte de acciones -->
+        <div class="group-box">
+            <div class="group-box-title">Mostrar en Reporte de acciones</div>
+            <div class="checkbox-grid">
+                <div class="checkbox-row">
+                    <DxCheckBox @bind-Checked="@MostrarDireccion">Dirección</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarDocumentoId">Sueldo</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarConsto">Fecha Nac.</DxCheckBox>
+                </div>
+                <div class="checkbox-row">
+                    <DxCheckBox @bind-Checked="@MostrarFechaNac">Documentos Id.</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarAvanceNeto">CCosto</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarNoRotacion">Cuenta B</DxCheckBox>
+                </div>
+                <div class="checkbox-row">
+                    <DxCheckBox @bind-Checked="@MostrarWeb">Avance Neto</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarTemporero">No Rotación</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarTemporero">NUevo ID</DxCheckBox>
+                </div>
+
+                <div class="checkbox-row">
+                    <DxCheckBox @bind-Checked="@MostrarWeb">Web</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarTemporero">Temporero</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@MostrarTemporero">Regular</DxCheckBox>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Fields
+    private string Codigo { get; set; } = string.Empty;
+    private bool Estatus { get; set; } = false;
+    private string Descripcion { get; set; } = string.Empty;
+    private string AccionBase { get; set; } = string.Empty;
+    private string Formula { get; set; } = string.Empty;
+    private string Asistencia { get; set; } = string.Empty;
+
+    // Tipo Contrato
+    private string TipoContrato { get; set; } = "Regular";
+    private List<OptionItem> TipoContratoOptions = new List<OptionItem>
+    {
+        new OptionItem { Text = "Definitivo", Value = "Definitivo" },
+        new OptionItem { Text = "Probatorio", Value = "Probatorio" },
+        new OptionItem { Text = "Regular", Value = "Regular" }
+    };
+
+    // Tipo Acción
+    private string TipoAccion { get; set; } = "Interna";
+    private List<OptionItem> TipoAccionOptions = new List<OptionItem>
+    {
+        new OptionItem { Text = "Interna", Value = "Interna" },
+        new OptionItem { Text = "Cambios", Value = "Cambios" },
+        new OptionItem { Text = "Salidas", Value = "Salidas" }
+    };
+
+    // Tipo Salida
+    private string TipoSalida { get; set; } = "Voluntaria";
+    private List<OptionItem> TipoSalidaOptions = new List<OptionItem>
+    {
+        new OptionItem { Text = "Voluntaria", Value = "Voluntaria" },
+        new OptionItem { Text = "Involuntaria", Value = "Involuntaria" }
+    };
+
+    // Checkboxes Reporte
+    private bool MostrarDireccion { get; set; } = false;
+    private bool MostrarDocumentoId { get; set; } = false;
+    private bool MostrarConsto { get; set; } = false;
+    private bool MostrarFechaNac { get; set; } = false;
+    private bool MostrarAvanceNeto { get; set; } = false;
+    private bool MostrarNoRotacion { get; set; } = false;
+    private bool MostrarNuevaId { get; set; } = false;
+    private bool MostrarWeb { get; set; } = false;
+    private bool MostrarTemporero { get; set; } = false;
+
+    // Dropdown Options
+    private List<OptionItem> AccionBaseOptions = new List<OptionItem>
+    {
+        new OptionItem { Text = "Opción 1", Value = "1" },
+        new OptionItem { Text = "Opción 2", Value = "2" }
+    };
+
+    private List<OptionItem> AsistenciaOptions = new List<OptionItem>
+    {
+        new OptionItem { Text = "Opción 1", Value = "1" },
+        new OptionItem { Text = "Opción 2", Value = "2" }
+    };
+
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda de código
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardado
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class OptionItem
+    {
+        public string Text { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+    }
+}

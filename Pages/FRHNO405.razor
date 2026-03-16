@@ -1,0 +1,230 @@
+@layout MainLayout
+@page "/FRHNO405"
+@using DevExpress.Blazor
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Simulación de ítems de cálculo" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhno405-form">
+        <!-- Item y Reporte -->
+        <div class="input">
+            <label>Item</label>
+            <DxComboBox Data="@items"
+                       @bind-Value="@selectedItem"
+                       NullText="Seleccione..."
+                       CssClass="full-width" />
+        </div>
+
+        <div class="input">
+            <label>Reporte</label>
+            <DxComboBox Data="@reportes"
+                       @bind-Value="@selectedReporte"
+                       NullText="Seleccione..."
+                       CssClass="full-width" />
+        </div>
+
+        <!-- A qué año y Monto a Distribuir -->
+        <div class="dual-input-row">
+            <div class="input">
+                <label>A qué año</label>
+                <DxSpinEdit @bind-Value="@year"
+                           MinValue="2000"
+                           MaxValue="2100" />
+            </div>
+            <div class="input">
+                <label>Monto a Distribuir</label>
+                <DxSpinEdit @bind-Value="@montoDistribuir"
+                           DisplayFormat="N2"
+                           MinValue="0" />
+            </div>
+        </div>
+
+        <!-- Nómina section -->
+        <div class="nomina-section">
+            <div class="nomina-header">
+                <label>Nómina</label>
+                <DxCheckBox @bind-Checked="@todasNominas">Todas</DxCheckBox>
+            </div>
+            <DxComboBox Data="@nominas"
+                       @bind-Value="@selectedNomina"
+                       Enabled="@(!todasNominas)"
+                       NullText="Seleccione..."
+                       CssClass="full-width" />
+        </div>
+
+        <!-- Periodo section -->
+        <div class="periodo-section">
+            <label class="periodo-label">Periodo</label>
+            <div class="periodo-inputs">
+                <DxSpinEdit @bind-Value="@periodoInicio1"
+                           MinValue="0"
+                           CssClass="periodo-spin" />
+                <DxSpinEdit @bind-Value="@periodoInicio2"
+                           MinValue="0"
+                           CssClass="periodo-spin" />
+                <span class="hasta-label">Hasta</span>
+                <DxSpinEdit @bind-Value="@periodoFin1"
+                           MinValue="0"
+                           CssClass="periodo-spin" />
+                <DxSpinEdit @bind-Value="@periodoFin2"
+                           MinValue="0"
+                           CssClass="periodo-spin" />
+                <div class="periodo-checks">
+                    <DxCheckBox @bind-Checked="@proyectarFaltantes">Proyectar los faltantes</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ingresosCorporativos">Ingresos Corporativos</DxCheckBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Oficina y Ubicación -->
+        <div class="dual-check-row">
+            <div class="check-with-dropdown">
+                <DxCheckBox @bind-Checked="@filtrarOficina">Oficina</DxCheckBox>
+                <DxComboBox Data="@oficinas"
+                           @bind-Value="@selectedOficina"
+                           Enabled="@filtrarOficina"
+                           NullText="Seleccione..."
+                           CssClass="full-width" />
+            </div>
+            <div class="action-buttons-right">
+            </div>
+        </div>
+
+        <div class="dual-check-row">
+            <div class="check-with-dropdown">
+                <DxCheckBox @bind-Checked="@filtrarUbicacion">Ubicación</DxCheckBox>
+                <DxComboBox Data="@ubicaciones"
+                           @bind-Value="@selectedUbicacion"
+                           Enabled="@filtrarUbicacion"
+                           NullText="Seleccione..."
+                           CssClass="full-width" />
+            </div>
+        </div>
+
+        <!-- Tipo de Empleados -->
+        <div class="employee-types">
+            <DxCheckBox @bind-Checked="@incluirRegulares">Regulares</DxCheckBox>
+            <DxCheckBox @bind-Checked="@incluirTemporeros">Temporeros</DxCheckBox>
+            <DxCheckBox @bind-Checked="@incluirPensionados">Pensionados</DxCheckBox>
+            <DxCheckBox @bind-Checked="@incluirExEmpleados">ExEmpleados</DxCheckBox>
+        </div>
+
+        <!-- Proponer en generación -->
+        <div class="input">
+            <DxCheckBox @bind-Checked="@proponerEnGeneracion">Proponer en generación</DxCheckBox>
+        </div>
+
+        <!-- Nómina Ref -->
+        <div class="input">
+            <label>Nómina Ref</label>
+            <DxTextBox @bind-Text="@nominaRef" NullText="" />
+        </div>
+
+        <!-- Fecha aplica -->
+        <div class="fecha-disco-section">
+            <div class="fecha-group">
+                <label>Fecha aplica</label>
+                <div class="fecha-input-group">
+                    <DxDateEdit @bind-Date="@fechaAplica"
+                               DisplayFormat="dd/MM/yyyy"
+                               NullText="/ /"
+                               CssClass="fecha-input" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Disco section -->
+        <div class="disco-section">
+            <label>Disco</label>
+            <div class="disco-inputs">
+                <div class="disco-row">
+                    <div class="input-small">
+                        <label>Tipo</label>
+                        <DxComboBox Data="@tiposDisco"
+                                   @bind-Value="@selectedTipoDisco"
+                                   NullText="" />
+                    </div>
+                    <div class="input-large">
+                        <label>Nombre</label>
+                        <DxTextBox @bind-Text="@nombreArchivo"
+                                  NullText="..."
+                                  CssClass="nombre-input" />
+                    </div>
+                    <div class="disco-actions">
+                        <DxButton IconCssClass="fi fi-rr-check"></DxButton>
+                        <DxButton IconCssClass="fi fi-rr-cross"></DxButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Item y Reporte
+    private List<string> items = new();
+    private string selectedItem = "";
+    private List<string> reportes = new();
+    private string selectedReporte = "";
+
+    // A qué año y Monto
+    private int year = DateTime.Now.Year;
+    private decimal montoDistribuir = 0.00m;
+
+    // Nómina
+    private bool todasNominas = false;
+    private List<string> nominas = new();
+    private string selectedNomina = "";
+
+    // Periodo
+    private int periodoInicio1 = 0;
+    private int periodoInicio2 = 0;
+    private int periodoFin1 = 0;
+    private int periodoFin2 = 0;
+    private bool proyectarFaltantes = false;
+    private bool ingresosCorporativos = false;
+
+    // Oficina y Ubicación
+    private bool filtrarOficina = false;
+    private List<string> oficinas = new();
+    private string selectedOficina = "";
+    private bool filtrarUbicacion = false;
+    private List<string> ubicaciones = new();
+    private string selectedUbicacion = "";
+
+    // Tipos de Empleados
+    private bool incluirRegulares = false;
+    private bool incluirTemporeros = false;
+    private bool incluirPensionados = false;
+    private bool incluirExEmpleados = false;
+
+    // Proponer en generación
+    private bool proponerEnGeneracion = false;
+
+    // Nómina Ref
+    private string nominaRef = "";
+
+    // Fecha aplica
+    private DateTime? fechaAplica = null;
+
+    // Disco
+    private List<string> tiposDisco = new();
+    private string selectedTipoDisco = "";
+    private string nombreArchivo = "";
+
+    private void HandleSave() { }
+    private void HandleClose() { }
+    private void HandlePrint() { }
+    private void HandleSearch() { }
+    private void HandleRefresh() { }
+    private void HandleSync() { }
+    private void HandleAddItem() { }
+}

@@ -1,0 +1,495 @@
+@page "/FRHNO207"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHNO207 - Cambio de Estatus de Período" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="main-layout">
+            <!-- Columna Izquierda - Formulario -->
+            <div class="left-column">
+                <!-- Nómina -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Nómina</label>
+                        <DxTextBox @bind-Text="@NominaValue"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                               Click="@OnSearchNominaClick" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Descripción</label>
+                        <DxTextBox @bind-Text="@DescripcionValue" />
+                    </div>
+                </div>
+
+                <!-- Año Fiscal -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Año Fiscal</label>
+                        <DxSpinEdit @bind-Value="@AnoFiscalValue" 
+                                   MinValue="2020" 
+                                   MaxValue="2030" />
+                    </div>
+                </div>
+
+                <!-- Período -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Período</label>
+                        <DxSpinEdit @bind-Value="@PeriodoValue" 
+                                   MinValue="0" 
+                                   MaxValue="99" />
+                    </div>
+                </div>
+
+                <!-- Desde -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Desde</label>
+                        <DxDateEdit @bind-Date="@DesdeValue" 
+                                   NullText="dd/mm/yyyy">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                            </Buttons>
+                        </DxDateEdit>
+                    </div>
+                </div>
+
+                <!-- Hasta -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Hasta</label>
+                        <DxDateEdit @bind-Date="@HastaValue" 
+                                   NullText="dd/mm/yyyy">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                            </Buttons>
+                        </DxDateEdit>
+                    </div>
+                </div>
+
+                <!-- Corte -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Corte</label>
+                        <DxDateEdit @bind-Date="@CorteValue" 
+                                   NullText="dd/mm/yyyy">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                            </Buttons>
+                        </DxDateEdit>
+                    </div>
+                </div>
+
+                <!-- Estatus Actual -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Estatus Actual</label>
+                        <DxTextBox @bind-Text="@EstatusActualValue" ReadOnly="true" />
+                    </div>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="checkboxes-section">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@PublicarVolantesOption">Publicar Volantes</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ActualizarImagenOption">Actualizar imagen histórica del proceso</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha - Resumen -->
+            <div class="right-column">
+                <div class="resumen-section">
+                    <label class="resumen-title">RESUMEN</label>
+                    
+                    <div class="resumen-content">
+                        <div class="resumen-row">
+                            <span class="resumen-label">Ingresos</span>
+                            <span class="resumen-value">$0.00</span>
+                        </div>
+                        <div class="resumen-row">
+                            <span class="resumen-label">Descuentos</span>
+                            <span class="resumen-value">$0.00</span>
+                        </div>
+                        <div class="resumen-row">
+                            <span class="resumen-label">Total Neto</span>
+                            <span class="resumen-value">$0.00</span>
+                        </div>
+                        <div class="resumen-row">
+                            <span class="resumen-label">Empleados</span>
+                            <span class="resumen-value">0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="propuesto-section">
+                        <div class="input-field">
+                            <label>Propuesto</label>
+                            <DxTextBox @bind-Text="@PropuestoValue" />
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <DxButton IconCssClass="fi fi-rr-settings" 
+                                 CssClass="icon-btn secondary-btn" 
+                                 Click="@OnSettingsClick" />
+                        <DxButton IconCssClass="fi fi-rr-refresh" 
+                                 CssClass="icon-btn info-btn" 
+                                 Click="@OnRefreshClick" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    /* Main layout */
+    .main-layout {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    /* Columna izquierda */
+    .left-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    /* Columna derecha */
+    .right-column {
+        flex: 0 0 280px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+        min-height: 60px;
+    }
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Checkboxes section */
+    .checkboxes-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .checkbox-row {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Resumen section */
+    .resumen-section {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .resumen-title {
+        font-weight: 700;
+        color: #333;
+        font-size: 16px;
+        text-align: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .resumen-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .resumen-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .resumen-row:last-child {
+        border-bottom: none;
+    }
+
+    .resumen-label {
+        font-weight: 500;
+        color: #495057;
+        font-size: 14px;
+    }
+
+    .resumen-value {
+        font-weight: 600;
+        color: #212529;
+        font-size: 14px;
+        text-align: right;
+    }
+
+    /* Propuesto section */
+    .propuesto-section {
+        border-top: 1px solid #dee2e6;
+        padding-top: 15px;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        padding-top: 15px;
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* Botones */
+    .icon-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-spin-edit,
+    .dx-date-edit {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-spin-edit-container,
+    .dx-date-edit-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-spin-edit-container:focus-within,
+    .dx-date-edit-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Checkboxes */
+    .dx-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Date Edit específico */
+    .dx-date-edit-container .dx-texteditor-input {
+        text-align: center;
+    }
+
+    /* Spin Edit específico */
+    .dx-spin-edit .dx-texteditor-input {
+        text-align: center;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1024px) {
+        .main-layout {
+            gap: 25px;
+        }
+
+        .right-column {
+            flex: 0 0 260px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .form-container {
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .main-layout {
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .left-column {
+            max-width: 100%;
+        }
+
+        .right-column {
+            flex: 1;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+            min-height: auto;
+        }
+
+        .input-field {
+            min-width: auto;
+        }
+
+        .resumen-section {
+            padding: 15px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .left-column {
+            gap: 15px;
+        }
+
+        .resumen-section {
+            padding: 15px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+        }
+
+        .action-buttons {
+            gap: 8px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string NominaValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private int AnoFiscalValue { get; set; } = DateTime.Now.Year;
+    private int PeriodoValue { get; set; } = 0;
+    private DateTime? DesdeValue { get; set; }
+    private DateTime? HastaValue { get; set; }
+    private DateTime? CorteValue { get; set; }
+    private string EstatusActualValue { get; set; } = "Abierto";
+    private string PropuestoValue { get; set; } = "";
+    
+    // Opciones de checkbox
+    private bool PublicarVolantesOption { get; set; } = false;
+    private bool ActualizarImagenOption { get; set; } = true;
+    
+    // Event handlers
+    private void OnSearchNominaClick() => Console.WriteLine("Buscar nómina");
+    private void OnSettingsClick() => Console.WriteLine("Configuración");
+    private void OnRefreshClick() => Console.WriteLine("Actualizar");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Cambio de estatus guardado!");
+    }
+}

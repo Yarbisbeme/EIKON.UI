@@ -1,0 +1,242 @@
+/* FRHMA526 - Formas de pago */
+
+.frhma526-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Código Field */
+.frhma526-form .codigo-field {
+    max-width: 120px;
+}
+
+/* Standard Input Fields */
+.frhma526-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhma526-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Main Grid Section */
+.frhma526-form .grid-section {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: start;
+    margin-top: 5px;
+}
+
+/* Fields Container (Left side) */
+.frhma526-form .fields-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.frhma526-form .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+.frhma526-form .small-field {
+    max-width: 200px;
+}
+
+.frhma526-form .base-calculo-field {
+    max-width: 415px;
+}
+
+/* Controls Container (Right side) */
+.frhma526-form .controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-end;
+    min-width: 150px;
+}
+
+.frhma526-form .base-pago-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhma526-form .section-label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhma526-form .base-pago-radio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Rangos Button */
+.frhma526-form .rangos-button-container {
+    margin-top: auto;
+}
+
+.frhma526-form .rangos-button {
+    padding: 8px 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #33363f;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 100px;
+}
+
+.frhma526-form .rangos-button:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.frhma526-form .rangos-button:active {
+    transform: scale(0.98);
+}
+
+/* DevExpress Component Overrides */
+.frhma526-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma526-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma526-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma526-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma526-form ::deep .dx-numberbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma526-form ::deep .dx-numberbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma526-form ::deep .dx-radiobutton {
+    margin-right: 0;
+}
+
+.frhma526-form ::deep .dx-radiobutton-icon {
+    border: 1px solid #bfbfbf;
+}
+
+.frhma526-form ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+    border-color: #007bff;
+    background-color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma526-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhma526-form .grid-section {
+        gap: 25px;
+    }
+
+    .frhma526-form .small-field {
+        max-width: 180px;
+    }
+
+    .frhma526-form .base-calculo-field {
+        max-width: 375px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma526-form {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .frhma526-form .codigo-field {
+        max-width: 100%;
+    }
+
+    .frhma526-form .grid-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhma526-form .controls-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .frhma526-form .rangos-button-container {
+        margin-top: 0;
+    }
+
+    .frhma526-form .small-field {
+        max-width: 100%;
+    }
+
+    .frhma526-form .base-calculo-field {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma526-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhma526-form .input label,
+    .frhma526-form .section-label {
+        font-size: 13px;
+    }
+
+    .frhma526-form .field-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhma526-form .controls-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .frhma526-form .rangos-button {
+        width: 100%;
+    }
+
+    .frhma526-form .base-pago-radio {
+        gap: 6px;
+    }
+}

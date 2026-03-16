@@ -1,0 +1,304 @@
+﻿@page "/FRHEK000"
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+<PageTitle>Clientes</PageTitle>
+<DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+    <DxTabPage Text="Mantenimiento">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="CLientes" BackUrl="/dash" />
+            </div>
+            <Toolbar options=@ToolbarOptions OnProccess="BuscarTool" OnAdd="AgregarTool" OnSave="GuardaTool" OnRemove="EliminarTool" OnAudit="OnAuditTool" />
+        </div>
+        <br />
+        @* Contenido del tab de mantenimiento de clientes *@
+        <EditForm Context="ekContext" Model="@editModel" OnInvalidSubmit="GuardaTool">
+             <DataAnnotationsValidator/>
+                <DxFormLayout Data="@editModel">
+
+                    <DxFormLayoutItem Caption="Código">
+                        <DxTextBox @bind-Text="@editModel.EkCodigo" MaxLength="6" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Descripción">
+                        <DxTextBox @bind-Text="@editModel.EkDescri" MaxLength="160" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="RNC">
+                        <DxTextBox @bind-Text="@editModel.EkRnc" MaxLength="60" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Cantidad Empresas">
+                        <DxSpinEdit @bind-Value="@editModel.EkCanEmpresas" Min="0" Max="32767" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Usuarios">
+                        <DxSpinEdit @bind-Value="@editModel.EkUsuarios" Min="0" Max="32767" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Código interno">
+                        <DxTextBox @bind-Text="@editModel.EkCode" MaxLength="7" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Serial Key">
+                        <DxTextBox @bind-Text="@editModel.EkSerialKey" MaxLength="200" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Contacto">
+                        <DxTextBox @bind-Text="@editModel.EkContacto" MaxLength="60" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Teléfono">
+                        <DxTextBox @bind-Text="@editModel.EkTel" MaxLength="24" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Email">
+                        <DxTextBox @bind-Text="@editModel.EkEmail" MaxLength="160" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Fecha">
+                        <DxDateEdit @bind-Date="@editModel.EkFecha" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Empresa código">
+                        <DxTextBox @bind-Text="@editModel.EmCodigo" MaxLength="2" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Tipo">
+                        <DxComboBox @bind-Value="@editModel.EkTipo"
+                                    Data="@tipoList" ValueFieldName="Id" TextFieldName="Text" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Contacto 2">
+                        <DxTextBox @bind-Text="@editModel.EkContacto2" MaxLength="160" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Tipo contacto">
+                        <DxComboBox @bind-Value="@editModel.EkTipoCont"
+                                    Data="@tipoContList" ValueFieldName="Id" TextFieldName="Text" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Nota">
+                        <DxTextBox @bind-Text="@editModel.Nota" MaxLength="200" />
+                    </DxFormLayoutItem>
+
+@*                     <DxFormLayoutItem Caption="App ID">
+                        <DxSpinEdit @bind-Value="@editModel.EkAppID" Min="0" />
+                    </DxFormLayoutItem> *@
+
+                    <DxFormLayoutItem Caption="Tipo 2">
+                        <DxComboBox @bind-Value="@editModel.EkTipo2" Data="@tipo2List" ValueFieldName="Id" TextFieldName="Text" />
+                    </DxFormLayoutItem>
+                </DxFormLayout>
+        </EditForm>
+    </DxTabPage>
+    <DxTabPage Text="Consulta">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Categorías Salariales" BackUrl="/dash" />
+            </div>
+        </div>
+        <DxGrid Data="@ekList" @ref="MyGrid"
+                CssClass="mw-1100"
+                EditMode="GridEditMode.EditRow"
+                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+            <Columns>
+                <DxGridCommandColumn Width="160px" VisibleIndex="1">
+                    <CellDisplayTemplate>
+                        <a @onclick="@(() => ShowEditRecord((Trhek000Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    </CellDisplayTemplate>
+                </DxGridCommandColumn>
+                <DxGridDataColumn Caption="Gódigo" FieldName="EkCodigo" Width="80px" VisibleIndex="3" />
+                <DxGridDataColumn Caption="Descripción" FieldName="EkDescri" Width="300px" VisibleIndex="4" />
+                <DxGridDataColumn Caption="Activo" FieldName="EkEstatus" VisibleIndex="8" Width="130px" />
+            </Columns>
+            <ToolbarTemplate>
+                <DxToolbar>
+                    <DxToolbarItem Text="Export to XLSX" Click="ExportXlsx_Click" BeginGroup="true" />
+                    <DxToolbarItem Context="itemekx" Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                        <Template>
+                            <DxCheckBox @bind-Checked="@ExportSelectedRowsOnly">Export Selected Rows Only</DxCheckBox>
+                        </Template>
+                    </DxToolbarItem>
+                </DxToolbar>
+            </ToolbarTemplate>
+
+        </DxGrid>
+    </DxTabPage>
+</DxTabs>
+
+<ConfirmDialog @ref="confirmDialog" Title="Confirmar Eliminación"
+               Message="¿Seguro deseas eliminar esta Categoria Salarial?"
+               OnConfirm="OnConfirmDelete" />
+
+@* <DxPopup @bind-Visible="@isPopupVisible"
+         HeaderText="@popupTitle"
+         ShowCloseButton="true"
+         ShowFooter="true"
+         Width="600px">
+    <BodyTemplate Context="popupCtx">
+        <DxFormLayout>
+            <DxFormLayoutItem Caption="Creado por:">
+                <DxTextBox @bind-Text="@editModel.CreatedBy" ReadOnly />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Creado el:">
+                <DxDateEdit @bind-Date="@editModel.CreatedOn" ReadOnly />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Modificado por:">
+                <DxTextBox @bind-Text="@editModel.ChangedBy" ReadOnly />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem Caption="Modificado el:">
+                <DxDateEdit @bind-Date="@editModel.ChangedOn" ReadOnly />
+            </DxFormLayoutItem>
+        </DxFormLayout>
+    </BodyTemplate>
+    <FooterTemplate>
+        <DxButton Text="Salir" RenderStyle="ButtonRenderStyle.Secondary" Click="@OnCancelPopup" />
+    </FooterTemplate>
+</DxPopup> *@
+
+@code {
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+    private List<Trhek000Dto> ekList = new List<Trhek000Dto>();
+    private Trhek000Dto editModel = new();
+    private string[] ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    private bool isPopupVisible = false;
+    private string popupTitle = "Clientes";
+
+    DxGrid MyGrid = new();
+    private ConfirmDialog confirmDialog;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    bool ExportSelectedRowsOnly { get; set; }
+
+    private List<object> tipoList = new()
+    {
+    new { Id = "A", Text = "Activo" },
+    new { Id = "I", Text = "Inactivo" }
+    };
+
+    private List<object> tipoContList = new()
+    {
+    new { Id = "P", Text = "Personal" },
+    new { Id = "C", Text = "Corporativo" }
+    };
+
+    private List<object> tipo2List = new()
+    {
+    new { Id = "X", Text = "Tipo X" },
+    new { Id = "Y", Text = "Tipo Y" }
+    };
+
+    async Task ExportXlsx_Click()
+    {
+        await MyGrid.ExportToXlsxAsync("ExportResult", new GridXlExportOptions()
+        {
+            ExportSelectedRowsOnly = ExportSelectedRowsOnly,
+            CustomizeCell = OnCustomizeXlCell
+        });
+    }
+
+    void OnCustomizeXlCell(GridExportCustomizeCellEventArgs args)
+    {
+        if (args.ColumnFieldName == "EkDescri" && args.AreaType == SheetAreaType.DataArea)
+            args.Formatting.Font = new XlCellFont() { Italic = true };
+        args.Handled = true;
+    }
+
+    private void ShowEditRecord(Trhek000Dto record)
+    {
+        editModel = record;
+        ActiveTabIndex = 0;
+    }
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+        ActiveTabIndex = newIndex;
+    }
+
+    void BuscarTool()
+    {
+        ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+    }
+
+    private void OnCancelPopup()
+    {
+        isPopupVisible = false;
+    }
+
+    private void OnAuditTool()
+    {
+        isPopupVisible = true;
+    }
+
+    private async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            try
+            {
+                // Lógica de eliminación a revisar
+                // editModel.ek = false;
+                var ret = await api.ekUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                Console.WriteLine("Error al eliminar..." + ex.Message);
+            }
+        }
+        else
+        {
+            alertInfo.Show("Eliminación cancelada");
+        }
+    }
+
+    protected void AgregarTool()
+    {
+        editModel = new Trhek000Dto();
+        editModel.EmCodigo = "01";
+    }
+
+    protected async Task GuardaTool()
+    {
+        try
+        {
+
+            if (editModel.EkId == 0)
+            {
+                var ret0 = await api.ekAddAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                alertInfo.Show("Agregado con exito!!!", "success");
+            }
+            else
+            {
+                var ret = await api.ekUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                StateHasChanged();
+                alertInfo.Show("Modificado con exito!!!", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ActiveTabIndex = 1;
+            StateHasChanged();
+            Console.Write("Esto es un error al guardar..." + ex.Message);
+        }
+    }
+
+    protected void EliminarTool()
+    {
+        confirmDialog.Show();
+    }
+}

@@ -1,0 +1,185 @@
+﻿@using EIKON.UI.Interfaces
+@using EIKON.UI.Services
+@using DevExpress.Blazor
+@inject NavigationManager nv;
+
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+
+
+ @* <DxMenu Data="@MenuItems">
+    @foreach (var menuItem in MenuItems)
+    { @inject AuthenticationStateProvider AuthenticationStateProvider
+        <DxMenuItem Text="@menuItem.Text" IconCssClass="@menuItem.IconCssClass" NavigateUrl="@menuItem.NavigateUrl" Expanded="true">
+            @if (menuItem.Items != null && menuItem.Items.Any())
+            {
+                @foreach (var childItem in menuItem.Items)
+                {
+                    <DxMenuItem Text="@childItem.Text" NavigateUrl="@childItem.NavigateUrl" Expanded="true" />
+                }
+            }
+        </DxMenuItem>
+    }
+</DxMenu> 
+<br /> *@
+@* <DxMenu Data="@MenuItems">
+    <DataMappings>
+        <DxMenuDataMapping Text="Text" Children="Items" IconCssClass="IconCssClass"></DxMenuDataMapping>
+        <DxMenuDataMapping Level="1" Text="Text" NavigateUrl="NavigateUrl" IconCssClass="IconCssClass"></DxMenuDataMapping>
+    </DataMappings>
+</DxMenu> *@
+@* <div Class="my-menu">
+    <DxMenu Data="@MenuItems"  DisplayMode="MenuDisplayMode.Auto" >
+    <DataMappings>
+            <DxMenuDataMapping Text="Name" Children="Items" IconCssClass="IconCssClass" ></DxMenuDataMapping>
+        <DxMenuDataMapping Level="1" Text="Name" NavigateUrl="Id" IconCssClass="IconCssClass"   ></DxMenuDataMapping>
+    </DataMappings>
+    </DxMenu>
+</div> *@
+<div>
+<DxMenu Data="@MenuItems"
+                        Orientation="Orientation"
+                        DisplayMode="DisplayMode"
+                        CollapseItemsToHamburgerMenu="true">
+                    <DataMappings>
+                        <DxMenuDataMapping Text="Name" Children="Items" IconCssClass="IconCssClass"></DxMenuDataMapping>
+                        <DxMenuDataMapping Level="1" Text="Name" NavigateUrl="Id" IconCssClass="IconCssClass"></DxMenuDataMapping>
+                    </DataMappings>
+ </DxMenu>
+</div>
+@* <ul class="tree-menu text-white ">
+    @foreach (var menuItem in MenuItems)
+    {
+        <li>
+            <i class="@menuItem.NavigateUrl"></i> <a href="@menuItem.NavigateUrl">@menuItem.Text</a>
+            @if (menuItem.Items != null && menuItem.Items.Any())
+            {
+                <ul>
+                    @foreach (var childItem in menuItem.Items)
+                    {
+                        <li>
+                            <i class="@childItem.NavigateUrl"></i><a class="text-white" href="@childItem.NavigateUrl">@childItem.Text</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul> *@
+
+
+@code {
+    private List<DxMnItemDto> MenuItems;
+    private List<DxMnItemDto> MenuPlanoItems;
+    public string Token { get; set; } = "";
+    public string empresa { get; set; } = "";
+    public string paCodigo { get; set; } = "";
+    MenuDisplayMode DisplayMode { get; set; } = MenuDisplayMode.Mobile;
+    Orientation Orientation { get; set; } = Orientation.Vertical;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            auth.SetToken(Token);
+            empresa = auth.emCodigo;
+            paCodigo = auth.role;
+            // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos(auth.userId,auth.tipo);
+            StateHasChanged();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //var user = authState.User;
+        Token = auth.tkn;
+        if (string.IsNullOrEmpty(Token))
+        {
+            return;
+        }
+
+        var tk = api.GetToken();
+        var EikonUser = api.GetUser();
+        auth.SetToken(Token);
+        var usuario = auth.userId;
+        var tipo = auth.tipo;
+        var rol = auth.role;
+        //var tipo = api.GetTipo();
+        nv.LocationChanged += OnLocationChanged;
+        if (tk != " ")
+        {
+            // Obtenemos los roles del usuario y cargamos los menús correspondientes
+            //var roles = api.GetToken(); // user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+            //  MenuItems = await api.GetDxMenuForRole(EikonUser);
+            //  MenuPlanoItems = await api.GetDxMenuForEmpresaUsuario("01", "Usuario");// Aquí podrías manejar múltiples roles si fuera necesario
+            // if (tipo == "E")
+            // {
+            //     MenuItems = await api.GetDxMenuForRole(usuario);
+            // }
+            // else
+            // {
+            //     MenuItems = await api.GetDxMenuForEmpresaUsuario("01", usuario);
+            // }
+            await CargarDatos(usuario, tipo);
+        }
+        else
+        {
+            DxMnItemDto item = new DxMnItemDto();
+            item.Name = "Login";
+            item.ParentId = " ";
+            item.Id = "/";
+            // MenuPlanoItems.Add(item);
+            //MenuItems.Add(item);
+        }
+        StateHasChanged();
+    }
+    async Task CargarDatos(string usuario, string tipo)
+    {
+        if (tipo == "E")
+        {
+            MenuItems = await api.GetDxMenuForRole(usuario, Token);
+            //MenuItems = items.Where(us=>us.Id.ToLower().Contains("w")).ToList();
+        }
+        else
+        {
+            MenuItems = await api.GetDxMenuForEmpresaUsuario("01", usuario, Token);
+            var items = MenuItems;
+        }
+        //return null;
+    }
+
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                return;
+            }
+
+            var tk = api.GetToken();
+            var EikonUser = api.GetUser();
+            auth.SetToken(Token);
+            var usuario = auth.userId;
+            var tipo = auth.tipo;
+            var rol = auth.role;
+            await CargarDatos(usuario,tipo);
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+}

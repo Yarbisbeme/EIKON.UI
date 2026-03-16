@@ -1,0 +1,242 @@
+@page "/FRHRJ109"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Procesar Carnes" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhrj109-container">
+        <div class="left-panel">
+            <div class="checkboxes-section">
+                <DxCheckBox @bind-Checked="@CheckCodigo" Text="Código" />
+                <DxCheckBox @bind-Checked="@CheckNomina" Text="Nómina" />
+                <DxCheckBox @bind-Checked="@CheckOficina" Text="Oficina" />
+                <DxCheckBox @bind-Checked="@CheckUbicacion" Text="Ubicación" />
+                <DxCheckBox @bind-Checked="@CheckClasificacion" Text="Clasificación" />
+                <DxCheckBox @bind-Checked="@CheckTurno" Text="Turno" />
+                <DxCheckBox @bind-Checked="@CheckTarjeta" Text="Tarjeta" />
+                <DxCheckBox @bind-Checked="@CheckSupervisor" Text="Supervisor" />
+            </div>
+
+            <div class="importar-section">
+                <label class="import-label">Importar Punches</label>
+                <div class="import-options">
+                    <DxCheckBox @bind-Checked="@ImportRegular" Text="Regular" CssClass="import-check" />
+                    <DxCheckBox @bind-Checked="@ImportTemporeros" Text="Temporeros" CssClass="import-check" />
+                    <DxCheckBox @bind-Checked="@ImportCumpleanos" Text="Cumpleaños" CssClass="import-check" />
+                    <DxCheckBox @bind-Checked="@ImportOriginal" Text="Original" CssClass="import-check" />
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-filters">
+                <div class="date-fields">
+                    <div class="filter-field">
+                        <label>Desde</label>
+                        <DxTextBox @bind-Text="@Desde" NullText="06/27/2025">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <div class="filter-field">
+                        <label>Hasta</label>
+                        <DxTextBox @bind-Text="@Hasta" NullText="06/27/2025">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <div class="month-checks">
+                        <DxCheckBox @bind-Checked="@CheckMayo" Text="Mayo" />
+                        <DxCheckBox @bind-Checked="@CheckAbril" Text="Abril" />
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <DxButton IconCssClass="fi fi-rr-check"
+                              RenderStyle="ButtonRenderStyle.Success"
+                              CssClass="btn-icon"
+                              Click="@HandleConfirm" />
+                    <DxButton IconCssClass="fi fi-rr-cross"
+                              RenderStyle="ButtonRenderStyle.Danger"
+                              CssClass="btn-icon"
+                              Click="@HandleCancel" />
+                    <DxButton IconCssClass="fi fi-rr-refresh"
+                              RenderStyle="ButtonRenderStyle.Secondary"
+                              CssClass="btn-icon"
+                              Click="@HandleRefresh" />
+                </div>
+            </div>
+
+            <div class="grid-section">
+                <DxGrid Data="@CarnesData"
+                        CssClass="carnes-grid"
+                        PageSize="20"
+                        ShowPager="false">
+                    <Columns>
+                        <DxGridDataColumn FieldName="Fecha" Caption="Fecha" Width="80px" />
+                        <DxGridDataColumn FieldName="Horario" Caption="Horario" Width="80px" />
+                        <DxGridDataColumn FieldName="Dia" Caption="Día" Width="60px" />
+                        <DxGridDataColumn FieldName="PIn" Caption="P.In" Width="70px" />
+                        <DxGridDataColumn FieldName="POutLune" Caption="P.Out/Lune" Width="90px" />
+                        <DxGridDataColumn FieldName="HoraTrab" Caption="Hora Trab" Width="80px" />
+                        <DxGridDataColumn FieldName="Jorn" Caption="Jorn" Width="60px" />
+                        <DxGridDataColumn FieldName="Reg" Caption="Reg" Width="60px" />
+                        <DxGridDataColumn FieldName="Hext" Caption="Hext" Width="60px" />
+                        <DxGridDataColumn FieldName="Libre" Caption="Libre" Width="60px" />
+                        <DxGridDataColumn FieldName="ParaAdv" Caption="Para Adv" Width="80px" />
+                        <DxGridDataColumn FieldName="ExtraInst" Caption="Extra Inst" Width="80px" />
+                        <DxGridDataColumn FieldName="Descripcion" Caption="Descripción" />
+                    </Columns>
+                </DxGrid>
+            </div>
+
+            <div class="bottom-section">
+                <div class="bottom-fields">
+                    <div class="field-row">
+                        <div class="input-field">
+                            <label>Nómina</label>
+                            <DxTextBox @bind-Text="@Nomina" NullText="" />
+                        </div>
+
+                        <div class="input-field">
+                            <label>Función</label>
+                            <DxTextBox @bind-Text="@Funcion" NullText="">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchFuncion" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Resuello</label>
+                            <DxTextBox @bind-Text="@Resuello" NullText="" />
+                        </div>
+                    </div>
+
+                    <div class="percentage-fields">
+                        <div class="perc-field">
+                            <label>%Nómina</label>
+                            <DxTextBox @bind-Text="@PercNomina" NullText="" />
+                        </div>
+                        <div class="perc-field">
+                            <label>%Jornada</label>
+                            <DxTextBox @bind-Text="@PercJornada" NullText="" />
+                        </div>
+                        <div class="perc-field">
+                            <label>%Horas</label>
+                            <DxTextBox @bind-Text="@PercHoras" NullText="" />
+                        </div>
+                        <div class="perc-field">
+                            <label>%Función</label>
+                            <DxTextBox @bind-Text="@PercFuncion" NullText="" />
+                        </div>
+                        <div class="perc-field">
+                            <label>%Adecuadas</label>
+                            <DxTextBox @bind-Text="@PercAdecuadas" NullText="" />
+                        </div>
+                        <div class="perc-field">
+                            <label>%Adiciona</label>
+                            <DxTextBox @bind-Text="@PercAdiciona" NullText="" />
+                        </div>
+                        <div class="perc-field">
+                            <label>%Horas</label>
+                            <DxTextBox @bind-Text="@PercHoras2" NullText="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-actions">
+                    <DxButton IconCssClass="fi fi-rr-disk"
+                              RenderStyle="ButtonRenderStyle.Secondary"
+                              CssClass="btn-action" />
+                    <DxButton IconCssClass="fi fi-rr-print"
+                              RenderStyle="ButtonRenderStyle.Secondary"
+                              CssClass="btn-action" />
+                    <DxButton IconCssClass="fi fi-rr-search"
+                              RenderStyle="ButtonRenderStyle.Secondary"
+                              CssClass="btn-action" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Left panel checkboxes
+    private bool CheckCodigo { get; set; } = false;
+    private bool CheckNomina { get; set; } = false;
+    private bool CheckOficina { get; set; } = false;
+    private bool CheckUbicacion { get; set; } = false;
+    private bool CheckClasificacion { get; set; } = false;
+    private bool CheckTurno { get; set; } = false;
+    private bool CheckTarjeta { get; set; } = false;
+    private bool CheckSupervisor { get; set; } = false;
+
+    // Import checkboxes
+    private bool ImportRegular { get; set; } = false;
+    private bool ImportTemporeros { get; set; } = false;
+    private bool ImportCumpleanos { get; set; } = false;
+    private bool ImportOriginal { get; set; } = false;
+
+    // Top filters
+    private string Desde { get; set; } = "06/27/2025";
+    private string Hasta { get; set; } = "06/27/2025";
+    private bool CheckMayo { get; set; } = true;
+    private bool CheckAbril { get; set; } = true;
+
+    // Bottom fields
+    private string Nomina { get; set; } = string.Empty;
+    private string Funcion { get; set; } = string.Empty;
+    private string Resuello { get; set; } = string.Empty;
+    private string PercNomina { get; set; } = string.Empty;
+    private string PercJornada { get; set; } = string.Empty;
+    private string PercHoras { get; set; } = string.Empty;
+    private string PercFuncion { get; set; } = string.Empty;
+    private string PercAdecuadas { get; set; } = string.Empty;
+    private string PercAdiciona { get; set; } = string.Empty;
+    private string PercHoras2 { get; set; } = string.Empty;
+
+    // Grid data
+    private List<CarneItem> CarnesData { get; set; } = new();
+
+    public class CarneItem
+    {
+        public string Fecha { get; set; } = string.Empty;
+        public string Horario { get; set; } = string.Empty;
+        public string Dia { get; set; } = string.Empty;
+        public string PIn { get; set; } = string.Empty;
+        public string POutLune { get; set; } = string.Empty;
+        public string HoraTrab { get; set; } = string.Empty;
+        public string Jorn { get; set; } = string.Empty;
+        public string Reg { get; set; } = string.Empty;
+        public string Hext { get; set; } = string.Empty;
+        public string Libre { get; set; } = string.Empty;
+        public string ParaAdv { get; set; } = string.Empty;
+        public string ExtraInst { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+    }
+
+    private void OnSearchFuncion() { }
+    private void HandleConfirm() { }
+    private void HandleCancel() { }
+    private void HandleRefresh() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

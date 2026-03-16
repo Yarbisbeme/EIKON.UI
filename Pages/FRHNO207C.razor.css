@@ -1,0 +1,320 @@
+/* Main form container */
+.frhno207c-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Tabs principales */
+.main-tabs {
+    width: 100%;
+}
+
+/* Contenido de tabs */
+.criterios-content,
+.otros-criterios-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 15px 0;
+}
+
+/* Sección superior */
+.top-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* Criterios izquierda */
+.criterios-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field-with-icons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.icon-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.icon-btn {
+    border: 1px solid #bfbfbf;
+    background: white;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+}
+
+.icon-btn i {
+    font-size: 14px;
+    color: #33363f;
+}
+
+/* Tabla resumen */
+.resumen-table {
+    width: 480px;
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #bfbfbf;
+}
+
+.summary-table th {
+    background: #f8f9fa;
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #bfbfbf;
+    font-size: 13px;
+    color: #33363f;
+    line-height: 1.5;
+}
+
+.summary-table td {
+    padding: 6px 12px;
+    border: 1px solid #bfbfbf;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.summary-table .label-cell {
+    font-weight: 500;
+    background: #f8f9fa;
+    color: #33363f;
+}
+
+.summary-table .value-cell {
+    text-align: right;
+    font-family: monospace;
+}
+
+/* Grid sections */
+.grid-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.section-title {
+    font-weight: 600;
+    color: #007bff;
+    font-size: 14px;
+}
+
+/* Resumen de transacciones */
+.resumen-transacciones-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border: 1px solid #bfbfbf;
+    background: white;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.btn-action:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+}
+
+.chart-placeholder {
+    border: 1px solid #bfbfbf;
+    border-radius: 2px;
+    padding: 20px;
+    min-height: 250px;
+    background: white;
+}
+
+.chart-area {
+    width: 100%;
+    height: 280px;
+    background: linear-gradient(45deg, transparent 48%, #e9ecef 48%, #e9ecef 52%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, #e9ecef 48%, #e9ecef 52%, transparent 52%);
+    background-size: 40px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grids inferiores */
+.bottom-grids {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 200px;
+}
+
+.grid-label {
+    font-weight: 600;
+    color: #007bff;
+    font-size: 14px;
+}
+
+/* Checkboxes con dropdowns (Otros criterios) */
+.criterios-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+
+.checkbox-field {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Input styling */
+.frhno207c-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhno207c-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 2px;
+}
+
+::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-dropdownedit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 2px;
+}
+
+::deep .dx-dropdownedit-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-grid {
+    border: 1px solid #bfbfbf;
+}
+
+::deep .dx-grid-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .top-section {
+        grid-template-columns: 1fr;
+    }
+
+    .resumen-table {
+        min-width: 100%;
+    }
+
+    .bottom-grids {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhno207c-form {
+        padding: 15px;
+    }
+
+    .field-with-icons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .icon-buttons {
+        justify-content: flex-start;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .checkbox-field {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-table {
+        font-size: 12px;
+    }
+
+    .summary-table th,
+    .summary-table td {
+        padding: 4px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhno207c-form {
+        padding: 10px;
+        gap: 20px;
+    }
+
+    .header-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-action {
+        width: 100%;
+    }
+
+    .chart-placeholder {
+        min-height: 200px;
+    }
+}

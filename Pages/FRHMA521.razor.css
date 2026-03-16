@@ -1,0 +1,261 @@
+/* FRHMA521 - Tardanzas, Asistencias y Permisos */
+
+.frhma521-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+    /* Código Field */
+    .frhma521-form .codigo-field {
+        max-width: 120px;
+    }
+
+    /* Standard Input Fields */
+    .frhma521-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .frhma521-form .field-row {
+        display: flex;
+        width: 100%;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .frhma521-form .input label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+    /* Días de Ley Section */
+    .frhma521-form .dias-ley-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .frhma521-form .section-label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+    .frhma521-form .dias-ley-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 1fr;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .frhma521-form .dias-field {
+        gap: 0;
+    }
+
+    .frhma521-form .tipo-field,
+    .frhma521-form .estado-field {
+        gap: 6px;
+    }
+
+    /* Política Memo */
+    .frhma521-form .politica-memo {
+        min-height: 250px;
+    }
+
+    /* Bottom Section */
+    .frhma521-form .bottom-section {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 30px;
+        align-items: start;
+        margin-top: 10px;
+    }
+
+    /* Checkboxes Group */
+    .frhma521-form .checkboxes-group {
+        display: flex;
+        gap: 15px;
+    }
+
+    .frhma521-form .custom-checkbox {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Tipo Radio Section */
+    .frhma521-form .tipo-radio-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 180px;
+    }
+
+    .frhma521-form .tipo-radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* DevExpress Component Overrides */
+    .frhma521-form ::deep .dx-textbox-container {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhma521-form ::deep .dx-textbox-container:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhma521-form ::deep .dx-editor-button {
+        background-color: #f8f9fa;
+        border-left: 1px solid #bfbfbf !important;
+    }
+
+        .frhma521-form ::deep .dx-editor-button:hover {
+            background-color: #e9ecef;
+        }
+
+    .frhma521-form ::deep .dx-dropdowneditor-input-wrapper {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhma521-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhma521-form ::deep .dx-numberbox-container {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhma521-form ::deep .dx-numberbox-container:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhma521-form ::deep .dx-memo {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhma521-form ::deep .dx-memo:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhma521-form ::deep .dx-checkbox {
+        margin-bottom: 0;
+    }
+
+    .frhma521-form ::deep .dx-checkbox-icon {
+        border: 1px solid #bfbfbf;
+        border-radius: 3px;
+    }
+
+    .frhma521-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .frhma521-form ::deep .dx-radiobutton {
+        margin-right: 0;
+    }
+
+    .frhma521-form ::deep .dx-radiobutton-icon {
+        border: 1px solid #bfbfbf;
+    }
+
+    .frhma521-form ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+        border-color: #007bff;
+        background-color: #007bff;
+    }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma521-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+        .frhma521-form .dias-ley-row {
+            grid-template-columns: 90px 1fr 1fr;
+            gap: 12px;
+        }
+
+        .frhma521-form .politica-memo {
+            min-height: 220px;
+        }
+}
+
+@media (max-width: 768px) {
+    .frhma521-form {
+        padding: 12px;
+        gap: 12px;
+    }
+
+        .frhma521-form .field-row {
+            align-items: flex-start;
+            margin-bottom:10px;
+            flex-direction: column;
+        }
+
+        .frhma521-form .codigo-field {
+            max-width: 100%;
+        }
+
+        .frhma521-form .dias-ley-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .frhma521-form .dias-field {
+            gap: 6px;
+        }
+
+            .frhma521-form .dias-field label::before {
+                content: "Días de Ley: ";
+                font-weight: 500;
+                color: #33363f;
+            }
+
+        .frhma521-form .bottom-section {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .frhma521-form .politica-memo {
+            min-height: 200px;
+        }
+}
+
+@media (max-width: 480px) {
+    .frhma521-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+        .frhma521-form .input label,
+        .frhma521-form .section-label {
+            font-size: 13px;
+        }
+
+        .frhma521-form .politica-memo {
+            min-height: 180px;
+        }
+
+        .frhma521-form .checkboxes-group {
+            gap: 10px;
+        }
+
+        .frhma521-form .tipo-radio-group {
+            gap: 8px;
+        }
+}

@@ -1,0 +1,132 @@
+@page "/FRHUT104"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Contadores del Sistema" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhut104-form">
+        <div class="search-row">
+            <div class="input">
+                <label>Nombre</label>
+                <DxTextBox @bind-Text="@Nombre" NullText="">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNombre" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+
+            <div class="input">
+                <label>Descripción</label>
+                <DxTextBox @bind-Text="@DescripcionSearch" NullText="" />
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+            <div class="input">
+                <label>Valor</label>
+                <DxTextBox @bind-Text="@Valor" NullText="" />
+            </div>
+
+            <div class="input">
+                <label>Atributo</label>
+                <DxTextBox @bind-Text="@Atributo" NullText="" />
+            </div>
+
+            <div class="input">
+                <label>Size</label>
+                <DxTextBox @bind-Text="@SizeSearch" NullText="" />
+            </div>
+        </div>
+
+        <div class="grid-section">
+            <DxGrid Data="@ContadoresData"
+                    CssClass="contadores-grid"
+                    PageSize="15"
+                    ShowPager="true"
+                    SelectionMode="GridSelectionMode.Single">
+                <Columns>
+                    <DxGridDataColumn FieldName="Codigo" Caption="CÓDIGO" Width="150px" />
+                    <DxGridDataColumn FieldName="Descripcion" Caption="DESCRIPCIÓN" />
+                    <DxGridDataColumn FieldName="Size" Caption="SIZE" Width="100px" />
+                    <DxGridDataColumn FieldName="Valor" Caption="VALOR" Width="150px" />
+                </Columns>
+            </DxGrid>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "delete", "close" };
+
+    // Search fields (first row)
+    private string Nombre { get; set; } = string.Empty;
+    private string DescripcionSearch { get; set; } = string.Empty;
+    private string SizeSearch { get; set; } = string.Empty;
+
+    // Detail fields (second row)
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string Size { get; set; } = string.Empty;
+    private string Valor { get; set; } = string.Empty;
+    private string Atributo { get; set; } = string.Empty;
+
+    // Grid data
+    private List<Contador> ContadoresData { get; set; } = new()
+    {
+        new Contador { Codigo = "FRHRE000", Descripcion = "EDUCACION EN GENERAL, QUE E", Size = "8", Valor = "945" },
+        new Contador { Codigo = "FRHRE000", Descripcion = "CONSULTA", Size = "5", Valor = "1" },
+        new Contador { Codigo = "FRHRE000", Descripcion = "TABLA DE EDUCACION CONTINUA", Size = "8", Valor = "9" },
+        new Contador { Codigo = "FRHSM000", Descripcion = "ENTIDAD DE PRESUPUESTO PCR", Size = "4", Valor = "0" },
+        new Contador { Codigo = "FRHSM000", Descripcion = "PRESUPUESTO", Size = "6", Valor = "0" },
+        new Contador { Codigo = "FRHCD000", Descripcion = "DOCUMENTOS", Size = "8", Valor = "13" },
+        new Contador { Codigo = "FRHCD000", Descripcion = "TABLA DE LOS DETALLES DEL CH", Size = "8-00229", Valor = "" },
+        new Contador { Codigo = "FRHCM000", Descripcion = "TABLA DE CHECK IN. GENERAL", Size = "8-00229", Valor = "" },
+        new Contador { Codigo = "FRHCM000", Descripcion = "HISTORICO DE ACCIONES A P", Size = "8-28996", Valor = "" },
+        new Contador { Codigo = "FRHCD000", Descripcion = "TABLA CORPORATIVA QUE SIRVE", Size = "8", Valor = "28783" }
+    };
+
+    private void OnSearchNombre()
+    {
+        // Implementar búsqueda por nombre
+    }
+
+    private void HandleAdd()
+    {
+        // Implementar agregar
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardar
+    }
+
+    private void HandleDelete()
+    {
+        // Implementar eliminar
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class Contador
+    {
+        public string Codigo { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public string Size { get; set; } = string.Empty;
+        public string Valor { get; set; } = string.Empty;
+    }
+}

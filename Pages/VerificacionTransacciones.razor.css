@@ -1,0 +1,8 @@
+﻿.custom-grid .fas.fa-ellipsis-v {
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.custom-grid .fas.fa-ellipsis-v:hover {
+    color: #495057;
+}

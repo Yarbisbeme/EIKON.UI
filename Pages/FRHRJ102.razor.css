@@ -1,0 +1,306 @@
+/* Contenedor principal */
+.frhrj102-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Top fields section */
+.top-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.small-field {
+    flex: 0 0 150px;
+}
+
+
+/* Field with inline checkboxes */
+.field-with-checks {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.field-with-checks ::deep .dx-textbox,
+.field-with-checks ::deep .dx-spin-edit {
+    flex: 0 0 100px;
+}
+
+.inline-check ::deep .dx-checkbox-text {
+    font-size: 13px;
+    color: #33363f;
+}
+
+/* Top action buttons */
+.top-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-action {
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+}
+
+.btn-action ::deep .dx-icon {
+    font-size: 14px;
+}
+
+/* Grids section */
+.grids-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grid-header {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    padding: 8px 0;
+}
+
+.jornadas-grid,
+.detalles-grid {
+    min-height: 250px;
+}
+
+.frhrj102-form ::deep .dx-datagrid {
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhrj102-form ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+    font-weight: 600;
+}
+
+.frhrj102-form ::deep .dx-header-row td {
+    color: #33363f !important;
+    font-size: 13px;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.frhrj102-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.frhrj102-form ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+.frhrj102-form ::deep .dx-datagrid-rowsview .dx-selection.dx-row {
+    background-color: #e7f3ff !important;
+}
+
+/* Checkboxes row */
+.checkboxes-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.checkboxes-row ::deep .dx-checkbox {
+    margin: 0;
+}
+
+.checkboxes-row ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.checkboxes-row ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.checkboxes-row ::deep .dx-checkbox-text {
+    font-size: 13px;
+    color: #33363f;
+    font-weight: 500;
+}
+
+.inline-check ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf !important;
+}
+
+.inline-check ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+/* Bottom fields */
+.bottom-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* DevExpress overrides */
+.frhrj102-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhrj102-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhrj102-form ::deep .dx-spin-edit-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhrj102-form ::deep .dx-spin-edit-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhrj102-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+.frhrj102-form ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.frhrj102-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .grids-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhrj102-form {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .field-row {
+        flex-direction: column;
+    }
+
+    .small-field,
+    .flex-field {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .top-actions {
+        flex-wrap: wrap;
+    }
+
+    .bottom-fields {
+        grid-template-columns: 1fr;
+    }
+
+/*    .checkboxes-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }*/
+
+    .field-with-checks {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .field-with-checks ::deep .dx-textbox,
+    .field-with-checks ::deep .dx-spin-edit {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .jornadas-grid,
+    .detalles-grid {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhrj102-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .top-fields {
+        gap: 12px;
+    }
+
+    .field-row {
+        gap: 10px;
+    }
+
+    .input label {
+        font-size: 13px;
+    }
+
+    .grid-header {
+        font-size: 13px;
+        padding: 6px 0;
+    }
+
+    .btn-action {
+        min-width: 28px;
+        height: 28px;
+    }
+
+    .frhrj102-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .checkboxes-row ::deep .dx-checkbox-text,
+    .inline-check ::deep .dx-checkbox-text {
+        font-size: 12px;
+    }
+
+    .jornadas-grid,
+    .detalles-grid {
+        min-height: 180px;
+    }
+}

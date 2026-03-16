@@ -1,0 +1,291 @@
+/* Main form container */
+.frhrj111-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Employee section */
+.employee-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.employee-data {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+.employee-details {
+    display: flex;
+    width: 100%;
+}
+
+.date-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+.employee-section .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.employee-section .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Tabs section */
+.tabs-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.tab-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Ponches section */
+.ponches-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.ponches-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ponches-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+.ponches-row-single {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.ponches-row-triple {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+/*    padding-top: 8px;*/
+}
+
+.ponches-content .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.ponches-content .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.fechahora-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.fechahora-wrapper ::deep .dx-textbox {
+    flex: 1;
+}
+
+.am-button {
+    padding: 6px 16px;
+    border: 1px solid #bfbfbf;
+    background: #f8f9fa;
+    color: #33363f;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 36px;
+}
+
+.am-button:hover {
+    background: #e9ecef;
+}
+
+/* Grid section */
+.ponches-grid-section {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background: #fff;
+}
+
+::deep .ponches-data-grid {
+    width: 100%;
+}
+
+::deep .ponches-data-grid .dx-datagrid-headers {
+    background: #f8f9fa;
+    border-bottom: 2px solid #bfbfbf;
+}
+
+::deep .ponches-data-grid .dx-header-row {
+    background: #f8f9fa;
+}
+
+::deep .ponches-data-grid .dx-row {
+    background: #fff;
+}
+
+::deep .ponches-data-grid .dx-row:nth-child(odd) {
+    background: #ffffcc;
+}
+
+::deep .ponches-data-grid .dx-row:hover {
+    background: #fffacd;
+}
+
+::deep .ponches-data-grid .dx-data-row td {
+    border-right: 1px solid #e9ecef;
+}
+
+/* Columns with yellow background using CellCssClass */
+::deep .ponches-data-grid .yellow-column {
+    background: #ffffcc !important;
+}
+
+/* Transactions content */
+.transactions-content {
+    padding: 20px;
+    min-height: 300px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-dateedit-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-combobox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-combobox-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-memo {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-memo:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-checkbox {
+    font-size: 14px;
+    color: #33363f;
+}
+
+/* Tab styling overrides */
+::deep .dx-tabs {
+    border-bottom: 1px solid #bfbfbf;
+}
+
+::deep .dx-tab {
+    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    background: #f8f9fa;
+    color: #33363f;
+    font-weight: 500;
+}
+
+::deep .dx-tab.dx-state-active {
+    background: #fff;
+    border-color: #bfbfbf;
+    border-bottom-color: #fff;
+}
+
+::deep .dx-tab:hover {
+    background: #e9ecef;
+}
+
+::deep .dx-tab.dx-state-active:hover {
+    background: #fff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .employee-data {
+        grid-template-columns: 1fr;
+    }
+
+    .date-range {
+        grid-template-columns: 1fr;
+    }
+
+    .ponches-row {
+        grid-template-columns: 1fr;
+    }
+
+    .ponches-row-triple {
+        grid-template-columns: 1fr;
+    }
+
+    .checkbox-wrapper {
+        padding-top: 0;
+    }
+
+    .tab-content {
+        padding: 15px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhrj111-form {
+        padding: 10px;
+    }
+
+    .ponches-content {
+        gap: 12px;
+    }
+}

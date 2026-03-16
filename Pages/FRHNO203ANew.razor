@@ -1,0 +1,188 @@
+﻿@page "/FRHNO203ANew"
+
+<div class="page">
+    <Breadcrumb Title="Generación de Nómina" BackUrl="/dashboard" />
+    <div class="header">
+        <div style="display:flex;width:auto;gap:20px;">
+            <div class="input">
+                <label for="user">Titulo Puesto</label>
+                <DxTextBox NullText="Requisicion" @bind-Text="@TextValue" />
+            </div>
+            <div class="select">
+                <label for="company">Analista RRHH</label>
+                <DxComboBox Data="@empresas"
+                            @bind-Value="@empresaSeleccionada"
+                            TextFieldName="@nameof(Empresa.Nombre)"
+                            ValueFieldName="@nameof(Empresa.Id)"
+                            CssClass="mi-combobox"
+                            NullText="Seleccionar Motivo"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+        </div>
+
+        <Toolbar formulario="FRHxxx999" />
+    </div>
+
+    <DxGrid Data="@Data"
+            PageSize="10"
+            ColumnResizeMode="GridColumnResizeMode.NextColumn"
+            TextWrapEnabled="false"
+            CssClass="custom-grid"
+            ShowFilterRow="true"
+            FilterRowCondition="GridFilterRowCondition.Equals"
+            PagerVisible="true"
+            PagerNavigationMode="PagerNavigationMode.InputBox"
+            PagerSwitchToInputBoxButtonCount="5">
+        <Columns>
+            <DxGridDataColumn FieldName="Mes" Caption="Mes" Width="100%" />
+            <DxGridDataColumn FieldName="Periodo" Caption="Periodo" Width="100%" />
+            <DxGridDataColumn FieldName="Inicio" Caption="Inicio" DisplayFormat="dd/MM/yyyy" Width="100%" />
+            <DxGridDataColumn FieldName="Fin" Caption="Fin" DisplayFormat="dd/MM/yyyy" Width="100%" />
+            <DxGridDataColumn FieldName="Estatus" Caption="Estatus" Width="100%">
+                <CellDisplayTemplate>
+                    @{
+                        var periodo = context.DataItem as PeriodoNomina;
+                        string cssClass = periodo?.Estatus switch
+                        {
+                            "En Proceso" => "status-badge status-proceso",
+                            "Pendiente" => "status-badge status-pendiente",
+                            "Completado" => "status-badge status-completado",
+                            "Cancelado" => "status-badge status-cancelado",
+                            _ => "status-badge status-default"
+                        };
+                    }
+                    <span class="@cssClass">@periodo?.Estatus</span>
+                </CellDisplayTemplate>
+            </DxGridDataColumn>
+        </Columns>
+    </DxGrid>
+
+    <div style="width:100%; display:flex;justify-content:space-between; align-items:center;">
+        <div style="max-width:max-content">
+            <DxCheckBox @bind-Checked="@IsChecked">Aprobar Requisición</DxCheckBox>
+        </div>
+        <div class="buttons">
+            <DxButton Text="Calcular Impuestos" CssClass="btn-gray" style="background-color:rgba(65,65,65,0.10) !important;color:#414141 !important;" />
+            <DxButton Text="Configuración" CssClass="" />
+        </div>
+    </div>
+</div>
+<style>
+
+    .custom-grid {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+        background: red;
+    }
+
+        .custom-grid .dx-datagrid-headers {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid blue;
+        }
+
+        .custom-grid .dx-datagrid-rowsview .dx-row {
+            border-bottom: 1px solid red;
+        }
+
+            .custom-grid .dx-datagrid-rowsview .dx-row:hover {
+                background-color: green;
+            }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+        text-align: center;
+        min-width: 70px;
+    }
+
+    .status-proceso {
+        color: #1976d2;
+    }
+
+    .status-pendiente {
+        color: #f57f17;
+    }
+
+    .status-completado {
+        color: #2e7d32;
+    }
+
+    .status-cancelado {
+        color: #c62828;
+    }
+
+    .status-default {
+        color: #757575;
+    }
+</style>
+
+@code {
+    private bool IsChecked = false;
+    object Data { get; set; }
+    private string TextValue { get; set; } = "Hola mundo";
+    // **- private string[] // **- ToolbarOptions = { "save" };
+
+    private List<Empresa> empresas = new List<Empresa>
+    {
+        new Empresa { Id = 1, Nombre = "Empresa 1", Codigo = "EMP001", Activa = true },
+        new Empresa { Id = 2, Nombre = "Empresa 2", Codigo = "EMP002", Activa = true },
+        new Empresa { Id = 3, Nombre = "Empresa 3", Codigo = "EMP003", Activa = true },
+        new Empresa { Id = 4, Nombre = "Empresa 4", Codigo = "EMP004", Activa = false },
+        new Empresa { Id = 5, Nombre = "Empresa 5", Codigo = "EMP005", Activa = true }
+    };
+
+    // Variable para almacenar la empresa seleccionada
+    private int? empresaSeleccionada = null;
+
+    public class Empresa
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Codigo { get; set; }
+        public bool Activa { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        Data = GetPeriodosNomina().ToList();
+    }
+
+    private IEnumerable<PeriodoNomina> GetPeriodosNomina()
+    {
+        var periodos = new List<PeriodoNomina>();
+
+        // Datos exactos como en tu imagen
+        for (int i = 1; i <= 10; i++)
+        {
+            var estatus = i == 1 ? "En Proceso" : "Pendiente";
+
+            periodos.Add(new PeriodoNomina
+                {
+                    Id = i,
+                    Mes = "Marzo",
+                    Periodo = 5,
+                    Inicio = new DateTime(2024, 3, 1),
+                    Fin = new DateTime(2024, 3, 15),
+                    Estatus = estatus
+                });
+        }
+
+        return periodos;
+    }
+
+    public class PeriodoNomina
+    {
+        public int Id { get; set; }
+        public string Mes { get; set; } = string.Empty;
+        public int Periodo { get; set; }
+        public DateTime Inicio { get; set; }
+        public DateTime Fin { get; set; }
+        public string Estatus { get; set; } = string.Empty;
+    }
+}

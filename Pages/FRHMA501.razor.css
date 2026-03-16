@@ -1,0 +1,348 @@
+/* Contenedor principal */
+.frhma501-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+/* Top fields section */
+.top-fields-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .field-row label {
+        min-width: 100px;
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+    }
+
+    .field-row ::deep .dx-textbox,
+    .field-row ::deep .dx-texteditor {
+        flex: 1;
+    }
+
+.codigo-input {
+    max-width: 120px;
+}
+
+.dual-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.field-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .field-group label {
+        min-width: 90px;
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+    }
+
+    .field-group ::deep .dx-textbox {
+        flex: 1;
+    }
+
+.objetivo-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+    .objetivo-field label {
+        min-width: 100px;
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+        padding-top: 8px;
+    }
+
+.objetivo-memo {
+    flex: 1;
+}
+
+    .objetivo-memo ::deep .dx-texteditor-container {
+        min-height: 90px;
+    }
+
+/* Middle section */
+.middle-section {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.left-list-container,
+.right-list-container {
+    height: 200px;
+}
+
+.left-list-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.right-list-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.list-header {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+.tareas-listbox {
+    height: 220px;
+    border: 1px solid #bfbfbf;
+    background-color: white;
+}
+
+    .tareas-listbox ::deep .dx-listbox {
+        border: none !important;
+    }
+
+    .tareas-listbox ::deep .dx-list-item {
+        font-size: 12px;
+        color: #33363f;
+        padding: 5px 8px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .tareas-listbox ::deep .dx-list-item:hover {
+            background-color: #f8f9fa;
+        }
+
+    .tareas-listbox ::deep .dx-list-item-selected {
+        background-color: #007bff;
+        color: white;
+    }
+
+.navigation-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn-nav {
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+}
+
+    .btn-nav ::deep .dx-icon {
+        font-size: 13px;
+    }
+
+/* Bottom section */
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.tareas-generadas-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 13px;
+}
+
+.bottom-right-fields {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.small-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .small-field label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+.costos-input,
+.dias-input {
+    max-width: 80px;
+}
+
+    .costos-input ::deep .dx-texteditor-input,
+    .dias-input ::deep .dx-texteditor-input {
+        text-align: right;
+    }
+
+/* DevExpress overrides */
+.frhma501-form ::deep .dx-textbox-container,
+.frhma501-form ::deep .dx-texteditor-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+    .frhma501-form ::deep .dx-textbox-container:focus-within,
+    .frhma501-form ::deep .dx-texteditor-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    }
+
+.frhma501-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+.frhma501-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 13px;
+}
+
+.frhma501-form ::deep .dx-spin-edit-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .dual-field-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .field-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .field-row label {
+            min-width: auto;
+        }
+
+        .field-row ::deep .dx-textbox,
+        .field-row ::deep .dx-texteditor {
+            width: 100%;
+        }
+
+    .codigo-input {
+        max-width: 100%;
+    }
+
+    .field-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .field-group label {
+            min-width: auto;
+        }
+
+    .objetivo-field {
+        flex-direction: column;
+    }
+
+        .objetivo-field label {
+            padding-top: 0;
+        }
+
+    .middle-section {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .left-list-container,
+    .right-list-container {
+        width: 100%;
+    }
+
+    .navigation-buttons {
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tareas-listbox {
+        height: 200px;
+    }
+
+    .bottom-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .bottom-right-fields {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-fields-section,
+    .middle-section,
+    .bottom-section {
+        padding: 12px;
+    }
+
+    .field-row label,
+    .field-group label,
+    .list-header,
+    .tareas-generadas-label,
+    .small-field label,
+    .objetivo-field label {
+        font-size: 12px;
+    }
+
+    .btn-nav {
+        min-width: 28px;
+        height: 28px;
+    }
+
+    .frhma501-form ::deep .dx-texteditor-input {
+        font-size: 12px !important;
+    }
+
+    .tareas-listbox {
+        height: 180px;
+    }
+
+        .tareas-listbox ::deep .dx-list-item {
+            font-size: 11px;
+            padding: 4px 6px;
+        }
+
+    .bottom-right-fields {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .small-field {
+        width: 100%;
+    }
+}

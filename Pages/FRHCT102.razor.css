@@ -1,0 +1,315 @@
+/* Layout principal */
+.page {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+}
+
+.main-content {
+    display: flex;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.left-column {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Form rows y campos */
+.form-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-row .input,
+.form-row .select {
+    flex: 1;
+}
+
+.small-field {
+    flex: 0.5 !important;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.select {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input label,
+.select label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+}
+
+.search-field {
+    display: flex;
+    gap: 5px;
+}
+
+/* Status indicators (radio buttons) */
+.status-indicators {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.dx-demo-radio {
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Report box */
+.report-box {
+    height: 200px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    position: relative;
+}
+
+.report-box::before,
+.report-box::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 2px;
+    background: #dee2e6;
+    transform: translate(-50%, -50%);
+}
+
+.report-box::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.report-box::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Dates and money section */
+.dates-money-section {
+    margin: 30px 0;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.date-controls {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+}
+
+.date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.date-field label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+}
+
+.date-input {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.date-short {
+    width: 60px;
+}
+
+.year-short {
+    width: 50px;
+}
+
+.date-separator {
+    color: #495057;
+    font-weight: 500;
+    margin: 0 2px;
+}
+
+.calendar-btn {
+    padding: 6px 8px !important;
+    background: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 3px !important;
+    color: #495057 !important;
+    min-width: auto !important;
+}
+
+.calendar-btn:hover {
+    background: #e9ecef !important;
+}
+
+.money-controls {
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+}
+
+.money-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.money-field label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+}
+
+.money-input {
+    width: 100px;
+    text-align: right;
+}
+
+/* Comment section */
+.comment-section {
+    margin: 30px 0;
+}
+
+.comment-section label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.comment-field {
+    width: 100%;
+    resize: vertical;
+}
+
+/* Bottom section */
+.bottom-section {
+    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 1px solid #dee2e6;
+}
+
+.report-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.report-controls .input {
+    flex: 1;
+    max-width: 300px;
+}
+
+.report-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.action-btn {
+    padding: 8px 12px !important;
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    color: #495057 !important;
+}
+
+.action-btn:hover {
+    background: #e9ecef !important;
+}
+
+.history-btn {
+    padding: 8px 16px !important;
+    background: #007bff !important;
+    border: 1px solid #007bff !important;
+    border-radius: 4px !important;
+    color: white !important;
+    font-weight: 500 !important;
+}
+
+.history-btn:hover {
+    background: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .date-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .money-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .report-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .report-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .date-input {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .status-indicators {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .report-box {
+        height: 150px;
+    }
+}

@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    @* <link href="/css/app.css" rel="stylesheet" /> *@
+    <link href="/css/custom/eikon-style.css" rel="stylesheet" />
+   @*  <a href="~/css/custom/eikon-style.css.map"></a> *@
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<div class="mainLayout">
+
+    <article class="content px-4">
+        @Body
+    </article>
+    <Componentshowcase />
+</div>

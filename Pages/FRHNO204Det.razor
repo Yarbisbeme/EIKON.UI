@@ -1,0 +1,108 @@
+﻿@inject EIKON.UI.Services.EikonDataServices api
+<div style="background-color:antiquewhite">
+<DxGrid Data="@Data"
+        PageSize="5"
+        ShowGroupPanel="false"
+        CustomizeElement="Grid_CustomizeElement"
+        CssClass="detalle-grid">
+
+    <Columns>
+        <DxGridDataColumn FieldName="WcCodigo" Caption="Código Transacción" Width="20%" />
+        <DxGridDataColumn FieldName="WcDescri" Caption="Transacción" Width="50%">
+            
+        </DxGridDataColumn>
+        <DxGridDataColumn FieldName="WvCantida"
+                          Caption="Cantidad"
+                          Width="15%"
+                          CaptionAlignment="GridTextAlignment.Right"
+                          TextAlignment="GridTextAlignment.Right" />
+        <DxGridDataColumn FieldName="WpMonto"
+                          Caption="Monto"
+                          Width="15%"
+                          DisplayFormat="C2"
+                          CaptionAlignment="GridTextAlignment.Right"
+                          TextAlignment="GridTextAlignment.Right" />
+    </Columns>
+        <TotalSummary>
+            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum"
+                               FieldName="WpMonto"
+                               FooterColumnName="WpMonto" />
+        </TotalSummary>
+</DxGrid>
+</div>
+<style>
+    /* Filas */
+    .detalle-grid .dxbl-grid-row {
+        background-color: rgba(0, 123, 255, 0.25) !important;
+    }
+
+        /* Hover */
+        .detalle-grid .dxbl-grid-row:hover {
+            background-color:#eaf0ff;
+        }
+
+.highlighted-item > td {
+    background-color: yellow  !important;
+}
+        
+.fw-800 {
+    font-weight: 800;
+}
+</style>
+@code {
+    [Parameter]
+    public Frhwe010Dto frhwe { get; set; } 
+    private List<Frhwd010Dto> PartidaDet = new List<Frhwd010Dto>();
+    private List<Trhwc010Dto> PartidaDesc = new List<Trhwc010Dto>();
+    object Data { get; set; }
+    readonly TaskCompletionSource<bool> dataLoadedTcs =
+    new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    protected override async Task OnInitializedAsync()
+    {
+        //var invoices = await NwindDataService.GetInvoicesAsync();
+        //var empl = await api.Frhma010DtoGetByMaenume("tk",frhwe.Maenume);
+        var nom = await api.Frhwd010DtoGetByEmpresaNomina(frhwe.EmEmpresa, frhwe.WbCodigo, "");
+        var trans = await api.Trhwc010DtoGetByEmpresa(frhwe.EmEmpresa,"");
+        // PartidaDet = nom
+        //     .Where(i => i.Maenume == frhwe.Maenume).ToList();
+
+        Data = (
+    from d in nom
+    join t in trans
+        on d.WcCodigo equals t.WcCodigo
+    where d.Maenume == frhwe.Maenume && t.WcInvisib !="S"
+    select new 
+    {
+        // Copiar propiedades necesarias
+        Maenume = d.Maenume,
+        WcCodigo = d.WcCodigo,
+        WcDescri = t.WcDescri,
+        WpMonto = t.WcTipoTr == "D"
+            ? -Math.Abs(d.WpMonto)
+            : Math.Abs(d.WpMonto),
+
+        WvCantida = d.WvCantida
+    }
+).ToList();
+        
+       // PartidaDesc = await api.Trhwc010DtoGetByEmpresa(frhwe.EmEmpresa,"");
+       // StateHasChanged();
+        dataLoadedTcs.TrySetResult(true);
+    }
+
+    void Grid_CustomizeElement(GridCustomizeElementEventArgs e) {
+    {
+        if (e.ElementType == GridElementType.DataRow && (System.Double)e.Grid.GetRowValue(e.VisibleIndex, "WpMonto") < 0)
+            e.CssClass = "highlighted-item";
+        }
+        if(e.ElementType == GridElementType.DataCell && e.Column.Name == "WpMonto") {
+            e.CssClass = "fw-800";
+        }
+        
+    }
+    public void Dispose()
+    {
+        dataLoadedTcs.TrySetCanceled();
+    }
+}

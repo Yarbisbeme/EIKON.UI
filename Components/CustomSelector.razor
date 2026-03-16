@@ -1,0 +1,36 @@
+﻿@*CustomSelector.razor *@
+@* @rendermode InteractiveServer
+ *@
+@namespace EIKON.UI.Components
+
+<div class="custom-selector">
+    <label>@Label</label>
+    <div class="selector-options">
+        @foreach (var option in Options)
+        {
+            <div class="@(SelectedValue == option.Value ? "active" : "")"
+                 @onclick="@(() => SelectOption(option.Value))">
+                @option.Text
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public List<SelectorOption> Options { get; set; } = new();
+    [Parameter] public string? SelectedValue { get; set; }
+    [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
+
+    private async Task SelectOption(string value)
+    {
+        SelectedValue = value;
+        await SelectedValueChanged.InvokeAsync(SelectedValue);
+    }
+
+    public class SelectorOption
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+}

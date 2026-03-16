@@ -1,0 +1,703 @@
+﻿@page "/FRHCL301"
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using EIKON.UI.PredefinedReports
+
+@using EIKON.UI.Components
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+@inject NavigationManager nv
+@inject IJSRuntime JS
+@using DevExpress.Blazor.Reporting
+
+
+<PageTitle>Reportes Generales</PageTitle>
+
+@if (data != null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+   
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Administración de Puestos - Reportes Generales</title>
+        
+        <style>
+            .visible {
+    display: block;
+}
+
+.oculto {
+    display: none;
+}
+
+.parametros-reporte, .report-viewer {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+            }
+
+            .container {
+                width: 95%;
+                margin: 0 auto;
+                background-color: #e9e9e9;
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+                font-size: 18px;
+                color: #333;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+
+            .form-group {
+                margin-bottom: 4px;
+            }
+
+                .form-group label {
+                    display: block;
+                    font-weight: bold;
+                    margin-bottom: 4px;
+                }
+
+                .form-group input, .form-group select {
+                    width: 80%;
+                    padding: 4px;
+                    box-sizing: border-box;
+                }
+
+                    .form-group input[type="checkbox"] {
+                        width: 50%;
+                    }
+
+            .form-row {
+                display: flex;
+                justify-content: space-between;
+            }
+
+                .form-row .form-group {
+                    width: 48%;
+                }
+
+            .actions {
+                text-align: right;
+               
+                margin-top: 10px;
+            }
+
+                .actions button {
+                    padding: 10px 15px;
+                    margin: 0 5px;
+                    cursor: pointer;
+                }
+
+            .checkitem > label {
+                display: inline-block;
+                width: calc(100% - 20px);
+                vertical-align: middle;
+            }
+
+            .checkitem > input[type=checkbox] {
+                display: inline-block;
+                width: 15px;
+                height: 25%;
+                vertical-align: middle;
+            }
+
+            .checkitem > input[type=radio] {
+                display: inline-block;
+                width: 15px;
+                height: 25%;
+                vertical-align: middle;
+
+            }
+
+            table {
+                width: 100%;
+                margin-top: 15px;
+                border-collapse: collapse;
+            }
+
+            table, th, td {
+                border: 1px solid #ccc;
+            }
+
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+
+           .hidden {
+                display: none;
+            }
+
+            .Ahdn {
+                display: none;
+            }
+
+            .Uhdn {
+                display: none;
+            }
+
+            .Dhdn {
+                display: none;
+            }
+
+            .Shdn {
+                display: none;
+            }
+
+            .Phdn {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+       
+    <div class="container">
+         
+         <div class="parametros-reporte">
+            <h1>SIRH - Reportes Generales</h1>
+                        <div class="row">
+                <div class="form-group col-md-2">
+                   
+                        <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorFecha" CheckedExpression="@(() => EsPorFecha)"
+                                    CheckedChanged="@((bool value) => hdFechas(value))">Fechas</DxCheckBox>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="fecha1">Desde:</label>
+                </div>
+                 <div class="form-group col-md-2">
+                    <DxDateEdit id="fecha1" Date="@fecha1s" Enabled="@EnabledFec"></DxDateEdit>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="fecha2">Hasta:</label>
+                </div>
+                    <div class="form-group col-md-2">
+                    <DxDateEdit id="fecha2" Date="@fecha2s" Enabled="@EnabledFec"></DxDateEdit>
+                    </div> 
+            </div>
+             <div class="row">
+                <div class="form-group col-md-2">
+
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorOficina" CheckedExpression="@(() => EsPorOficina)"
+                                CheckedChanged="@((bool value) => hdOficina(value))">Oficina</DxCheckBox>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="Oficina">Seleccione:</label>
+                </div>
+                    <div class="form-group col-md-5">
+                    <DxComboBox id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="@Oficina" Enabled="@EsPorOficina"></DxComboBox>
+                    </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorUbicacion" CheckedExpression="@(() => EsPorUbicacion)"
+                                CheckedChanged="@((bool value) => hdUbicacion(value))">Ubicación</DxCheckBox>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="Oficina">Seleccione:</label>
+                </div>
+                <div class="form-group col-md-5">
+                    <DxComboBox id="Oficina" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="@Ubicacion" Enabled="@EsPorUbicacion"></DxComboBox>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorClase" CheckedExpression="@(() => EsPorClase)"
+                                CheckedChanged="@((bool value) => hdClase(value))">Clase</DxCheckBox>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="Clase">Seleccione:</label>
+                </div>
+                <div class="form-group col-md-5">
+                    <DxComboBox id="Clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="@Clase" Enabled="@EsPorClase"></DxComboBox>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EsPorPuesto" CheckedExpression="@(() => EsPorPuesto)"
+                                CheckedChanged="@((bool value) => hdPuesto(value))">Puesto</DxCheckBox>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="Puesto">Seleccione:</label>
+                </div>
+                <div class="form-group col-md-5">
+                    <DxComboBox id="Puesto" Data="@puestos" ValueFieldName="JoNumber" TextFieldName="JoTitulo" @bind-Value="@Puesto" Enabled="@EsPorPuesto"></DxComboBox>
+                </div>
+                
+            </div>
+           
+            
+                <!--aqui-->
+                <div class="row " style="border:dashed;">
+                   
+                   @*  <label>Estatus</label><br /> *@
+                   <div class="form-group col-md-3">
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@EnProceso" CheckedExpression="@(() => EnProceso)"
+                                CheckedChanged="@((bool value) => SetEnProceso(value))">En Proceso</DxCheckBox>
+                </div>
+                <div class="form-group col-md-3">
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@Desactivado" CheckedExpression="@(() => Desactivado)"
+                                CheckedChanged="@((bool value) => SetDesactivado(value))">Desactivado</DxCheckBox>
+                </div>
+                <div class="form-group col-md-3">
+                    <DxCheckBox CheckType="CheckType.Checkbox" Checked="@Aprobado" CheckedExpression="@(() => Aprobado)"
+                                CheckedChanged="@((bool value) => SetAprobado(value))">Aprobado</DxCheckBox>
+                </div>
+                    
+                </div>
+                <br />
+                <div class="row">
+                
+                <div class="form-group col-md-3">
+                    <label for="Reporte">Reportes:</label>
+                </div>
+                <div class="form-group col-md-5">
+                    <DxComboBox id="Reporte" Data="@reportes37" ValueFieldName="RwCodigo" TextFieldName="RwDescri" @bind-Value="@Reporte" ></DxComboBox>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="btn-group col-md-3" role="group" aria-label="Barra de botones">
+                        <button type="button" class="btn btn-dark" @onclick="AbrirReporteEnPestana">
+                            <i class="fas fa-printer"></i> Visualizar Reporte
+                    </button>
+                </div>
+            </div>
+            
+            
+            
+
+ @* <DxPopup @bind-Visible="@isPopupVisible" ShowCloseButton="true"
+          Width="90vw"
+         Height="90vh"
+         TitleText="Reporte...">
+
+    <DialogContent>
+        
+        <DxButton Click="ClosePopup" Text="Cerrar" CssClass="btn btn-secondary" />
+    </DialogContent>
+</DxPopup> *@
+</div>
+@*  <div class="report-viewer">
+        <DxButton Click="ClosePopup" Text="Volver a Parámetros" CssClass="btn btn-warning mt-3" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <DxReportViewer Id="RepViewer" @ref="reportViewer" Report="@Report" RootCssClasses="w-90 h-100" />
+
+                </div>
+                
+            </div>
+</div>    *@  
+
+</div>
+</body>
+}
+
+
+    
+
+
+<h3 class="x"></h3>
+
+@code {
+    // [Parameter]
+    // public int id { get; set; }
+    public bool IsModalVisible { get; set; }
+    public DateTime fecha1s { get; set; } 
+    public DateTime fecha2s { get; set; } 
+    public string sPrueba { get; set; }
+    public string Oficina { get; set; } = "0";
+    public string Ubicacion { get; set; } = "0";
+    public string Clase { get; set; } = "0";
+    public string Puesto { get; set; } = "0";
+    public string Reporte { get; set; } = "001";
+    public string Presupuesto { get; set; } = "0.00";
+    public bool CantAdd { get; set; } = false;
+    public bool CantEdit { get; set; } = false;
+    public bool CantDelete { get; set; } = true;
+    public bool CantSave { get; set; } = true;
+    public string Token { get; set; } = "";
+    public string PaCodigo { get; set; } = "0088";
+    public string IsCodigo { get; set; } = "Wtrhfm000";
+    public string ApiBaseUrl { get; set; } ="";
+    public string cAhdn { get; set; } = "";
+    public string cUhdn { get; set; } = "";
+    public string cShdn { get; set; } = "";
+    public string cDhdn { get; set; } = "";
+    private ConfirmDialog confirmDialog;
+    private AlertDialog alertDialog;
+    DxReportViewer reportViewer;
+    XtraReport Report;
+    private bool isPopupVisible = false;
+    private string parametrosClass => isPopupVisible ? "oculto" : "visible";
+    private string reporteClass => isPopupVisible ? "visible" : "oculto";
+    private void ShowPopup()
+    {
+        isPopupVisible = true;
+    }
+
+    private void ClosePopup()
+    {
+        isPopupVisible = false;
+    }
+    void ShowConfirmDialog()
+    {
+        confirmDialog.Show(); // Muestra el diálogo
+    }
+    void ShowAlertDialog()
+    {
+        alertDialog.Message = "Testing";
+        alertDialog.Show(); // Muestra la alerta
+    }
+    async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            // Lógica de eliminación si el usuario confirma
+            //**/ await DeleteItem();
+        }
+        else
+        {
+            // Lógica si el usuario cancela
+            Console.WriteLine("Eliminación cancelada");
+        }
+    }
+
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+    protected void Guarda()
+    {
+        var dataItem = SelectedItem;
+        dataItem.Puevaca = Estatus;
+
+        if (SelectedItem.IdentityColumn==0)
+        {
+            var ret0 = api.InsertFrhpu010Dto(dataItem);
+            //dataue = new List<Frhue000Dto>();
+            clase = "";
+        }
+        else
+        {
+            var ret = api.UpdateFrhpu010Dto(dataItem);
+            nv.NavigateTo("/FRHCL101");
+        }
+
+
+    }
+    protected void Cancelar()
+    {
+        nv.NavigateTo("/FRHCL101");
+    }
+    protected async Task Deshacer()
+    {
+        // await CargaRegistro();
+        // await SetPermisos(PaCodigo,IsCodigo);
+        clase = "";
+    }
+    protected void Editar()
+    {
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        //CantSave= false;
+    }
+    protected void Agregar()
+    {
+        clase = "hidden";
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        SelectedItem.IdentityColumn=0;
+        // SelectedItem.a = "000";
+        // SelectedItem.Pasnomb = "xx";
+        // SelectedItem.PasUserid = "xx";
+        // SelectedItem.PasFecRe = DateTime.Today;
+        // SelectedItem.PasFecEx = DateTime.Today;
+        // SelectedItem.PasEsEmp = "N";
+        SelectedItem.CreatedBy = "N";
+        SelectedItem.CreatedOn = DateTime.Today;
+        SelectedItem.ChangedOn = DateTime.Today;
+        SelectedItem.ChangedBy = "N";
+        CantSave = false;
+    }
+    // Propiedad que manejará el estatus seleccionado
+    private string Estatus { get; set; } = "A"; // Valor por defecto "A" para Activo
+                                                // Propiedad que manejará el campo EsEmpleado
+    bool EsPorFecha { get; set; } = false;
+
+    bool EsPorOficina { get; set; } = false;
+    bool EnabledOf { get; set; } = false;
+    bool EnabledFec { get; set; } = false;
+    bool EsPorUbicacion { get; set; } = false;
+    bool EnabledUb { get; set; } = false;
+    bool EsPorClase { get; set; } = false;
+    bool EnabledClase { get; set; } = false;
+    bool EsPorPuesto { get; set; } = false;
+    bool EnabledPuesto { get; set; } = false;
+    bool EnProceso { get; set; } = true;
+    bool Desactivado { get; set; } = true;
+    bool Aprobado { get; set; } = true;
+    bool EnabledExp { get; set; } = false;
+    private string clase { get; set; } = "";
+    // Método que actualiza el valor del estatus al cambiar la selección
+    private void CambiarEstatus(Microsoft.AspNetCore.Components.ChangeEventArgs e)
+    {
+        Estatus = e.Value.ToString();
+    }
+    private void hdFechas(bool value)
+    {
+        EsPorFecha = value;
+        EnabledFec = EsPorFecha;  
+
+    }
+    private void hdOficina(bool value)
+    {
+        EsPorOficina = value;
+        EnabledOf = EsPorOficina;
+
+    }
+    private void hdUbicacion(bool value)
+    {
+        EsPorUbicacion = value;
+        EnabledUb = EsPorUbicacion;
+
+    }
+    private void hdClase(bool value)
+    {
+        EsPorClase = value;
+        EnabledClase = EsPorClase;
+
+    }
+    private void hdPuesto(bool value)
+    {
+        EsPorPuesto = value;
+        EnabledPuesto = EsPorPuesto;
+
+    }
+    private void SetEnProceso(bool value)
+    {
+        EnProceso = value;
+
+    }
+    private void SetAprobado(bool value)
+    {
+        Aprobado = value;
+
+    }
+    private void SetDesactivado(bool value)
+    {
+        Desactivado = value;
+
+    }
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Frhpu010Dto> data;
+    private Frhrq010Dto datarq;
+    //private List<Trhnz000Dto> modulos { get; set; } =new List<Trhnz000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Frhpu010Dto SelectedItem { get; set; }
+    private List<Trhem000> empresas { get; set; } = new List<Trhem000>();
+    //private List<Trhpa000Dto> perfiles { get; set; } = new List<Trhpa000Dto>();
+    private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+
+    private List<Frhjo010Dto> puestos { get; set; } = new List<Frhjo010Dto>();
+    private List<Trhrw000Dto> reportes { get; set; } = new List<Trhrw000Dto>();
+    private List<Trhrw000Dto> reportes37 { get; set; } = new List<Trhrw000Dto>();
+    private List<Trhof010Dto> oficinas { get; set; }
+    private List<Trhub010Dto> ubicaciones { get; set; }
+
+    private List<Trhnp010Dto> clases { get; set; }
+    private Trhnp010Dto clase_np { get; set; }
+    private Trhct010Dto categoria_np { get; set; }
+    private List<Trhct010Dto> categorias { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            await Task.Delay(400);
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            puestos = await api.joGetAllAsync(Token);
+            ubicaciones = await api.ubGetByEmCodigo("01", Token);
+            oficinas = await api.ofGetByEmCodigo("01", Token);
+            clases = await api.npGetByEmCodigo("01", Token);
+            categorias = await api.ctGetByEmCodigo("01", Token);
+            reportes = await api.rwGetAllAsync(Token);
+            reportes37 = reportes.Where(rp => rp.DrCodigo == "037" && rp.RwEstatus=="A").ToList();
+            await InvokeAsync(StateHasChanged);
+            StateHasChanged();
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+
+    private rrhel006 report;
+    private Rptrrhel006a report2;
+    async Task ReporteRrwel006()
+    {
+        isPopupVisible = true;
+       //- var data = await api.GetDataRrhel006("A");
+        //reportViewer.Report = report;
+         //isPopupVisible = true;
+        report = new rrhel006();
+      //-  report.LoadData(data);
+        Report = report;
+
+        // Si el ReportViewer ya está renderizado, recargar manualmente
+        if (reportViewer != null)
+        {  
+            await reportViewer.OpenReportAsync(report);
+        }
+    }
+    async Task ReporteRrwel006a()
+    {
+        isPopupVisible = true;
+        var data = await api.GetDataRrhel006a(Oficina,Ubicacion,Clase,Puesto,"01" );
+        report2 = new Rptrrhel006a();
+        report2.LoadData(data);
+        Report = report2;
+
+        // Si el ReportViewer ya está renderizado, recargar manualmente
+        // // if (reportViewer != null)
+        // // {    //isPopupVisible = true;
+        // //     await reportViewer.OpenReportAsync(report2);
+        // // }
+    }
+    async Task AbrirReporteEnPestana()
+    {
+        
+          var Empresa = "01"; // Cambia esto según tu lógica
+            
+        // Construir la URL del reporte
+        var url = nv.BaseUri + "Visualizador?oficina=" + Oficina + "&ubicacion=" + Ubicacion + 
+                  "&clase=" + Clase + "&puesto=" + Puesto + "&empresa=" + Empresa +"&rep="+Reporte ;
+            await JS.InvokeVoidAsync("window.open", url, "_blank");
+        
+
+        //return File(ms.ToArray(), "application/pdf", "reporte_rrhel006a.pdf");
+
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        fecha1s = DateTime.Today.AddDays(-7);
+        fecha2s = DateTime.Today;
+    
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        // data = await HttpClient.GetFromJsonAsync<List<Frhpu010Dto>>(ApiBaseUrl + "Frhpu010");
+        // empresas = await HttpClient.GetFromJsonAsync<List<Trhem000>>(ApiBaseUrl + "Trhem000");
+         puestos = await api.joGetAllAsync(Token);
+         ubicaciones = await api.ubGetByEmCodigo("01", Token);
+         oficinas = await api.ofGetByEmCodigo("01", Token);
+         clases = await api.npGetByEmCodigo("01", Token);
+         categorias = await api.ctGetByEmCodigo("01", Token);
+        reportes = await api.rwGetAllAsync(Token);
+        reportes37 = reportes.Where(rp => rp.DrCodigo == "037" && rp.RwEstatus == "A").ToList();
+         // perfiles = await HttpClient.GetFromJsonAsync<List<Trhpa000Dto>>(ApiBaseUrl + "Trhpa000");
+         // data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+         // set permisos
+       //  await SetPermisos(PaCodigo, IsCodigo);
+         //modulos = await api.GetTrhnz000Dtos();
+        // //  await CargaRegistro();
+        // // if (id==0)
+        // // { data = await api.GetTrhps000Dtos(); }
+        // // else
+        // // { SelectedItem = await api.GetByIdTrhps000Dtos(id);
+        // //     data = new List<Trhps000Dto>();
+        // //     data.Add(SelectedItem);
+        // //     Estatus = SelectedItem.PasUserE;
+        // //     EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+        // //     EnabledEmp = EsEmpl;
+        // //     Expira = SelectedItem.PasExpira == "S" ? true : false;
+        // //     EnabledExp = Expira;
+        // //     dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        // // }
+        // // modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "Trhnz000");
+    }
+
+   
+}
+
+
+

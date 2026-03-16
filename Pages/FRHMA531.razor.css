@@ -1,0 +1,173 @@
+﻿.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+    align-items: end;
+}
+
+    .form-row:last-child {
+        margin-bottom: 0;
+    }
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .form-field.full-width {
+        grid-column: span 2;
+    }
+
+    .form-field label {
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+.checkbox-group {
+    grid-column: span 2;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+/* DevExpress Components Styling */
+.dx-textbox-container,
+.dx-combobox-container,
+.dx-spin-edit-container,
+.dx-memo-container {
+    border: 1px solid #ced4da !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-spin-edit-container:focus-within,
+    .dx-memo-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    .dx-textbox-container[aria-disabled="true"],
+    .dx-textbox-container[readonly],
+    .dx-combobox-container[aria-disabled="true"],
+    .dx-spin-edit-container[aria-disabled="true"] {
+        background-color: #f8f9fa !important;
+        border-color: #e9ecef !important;
+        opacity: 0.6;
+    }
+
+/* Search button styling */
+.dx-editor-button {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: white !important;
+    border-radius: 3px !important;
+    margin-right: 2px !important;
+}
+
+/* Memo styling */
+.dx-memo {
+    border-radius: 6px !important;
+    line-height: 1.4 !important;
+}
+
+.dx-memo-container {
+    min-height: 120px !important;
+}
+
+/* Checkbox styling */
+.dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+/* Button styling */
+.dx-button {
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-section {
+        padding: 20px;
+        margin: 0;
+        max-width: none;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .form-field.full-width {
+        grid-column: span 1;
+    }
+
+    .checkbox-group {
+        grid-column: span 1;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .form-field > div[style*="display:flex"] {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-section {
+        padding: 15px;
+    }
+
+    .form-row {
+        margin-bottom: 20px;
+    }
+
+    .checkbox-group {
+        gap: 10px;
+    }
+
+    .dx-memo-container {
+        min-height: 100px !important;
+    }
+}
+
+/* Clean and modern spacing */
+.form-row {
+    position: relative;
+}
+
+    .form-row::after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e9ecef 20%, #e9ecef 80%, transparent);
+    }
+
+    .form-row:last-child::after {
+        display: none;
+    }

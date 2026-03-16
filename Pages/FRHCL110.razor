@@ -1,0 +1,518 @@
+﻿@page "/FRHCL110"
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+<PageTitle>Creación de Oficinas/Sucursales</PageTitle>
+@* <h1>Mantenimiento de Oficinas/Sucursales...</h1>
+ *@
+@if (data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Alert2 @ref="alertInfo" TypeAlert="info" Message="Creación de Oficinas" />
+
+ <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+        <DxTabPage Text="Formulario">
+            <div class="header">
+
+                <div style="display:flex;width:auto;gap:20px;">
+                    <Breadcrumb Title="Oficinas / Sucursales" BackUrl="/dash" />
+                </div>
+
+                <Toolbar formulario="FRHCL110" OnProccess="BuscarOfic" OnAdd="Agregar" OnSave="Guarda" OnRemove="Eliminar" OnLeave="CargarDatos" />
+
+            </div>
+
+            <EditForm data="@oficinaSeleccionada" Model="oficinaSeleccionada" Context="EdtForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <DxFormLayout>
+
+                    <DxFormLayoutItem Caption="Id Oficina" ColSpanLg="4">
+                        <DxTextBox id="oficinaid" @bind-Text="oficinaSeleccionada.OfCodigo"
+                                   ValidationEnabled="true"
+                                   ShowValidationIcon="true"
+                                   ShowValidationSuccessState="true"
+                                   ReadOnly="true"
+                                   
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                Click="@BuscarOfic" />
+                            </Buttons>
+                        </DxTextBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Descripción" ColSpanLg="4">
+                        <DxTextBox @bind-Text="oficinaSeleccionada.OfDescri" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Descripción Alterna" ColSpanLg="4">
+                        <DxTextBox @bind-Text="oficinaSeleccionada.OfDesalterno" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Tipo Oficina" ColSpanLg="4">
+                        <DxComboBox Data="tipoOficina"
+                                    ValueFieldName="ToCodigo"
+                                    TextFieldName="ToDescri"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                    EditFormat="{1} {2}"
+                                    SearchMode="@ListSearchMode.AutoSearch"
+                                    SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                    @bind-Value="oficinaSeleccionada.ToCodigo">
+                            <Columns>
+                                <DxListEditorColumn FieldName="ToCodigo" Caption="Código" />
+                                <DxListEditorColumn FieldName="ToDescri" Caption="Descripción" />
+                            </Columns>
+                        </DxComboBox>
+
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Provincia" ColSpanLg="4">
+                        <DxComboBox Data="provincias"
+                                    ValueFieldName="PvCodigo"
+                                    TextFieldName="PvDescri"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                    EditFormat="{1} {2}"
+                                    SearchMode="@ListSearchMode.AutoSearch"
+                                    SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                    @bind-Value="oficinaSeleccionada.PvCodigo">
+                            <Columns>
+                                <DxListEditorColumn FieldName="PvCodigo" Caption="Código" />
+                                <DxListEditorColumn FieldName="PvDescri" Caption="Descripción" />
+                            </Columns>
+                        </DxComboBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Regional" ColSpanLg="4">
+                        <DxComboBox Data="regionales"
+                                    ValueFieldName="CrCodigo"
+                                    TextFieldName="CrDescri"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                    EditFormat="{0} {1}"
+                                    SearchMode="@ListSearchMode.AutoSearch"
+                                    SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                    @bind-Value="oficinaSeleccionada.CrCodigo">
+                            <Columns>
+                                <DxListEditorColumn FieldName="CrCodigo" Caption="Código" />
+                                <DxListEditorColumn FieldName="CrDescri" Caption="Descripcion" />
+                            </Columns>
+                        </DxComboBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Dirección" ColSpanLg="6">
+                        <DxMemo @bind-Text="oficinaSeleccionada.OfDirecci" Rows="3"  />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Teléfono" ColSpanLg="3">
+                        <DxTextBox @bind-Text="oficinaSeleccionada.OfTelefon" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Fax" ColSpanLg="3">
+                        <DxTextBox @bind-Text="oficinaSeleccionada.OfFax" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Email" ColSpanLg="6">
+                        <DxTextBox @bind-Text="oficinaSeleccionada.OfEMail" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Fecha Desde" ColSpanLg="3">
+                        <DxDateEdit @bind-Date="oficinaSeleccionada.OfDesde" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Fecha Hasta" ColSpanLg="3">
+                        <DxDateEdit @bind-Date="oficinaSeleccionada.OfHasta" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Estatus" ColSpanLg="2">
+                        <DxCheckBox @bind-Checked="IsActive" Text="Activo" />
+                    </DxFormLayoutItem>
+
+                    @* <DxFormLayoutItem Caption="Empresa" ColSpanLg="4">
+                        <DxTextBox @bind-Text="oficinaSeleccionada.EmEmpresa" ReadOnly="true" />
+                    </DxFormLayoutItem> *@
+                    <input id="hdem" type="hidden" @bind-value="oficinaSeleccionada.EmEmpresa" />
+                </DxFormLayout>
+   
+            </EditForm>
+        </DxTabPage>
+        <DxTabPage Text="Lista de Sucursales">
+            <div class="header">
+                <div style="display:flex;width:auto;gap:20px;">
+
+                    <Breadcrumb Title="Oficinas / Sucursales" BackUrl="/dash" />
+
+
+
+                </div>
+    @*            <Toolbar formulario="FRHxxx999" OnClose="Cancel" /> *@
+
+            </div>
+    <DxGrid Data="@data" @ref="MyGrid"
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+                    ShowFilterRow="true" AllowColumnReorder>
+        <Columns>
+            <DxGridCommandColumn Width="60px" VisibleIndex="2">
+                <HeaderTemplate>
+                    <a class="text-primary" @onclick="@(() => OpenForm())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                            
+                    <a class="text-primary" @onclick="@(() => SelectRow((Trhof010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Id" FieldName="OfCodigo" Width="100px" VisibleIndex="3" />
+            <DxGridDataColumn Caption="Descripción" FieldName="OfDescri" Width="300px" VisibleIndex="4" />
+            <DxGridDataColumn Caption="Activo" FieldName="OfEstatus" VisibleIndex="8" Width="130px" />
+
+                           
+        
+
+
+
+        </Columns>
+    </DxGrid>
+    <hr />
+            <div class="row">
+                <div class="col-12">
+                    <DxChart Data="@DatosCategorias"
+                             Width="100%" Rotated="true" Height="400px">
+                        <DxChartTitle Text="Empleados Por Oficinas" />
+                        <DxChartCommonSeries NameField="@((EstructuraDataPoint s) => s.Etiqueta)"
+                                             ArgumentField="@(s => s.Etiqueta)"
+                                             ValueField="@(s => s.Valor)"
+                                             SummaryMethod="Enumerable.Sum"
+                                             SeriesType="ChartSeriesType.Bar" />
+                        <DxChartLegend Position="RelativePosition.Inside"
+                                       HorizontalAlignment="HorizontalAlignment.Right" Visible="false" />
+                        <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+                            <div class="m-2">
+                                <div class="fw-bold text-center">
+                                    Oficina: @context.Point.SeriesName
+                                </div>
+                                <div>
+                                    @context.Point.Argument: @string.Format("{0:#}", (double)context.Point.Value)
+                                </div>
+                            </div>
+                        </DxChartTooltip>
+                    </DxChart>
+                </div>
+
+            </div>
+
+    </DxTabPage>
+    
+ </DxTabs>
+
+}
+
+<h3 class=""></h3>
+
+@code {
+    [Parameter]
+    public string? tk { get; set; }
+    [Parameter]
+    public string? pPaCodigo { get; set; }
+    public bool IsModalVisible { get; set; }
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } ="";
+    // **- private string[] // **- ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        ActiveTabIndex = newIndex;
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+    }
+    async Task BuscarOfic()
+    {
+        ActiveTabIndex=1; // Cambiar a la pestaña de busqueda de oficinas
+
+    }
+    public bool IsActive
+    {
+        get => oficinaSeleccionada.OfEstatus == "S";
+        set => oficinaSeleccionada.OfEstatus = value ? "S" : "N";
+    }
+    protected void Agregar()
+    {
+        oficinaSeleccionada = new Trhof010Dto();
+        oficinaSeleccionada.IdentityColumn = 0;
+        oficinaSeleccionada.EmEmpresa = "01";
+        alertInfo.Show("Crear Nueva Oficina!!!");
+        oficinaSeleccionada.CreatedBy = "N";
+        oficinaSeleccionada.CreatedOn = DateTime.Today;
+        oficinaSeleccionada.ChangedOn = DateTime.Today;
+        oficinaSeleccionada.ChangedBy = "N";
+
+    }
+    protected async Task<bool> Guarda()
+    {
+        //var dataItem = SelectedItem;
+        // dataItem.Puevaca = Estatus;
+        //alertInfo.Show("Actualizar Oficina!!!", "success");
+        if (oficinaSeleccionada.IdentityColumn == 0)
+        {
+            var ret0 = api.ofAddAsync(oficinaSeleccionada,Token);
+            //dataue = new List<Frhue000Dto>();
+
+        }
+        else
+        {
+            var ret = api.ofUpdateAsync(oficinaSeleccionada,Token);
+            //   nv.NavigateTo("/FRHCL101");
+        }
+
+        alertInfo.Show("Actualizar Oficina!!!", "success");
+        // Reload data from API
+        //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+
+        return true;
+    }
+    protected async Task<bool> Eliminar()
+    {
+        if(oficinaSeleccionada?.IdentityColumn > 0)
+        {
+            try
+            {
+
+
+                var isDelete = api.ofDeleteAsync(oficinaSeleccionada.IdentityColumn, Token);
+
+                // Reload data from API
+                await CargarDatos();
+
+                // //Refresh grid if it exists
+                // if(MyGrid != null)
+                // {
+                //      MyGrid.Reload();
+                // }
+
+                alertInfo.Show("Eliminar Oficina!!!", "warning");
+            }
+            catch (Exception ex)
+            {
+                alertInfo.Show($"Error al eliminar: {ex.Message}", "error");
+            }
+        }
+        else
+        {
+            alertInfo.Show("Seleccione una oficina para eliminar", "warning");
+        }
+
+        //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+        return true;
+    }
+    private void Cancel()
+    {
+        alertInfo.Show("Cancelando Busqueda!!!", "warning");
+        ActiveTabIndex = 0;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Trhof010Dto> data; //oficinas
+    private Trhof010Dto oficinaSeleccionada; //oficinaSeleccionada
+    private List<Trhcr000Dto> regionales { get; set; }
+    private string SelectedCategoryId { get; set; }
+    private List<Trhpv000Dto> provincias { get; set; }
+    private List<Trhto000Dto> tipoOficina { get; set; }
+    private List<Vfrhma000Activo> empleados { get; set; }
+    public class EstructuraDataPoint
+    {
+        public string Etiqueta { get; set; }
+        public double Valor { get; set; }
+        public EstructuraDataPoint(string etiqueta, double valor)
+        {
+            (Etiqueta, Valor) = (etiqueta, valor);
+        }
+    }
+    private List<EstructuraDataPoint> DatosCategorias = new List<EstructuraDataPoint>();
+
+    //private string authToken;
+
+    // Llamada JSInterop para obtener el token de la cookie después de renderizar
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        // **- ToolbarOptions = ToolbarOptions.Append("remove").ToArray();
+        // // **- ToolbarOptions = ToolbarOptions.Append("leave").ToArray();
+        // **- ToolbarOptions = ToolbarOptions.Append("save").ToArray();
+        // **- ToolbarOptions = ToolbarOptions.Append("add").ToArray();
+        //  // **- ToolbarOptions = ToolbarOptions.Append("procesar").ToArray();
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        data = await api.ofGetByEmCodigo("01", Token);
+        oficinaSeleccionada = data.FirstOrDefault();
+        regionales = await HttpClient.GetFromJsonAsync<List<Trhcr000Dto>>(ApiBaseUrl + "Api/Trhcr000");
+        tipoOficina = await HttpClient.GetFromJsonAsync<List<Trhto000Dto>>(ApiBaseUrl + "Api/Trhto000");
+        provincias = await HttpClient.GetFromJsonAsync<List<Trhpv000Dto>>(ApiBaseUrl + "Api/Trhpv000");
+        empleados = await api.Vfrhma000ActivoGetAll(Token);
+        DatosCategorias = empleados
+        .GroupBy(e => e.OfDescri)
+            .Select(g => new EstructuraDataPoint(g.Key, g.Count()))
+            .ToList();
+        ActiveTabIndex = 1;
+        await CargarDatos();  
+        //modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "Trhnz000");
+    }
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            data = await api.Trhof010DtoGetByEmpresa("01", Token);
+            
+            await InvokeAsync(StateHasChanged);
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Trhof010Dto)e.DataItem).IdentityColumn;
+        await api.ofDeleteAsync(codigo,Token);
+        //await HttpClient.puDeleteAsync(ApiBaseUrl + "Trhps000/" + ((Trhps000Dto)e.DataItem).IdentityColumn);
+        data = await api.ofGetByEmCodigo("01", Token);
+        //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            nv.NavigateTo("/FRHCL110Detalle");
+           
+        }
+        else
+        {
+            var dataItem = (Trhof010Dto)e.DataItem;
+            var codigo = ((Trhof010Dto)e.DataItem).IdentityColumn;
+            oficinaSeleccionada = dataItem;
+            ActiveTabIndex = 0;
+           
+        }
+
+        void SetNewValues(Trhof010Dto dataItem, Trhof010Dto newValues)
+        {
+            dataItem.OfDescri = newValues.OfDescri;
+            dataItem.ToCodigo = newValues.ToCodigo;
+            dataItem.OfCodigo = newValues.OfCodigo; 
+            dataItem.CrCodigo = newValues.CrCodigo;
+
+            dataItem.PvCodigo = newValues.PvCodigo;
+           
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+        void SetEditValues(Trhof010Dto dataItem, Trhof010Dto newValues)
+        {
+            dataItem.OfDescri = newValues.OfDescri;
+            dataItem.ToCodigo = newValues.ToCodigo;
+            dataItem.OfCodigo = newValues.OfCodigo;
+            dataItem.CrCodigo = newValues.CrCodigo;
+
+            dataItem.PvCodigo = newValues.PvCodigo;
+
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+
+
+    }
+
+    // Método para abrir el formulario
+    private void OpenForm()
+    {
+      // SelectedItem = item;
+       nv.NavigateTo("/FRHCL110Detalle/000");
+
+    }
+    void OnRowClick(GridRowClickEventArgs e)
+    {
+        
+       //nv.NavigateTo("/FRHCL110Detalle/" + e.Grid.GetRowValue(e.VisibleIndex, "OfCodigo"));
+        oficinaSeleccionada = (Trhof010Dto)e.Grid.Data;
+        ActiveTabIndex = 0;
+       //Alert = $"Clicked row index: {e.VisibleIndex}. Corresponding date: '{e.Grid.GetRowValue(e.VisibleIndex, "Date")}'";
+    }
+    private async Task SelectRow(Trhof010Dto ofic)
+    {
+
+        
+        oficinaSeleccionada = ofic;
+        ActiveTabIndex = 0;
+
+
+    }
+
+
+}
+
+
+
+

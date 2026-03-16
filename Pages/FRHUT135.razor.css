@@ -1,0 +1,227 @@
+/* Main container */
+.frhut135-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Custom toolbar at top right */
+.frhut135-toolbar {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.frhut135-toolbar ::deep .toolbar-action-btn.dx-button {
+    min-width: 40px;
+    height: 40px;
+    padding: 8px;
+    background-color: #f8f9fa !important;
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhut135-toolbar ::deep .toolbar-action-btn.dx-button:hover {
+    background-color: #e9ecef !important;
+    border-color: #007bff !important;
+}
+
+.frhut135-toolbar ::deep .toolbar-action-btn .dx-icon {
+    font-size: 18px;
+    color: #33363f !important;
+}
+
+.frhut135-toolbar ::deep .toolbar-action-btn.dx-button:hover .dx-icon {
+    color: #007bff !important;
+}
+
+/* Form layout - two columns */
+.frhut135-form {
+    gap: 30px;
+    width: 100%;
+}
+
+.field-row{
+display:flex;
+gap:10px;
+}
+
+/* Input fields */
+.frhut135-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhut135-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Cedula input with increment/decrement buttons */
+.cedula-controls {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.cedula-controls ::deep .cedula-textbox {
+    flex: 1;
+}
+
+.cedula-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cedula-buttons ::deep .cedula-btn.dx-button {
+    min-width: 32px;
+    height: 20px;
+    padding: 2px;
+    background-color: #f8f9fa !important;
+    border: 1px solid #bfbfbf !important;
+}
+
+.cedula-buttons ::deep .cedula-btn.dx-button:hover {
+    background-color: #e9ecef !important;
+    border-color: #007bff !important;
+}
+
+.cedula-buttons ::deep .cedula-btn .dx-icon {
+    font-size: 12px;
+    color: #33363f !important;
+}
+
+.cedula-buttons ::deep .cedula-btn.dx-button:hover .dx-icon {
+    color: #007bff !important;
+}
+
+/* DevExpress TextBox and ComboBox overrides */
+.frhut135-form ::deep .dx-textbox-container,
+.frhut135-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhut135-form ::deep .dx-textbox-container:focus-within,
+.frhut135-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhut135-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* ComboBox specific styling */
+.frhut135-form ::deep .dx-dropdowneditor-icon {
+    color: #33363f !important;
+}
+
+.frhut135-form ::deep .dx-dropdowneditor-input-wrapper:hover {
+    border-color: #007bff !important;
+}
+
+/* Search button styling */
+.frhut135-form ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhut135-form ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.frhut135-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .frhut135-form {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhut135-container {
+        padding: 15px;
+    }
+
+    .frhut135-toolbar {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhut135-container {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .field-row {
+        flex-direction: column;
+    }
+
+    .frhut135-form .input label {
+        font-size: 13px;
+    }
+
+    .left-column,
+    .right-column {
+        gap: 12px;
+    }
+
+    .frhut135-toolbar ::deep .toolbar-action-btn.dx-button {
+        min-width: 38px;
+        height: 38px;
+    }
+
+    .frhut135-toolbar ::deep .toolbar-action-btn .dx-icon {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhut135-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhut135-form .input label {
+        font-size: 12px;
+    }
+
+    .left-column,
+    .right-column {
+        gap: 10px;
+    }
+
+    .frhut135-toolbar ::deep .toolbar-action-btn.dx-button {
+        min-width: 36px;
+        height: 36px;
+    }
+
+    .frhut135-toolbar ::deep .toolbar-action-btn .dx-icon {
+        font-size: 14px;
+    }
+
+    .frhut135-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .cedula-buttons ::deep .cedula-btn.dx-button {
+        min-width: 28px;
+        height: 18px;
+    }
+
+    .cedula-controls {
+        gap: 6px;
+    }
+}

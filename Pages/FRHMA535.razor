@@ -1,0 +1,279 @@
+@layout MainLayout
+@page "/FRHMA535"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHMA535 - Excepciones Contables en la nómina" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+    <div class="frhma535-form">
+
+        <!-- No. Relación -->
+        <div class="input relacion-field">
+            <label>No. Relación</label>
+            <DxTextBox @bind-Text="@NumeroRelacion">
+                <Buttons>
+                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchRelacion" />
+                </Buttons>
+            </DxTextBox>
+        </div>
+
+        <!-- Transacción -->
+        <div class="input">
+            <label>Transacción</label>
+            <DxTextBox @bind-Text="@Transaccion" NullText="Transacción" />
+        </div>
+
+        <!-- Débito -->
+        <div class="input">
+            <label>Débito</label>
+            <DxComboBox Data="@CuentasContables"
+                        @bind-Value="@DebitoSeleccionado"
+                        NullText="Seleccione cuenta débito"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+            </DxComboBox>
+        </div>
+
+        <!-- Crédito -->
+        <div class="input">
+            <label>Crédito</label>
+            <DxComboBox Data="@CuentasContables"
+                        @bind-Value="@CreditoSeleccionado"
+                        NullText="Seleccione cuenta crédito"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+            </DxComboBox>
+        </div>
+
+        <!-- Débito % -->
+        <div class="input debito-percent-field">
+            <label>Débito %</label>
+            <DxSpinEdit @bind-Value="@DebitoPorcentaje"
+                        MinValue="0m"
+                        MaxValue="100m"
+                        DisplayFormat="N2"
+                        Increment="0.01m"
+                        NullText="100.00" />
+        </div>
+
+        <!-- Blue Section: Employee/Area/Office filters -->
+        <div class="filters-section">
+
+            <!-- Empleado -->
+            <div style="display:flex;gap:space-between; align-items:center">
+                <DxCheckBox style="width:200px;" @bind-Checked="@IsChecked">Empleado</DxCheckBox>
+                <div style="display:flex; gap:10px; width:100%">
+                    <div style="width:150px;">
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="OnSearchEmpleado" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                    </DxTextBox>
+                </div>
+
+            </div>
+
+            <div style="display:flex;gap:space-between; align-items:center">
+                <DxCheckBox style="width:200px;" @bind-Checked="@IsChecked">Área</DxCheckBox>
+                <div style="display:flex; gap:10px; width:100%">
+                    <div style="width:150px;">
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="OnSearchEmpleado" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                    </DxTextBox>
+                </div>
+
+            </div>
+
+            <!-- Oficina -->
+            <div style="display:flex;gap:space-between; align-items:center">
+                <DxCheckBox style="width:200px;" @bind-Checked="@IsChecked">Oficina</DxCheckBox>
+                <div style="display:flex; gap:10px; width:100%">
+                    <div style="width:150px;">
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="OnSearchEmpleado" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+
+                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                    </DxTextBox>
+                </div>
+
+            </div>
+
+            <!-- Forma pago -->
+            <div class="input">
+                <label>Forma pago</label>
+                <DxComboBox Data="@FormasPago"
+                            @bind-Value="@FormaPagoSeleccionada"
+                            NullText="Seleccione forma de pago"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                </DxComboBox>
+            </div>
+
+            <!-- Tipo Nómina -->
+            <div class="input">
+                <label>Tipo Nómina</label>
+                <DxComboBox Data="@TiposNomina"
+                            @bind-Value="@TipoNominaSeleccionado"
+                            NullText="Seleccione tipo de nómina"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                </DxComboBox>
+            </div>
+
+        </div>
+
+        <!-- Distribuir cuenta button -->
+        <div class="distribuir-button-container">
+            <DxButton Text="Distribuir cuenta" Click="OpenDistribuirModal"></DxButton>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal: Distribuir cuentas -->
+@if (ShowDistribuirModal)
+{
+    <div class="modal-overlay" @onclick="CloseDistribuirModal">
+        <div class="modal-content" @onclick:stopPropagation="true">
+            <div class="modal-header">
+                <h3 class="modal-title">ADELANTOS/SALARIOS</h3>
+                <button class="close-button" @onclick="CloseDistribuirModal">
+                    <i class="fi fi-rr-cross"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <DxGrid Data="@CuentasDistribucion"
+                        CssClass="distribucion-grid"
+                        PageSize="15">
+                    <Columns>
+                        <DxGridSelectionColumn Width="50px" />
+                        <DxGridDataColumn FieldName="Codigo" Caption="Código" Width="100px" />
+                        <DxGridDataColumn FieldName="Transaccion" Caption="Transacción" />
+                        <DxGridDataColumn FieldName="ValorPorcentaje" Caption="Valor%" Width="100px" />
+                    </Columns>
+                </DxGrid>
+            </div>
+            <div class="modal-footer">
+                <DxButton Text="Cerrar" Click="CloseDistribuirModal"></DxButton>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+    private bool IsChecked { get; set; } = false;
+    // Main fields
+    private string NumeroRelacion { get; set; } = string.Empty;
+    private string Transaccion { get; set; } = string.Empty;
+    private string DebitoSeleccionado { get; set; } = string.Empty;
+    private string CreditoSeleccionado { get; set; } = string.Empty;
+    private decimal DebitoPorcentaje { get; set; } = 100.00m;
+
+    // Employee/Area/Office filters
+    private string EmpleadoCodigo { get; set; } = string.Empty;
+    private string EmpleadoNombre { get; set; } = string.Empty;
+    private string AreaCodigo { get; set; } = string.Empty;
+    private string AreaNombre { get; set; } = string.Empty;
+    private string OficinaCodigo { get; set; } = string.Empty;
+    private string OficinaNombre { get; set; } = string.Empty;
+    private string FormaPagoSeleccionada { get; set; } = string.Empty;
+    private string TipoNominaSeleccionado { get; set; } = string.Empty;
+
+    // Modal state
+    private bool ShowDistribuirModal { get; set; } = false;
+
+    // Dropdown data
+    private List<string> CuentasContables = new List<string>
+    {
+        "101 - EFECTIVO EN CAJA",
+        "102 - BANCOS",
+        "201 - CUENTAS POR PAGAR",
+        "301 - CAPITAL SOCIAL",
+        "401 - VENTAS"
+    };
+
+    private List<string> FormasPago = new List<string>
+    {
+        "Efectivo",
+        "Transferencia bancaria",
+        "Cheque",
+        "Depósito directo"
+    };
+
+    private List<string> TiposNomina = new List<string>
+    {
+        "Quincenal",
+        "Mensual",
+        "Semanal",
+        "Decenal"
+    };
+
+    // Grid data
+    private List<CuentaDistribucion> CuentasDistribucion = new List<CuentaDistribucion>
+    {
+        new CuentaDistribucion { Codigo = "001", Transaccion = "0101 - SALARIO" },
+        new CuentaDistribucion { Codigo = "002", Transaccion = "0102 - HORAS EXTRAS" },
+        new CuentaDistribucion { Codigo = "003", Transaccion = "0103 - INCENTIVO POR DESEMPEÑO" },
+        new CuentaDistribucion { Codigo = "004", Transaccion = "0104 - ANTIGÜEDAD" },
+        new CuentaDistribucion { Codigo = "005", Transaccion = "0105 - OTRAS PRESTACIONES SOCIALES" },
+        new CuentaDistribucion { Codigo = "006", Transaccion = "0106 - VIÁTICOS" },
+        new CuentaDistribucion { Codigo = "007", Transaccion = "0101 - ALIMENTACIÓN AL PERSONAL" },
+        new CuentaDistribucion { Codigo = "008", Transaccion = "0306 - SUBSIDIOS DE ANTEOJEOS" },
+        new CuentaDistribucion { Codigo = "009", Transaccion = "0308 - SUBSIDIOS E INCAPACIDADES" }
+    };
+
+    private void OnSearchRelacion() { }
+    private void OnSearchEmpleado() { }
+    private void OnSearchArea() { }
+    private void OnSearchOficina() { }
+
+    private void OpenDistribuirModal()
+    {
+        ShowDistribuirModal = true;
+    }
+
+    private void CloseDistribuirModal()
+    {
+        ShowDistribuirModal = false;
+    }
+
+    private void HandleSave() { }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class CuentaDistribucion
+    {
+        public string Codigo { get; set; } = string.Empty;
+        public string Transaccion { get; set; } = string.Empty;
+        public string ValorPorcentaje { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,16 @@
+.filter-section {
+    width: 100%;
+    border: 1px solid #e5e5ea;
+    border-radius: 4px;
+    padding: 3rem 2rem;
+    position: relative;
+    flex-direction: column;
+    display: flex;
+    gap: 25px;
+}
+
+    .filter-section > span {
+        position: absolute;
+        top: -10px;
+        background: #fbf9f9;
+    }

@@ -1,0 +1,373 @@
+@page "/dash" 
+@namespace EIKON.UI.Pages.Dashboards
+@using Microsoft.JSInterop
+@using DevExpress.Blazor
+@using EIKON.UI.Components
+@using EIKON.UI.Interfaces
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+@inject NavigationManager nv;
+
+@* <EikonPage Title="Dashboard — Reclutamiento & Selección" Icon="briefcase">
+ *@    <PageTitle>Dashboard — Reclutamiento & Selección</PageTitle>
+
+<div class="container-fluid">
+
+    <!-- ===================== KPIs PRINCIPALES ===================== -->
+    <div class="row g-3 mb-2">
+
+        <div class="col-6 col-md-2">
+            <div class="dashboard-card text-center">
+                <div class="header">Requisiciones Activas</div>
+                <div class="kpi-number kpi-warning">14</div>
+                <div class="small text-muted">En proceso</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+            <div class="dashboard-card text-center">
+                <div class="header">Cargos Vacantes</div>
+                <div class="kpi-number kpi-danger">37</div>
+                <div class="small text-muted">Sin cubrir</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+            <div class="dashboard-card text-center">
+                <div class="header">Aplicaciones (mes)</div>
+                <div class="kpi-number kpi-success">412</div>
+                <div class="small text-muted">Candidatos nuevos</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+            <div class="dashboard-card text-center">
+                <div class="header">Tasa de Conversión</div>
+                <div class="kpi-number">14%</div>
+                <div class="small text-muted">Aplicado → Contratado</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+            <div class="dashboard-card text-center">
+                <div class="header">Tiempo Prom. Contratación</div>
+                <div class="kpi-number">22 días</div>
+                <div class="small text-muted">Desde solicitud</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== GRÁFICOS ===================== -->
+    <div class="row g-3 mb-3" >
+
+        <!-- Embudo de selección -->
+        <div class="col-md-6" style="display:none;">
+            <div class="dashboard-card">
+                <div class="section-title">Embudo de Selección</div>
+                <canvas id="chartEmbudoRS"></canvas>
+            </div>
+        </div>
+
+        <!-- Fuentes de reclutamiento -->
+        <div class="col-md-6" style="display:none;">
+            <div class="dashboard-card">
+                <div class="section-title">Fuentes de Reclutamiento</div>
+                <canvas id="chartFuentesRS"></canvas>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+    <div class="col-md-6">
+            <h3>Embudo de Selección</h3>
+       @*  <DxChart Data="@DatosCategorias">
+            <DxChartSeriesCollection>
+                <DxChartBarSeries
+                    ArgumentField="@nameof(EstructuraDataPoint.Etiqueta)"
+                    ValueField="@nameof(EstructuraDataPoint.Valor)"
+                    Name="Conteo por Categoría"
+                    Color="#0d6efd">
+                </DxChartBarSeries>
+            </DxChartSeriesCollection>
+            <DxChartValueAxis MinValue="0" />
+            <DxChartLegend Visible="false" />
+            <DxChartTooltip Enabled="true" />
+        </DxChart> *@
+            <DxChart Data="@DatosCategorias"
+                     Width="100%" Rotated="true">
+                <DxChartTitle Text="Por Categorias" />
+                <DxChartCommonSeries NameField="@((EstructuraDataPoint s) => s.Etiqueta)"
+                                     ArgumentField="@(s => s.Etiqueta)"
+                                     ValueField="@(s => s.Valor)"
+                                     SummaryMethod="Enumerable.Sum"
+                                     SeriesType="ChartSeriesType.Bar" />
+                <DxChartLegend Position="RelativePosition.Inside"
+                               HorizontalAlignment="HorizontalAlignment.Right" Visible="false" />
+                <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+                    <div class="m-2">
+                        <div class="fw-bold text-center">
+                            Categoria: @context.Point.SeriesName
+                        </div>
+                        <div>
+                            @context.Point.Argument: @string.Format("{0:#}", (double)context.Point.Value)
+                        </div>
+                    </div>
+                </DxChartTooltip>
+            </DxChart>
+    </div>
+    <div class="col-md-6">
+            <h3>Fuentes de Reclutamiento</h3>
+       @*  <DxChart Data="@DatosGruposOcupacionales">
+            <DxChartSeriesCollection>
+                <DxChartBarSeries
+                    ArgumentField="@nameof(EstructuraDataPoint.Etiqueta)"
+                    ValueField="@nameof(EstructuraDataPoint.Valor)"
+                    Name="Conteo por Grupo"
+                    Color="#198754">
+                </DxChartBarSeries>
+            </DxChartSeriesCollection>
+            <DxChartValueAxis MinValue="0" />
+            <DxChartLegend Visible="false" />
+            <DxChartTooltip Enabled="true" />
+        </DxChart> *@
+            <DxChart Data="@DatosGruposOcupacionales"
+                     Width="100%" Rotated="true">
+                <DxChartTitle Text="Conteo por Grupo" />
+                <DxChartCommonSeries NameField="@((EstructuraDataPoint s) => s.Etiqueta)"
+                                     ArgumentField="@(s => s.Etiqueta)"
+                                     ValueField="@(s => s.Valor)"
+                                     SummaryMethod="Enumerable.Sum"
+                                     SeriesType="ChartSeriesType.Bar" />
+                <DxChartLegend Position="RelativePosition.Inside"
+                               HorizontalAlignment="HorizontalAlignment.Right" Visible="false" />
+                <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+                    <div class="m-2">
+                        <div class="fw-bold text-center">
+                            Grupo: @context.Point.SeriesName
+                        </div>
+                        <div>
+                            @context.Point.Argument: @string.Format("{0:#}", (double)context.Point.Value)
+                        </div>
+                    </div>
+                </DxChartTooltip>
+            </DxChart>
+    </div>
+</div>
+    <!-- ===================== TABLA DE CANDIDATOS ACTIVOS ===================== -->
+    <div class="dashboard-card mb-3">
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>Candidatos en Proceso</strong>
+            @* <button class="btn btn-sm btn-outline-primary" @onclick="OpenResumenRS">
+                Ver resumen R&S
+            </button> *@
+        </div>
+
+       @*  <DxGrid Data="@Candidatos"
+                    PageSize="10"
+                    ShowFilterRow="false"
+                    ShowGroupPanel="false"
+                    KeyFieldName="@nameof(CandidatoInfo.Id)">
+
+            <DxGridDataColumn FieldName="@nameof(CandidatoInfo.Id)" Caption="#" Width="60px" />
+            <DxGridDataColumn FieldName="@nameof(CandidatoInfo.Nombre)" Caption="Candidato" Width="220px" />
+            <DxGridDataColumn FieldName="@nameof(CandidatoInfo.Puesto)" Caption="Puesto Aplicado" Width="200px" />
+            <DxGridDataColumn FieldName="@nameof(CandidatoInfo.Estado)" Caption="Estado" Width="140px" />
+            <DxGridDataColumn FieldName="@nameof(CandidatoInfo.Fecha)" Caption="Fecha" Width="120px" />
+
+        </DxGrid> *@
+
+    </div>
+
+    <!-- ===================== MODAL RESUMEN R&S ===================== -->
+    <div class="modal fade eikon-modal @(showRSResumen ? "show" : "")">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Resumen Ejecutivo — R&S</h5>
+                    <button class="btn-close btn-close-white" @onclick="CloseResumenRS"></button>
+                </div>
+
+                <div class="modal-body small">
+
+                    <ul class="mb-2">
+                        <li>✔ Requisiciones abiertas: <strong>14</strong>.</li>
+                        <li>✔ Candidatos activos en proceso: <strong>126</strong>.</li>
+                        <li>✔ Aplicaciones recibidas este mes: <strong>412</strong>.</li>
+                        <li>✔ Tiempo promedio de contratación: <strong>22 días</strong>.</li>
+                        <li>✔ Conversión promedio: <strong>14%</strong>.</li>
+                        <li>✔ Fuente más efectiva: <strong>LinkedIn</strong>.</li>
+                    </ul>
+
+                    <p class="text-muted">
+                        En producción, este panel será alimentado por Requisiciones,
+                        Cargos, Aplicaciones, Tracking de Candidatos y Nómina.
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" @onclick="CloseResumenRS">Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+
+        @if (showRSResumen)
+        {
+            <div class="modal-backdrop fade show eikon-backdrop"></div>
+        }
+    </div>
+
+</div>
+
+@* </EikonPage>
+ *@
+@code {
+
+   // [Inject] public IJSRuntime JS { get; set; } = default!;
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    private bool showRSResumen = false;
+    private List<Vfrhma000Activo> empleados { get; set; }
+    public record CandidatoInfo(
+        int Id,
+        string Nombre,
+        string Puesto,
+        string Estado,
+        string Fecha
+    );
+
+    List<CandidatoInfo> Candidatos = new()
+    {
+        new(1, "Juan Pérez", "Analista de Nómina", "Entrevista RRHH", "2025-02-01"),
+        new(2, "Carolina Gómez", "Gerente de IT", "Evaluación técnica", "2025-02-02"),
+        new(3, "Luis Rivas", "Auxiliar Contable", "Revisión CV", "2025-02-03"),
+        new(4, "Marta Ruiz", "Coordinador de RRHH", "Entrevista jefe", "2025-02-05"),
+        new(5, "Pedro Vargas", "Supervisor Planta", "Oferta enviada", "2025-02-06")
+    };
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         // await JS.InvokeVoidAsync("renderRSCharts");
+    //     }
+    // }
+
+    private void OpenResumenRS()
+    {
+        showRSResumen = true;
+    }
+
+    private void CloseResumenRS()
+    {
+        showRSResumen = false;
+    }
+    public class EstructuraDataPoint
+    {
+        public string Etiqueta { get; set; }
+        public double Valor { get; set; }
+        public EstructuraDataPoint(string etiqueta, double valor)
+        {
+            (Etiqueta, Valor) = (etiqueta, valor);
+        }
+    }
+
+    // Datos para Categorías (Del JS: Ejecutivo, Profesional, Técnico, Auxiliar)
+    private List<EstructuraDataPoint> DatosCategorias = new List<EstructuraDataPoint>();
+    // {
+    //     new EstructuraDataPoint { Etiqueta = "Ejecutivo", Valor = 32 },
+    //     new EstructuraDataPoint { Etiqueta = "Profesional", Valor = 420 },
+    //     new EstructuraDataPoint { Etiqueta = "Técnico", Valor = 210 },
+    //     new EstructuraDataPoint { Etiqueta = "Auxiliar", Valor = 115 },
+    // };
+
+    // Datos para Grupos Ocupacionales (Del JS: Administrativo, Operativo, Soporte, Técnico)
+    private List<EstructuraDataPoint> DatosGruposOcupacionales = new List<EstructuraDataPoint>();
+    // {
+    //     new EstructuraDataPoint { Etiqueta = "Administrativo", Valor = 180 },
+    //     new EstructuraDataPoint { Etiqueta = "Operativo", Valor = 730 },
+    //     new EstructuraDataPoint { Etiqueta = "Soporte", Valor = 210 },
+    //     new EstructuraDataPoint { Etiqueta = "Técnico", Valor = 120 },
+    // };
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        DateTime currentDateTime = DateTime.Now;
+        //MinDate = new DateTime(currentDateTime.Year, currentDateTime.Month, 1);
+        //MaxDate = new DateTime(
+        // currentDateTime.Year,
+        // currentDateTime.Month,
+        // DateTime.DaysInMonth(currentDateTime.Year, currentDateTime.Month)
+        // );
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+        //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(ApiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("http://localhost:8081/api/Trhem000");
+        // data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+        var usuario = auth.userId;
+        var tipo = auth.tipo;
+        
+        //modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "Trhnz000");
+    }
+    async Task CargarDatos()
+    {
+
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            empleados = await api.Vfrhma000ActivoGetAll(Token);
+            DatosCategorias = empleados                 
+            .GroupBy(e => e.CtDescri)
+                .Select(g => new EstructuraDataPoint(g.Key, g.Count()))
+                .ToList();
+            DatosGruposOcupacionales = empleados
+            .GroupBy(e => e.GrDescri) 
+                .Select(g => new EstructuraDataPoint(g.Key, g.Count()))
+                .ToList();
+       
+            await InvokeAsync(StateHasChanged);
+            // MyGrid.Reload();
+            //puestos = await api.joGetAllAsync(Token);
+        }
+
+    }
+}

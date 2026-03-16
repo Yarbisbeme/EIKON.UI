@@ -1,0 +1,815 @@
+@layout MainLayout
+@page "/FRHRE402"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Expediente de Solicitud externa" BackUrl="/dash" />
+
+    <div class="page-header">
+        <div class="page-search-frhre402">
+            <div class="input-search">
+                <label>No.Solicitud</label>
+                <DxTextBox @bind-Text="@numeroSolicitud"
+                           NullText="00000041"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+            <div class="input">
+                <label>Tipo</label>
+                <DxTextBox @bind-Text="@tipoSolicitud" NullText="Creación de Puesto" />
+            </div>
+            <div class="input">
+                <label>Fecha</label>
+                <DxDateEdit @bind-Date="@fechaSolicitud" DisplayFormat="dd/MM/yyyy" />
+            </div>
+        </div>
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <!-- Nombre destacado -->
+    <div class="nombre-destacado">
+        APRUEBA NPRUEBA
+    </div>
+
+    <div class="frhre402-form">
+        <!-- Sección superior: Identificadores + Nombres + Imagen -->
+        <div class="seccion-identificacion">
+            <div class="columna-identificadores">
+                <div class="grupo-identificadores">
+                    <h3>Identificadores</h3>
+                    <div class="input">
+                        <label>Sexo</label>
+                        <DxTextBox @bind-Text="@sexo" NullText="Masculino" />
+                    </div>
+                    <div class="input">
+                        <label>Cédula</label>
+                        <DxTextBox @bind-Text="@cedula" NullText="40214514089" />
+                    </div>
+                    <div class="input">
+                        <label>Cod. Alterno</label>
+                        <DxTextBox @bind-Text="@codigoAlterno" />
+                    </div>
+                    <div class="input">
+                        <label>Otro Doc</label>
+                        <DxTextBox @bind-Text="@otroDoc" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="columna-nombres">
+                <div class="grupo-nombres">
+                    <h3>Nombres</h3>
+                    <div class="input">
+                        <label>Nombres</label>
+                        <DxTextBox @bind-Text="@nombres" NullText="NPRUEBA" />
+                    </div>
+                    <div class="input">
+                        <label>Apellidos</label>
+                        <DxTextBox @bind-Text="@apellidos" NullText="APRUEBA" />
+                    </div>
+                    <div class="input">
+                        <label>Apodo</label>
+                        <DxTextBox @bind-Text="@apodo" />
+                    </div>
+                    <div class="input">
+                        <label>Nombre Corto</label>
+                        <DxTextBox @bind-Text="@nombreCorto" NullText="PRUEBAAA" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="columna-imagen">
+                <div class="imagen-placeholder">
+                    <div class="imagen-texto">
+                        <span>imagen</span>
+                        <span>no</span>
+                        <span>disponible</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs: Básico | Localizadores | Dirección -->
+        <div class="tabs-basico-container">
+            <DxTabs @bind-ActiveTabIndex="@activeTabBasico" CssClass="tabs-basico">
+                <DxTabPage Text="Básico">
+                    <div class="contenido-basico">
+                        <div class="dual-columns">
+                            <div class="columna-izq">
+                                <div class="input">
+                                    <label>Fecha Nacimiento</label>
+                                    <DxDateEdit @bind-Date="@fechaNacimiento" DisplayFormat="dd/MM/yyyy" NullText="23/04/1985" />
+                                </div>
+                                <div class="input">
+                                    <label>Tipo de Sangre</label>
+                                    <DxTextBox @bind-Text="@tipoSangre" NullText="B. Rh Positivo (B+)" />
+                                </div>
+                                <div class="input">
+                                    <label>Nacionalidad</label>
+                                    <DxTextBox @bind-Text="@nacionalidad" NullText="DOMINICANA" />
+                                </div>
+                                <div class="input">
+                                    <label>Lugar Nacimiento</label>
+                                    <DxTextBox @bind-Text="@lugarNacimiento" NullText="Santo Domingo" />
+                                </div>
+                            </div>
+                            <div class="columna-der">
+                                <div class="input-edad">
+                                    <label>Edad</label>
+                                    <DxSpinEdit @bind-Value="@edad" MinValue="0" />
+                                </div>
+                                <div class="input">
+                                    <label>Estado Civil</label>
+                                    <DxTextBox @bind-Text="@estadoCivil" NullText="Solterola" />
+                                </div>
+                                <div class="input">
+                                    <label>NSS</label>
+                                    <DxTextBox @bind-Text="@nss" />
+                                </div>
+                                <div class="input">
+                                    <label>RNC</label>
+                                    <DxTextBox @bind-Text="@rnc" />
+                                </div>
+                                <div class="input">
+                                    <label>Religión</label>
+                                    <DxTextBox @bind-Text="@religion" NullText="No notificado" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Localizadores">
+                    <div class="contenido-localizadores">
+                        <p>Contenido Localizadores</p>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Dirección">
+                    <div class="contenido-direccion">
+                        <p>Contenido Dirección</p>
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+
+        <!-- Sección Familiares -->
+        <div class="seccion-familiares">
+            <div class="campos-familiares">
+                <div class="fila-1">
+                    <div class="input">
+                        <label>Nombre</label>
+                        <DxTextBox @bind-Text="@familiarNombre" />
+                    </div>
+                    <div class="input">
+                        <label>Parentesco</label>
+                        <DxTextBox @bind-Text="@familiarParentesco" NullText="PADRE" />
+                    </div>
+                    <div class="grupo-fecha-edad">
+                        <div class="input">
+                            <label>Fecha Nacimiento</label>
+                            <DxDateEdit @bind-Date="@familiarFechaNac" DisplayFormat="dd/MM/yyyy" NullText="/ / : : AM" />
+                        </div>
+                        <div class="input-edad-fam">
+                            <label>Edad</label>
+                            <DxSpinEdit @bind-Value="@familiarEdad" MinValue="0" />
+                        </div>
+                    </div>
+                </div>
+                <div class="fila-2">
+                    <div class="input">
+                        <label>Dirección</label>
+                        <DxTextBox @bind-Text="@familiarDireccion" />
+                    </div>
+                    <div class="input">
+                        <label>Teléfono</label>
+                        <DxTextBox @bind-Text="@familiarTelefono" NullText="- -" />
+                    </div>
+                </div>
+                <div class="fila-3">
+                    <div class="input">
+                        <label>Ocupación</label>
+                        <DxTextBox @bind-Text="@familiarOcupacion" />
+                    </div>
+                    <div class="input">
+                        <label>Lugar de Trabajo</label>
+                        <DxTextBox @bind-Text="@familiarLugarTrabajo" />
+                    </div>
+                    <div class="checkboxes-grupo">
+                        <DxCheckBox @bind-Checked="@familiarTrabaja">¿ Trabaja ?</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@familiarCompetencia">¿ Competencia ?</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-familiares">
+                <DxGrid Data="@familiaresList" CssClass="familiares-grid">
+                    <Columns>
+                        <DxGridDataColumn FieldName="Nombre" Caption="Nombre" />
+                        <DxGridDataColumn FieldName="Parentesco" Caption="Parentesco" />
+                        <DxGridDataColumn FieldName="Fecha" Caption="Fecha" />
+                        <DxGridDataColumn FieldName="Edad" Caption="Edad" />
+                        <DxGridDataColumn FieldName="Direccion" Caption="Dirección" />
+                        <DxGridDataColumn FieldName="Telefono" Caption="Teléfono" />
+                        <DxGridDataColumn FieldName="Ocupacion" Caption="Ocupación" />
+                    </Columns>
+                </DxGrid>
+            </div>
+        </div>
+
+        <!-- Sección Experiencia Laboral -->
+        <div class="seccion-experiencia-laboral">
+            <div class="campos-experiencia">
+                <div class="input-sueldo">
+                    <label>Sueldo que aspira</label>
+                    <DxSpinEdit @bind-Value="@sueldoAspira" MinValue="0" DisplayFormat="N2" />
+                </div>
+                <div class="input">
+                    <label>Empresa</label>
+                    <DxTextBox @bind-Text="@empresa" />
+                </div>
+                <div class="input">
+                    <label>Procedencia De la Solicitud</label>
+                    <DxTextBox @bind-Text="@procedenciaSolicitud" />
+                </div>
+            </div>
+            <div class="puestos-clasificacion">
+                <div class="puestos-columna">
+                    <label>Puestos</label>
+                    <DxListBox Data="@puestosList"
+                               TData="string"
+                               TValue="string"
+                               CssClass="puestos-listbox"
+                               SelectionMode="ListBoxSelectionMode.Single">
+                    </DxListBox>
+                </div>
+                <div class="clasifica-columna">
+                    <label>Clasifica para</label>
+                    <DxListBox Data="@clasificaParaList"
+                               TData="string"
+                               TValue="string"
+                               CssClass="clasifica-listbox"
+                               SelectionMode="ListBoxSelectionMode.Single">
+                    </DxListBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs principales de Educación -->
+        <div class="tabs-educacion-container">
+            <DxTabs @bind-ActiveTabIndex="@activeTabEducacion" CssClass="tabs-educacion">
+                <DxTabPage Text="Grado educativo">
+                    <div class="contenido-grado">
+                        <h3 class="titulo-seccion">Grados</h3>
+                        <DxGrid Data="@gradosEducativosList" CssClass="grados-grid">
+                            <Columns>
+                                <DxGridDataColumn FieldName="Educacion" Caption="Educación" />
+                                <DxGridDataColumn FieldName="Institucion" Caption="Institución" />
+                                <DxGridDataColumn FieldName="Profesion" Caption="Profesión" />
+                                <DxGridDataColumn FieldName="Desde" Caption="Desde" />
+                                <DxGridDataColumn FieldName="Hasta" Caption="Hasta" />
+                                <DxGridDataColumn FieldName="Nivel" Caption="Nivel" />
+                            </Columns>
+                        </DxGrid>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Idiomas">
+                    <div class="contenido-idiomas">
+                        <h3 class="titulo-seccion">Idiomas</h3>
+                        <DxGrid Data="@idiomasList" CssClass="idiomas-grid">
+                            <Columns>
+                                <DxGridDataColumn FieldName="Idioma" Caption="Idioma" />
+                                <DxGridDataColumn FieldName="Habla" Caption="Habla" />
+                                <DxGridDataColumn FieldName="Lee" Caption="Lee" />
+                                <DxGridDataColumn FieldName="Escribe" Caption="Escribe" />
+                                <DxGridDataColumn FieldName="Nivel" Caption="Nivel" />
+                            </Columns>
+                        </DxGrid>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="General">
+                    <div class="contenido-general">
+                        <div class="checkbox-estudia">
+                            <DxCheckBox @bind-Checked="@estudia">¿Estudia ?</DxCheckBox>
+                        </div>
+                        <div class="campos-general">
+                            <div class="input">
+                                <label>¿Dónde Estudia ?</label>
+                                <DxTextBox @bind-Text="@dondeEstudia" />
+                            </div>
+                            <div class="input">
+                                <label>¿Qué estudia ?</label>
+                                <DxTextBox @bind-Text="@queEstudia" />
+                            </div>
+                            <div class="fila-campos">
+                                <div class="input">
+                                    <label>Horario</label>
+                                    <DxTextBox @bind-Text="@horario" />
+                                </div>
+                                <div class="input">
+                                    <label>Unidad</label>
+                                    <DxTextBox @bind-Text="@unidad" />
+                                </div>
+                            </div>
+                            <div class="fila-campos-triple">
+                                <div class="input">
+                                    <label>Duración</label>
+                                    <DxTextBox @bind-Text="@duracion" />
+                                </div>
+                                <div class="input">
+                                    <label>Lleva</label>
+                                    <DxTextBox @bind-Text="@lleva" />
+                                </div>
+                                <div class="input">
+                                    <label>Nivel</label>
+                                    <DxTextBox @bind-Text="@nivelGeneral" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Oficios">
+                    <div class="contenido-oficios">
+                        <div class="oficios-dual-list">
+                            <div class="oficios-disponibles">
+                                <h3>OFICIOS</h3>
+                                <DxListBox Data="@oficiosList"
+                                           TData="string"
+                                           TValue="string"
+                                           CssClass="oficios-listbox"
+                                           SelectionMode="ListBoxSelectionMode.Multiple">
+                                </DxListBox>
+                            </div>
+                            <div class="oficios-seleccionados">
+                                <h3>OFICIOS SELECCIONADOS</h3>
+                                <DxListBox Data="@oficiosSeleccionadosList"
+                                           TData="string"
+                                           TValue="string"
+                                           CssClass="oficios-seleccionados-listbox"
+                                           SelectionMode="ListBoxSelectionMode.Multiple">
+                                </DxListBox>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Continuada">
+                    <div class="contenido-continuada">
+                        <div class="educacion-continuada-seccion">
+                            <h3>Educación continuada</h3>
+                            <DxGrid Data="@educacionContinuadaList" CssClass="educacion-continuada-grid">
+                                <Columns>
+                                    <DxGridDataColumn FieldName="NoEntrada" Caption="NoEntrada" />
+                                    <DxGridDataColumn FieldName="Evento" Caption="Evento" />
+                                    <DxGridDataColumn FieldName="Lugar" Caption="Lugar" />
+                                    <DxGridDataColumn FieldName="Desde" Caption="Desde" />
+                                    <DxGridDataColumn FieldName="Hasta" Caption="Hasta" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                        <div class="conocimientos-seccion">
+                            <h3>Conocimientos</h3>
+                            <DxGrid Data="@conocimientosList" CssClass="conocimientos-grid">
+                                <Columns>
+                                    <DxGridDataColumn FieldName="NoEntrada" Caption="NoEntrada" />
+                                    <DxGridDataColumn FieldName="Conocimiento" Caption="Conocimiento" />
+                                    <DxGridDataColumn FieldName="Nivel" Caption="Nivel" />
+                                    <DxGridDataColumn FieldName="FechaAsignada" Caption="Fecha asignada" />
+                                    <DxGridDataColumn FieldName="FechaExpira" Caption="Fecha Expira" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+
+        <!-- Tabs Experiencia Profesional -->
+        <div class="tabs-experiencia-container">
+            <DxTabs @bind-ActiveTabIndex="@activeTabExperiencia" CssClass="tabs-experiencia">
+                <DxTabPage Text="Experiencia Profesional">
+                    <div class="contenido-experiencia-profesional">
+                        <div class="campos-experiencia-prof">
+                            <div class="fila-1-exp">
+                                <div class="input">
+                                    <label>Institución</label>
+                                    <DxTextBox @bind-Text="@institucion" />
+                                </div>
+                                <div class="input">
+                                    <label>Teléfono</label>
+                                    <DxTextBox @bind-Text="@telefonoInstitucion" NullText="- -" />
+                                </div>
+                            </div>
+                            <div class="fila-2-exp">
+                                <div class="input">
+                                    <label>Cargo</label>
+                                    <DxTextBox @bind-Text="@cargo" />
+                                </div>
+                                <div class="input">
+                                    <label>Mensual</label>
+                                    <DxTextBox @bind-Text="@mensual" />
+                                </div>
+                                <div class="input">
+                                    <label>Anual</label>
+                                    <DxTextBox @bind-Text="@anual" />
+                                </div>
+                            </div>
+                            <div class="fila-3-exp">
+                                <div class="input">
+                                    <label>Supervisor</label>
+                                    <DxTextBox @bind-Text="@supervisor" />
+                                </div>
+                                <div class="input">
+                                    <label>Desde</label>
+                                    <DxDateEdit @bind-Date="@experienciaDesde" DisplayFormat="dd/MM/yyyy" NullText="/ /" />
+                                </div>
+                                <div class="input">
+                                    <label>Hasta</label>
+                                    <DxDateEdit @bind-Date="@experienciaHasta" DisplayFormat="dd/MM/yyyy" NullText="/ / : :" />
+                                </div>
+                                <div class="checkbox-actual-exp">
+                                    <DxCheckBox @bind-Checked="@actualTrabajo">Actual</DxCheckBox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-experiencia-prof">
+                            <DxGrid Data="@experienciaProfesionalList" CssClass="experiencia-profesional-grid">
+                                <Columns>
+                                    <DxGridDataColumn FieldName="Institucion" Caption="Institución" />
+                                    <DxGridDataColumn FieldName="Cargo" Caption="Cargo" />
+                                    <DxGridDataColumn FieldName="Telefono" Caption="Teléfono" />
+                                    <DxGridDataColumn FieldName="Desde" Caption="Desde" />
+                                    <DxGridDataColumn FieldName="Hasta" Caption="Hasta" />
+                                    <DxGridDataColumn FieldName="Supervisor" Caption="Supervisor" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Referencia">
+                    <div class="contenido-referencia">
+                        <DxMemo @bind-Text="@referencia" Rows="12" />
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+
+        <!-- Tabs Varios (Información Adicional) -->
+        <div class="tabs-varios-container">
+            <DxTabs @bind-ActiveTabIndex="@activeTabVarios" CssClass="tabs-varios">
+                <DxTabPage Text="Varios">
+                    <div class="contenido-varios">
+                        <div class="pregunta-varios">
+                            <DxCheckBox @bind-Checked="@trabajaFamiliarEmpresa">
+                                Trabaja o ha trabajado algún familiar suyo en la(s) Empresas
+                            </DxCheckBox>
+                            <DxMemo @bind-Text="@detallesFamiliarEmpresa" Rows="5" />
+                        </div>
+                        <div class="pregunta-varios">
+                            <DxCheckBox @bind-Checked="@trabajaConocidoEmpresa">
+                                Trabaja o ha trabajado algún conocido suyo en la(s) Empresas
+                            </DxCheckBox>
+                            <DxMemo @bind-Text="@detallesConocidoEmpresa" Rows="5" />
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Deportes">
+                    <div class="contenido-deportes">
+                        <div class="deportes-dual-list">
+                            <div class="deportes-disponibles">
+                                <DxListBox Data="@deportesList"
+                                           TData="string"
+                                           TValue="string"
+                                           CssClass="deportes-listbox"
+                                           SelectionMode="ListBoxSelectionMode.Multiple">
+                                </DxListBox>
+                            </div>
+                            <div class="deportes-seleccionados">
+                                <DxListBox Data="@deportesSeleccionadosList"
+                                           TData="string"
+                                           TValue="string"
+                                           CssClass="deportes-seleccionados-listbox"
+                                           SelectionMode="ListBoxSelectionMode.Multiple">
+                                </DxListBox>
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Licencia">
+                    <div class="contenido-licencia">
+                        <div class="seccion-licencia-checkbox">
+                            <DxCheckBox @bind-Checked="@tieneLicencia">Licencia</DxCheckBox>
+                        </div>
+                        <div class="campos-licencia">
+                            <div class="fila-licencia-1">
+                                <div class="input">
+                                    <label>Tipo</label>
+                                    <DxTextBox @bind-Text="@tipoLicencia" />
+                                </div>
+                                <div class="input">
+                                    <label>Número</label>
+                                    <DxTextBox @bind-Text="@numeroLicencia" />
+                                </div>
+                                <div class="input">
+                                    <label>Restricción</label>
+                                    <DxTextBox @bind-Text="@restriccion" />
+                                </div>
+                            </div>
+                            <div class="fila-licencia-2">
+                                <div class="input">
+                                    <label>Expedición</label>
+                                    <DxDateEdit @bind-Date="@expedicionLicencia" DisplayFormat="dd/MM/yyyy HH:mm:ss" NullText="01/01/1900 12:00:00" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="seccion-vehiculo">
+                            <div class="vehiculo-checkbox">
+                                <DxCheckBox @bind-Checked="@vehiculoPropio">Vehículo Propio</DxCheckBox>
+                            </div>
+                            <div class="campos-vehiculo">
+                                <div class="input">
+                                    <label>Placa</label>
+                                    <DxTextBox @bind-Text="@placa" />
+                                </div>
+                                <div class="input">
+                                    <label>Descripción</label>
+                                    <DxTextBox @bind-Text="@descripcionVehiculo" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="seccion-organizacion">
+                            <div class="input">
+                                <label>Organización a la que pertenece</label>
+                                <DxMemo @bind-Text="@organizacion" Rows="3" />
+                            </div>
+                        </div>
+                    </div>
+                </DxTabPage>
+                <DxTabPage Text="Enfermedades">
+                    <div class="contenido-enfermedades">
+                        <div class="campos-enfermedad">
+                            <div class="input">
+                                <label>Enfermedad</label>
+                                <DxTextBox @bind-Text="@enfermedad" />
+                            </div>
+                            <div class="input">
+                                <label>Fecha</label>
+                                <DxDateEdit @bind-Date="@fechaEnfermedad" DisplayFormat="dd/MM/yyyy" NullText="/ /" />
+                            </div>
+                        </div>
+                        <div class="comentario-enfermedad">
+                            <label>Comentario</label>
+                            <DxMemo @bind-Text="@comentarioEnfermedad" Rows="3" />
+                        </div>
+                        <div class="grid-enfermedades">
+                            <DxGrid Data="@enfermedadesList" CssClass="enfermedades-grid">
+                                <Columns>
+                                    <DxGridDataColumn FieldName="Codigo" Caption="Código" />
+                                    <DxGridDataColumn FieldName="Fecha" Caption="Fecha" />
+                                    <DxGridDataColumn FieldName="Comentario" Caption="Comentario" />
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                    </div>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Toolbar
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Header
+    private string numeroSolicitud = "00000041";
+    private string tipoSolicitud = "Creación de Puesto";
+    private DateTime fechaSolicitud = new DateTime(2025, 4, 23);
+
+    // Identificadores
+    private string sexo = "Masculino";
+    private string cedula = "40214514089";
+    private string codigoAlterno = "";
+    private string otroDoc = "";
+
+    // Nombres
+    private string nombres = "NPRUEBA";
+    private string apellidos = "APRUEBA";
+    private string apodo = "";
+    private string nombreCorto = "PRUEBAAA";
+
+    // Tabs activos
+    private int activeTabBasico = 0;
+    private int activeTabEducacion = 0;
+    private int activeTabExperiencia = 0;
+    private int activeTabVarios = 0;
+
+    // Básico
+    private DateTime? fechaNacimiento = new DateTime(1985, 4, 23);
+    private int edad = 40;
+    private string tipoSangre = "B. Rh Positivo (B+)";
+    private string nacionalidad = "DOMINICANA";
+    private string lugarNacimiento = "Santo Domingo";
+    private string estadoCivil = "Solterola";
+    private string nss = "";
+    private string rnc = "";
+    private string religion = "No notificado";
+
+    // Familiares
+    private string familiarNombre = "";
+    private string familiarParentesco = "PADRE";
+    private DateTime? familiarFechaNac = null;
+    private int familiarEdad = 0;
+    private string familiarDireccion = "";
+    private string familiarTelefono = "- -";
+    private string familiarOcupacion = "";
+    private string familiarLugarTrabajo = "";
+    private bool familiarTrabaja = false;
+    private bool familiarCompetencia = false;
+    private List<FamiliarDto> familiaresList = new();
+
+    // Experiencia Laboral
+    private decimal sueldoAspira = 0.00m;
+    private string empresa = "";
+    private string procedenciaSolicitud = "";
+    private List<string> puestosList = new List<string>
+    {
+        "VICEPRESIDENTE & GERENTE GENERAL",
+        "DIRECTOR RECURSOS HUMANOS",
+        "GERENTE SENIOR DE APRENDIZAJE",
+        "GERENTE DE APRENDIZAJE Y DESARROLLO",
+        "GERENTE SENIOR DE OPERACIONES",
+        "GERENTE DE RECLUTAMIENTO",
+        "GERENTE SENIOR DE CONSULTAMIENTO",
+        "GERENTE SENIOR DE FINANZAS",
+        "ANALISTA BENEFICIOS",
+        "ANALISTA CALIDAD",
+        "ANALISTA CALIDAD DE SERVICIOS",
+        "ANALISTA CALIDAD Y PROCESOS"
+    };
+    private List<string> clasificaParaList = new();
+
+    // Educación
+    private List<GradoEducativoDto> gradosEducativosList = new();
+    private List<IdiomaDto> idiomasList = new();
+    private bool estudia = false;
+    private string dondeEstudia = "";
+    private string queEstudia = "";
+    private string horario = "";
+    private string unidad = "";
+    private string duracion = "";
+    private string lleva = "";
+    private string nivelGeneral = "";
+    private List<string> oficiosList = new List<string>
+    {
+        "Liderazgo",
+        "Habilidad de Comunicación Oral",
+        "Habilidad de Comunicación Escrita",
+        "Habilidad para Persuasión y Convencimiento",
+        "Sentido de Oportunidad",
+        "Vocación de Servicio",
+        "Pensamiento Crítico"
+    };
+    private List<string> oficiosSeleccionadosList = new();
+    private List<EducacionContinuadaDto> educacionContinuadaList = new()
+    {
+        new EducacionContinuadaDto { NoEntrada = "FRHRE402 0001", Evento = "S", Lugar = "S", Desde = "S", Hasta = "S" }
+    };
+    private List<ConocimientoDto> conocimientosList = new()
+    {
+        new ConocimientoDto { NoEntrada = "FRHRE402 0001", Conocimiento = "S", Nivel = "S", FechaAsignada = "S", FechaExpira = "S" }
+    };
+
+    // Experiencia Profesional
+    private string institucion = "";
+    private string telefonoInstitucion = "- -";
+    private string cargo = "";
+    private string mensual = "";
+    private string anual = "";
+    private string supervisor = "";
+    private DateTime? experienciaDesde = null;
+    private DateTime? experienciaHasta = null;
+    private bool actualTrabajo = false;
+    private List<ExperienciaProfesionalDto> experienciaProfesionalList = new();
+    private string referencia = "";
+
+    // Varios
+    private bool trabajaFamiliarEmpresa = false;
+    private string detallesFamiliarEmpresa = "";
+    private bool trabajaConocidoEmpresa = false;
+    private string detallesConocidoEmpresa = "";
+    private List<string> deportesList = new List<string>
+    {
+        "BaseBall",
+        "Baloncesto",
+        "Ciclismo",
+        "Atletismo",
+        "Karate",
+        "Volleyball",
+        "Fútbol",
+        "Tenis",
+        "Pesca",
+        "Ajedrez",
+        "Poker"
+    };
+    private List<string> deportesSeleccionadosList = new();
+
+    // Licencia
+    private bool tieneLicencia = false;
+    private string tipoLicencia = "";
+    private string numeroLicencia = "";
+    private string restriccion = "";
+    private DateTime? expedicionLicencia = null;
+    private bool vehiculoPropio = false;
+    private string placa = "";
+    private string descripcionVehiculo = "";
+    private string organizacion = "";
+
+    // Enfermedades
+    private string enfermedad = "";
+    private DateTime? fechaEnfermedad = null;
+    private string comentarioEnfermedad = "";
+    private List<EnfermedadDto> enfermedadesList = new();
+
+    private void OnSearchClick()
+    {
+        Console.WriteLine($"Buscando solicitud: {numeroSolicitud}");
+    }
+
+    private async Task HandleSave()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Guardando expediente...");
+    }
+
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Cerrando formulario...");
+    }
+
+    // DTOs
+    public class FamiliarDto
+    {
+        public string Nombre { get; set; }
+        public string Parentesco { get; set; }
+        public string Fecha { get; set; }
+        public int Edad { get; set; }
+        public string Direccion { get; set; }
+        public string Telefono { get; set; }
+        public string Ocupacion { get; set; }
+    }
+
+    public class GradoEducativoDto
+    {
+        public string Educacion { get; set; }
+        public string Institucion { get; set; }
+        public string Profesion { get; set; }
+        public string Desde { get; set; }
+        public string Hasta { get; set; }
+        public string Nivel { get; set; }
+    }
+
+    public class IdiomaDto
+    {
+        public string Idioma { get; set; }
+        public string Habla { get; set; }
+        public string Lee { get; set; }
+        public string Escribe { get; set; }
+        public string Nivel { get; set; }
+    }
+
+    public class EducacionContinuadaDto
+    {
+        public string NoEntrada { get; set; }
+        public string Evento { get; set; }
+        public string Lugar { get; set; }
+        public string Desde { get; set; }
+        public string Hasta { get; set; }
+    }
+
+    public class ConocimientoDto
+    {
+        public string NoEntrada { get; set; }
+        public string Conocimiento { get; set; }
+        public string Nivel { get; set; }
+        public string FechaAsignada { get; set; }
+        public string FechaExpira { get; set; }
+    }
+
+    public class ExperienciaProfesionalDto
+    {
+        public string Institucion { get; set; }
+        public string Cargo { get; set; }
+        public string Telefono { get; set; }
+        public string Desde { get; set; }
+        public string Hasta { get; set; }
+        public string Supervisor { get; set; }
+    }
+
+    public class EnfermedadDto
+    {
+        public string Codigo { get; set; }
+        public string Fecha { get; set; }
+        public string Comentario { get; set; }
+    }
+}

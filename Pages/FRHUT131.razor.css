@@ -1,0 +1,212 @@
+/* Main container with horizontal toolbar layout */
+.frhut131-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Form section */
+.frhut131-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input fields */
+.frhut131-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhut131-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Formato field - narrower than others */
+.frhut131-form .formato-input {
+    max-width: 200px;
+}
+
+/* Horizontal toolbar at the bottom right */
+.horizontal-toolbar {
+    display: flex;
+    gap: 0;
+    justify-content: flex-end;
+    background-color: #d4d4d4;
+    border-top: 1px solid #bfbfbf;
+    padding: 0;
+}
+
+.horizontal-toolbar .toolbar-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-left: 1px solid #bfbfbf;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.horizontal-toolbar .toolbar-btn:first-child {
+    border-left: none;
+}
+
+.horizontal-toolbar .toolbar-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.horizontal-toolbar .toolbar-btn:active {
+    transform: scale(0.95);
+}
+
+/* Save button - green */
+.horizontal-toolbar .save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Cancel button - red */
+.horizontal-toolbar .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Report button - gray */
+.horizontal-toolbar .report-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Help button - gray */
+.horizontal-toolbar .help-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Action button - light blue */
+.horizontal-toolbar .action-btn {
+    background-color: #17a2b8;
+    color: white;
+}
+
+/* DevExpress TextBox, ComboBox, and DateEdit overrides */
+.frhut131-form ::deep .dx-textbox-container,
+.frhut131-form ::deep .dx-dropdowneditor-input-wrapper,
+.frhut131-form ::deep .dx-dateedit-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhut131-form ::deep .dx-textbox-container:focus-within,
+.frhut131-form ::deep .dx-dropdowneditor-input-wrapper:focus-within,
+.frhut131-form ::deep .dx-dateedit-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhut131-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* ComboBox and DateEdit dropdown icons */
+.frhut131-form ::deep .dx-dropdowneditor-icon,
+.frhut131-form ::deep .dx-dateedit-dropdown-button {
+    color: #33363f !important;
+}
+
+.frhut131-form ::deep .dx-dropdowneditor-input-wrapper:hover,
+.frhut131-form ::deep .dx-dateedit-input-wrapper:hover {
+    border-color: #007bff !important;
+}
+
+/* Search button styling */
+.frhut131-form ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhut131-form ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+/* Calendar icon styling */
+.frhut131-form ::deep .dx-dateedit-dropdown-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .frhut131-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .horizontal-toolbar .toolbar-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhut131-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhut131-form .input label {
+        font-size: 13px;
+    }
+
+    .frhut131-form .formato-input {
+        max-width: 150px;
+    }
+
+    .horizontal-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .horizontal-toolbar .toolbar-btn {
+        flex: 1;
+        min-width: 50px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhut131-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhut131-form .input label {
+        font-size: 12px;
+    }
+
+    .frhut131-form .formato-input {
+        max-width: 120px;
+    }
+
+    .horizontal-toolbar .toolbar-btn {
+        min-width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .frhut131-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+}

@@ -1,0 +1,393 @@
+@layout MainLayout
+@page "/FRHCA102"
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+
+    <Breadcrumb Title="Registro de Asistencias, Permisos y Tardanzas" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca102-form">
+
+        <!-- Employee Information Section -->
+        <div class="employee-info">
+            <div class="info-row-1">
+                <div class="input small-input">
+                    <label for="numero">Número</label>
+                    <DxTextBox @bind-Text="@Numero"
+                               NullText="Número"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchNumero"
+                                            Tooltip="Buscar empleado" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+
+                <div class="input">
+                    <label for="empleado">Empleado</label>
+                    <DxTextBox @bind-Text="@Empleado" NullText="Empleado" />
+                </div>
+
+                    @* <DxButton Text="Enviar a Expediente" *@
+                    @*           IconCssClass="fi fi-rr-paper-plane" *@
+                    @*           Click="@OnEnviarExpediente"/> *@
+            </div>
+
+            <div class="info-row-2">
+                <div class="input small-input">
+                    <label for="turno">Turno</label>
+                    <DxTextBox @bind-Text="@Turno" NullText="Turno" />
+                </div>
+
+                <div class="input">
+                    <label for="fIngreso">F. Ingreso</label>
+                    <DxDateEdit @bind-Date="@FIngreso"
+                                DisplayFormat="dd/MM/yyyy"
+                                NullText="//" />
+                </div>
+            </div>
+
+            <div class="info-row-3">
+                <div class="input small-input">
+                    <label for="antiguedad">Antigüedad</label>
+                    <DxTextBox @bind-Text="@Antiguedad" NullText="" />
+                </div>
+
+                <div class="input">
+                    <label for="antiguedadAcumulada">Antigüedad Acumulada</label>
+                    <DxTextBox @bind-Text="@AntiguedadAcumulada" NullText="" />
+                </div>
+            </div>
+
+            <div class="info-row-4">
+                <div class="input small-input">
+                    <label for="noControl">No Control</label>
+                    <DxTextBox @bind-Text="@NoControl" NullText="" />
+                </div>
+
+                <div class="input">
+                    <label for="registrado">Registrado</label>
+                    <DxDateEdit @bind-Date="@Registrado"
+                                DisplayFormat="dd/MM/yyyy"
+                                NullText="//" />
+                </div>
+
+                <DxCheckBox style="min-width:fit-content;" @bind-Checked="@FijarTipo">Fijar Tipo</DxCheckBox>
+            </div>
+
+            <div class="info-row-5">
+                <div class="input">
+                    <label for="tipoRegistro">Tipo registro</label>
+                    <DxTextBox @bind-Text="@TipoRegistro"
+                               NullText="Tipo registro"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchTipoRegistro"
+                                            Tooltip="Buscar tipo" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <div class="info-row-6">
+                <div class="input">
+                    <label for="enfermedad">Enfermedad</label>
+                    <DxTextBox @bind-Text="@Enfermedad"
+                               NullText="Enfermedad"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search"
+                                            Click="@OnSearchEnfermedad"
+                                            Tooltip="Buscar enfermedad" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Three Panels Section -->
+        <div class="panels-section">
+            <!-- Asistencia Panel -->
+            <div class="panel asistencia-panel">
+                <div class="panel-header">
+                    <DxCheckBox @bind-Checked="@AsistenciaEnabled">Asistencia</DxCheckBox>
+                </div>
+                <div class="panel-body">
+                    <div class="input">
+                        <label>Desde</label>
+                        <DxDateEdit @bind-Date="@AsistenciaDesde"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//"
+                                    Enabled="@AsistenciaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Días</label>
+                        <DxSpinEdit @bind-Value="@AsistenciaDias"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00"
+                                    Enabled="@AsistenciaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Hasta</label>
+                        <DxDateEdit @bind-Date="@AsistenciaHasta"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//"
+                                    Enabled="@AsistenciaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Aplica</label>
+                        <DxDateEdit @bind-Date="@AsistenciaAplica"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//"
+                                    Enabled="@AsistenciaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Comentario</label>
+                        <DxMemo @bind-Text="@AsistenciaComentario"
+                                Rows="3"
+                                NullText="Comentario..."
+                                Enabled="@AsistenciaEnabled" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Permisos Panel -->
+            <div class="panel permisos-panel">
+                <div class="panel-header">
+                    <DxCheckBox @bind-Checked="@PermisosEnabled">Permisos</DxCheckBox>
+                </div>
+                <div class="panel-body">
+                    <div class="input">
+                        <label>Fecha</label>
+                        <DxDateEdit @bind-Date="@PermisosFecha"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//"
+                                    Enabled="@PermisosEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Desde</label>
+                        <DxTimeEdit @bind-Time="@PermisosDesde"
+                                    DisplayFormat="HH:mm"
+                                    NullText="00:00"
+                                    Enabled="@PermisosEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Hasta</label>
+                        <DxTimeEdit @bind-Time="@PermisosHasta"
+                                    DisplayFormat="HH:mm"
+                                    NullText="00:00"
+                                    Enabled="@PermisosEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Horas</label>
+                        <DxSpinEdit @bind-Value="@PermisosHoras"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00"
+                                    Enabled="@PermisosEnabled" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tardanza Panel -->
+            <div class="panel tardanza-panel">
+                <div class="panel-header">
+                    <DxCheckBox @bind-Checked="@TardanzaEnabled">Tardanza</DxCheckBox>
+                </div>
+                <div class="panel-body">
+                    <div class="input">
+                        <label>Fecha</label>
+                        <DxDateEdit @bind-Date="@TardanzaFecha"
+                                    DisplayFormat="dd/MM/yyyy"
+                                    NullText="//"
+                                    Enabled="@TardanzaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Hora Llegada</label>
+                        <DxTimeEdit @bind-Time="@TardanzaHoraLlegada"
+                                    DisplayFormat="HH:mm"
+                                    NullText="00:00"
+                                    Enabled="@TardanzaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>Horas perdidas</label>
+                        <DxSpinEdit @bind-Value="@TardanzaHorasPerdidas"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00"
+                                    Enabled="@TardanzaEnabled" />
+                    </div>
+                    <div class="input">
+                        <label>¿Pagado?</label>
+                        <div style="display:flex; gap:10px;">
+                        <DxRadio GroupName="accion"
+                                 @bind-GroupValue="@TardanzaPagado"
+                                 Value="@("Si")">
+                            Si
+                        </DxRadio>
+                        <DxRadio GroupName="accion"
+                                 @bind-GroupValue="@TardanzaPagado"
+                                 Value="@("No")">
+                            No
+                        </DxRadio>
+                        </div>
+                    </div>
+                    <div class="input">
+                        <label>Costo</label>
+                        <DxSpinEdit @bind-Value="@TardanzaCosto"
+                                    DisplayFormat="N2"
+                                    MinValue="0"
+                                    NullText="0.00"
+                                    Enabled="@TardanzaEnabled" />
+                    </div>
+                    <div class="input">
+                        <DxCheckBox @bind-Checked="@TardanzaProponerNomina"
+                                    Enabled="@TardanzaEnabled">Proponer en nómina</DxCheckBox>
+                    </div>
+                    <div class="input">
+                        <label>Cant. Periodos.</label>
+                        <DxSpinEdit @bind-Value="@TardanzaCantPeriodos"
+                                    MinValue="0"
+                                    NullText="0"
+                                    Enabled="@TardanzaEnabled" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Section -->
+        <div class="grid-section">
+            <DxGrid Data="@RegistrosList"
+                    CssClass="registros-grid"
+                    ShowGroupPanel="false">
+                <Columns>
+                    <DxGridSelectionColumn Width="40px" />
+                    <DxGridDataColumn FieldName="NoControl" Caption="NoControl" Width="100%" />
+                    <DxGridDataColumn FieldName="IcTipo" Caption="IcTipo" Width="100%" />
+                    <DxGridDataColumn FieldName="DscTipo" Caption="DscTipo" Width="100%" />
+                    <DxGridDataColumn FieldName="Registro" Caption="Registro" Width="100%" />
+                    <DxGridDataColumn FieldName="Desde" Caption="Desde" Width="100%" />
+                    <DxGridDataColumn FieldName="Hasta" Caption="Hasta" Width="100%" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Employee info fields
+    private string Numero { get; set; } = "";
+    private string Empleado { get; set; } = "";
+    private string Turno { get; set; } = "";
+    private DateTime? FIngreso { get; set; }
+    private string Antiguedad { get; set; } = "";
+    private string AntiguedadAcumulada { get; set; } = "";
+    private string NoControl { get; set; } = "";
+    private DateTime? Registrado { get; set; }
+    private bool FijarTipo { get; set; } = false;
+    private string TipoRegistro { get; set; } = "";
+    private string Enfermedad { get; set; } = "";
+
+    // Asistencia panel
+    private bool AsistenciaEnabled { get; set; } = false;
+    private DateTime? AsistenciaDesde { get; set; }
+    private decimal AsistenciaDias { get; set; } = 0.00m;
+    private DateTime? AsistenciaHasta { get; set; }
+    private DateTime? AsistenciaAplica { get; set; }
+    private string AsistenciaComentario { get; set; } = "";
+
+    // Permisos panel
+    private bool PermisosEnabled { get; set; } = false;
+    private DateTime? PermisosFecha { get; set; }
+    private TimeSpan? PermisosDesde { get; set; }
+    private TimeSpan? PermisosHasta { get; set; }
+    private decimal PermisosHoras { get; set; } = 0.00m;
+
+    // Tardanza panel
+    private bool TardanzaEnabled { get; set; } = false;
+    private DateTime? TardanzaFecha { get; set; }
+    private TimeSpan? TardanzaHoraLlegada { get; set; }
+    private decimal TardanzaHorasPerdidas { get; set; } = 0.00m;
+    private string TardanzaPagado { get; set; } = "No";
+    private decimal TardanzaCosto { get; set; } = 0.00m;
+    private bool TardanzaProponerNomina { get; set; } = false;
+    private int TardanzaCantPeriodos { get; set; } = 0;
+
+    // Grid data
+    private List<RegistroItem> RegistrosList = new();
+
+    // Radio button options
+    private List<SelectItem> PagadoOptions = new()
+    {
+        new SelectItem { Text = "Si", Value = "Si" },
+        new SelectItem { Text = "No", Value = "No" }
+    };
+
+    private void OnSearchNumero()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnEnviarExpediente()
+    {
+        // TODO: Implement send to expediente logic
+    }
+
+    private void OnCopyRegistrado()
+    {
+        // TODO: Implement copy logic
+    }
+
+    private void OnSearchTipoRegistro()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void OnSearchEnfermedad()
+    {
+        // TODO: Implement search logic
+    }
+
+    private void HandleAdd()
+    {
+        // TODO: Implement add logic
+    }
+
+    private void HandleSave()
+    {
+        // TODO: Implement save logic
+    }
+
+    private void HandleClose()
+    {
+        // TODO: Implement close logic
+    }
+
+    public class RegistroItem
+    {
+        public string NoControl { get; set; } = "";
+        public string IcTipo { get; set; } = "";
+        public string DscTipo { get; set; } = "";
+        public string Registro { get; set; } = "";
+        public string Desde { get; set; } = "";
+        public string Hasta { get; set; } = "";
+    }
+
+    public class SelectItem
+    {
+        public string Text { get; set; } = "";
+        public string Value { get; set; } = "";
+    }
+}

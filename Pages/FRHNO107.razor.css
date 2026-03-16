@@ -1,0 +1,182 @@
+/* Plan de Salud form styling */
+.plan-salud-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+}
+
+    /* Form fields styling */
+    .plan-salud-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+        .plan-salud-form .input label {
+            font-weight: 500;
+            color: #495057;
+            font-size: 14px;
+        }
+
+.dxbl-modal-body {
+    background-color: #fbf9f9 !important;
+}
+/* Condición row with button */
+.condicion-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.condicion-field {
+    flex: 1;
+}
+
+.planes-button-section {
+    display: flex;
+    align-items: flex-end;
+}
+
+.planes-btn {
+    height: 38px;
+    min-width: 100px;
+}
+
+/* Invisible row styling */
+.invisible-row {
+    width: 100%;
+}
+
+.invisible-field {
+    width: 200px;
+}
+
+/* Search field styling */
+.search-field {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Modal styling */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    padding: 15px;
+    box-shadow: none !important;
+}
+
+/* Filter section styling */
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 15px;
+}
+
+.filter-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-section {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+
+.icon-btn {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+}
+
+/* Grid styling */
+.planes-grid {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+}
+
+.modal-grid {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .plan-salud-form {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .condicion-row {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .planes-button-section {
+        align-items: center;
+        padding-bottom: 0;
+    }
+
+    .invisible-field {
+        width: 100%;
+    }
+
+    .filter-options {
+        gap: 15px;
+    }
+
+    .search-section {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .action-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .plan-salud-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .filter-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        padding: 10px;
+        gap: 15px;
+    }
+}

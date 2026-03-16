@@ -1,0 +1,578 @@
+@page "/FRHCA106New"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHCA106 - Cartas administrativas" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Superior -->
+        <div class="top-section">
+            <!-- Tipo Empleado y Campos -->
+            <div class="employee-section">
+                <div class="radio-group">
+                    <label class="group-title">Tipo Empleado</label>
+                    <div class="radio-options">
+                        <DxRadioGroup @bind-Value="@TipoEmpleadoValue" 
+                                     Data="@TipoEmpleadoOptions" 
+                                     ValueFieldName="Value"
+                                     TextFieldName="Text"
+                                     TData="RadioOption"
+                                     TValue="string"
+                                     Orientation="Orientation.Vertical" />
+                    </div>
+                </div>
+                
+                <div class="fields-section">
+                    <div class="form-row">
+                        <div class="input-field">
+                            <label>Número</label>
+                            <DxTextBox @bind-Text="@NumeroValue" />
+                        </div>
+                        <div class="toolbar-actions">
+                            <DxButton IconCssClass="fi fi-rr-search" 
+                                     CssClass="icon-btn secondary-btn" 
+                                     Click="@OnSearchNumeroClick" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="input-field">
+                            <label>Tipo Carta</label>
+                            <DxTextBox @bind-Text="@TipoCartaValue" />
+                        </div>
+                        <div class="toolbar-actions">
+                            <DxButton IconCssClass="fi fi-rr-search" 
+                                     CssClass="icon-btn secondary-btn" 
+                                     Click="@OnSearchTipoCartaClick" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="checkbox-section">
+                            <DxCheckBox @bind-Checked="@FijarTipoOption">Fijar Tipo</DxCheckBox>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tipos-section">
+                    <label class="group-title">Tipos</label>
+                    <div class="tipos-options">
+                        <DxRadioGroup @bind-Value="@TiposValue" 
+                                     Data="@TiposOptions" 
+                                     ValueFieldName="Value"
+                                     TextFieldName="Text"
+                                     TData="RadioOption"
+                                     TValue="string"
+                                     Orientation="Orientation.Vertical" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Texto de la carta -->
+        <div class="text-section">
+            <div class="input-field">
+                <label>Texto de la carta</label>
+                <DxMemo @bind-Value="@TextoCartaValue" 
+                       Rows="12" 
+                       NullText="Escriba el contenido de la carta aquí..." />
+            </div>
+        </div>
+
+        <!-- Grid Section -->
+        <div class="grid-section">
+            <DxGrid Data="@RequerimientosData" CssClass="custom-grid">
+                <Columns>
+                    <DxGridDataColumn FieldName="IdRequerimiento" Caption="IdRequerimiento" Width="100%" />
+                    <DxGridDataColumn FieldName="EmpleadoNombre" Caption="EmpleadoNombre" Width="100%" />
+                    <DxGridDataColumn FieldName="Requerimiento" Caption="Requerimiento" Width="100%" />
+                    <DxGridDataColumn FieldName="FechaSolicitar" Caption="FechaSolicitar" Width="100%" />
+                </Columns>
+            </DxGrid>
+        </div>
+
+        <!-- Sección Inferior -->
+        <div class="bottom-section">
+            <div class="disco-section">
+                <div class="disco-row">
+                    <label class="disco-label">Disco</label>
+                </div>
+                <div class="disco-fields">
+                    <div class="form-row">
+                        <div class="input-field">
+                            <label>Tipo</label>
+                            <DxTextBox @bind-Text="@DiscoTipoValue" />
+                        </div>
+                        <div class="input-field">
+                            <label>Nombre</label>
+                            <DxTextBox @bind-Text="@DiscoNombreValue" />
+                        </div>
+                        <div class="disco-actions">
+                            <DxButton IconCssClass="fi fi-rr-check" 
+                                     CssClass="icon-btn success-btn" 
+                                     Click="@OnConfirmDiscoClick" />
+                            <DxButton IconCssClass="fi fi-rr-cross" 
+                                     CssClass="icon-btn danger-btn" 
+                                     Click="@OnCancelDiscoClick" />
+                        </div>
+                    </div>
+                </div>
+                <div class="disco-options">
+                    <DxCheckBox @bind-Checked="@ConTimbreOption">Con Timbre</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@CompletarOption">Completar</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@AceptarSecuenciaOption">Aceptar Secuencia</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@CambiarTipoTamanoOption">Cambiar tipo y tamaño de letra</DxCheckBox>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Top section */
+    .top-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .employee-section {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    /* Radio groups */
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 0 0 120px;
+    }
+
+    .group-title {
+        font-weight: 600;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .radio-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Fields section */
+    .fields-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 350px;
+    }
+
+    /* Tipos section */
+    .tipos-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 0 0 120px;
+    }
+
+    .tipos-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+        min-height: 50px;
+    }
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Checkbox section */
+    .checkbox-section {
+        display: flex;
+        align-items: center;
+        padding-bottom: 5px;
+    }
+
+    /* Toolbar actions */
+    .toolbar-actions {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+        align-items: flex-end;
+        padding-bottom: 5px;
+    }
+
+    /* Text section */
+    .text-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+
+    /* Grid section */
+    .grid-section {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .custom-grid {
+        border: none;
+        border-radius: 0;
+    }
+
+    /* Bottom section */
+    .bottom-section {
+        border-top: 1px solid #e0e0e0;
+        padding-top: 20px;
+    }
+
+    .disco-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .disco-row {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .disco-label {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .disco-fields {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .disco-actions {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+        align-items: flex-end;
+    }
+
+    .disco-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: flex-start;
+        padding: 15px 0;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    /* Botones */
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .danger-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .danger-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-memo {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-memo-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-memo-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Radio buttons and checkboxes */
+    .dx-radiobutton-checked .dx-radiobutton-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-radiobutton:hover .dx-radiobutton-icon,
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Grid específico */
+    .dx-grid-header-content {
+        background-color: #f8f9fa !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+    }
+
+    .dx-grid-data-row:nth-child(even) {
+        background-color: #f8f9fa !important;
+    }
+
+    .dx-grid-data-row:hover {
+        background-color: rgba(220, 53, 69, 0.05) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1024px) {
+        .employee-section {
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .fields-section {
+            max-width: 100%;
+        }
+
+        .disco-options {
+            gap: 15px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .form-container {
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .employee-section {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .radio-group,
+        .tipos-section {
+            flex: none;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+            min-height: auto;
+        }
+
+        .input-field {
+            min-width: auto;
+        }
+
+        .checkbox-section {
+            padding-bottom: 0;
+        }
+
+        .disco-options {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+            padding: 15px;
+        }
+
+
+        .disco-options {
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string TipoEmpleadoValue { get; set; } = "Individual";
+    private string NumeroValue { get; set; } = "";
+    private string TipoCartaValue { get; set; } = "";
+    private bool FijarTipoOption { get; set; } = false;
+    private string TiposValue { get; set; } = "Cartas";
+    private string TextoCartaValue { get; set; } = "";
+    private string DiscoTipoValue { get; set; } = "";
+    private string DiscoNombreValue { get; set; } = "";
+    private bool ConTimbreOption { get; set; } = false;
+    private bool CompletarOption { get; set; } = false;
+    private bool AceptarSecuenciaOption { get; set; } = false;
+    private bool CambiarTipoTamanoOption { get; set; } = false;
+
+    // Listas de datos
+    private List<RadioOption> TipoEmpleadoOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Individual", Text = "Individual" },
+        new RadioOption { Value = "Colectiva", Text = "Colectiva" },
+        new RadioOption { Value = "General", Text = "General" }
+    };
+
+    private List<RadioOption> TiposOptions = new List<RadioOption>
+    {
+        new RadioOption { Value = "Cartas", Text = "Cartas" },
+        new RadioOption { Value = "Historicos", Text = "Históricos" },
+        new RadioOption { Value = "Cuentos", Text = "Cuentos" },
+        new RadioOption { Value = "Oficial", Text = "Oficial" },
+        new RadioOption { Value = "Etiquetas", Text = "Etiquetas" }
+    };
+
+    private List<RequerimientoItem> RequerimientosData = new List<RequerimientoItem>
+    {
+        new RequerimientoItem 
+        { 
+            IdRequerimiento = "REQ001", 
+            EmpleadoNombre = "Juan Pérez", 
+            Requerimiento = "Certificación de trabajo", 
+            FechaSolicitar = "15/12/2024" 
+        },
+        new RequerimientoItem 
+        { 
+            IdRequerimiento = "REQ002", 
+            EmpleadoNombre = "María González", 
+            Requerimiento = "Carta de recomendación", 
+            FechaSolicitar = "18/12/2024" 
+        },
+        new RequerimientoItem 
+        { 
+            IdRequerimiento = "REQ003", 
+            EmpleadoNombre = "Carlos Rodríguez", 
+            Requerimiento = "Constancia salarial", 
+            FechaSolicitar = "20/12/2024" 
+        }
+    };
+
+    public class RadioOption
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+
+    public class RequerimientoItem
+    {
+        public string IdRequerimiento { get; set; } = "";
+        public string EmpleadoNombre { get; set; } = "";
+        public string Requerimiento { get; set; } = "";
+        public string FechaSolicitar { get; set; } = "";
+    }
+    
+    // Event handlers
+    private void OnSearchNumeroClick() => Console.WriteLine("Buscar número");
+    private void OnSearchTipoCartaClick() => Console.WriteLine("Buscar tipo carta");
+    private void OnConfirmDiscoClick() => Console.WriteLine("Confirmar disco");
+    private void OnCancelDiscoClick() => Console.WriteLine("Cancelar disco");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Carta administrativa guardada!");
+    }
+}

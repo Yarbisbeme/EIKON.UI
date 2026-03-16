@@ -1,0 +1,198 @@
+/* FRHRJ101 - Importar Datos de Reloj */
+
+.frhrj101-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+    /* Standard Input Field */
+    .frhrj101-form .input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+        .frhrj101-form .input label {
+            font-weight: 500;
+            color: #33363f;
+            font-size: 14px;
+        }
+
+    /* Radio Section */
+    .frhrj101-form .radio-section {
+        display: flex;
+        gap:10px;
+    }
+
+    .frhrj101-form .import-radio-group ::deep .dx-radiogroup-items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .frhrj101-form .import-radio-group ::deep .dx-radiobutton {
+        margin-bottom: 0;
+    }
+
+    .frhrj101-form .import-radio-group ::deep .dx-radiobutton-icon {
+        border: 1px solid #bfbfbf;
+        border-radius: 50%;
+    }
+
+    .frhrj101-form .import-radio-group ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    /* Dates Section */
+    .frhrj101-form .dates-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+        border: 1px solid #bfbfbf;
+        border-radius: 4px;
+    }
+
+    .frhrj101-form .date-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .frhrj101-form .date-label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+        min-width: 50px;
+    }
+
+    .frhrj101-form .date-input {
+        max-width: 150px;
+    }
+
+    .frhrj101-form .calendar-btn {
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    /* Checkbox Section */
+    .frhrj101-form .checkbox-section {
+        padding: 8px 0;
+    }
+
+    /* ===== DevExpress Component Overrides ===== */
+    .frhrj101-form ::deep .dx-textbox-container {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhrj101-form ::deep .dx-textbox-container:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .frhrj101-form ::deep .dx-dropdowneditor-input-wrapper {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhrj101-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    /* DateEdit */
+    .frhrj101-form ::deep .dx-dateedit-container {
+        border: 1px solid #bfbfbf !important;
+        border-radius: 4px;
+    }
+
+        .frhrj101-form ::deep .dx-dateedit-container:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    /* Editor Buttons */
+    .frhrj101-form ::deep .dx-editor-button {
+        background-color: #f8f9fa;
+        border-left: 1px solid #bfbfbf !important;
+    }
+
+        .frhrj101-form ::deep .dx-editor-button:hover {
+            background-color: #e9ecef;
+        }
+
+    /* Checkboxes */
+    .frhrj101-form ::deep .dx-checkbox {
+        margin-bottom: 0;
+    }
+
+    .frhrj101-form ::deep .dx-checkbox-icon {
+        border: 1px solid #bfbfbf;
+        border-radius: 3px;
+    }
+
+    .frhrj101-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    /* Button Styling */
+    .frhrj101-form ::deep .dx-button {
+        border-radius: 4px;
+    }
+
+    .frhrj101-form ::deep .dx-button-secondary {
+        background-color: #fff;
+        border: 1px solid #bfbfbf;
+        color: #33363f;
+    }
+
+        .frhrj101-form ::deep .dx-button-secondary:hover {
+            background-color: #e9ecef;
+            border-color: #007bff;
+        }
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .frhrj101-form {
+        max-width: 100%;
+        gap: 15px;
+    }
+
+        .frhrj101-form .date-row {
+            flex-wrap: wrap;
+        }
+
+        .frhrj101-form .date-input {
+            max-width: 100%;
+        }
+
+        .frhrj101-form .dates-section {
+            padding: 12px;
+        }
+}
+
+@media (max-width: 480px) {
+    .frhrj101-form {
+        gap: 12px;
+    }
+
+        .frhrj101-form .input label,
+        .frhrj101-form .date-label {
+            font-size: 13px;
+        }
+
+        .frhrj101-form .date-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .frhrj101-form .date-label {
+            min-width: 100%;
+        }
+}

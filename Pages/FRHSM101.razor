@@ -1,0 +1,215 @@
+﻿@page "/FRHSM101"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHSM101 - Planes de Salud Empresas Afiliadas" BackUrl="/dash" />
+
+    <div class="page-header">
+
+        <div class="page-search">
+            <div class="input-search">
+                <label for="user">Código</label>
+                <DxTextBox @bind-Text="@codigo"
+                           NullText="Código"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+
+        </div>
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Layout principal de dos columnas -->
+        <div class="main-layout">
+            <!-- Columna Izquierda -->
+            <div class="left-column">
+                <!-- Descripción -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Descripción</label>
+                        <DxTextBox @bind-Text="@DescripcionValue" />
+                    </div>
+                    <div class="checkbox-section">
+                        <DxCheckBox @bind-Checked="@SucursalOption">Sucursal</DxCheckBox>
+                    </div>
+                </div>
+
+                <!-- Contacto -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Contacto</label>
+                        <DxTextBox @bind-Text="@ContactoValue" />
+                    </div>
+                </div>
+
+                <!-- Dirección -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Dirección</label>
+                        <DxTextBox @bind-Text="@DireccionValue" />
+                    </div>
+                </div>
+
+                <!-- Provincia -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Provincia</label>
+                        <DxTextBox @bind-Text="@ProvinciaValue" />
+                    </div>
+                </div>
+
+                <!-- Registro -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Registro</label>
+                        <DxTextBox @bind-Text="@RegistroValue" />
+                    </div>
+                </div>
+
+                <!-- E-Mail -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>E-Mail</label>
+                        <DxTextBox @bind-Text="@EmailValue" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="right-column">
+                <!-- Parque ZF y Zona Franca -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Parque ZF</label>
+                        <DxTextBox @bind-Text="@ParqueZFValue" />
+                    </div>
+                    <div class="checkbox-section-right">
+                        <DxCheckBox @bind-Checked="@ZonaFrancaOption">Zona Franca</DxCheckBox>
+                    </div>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Teléfono</label>
+                        <DxMaskedInput @bind-Value="@TelefonoValue"
+                                       Mask="000-000-0000"
+                                       NullText="___-___-____" />
+                    </div>
+                </div>
+
+                <!-- Fax -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Fax</label>
+                        <DxMaskedInput @bind-Value="@FaxValue"
+                                       Mask="000-000-0000"
+                                       NullText="___-___-____" />
+                    </div>
+                </div>
+
+                <!-- Póliza Acc -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>Póliza Acc</label>
+                        <DxTextBox @bind-Text="@PolizaAccValue" />
+                    </div>
+                </div>
+
+                <!-- No. IDSS -->
+                <div class="form-row">
+                    <div class="input-field">
+                        <label>No. IDSS</label>
+                        <DxTextBox @bind-Text="@NoIdssValue" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección inferior - Campos finales en fila -->
+        <div class="bottom-section">
+            <div class="form-row">
+                <div class="input-field">
+                    <label>RNL</label>
+                    <DxTextBox @bind-Text="@RnlValue" />
+                </div>
+                <div class="input-field">
+                    <label>Clase</label>
+                    <DxTextBox @bind-Text="@ClaseValue" />
+                </div>
+                <div class="input-field">
+                    <label>Fecha Inicio</label>
+                    <DxDateEdit @bind-Date="@FechaInicioValue"
+                                NullText="dd/mm/yyyy">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-calendar" />
+                        </Buttons>
+                    </DxDateEdit>
+                </div>
+                <div class="input-field">
+                    <label>Capital</label>
+                    <DxSpinEdit @bind-Value="@CapitalValue"
+                                MinValue="0"
+                                MaxValue="999999999"
+                                DisplayFormat="C2" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    private string codigo { get; set; } = "00000001";
+
+    // Campos del formulario
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private string ContactoValue { get; set; } = "";
+    private string DireccionValue { get; set; } = "";
+    private string ProvinciaValue { get; set; } = "";
+    private string RegistroValue { get; set; } = "";
+    private string EmailValue { get; set; } = "";
+    private string ParqueZFValue { get; set; } = "";
+    private string TelefonoValue { get; set; } = "";
+    private string FaxValue { get; set; } = "";
+    private string PolizaAccValue { get; set; } = "";
+    private string NoIdssValue { get; set; } = "";
+    private string RnlValue { get; set; } = "";
+    private string ClaseValue { get; set; } = "";
+    private DateTime? FechaInicioValue { get; set; }
+    private decimal CapitalValue { get; set; } = 0.00m;
+
+    // Opciones de checkbox
+    private bool SucursalOption { get; set; } = false;
+    private bool ZonaFrancaOption { get; set; } = false;
+
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Oficina Regional guardada!");
+    }
+}

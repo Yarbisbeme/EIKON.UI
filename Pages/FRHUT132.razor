@@ -1,0 +1,491 @@
+@page "/FRHUT132"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.UI
+@using System.ComponentModel.DataAnnotations
+
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<div class="page">
+    <Breadcrumb Title="FRHUT132 - Inscribir reportes" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Primera Fila - Código y Descripción -->
+        <div class="form-row">
+            <div class="input-field">
+                <label>Código</label>
+                <DxTextBox @bind-Text="@CodigoValue"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                       Click="@OnSearchCodigoClick" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+            <div class="input-field wide">
+                <label>Descripción</label>
+                <DxTextBox @bind-Text="@DescripcionValue" />
+            </div>
+        </div>
+
+        <!-- Segunda Fila - Clasificación y Nombre Reporte -->
+        <div class="form-row">
+            <div class="input-field">
+                <label>Clasificación</label>
+                <DxComboBox Data="@ClasificacionList" 
+                           @bind-Value="@SelectedClasificacion" 
+                           NullText="Seleccionar clasificación"
+                           TextFieldName="Name" 
+                           ValueFieldName="Id" />
+            </div>
+            <div class="input-field wide">
+                <label>Nombre Reporte</label>
+                <DxTextBox @bind-Text="@NombreReporteValue" />
+            </div>
+        </div>
+
+        <!-- Tercera Fila - Checkboxes de Opciones -->
+        <div class="opciones-section">
+            <div class="opciones-group">
+                <div class="opciones-column">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ProcesoOption">Proceso</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@PagadaOption">Pagada</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@CerradaOption">Cerrada</DxCheckBox>
+                    </div>
+                </div>
+                <div class="opciones-column">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ChequeOption">Cheque</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@VolanteOption">Volante</DxCheckBox>
+                    </div>
+                </div>
+                <div class="opciones-column">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@TransacOption">Transac</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ColumnaOption">Columna</DxCheckBox>
+                    </div>
+                </div>
+                <div class="opciones-column">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@LinealOption">Lineal</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ItemOption">Item</DxCheckBox>
+                    </div>
+                </div>
+                <div class="opciones-column">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@MultipleOption">Multiple</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ScriptsOption">Scripts</DxCheckBox>
+                    </div>
+                </div>
+                <div class="opciones-column">
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@ActivoOption">Activo</DxCheckBox>
+                    </div>
+                    <div class="checkbox-row">
+                        <DxCheckBox @bind-Checked="@InactivoOption">Inactivo</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Tabs - Comentario y SQL -->
+        <div class="tabs-section">
+            <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" CssClass="custom-tabs">
+                <DxTabPage Text="Comentario" CssClass="tab-page">
+                    <Content>
+                        <div class="tab-content">
+                            <DxMemo @bind-Value="@ComentarioValue" 
+                                   Rows="12" 
+                                   NullText="Escriba sus comentarios aquí..." 
+                                   CssClass="full-memo" />
+                        </div>
+                    </Content>
+                </DxTabPage>
+                <DxTabPage Text="SQL" CssClass="tab-page">
+                    <Content>
+                        <div class="tab-content">
+                            <DxMemo @bind-Value="@SqlValue" 
+                                   Rows="12" 
+                                   NullText="Escriba la consulta SQL aquí..." 
+                                   CssClass="sql-memo" />
+                        </div>
+                    </Content>
+                </DxTabPage>
+            </DxTabs>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        padding: 20px 0;
+        width: 100%;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        min-height: 60px;
+    }
+
+    /* Input fields */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    .input-field label {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* Opciones section */
+    .opciones-section {
+        margin-top: 15px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+    .opciones-group {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+    }
+
+    .opciones-column {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .checkbox-row {
+        display: flex;
+        align-items: center;
+        min-height: 35px;
+    }
+
+    /* Tabs section - Comentario y SQL */
+    .tabs-section {
+        margin-top: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .custom-tabs {
+        border: none;
+    }
+
+    .tab-content {
+        padding: 20px;
+        background-color: transparent;
+    }
+
+    .full-memo,
+    .sql-memo {
+        width: 100%;
+        border: none;
+    }
+
+    .full-memo .dx-memo-container,
+    .sql-memo .dx-memo-container {
+        background-color: transparent !important;
+        border: 1px solid #ced4da !important;
+        min-height: 350px !important;
+    }
+
+    /* DevExpress Components */
+    .dx-textbox,
+    .dx-combobox,
+    .dx-memo {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container,
+    .dx-memo-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within,
+    .dx-memo-container:focus-within {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Memo específico */
+    .dx-memo-container .dx-texteditor-input {
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    /* SQL Memo específico */
+    .sql-memo .dx-memo-container .dx-texteditor-input {
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 13px;
+        background-color: transparent !important;
+    }
+
+    /* Comentario Memo específico */
+    .full-memo .dx-memo-container .dx-texteditor-input {
+        background-color: transparent !important;
+    }
+
+    /* Tabs específicos */
+    .dx-tabs-header {
+        background-color: #f8f9fa !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+    }
+
+    .dx-tab {
+        border: none !important;
+        background-color: transparent !important;
+        color: #6c757d !important;
+        font-weight: 500 !important;
+    }
+
+    .dx-tab:hover {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+        color: #dc3545 !important;
+    }
+
+    .dx-tab-active {
+        background-color: #dc3545 !important;
+        color: white !important;
+        border-radius: 6px 6px 0 0 !important;
+    }
+
+    .dx-tab-content {
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    /* Checkboxes */
+    .dx-checkbox {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .dx-checkbox:hover .dx-checkbox-icon {
+        border-color: #dc3545 !important;
+    }
+
+    /* Search button styling */
+    .dx-editor-button {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+        border-radius: 4px !important;
+    }
+
+    .dx-editor-button:hover {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 1200px) {
+        .opciones-group {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+    }
+
+    media (max-width: 1024px) {
+        .form-container {
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .form-row {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .opciones-group {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .opciones-section {
+            padding: 15px;
+        }
+
+        .tabs-section {
+            margin-top: 15px;
+        }
+    }
+
+    media (max-width: 768px) {
+        .form-container {
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+            min-height: auto;
+        }
+
+        .input-field {
+            min-width: auto;
+        }
+
+        .input-field.wide {
+            flex: 1;
+        }
+
+        .opciones-group {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .opciones-section {
+            padding: 15px;
+        }
+
+        .full-memo .dx-memo-container,
+        .sql-memo .dx-memo-container {
+            min-height: 250px !important;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .form-row {
+            gap: 12px;
+        }
+
+        .opciones-group {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .opciones-section {
+            padding: 12px;
+        }
+
+        .checkbox-row {
+            min-height: 30px;
+        }
+
+        .full-memo .dx-memo-container,
+        .sql-memo .dx-memo-container {
+            min-height: 200px !important;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string CodigoValue { get; set; } = "";
+    private string DescripcionValue { get; set; } = "";
+    private int? SelectedClasificacion { get; set; }
+    private string NombreReporteValue { get; set; } = "";
+    private string ComentarioValue { get; set; } = "";
+    private string SqlValue { get; set; } = "";
+    
+    // Tab index
+    private int ActiveTabIndex { get; set; } = 0;
+    
+    // Opciones de checkbox
+    private bool ProcesoOption { get; set; } = false;
+    private bool PagadaOption { get; set; } = false;
+    private bool CerradaOption { get; set; } = false;
+    private bool ChequeOption { get; set; } = false;
+    private bool VolanteOption { get; set; } = false;
+    private bool TransacOption { get; set; } = false;
+    private bool ColumnaOption { get; set; } = false;
+    private bool LinealOption { get; set; } = false;
+    private bool ItemOption { get; set; } = false;
+    private bool MultipleOption { get; set; } = false;
+    private bool ScriptsOption { get; set; } = false;
+    private bool ActivoOption { get; set; } = true;
+    private bool InactivoOption { get; set; } = false;
+
+    // Listas de datos
+    private List<OptionItem> ClasificacionList = new List<OptionItem>
+    {
+        new OptionItem { Id = 1, Name = "Reportes Generales" },
+        new OptionItem { Id = 2, Name = "Reportes Especiales" },
+        new OptionItem { Id = 3, Name = "Reportes Ejecutivos" },
+        new OptionItem { Id = 4, Name = "Reportes Operativos" }
+    };
+
+    public class OptionItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    // Event handlers
+    private void OnSearchCodigoClick() => Console.WriteLine("Buscar código");
+    
+    private async Task HandleClose()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Reporte inscrito exitosamente!");
+    }
+}

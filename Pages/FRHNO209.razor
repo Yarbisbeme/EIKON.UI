@@ -1,0 +1,493 @@
+@page "/FRHNO209"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO209 - Importar transacciones" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal de Campos -->
+        <div class="main-section">
+            <!-- Primera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Formato</label>
+                    <DxTextBox @bind-Text="@FormatoValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchFormatoClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Transacción</label>
+                    <DxTextBox @bind-Text="@TransaccionValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" 
+                                           Click="@OnSearchTransaccionClick" />
+                        </Buttons>
+                    </DxTextBox>
+                </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Período</label>
+                    <DxComboBox Data="@PeriodosList" 
+                               @bind-Value="@SelectedPeriodo" 
+                               NullText="Seleccionar período"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id" />
+                </div>
+            </div>
+
+            <!-- Cuarta Fila -->
+            <div class="form-row full-width">
+                <div class="input-field">
+                    <label>Archivo</label>
+                    <DxTextBox @bind-Text="@ArchivoValue" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Opciones Centrales -->
+        <div class="center-options-section">
+            <div class="options-container">
+                <!-- Primera Fila de Checkboxes -->
+                <div class="checkbox-row">
+                    <div class="checkbox-group left">
+                        <DxCheckBox @bind-Checked="@OkOption">Ok</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@RechazosOption">Rechazos</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@ErrorEmpleadosOption">Error en Empleados</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@ErrorTransaccionesOption">Error en Transacciones</DxCheckBox>
+                    </div>
+                    
+                    <div class="aplicar-label">
+                        <span>Aplicar a nómina</span>
+                    </div>
+                </div>
+
+                <!-- Segunda Fila de Checkboxes -->
+                <div class="checkbox-row">
+                    <div class="checkbox-group special">
+                        <DxCheckBox @bind-Checked="@NominaPrincipalOption">Nómina Principal</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@SobreescribirDatosOption">Sobreescribir datos</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@LimpiarTransaccionOption">Limpiar transacción</DxCheckBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Estados -->
+        <div class="status-section">
+            <div class="status-checkboxes">
+                <DxCheckBox @bind-Checked="@RegularOption">Regular</DxCheckBox>
+                <DxCheckBox @bind-Checked="@TemporeroOption">Temporero</DxCheckBox>
+                <DxCheckBox @bind-Checked="@ExempleadoOption">Exempleado</DxCheckBox>
+                <DxCheckBox @bind-Checked="@PensionadosOption">Pensionados</DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Sección de Reporte -->
+        <div class="report-section">
+            <div class="report-controls">
+                <div class="input-field wide">
+                    <label>Reporte</label>
+                    <DxTextBox @bind-Text="@ReporteValue" />
+                </div>
+                <div class="report-actions">
+                    <DxButton IconCssClass="fi fi-rr-print" 
+                             CssClass="icon-btn info-btn" 
+                             Click="@OnPrintReportClick" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    /* Sección principal */
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+    }
+
+    /* Form rows */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    .form-row.full-width {
+        width: 100%;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    /* Sección de opciones centrales */
+    .center-options-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .checkbox-row {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .checkbox-group {
+        display: flex;
+        gap: 15px;
+    }
+
+    .checkbox-group.left {
+        flex: 1;
+    }
+
+    .checkbox-group.right {
+        flex: 1;
+        justify-content: flex-start;
+    }
+
+    .checkbox-group.special {
+        flex: 2;
+        gap: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+    }
+
+    .aplicar-label {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+        flex: 0 0 auto;
+        margin-left: auto;
+    }
+
+    /* Sección de estados */
+    .status-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .status-checkboxes {
+        display: flex;
+        gap: 25px;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    /* Sección de reporte */
+    .report-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .report-controls {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .report-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* Botones de acción */
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .error-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .error-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .info-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .info-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .secondary-btn {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Estilos para DevExpress Components */
+    .dx-textbox,
+    .dx-combobox {
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container,
+    .dx-combobox-container {
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+
+    .dx-textbox-container:focus-within,
+    .dx-combobox-container:focus-within {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .main-section,
+        .center-options-section,
+        .status-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .form-row,
+        .checkbox-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .checkbox-group.right,
+        .action-buttons,
+        .aplicar-label {
+            justify-content: flex-start;
+            margin-left: 0;
+        }
+
+        .status-checkboxes {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-controls {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .report-actions {
+            justify-content: center;
+        }
+    }
+
+    media (max-width: 480px) {
+        .form-container {
+            gap: 15px;
+        }
+
+        .main-section,
+        .center-options-section,
+        .status-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .options-container {
+            gap: 15px;
+        }
+
+        .action-btn,
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+        }
+
+        .status-checkboxes {
+            gap: 12px;
+        }
+
+        .checkbox-group {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Campos del formulario
+    private string FormatoValue { get; set; } = "";
+    private string TransaccionValue { get; set; } = "";
+    private int? SelectedPeriodo { get; set; }
+    private string ArchivoValue { get; set; } = "";
+    private string ReporteValue { get; set; } = "";
+    
+    // Opciones de checkboxes - primera fila
+    private bool OkOption { get; set; } = false;
+    private bool RechazosOption { get; set; } = false;
+    private bool ErrorEmpleadosOption { get; set; } = false;
+    private bool ErrorTransaccionesOption { get; set; } = false;
+    
+    // Opciones de checkboxes - segunda fila
+    private bool NominaPrincipalOption { get; set; } = true;
+    private bool SobreescribirDatosOption { get; set; } = true;
+    private bool LimpiarTransaccionOption { get; set; } = false;
+    
+    // Estados de empleados
+    private bool RegularOption { get; set; } = true;
+    private bool TemporeroOption { get; set; } = true;
+    private bool ExempleadoOption { get; set; } = false;
+    private bool PensionadosOption { get; set; } = true;
+    
+    // Listas de datos
+    private List<PeriodoItem> PeriodosList = new List<PeriodoItem>
+    {
+        new PeriodoItem { Id = 1, Name = "PERIODO 01 - ENERO" },
+        new PeriodoItem { Id = 2, Name = "PERIODO 02 - FEBRERO" },
+        new PeriodoItem { Id = 3, Name = "PERIODO 03 - MARZO" },
+        new PeriodoItem { Id = 4, Name = "PERIODO 04 - ABRIL" },
+        new PeriodoItem { Id = 5, Name = "PERIODO 05 - MAYO" },
+        new PeriodoItem { Id = 6, Name = "PERIODO 06 - JUNIO" },
+        new PeriodoItem { Id = 7, Name = "PERIODO 07 - JULIO" },
+        new PeriodoItem { Id = 8, Name = "PERIODO 08 - AGOSTO" },
+        new PeriodoItem { Id = 9, Name = "PERIODO 09 - SEPTIEMBRE" },
+        new PeriodoItem { Id = 10, Name = "PERIODO 10 - OCTUBRE" },
+        new PeriodoItem { Id = 11, Name = "PERIODO 11 - NOVIEMBRE" },
+        new PeriodoItem { Id = 12, Name = "PERIODO 12 - DICIEMBRE" }
+    };
+    
+    public class PeriodoItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    private void OnSearchFormatoClick()
+    {
+        Console.WriteLine($"Buscando formato: {FormatoValue}");
+    }
+    
+    private void OnSearchTransaccionClick()
+    {
+        Console.WriteLine($"Buscando transacción: {TransaccionValue}");
+    }
+    
+    private void OnValidateClick()
+    {
+        Console.WriteLine("Validando importación de transacciones");
+    }
+    
+    private void OnCancelClick()
+    {
+        Console.WriteLine("Cancelando importación de transacciones");
+    }
+    
+    private void OnSettingsClick()
+    {
+        Console.WriteLine("Abriendo configuración de transacciones");
+    }
+    
+    private void OnPrintReportClick()
+    {
+        Console.WriteLine("Imprimiendo reporte de transacciones");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Importación de transacciones guardada!");
+    }
+}

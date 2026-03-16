@@ -1,0 +1,398 @@
+/* Main form container */
+.frhrj113-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Three-column layout */
+.frhrj113-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 15px;
+    width: 100%;
+    min-height: 600px;
+}
+
+/* ========== Panel izquierdo: Lista de empleados ========== */
+.employee-list-panel {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #bfbfbf;
+    background: #fff;
+    overflow: hidden;
+}
+
+.employee-list-header {
+    padding: 10px;
+    border-bottom: 1px solid #bfbfbf;
+    background: #f8f9fa;
+}
+
+.employee-list-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.employee-list-headers {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    background: #ffffcc;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.header-col {
+    padding: 8px;
+    font-weight: 600;
+    color: #33363f;
+    font-size: 13px;
+    border-right: 1px solid #bfbfbf;
+}
+
+    .header-col:last-child {
+        border-right: none;
+    }
+
+.employee-list-items {
+    flex: 1;
+    overflow-y: auto;
+    background: #ffffcc;
+}
+
+.employee-item {
+    display: grid;
+    grid-template-columns: 30px 50px 1fr;
+    padding: 6px 8px;
+    border-bottom: 1px solid #e9ecef;
+    align-items: center;
+    gap: 8px;
+}
+
+    .employee-item:hover {
+        background: #fffacd;
+    }
+
+.emp-numero {
+    font-size: 13px;
+    color: #33363f;
+}
+
+.emp-nombre {
+    font-size: 13px;
+    color: #33363f;
+}
+
+/* ========== Panel central: Main content ========== */
+.main-content-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Filters section */
+.filters-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-radius: 4px;
+}
+
+.filter-row-dates {
+    display: grid;
+    grid-template-columns: 160px 160px 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.date-checkboxes {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.first-section {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+    .first-section:first-child {
+        flex: 2;
+    }
+
+    .first-section:last-child {
+        flex: 1;
+    }
+
+.filter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    align-items: start;
+}
+
+.filter-row-single {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.filters-section .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+    .filters-section .input label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+/* Employee type section */
+.employee-type-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.employee-type-checks {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.employee-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .employee-count label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+.count-value {
+    padding: 4px 12px;
+    background: #fff;
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+    font-weight: 600;
+    color: #33363f;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* Schedule grid section */
+.schedule-grid-section {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.grid-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.grid-btn {
+    padding: 6px 12px;
+    border: 1px solid #bfbfbf;
+    background: #fff;
+    color: #33363f;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .grid-btn:hover {
+        background: #e9ecef;
+    }
+
+    .grid-btn i {
+        font-size: 14px;
+    }
+
+/* Grid styling */
+::deep .schedule-grid {
+    width: 100%;
+}
+
+    ::deep .schedule-grid .dx-datagrid-headers {
+        background: #f8f9fa;
+        border-bottom: 2px solid #bfbfbf;
+    }
+
+    ::deep .schedule-grid .dx-header-row {
+        background: #f8f9fa;
+    }
+
+    ::deep .schedule-grid .dx-row {
+        background: #fff;
+    }
+
+        ::deep .schedule-grid .dx-row:nth-child(odd) {
+            background: #ffffcc;
+        }
+
+        ::deep .schedule-grid .dx-row:hover {
+            background: #fffacd;
+        }
+
+    ::deep .schedule-grid .dx-data-row td {
+        border-right: 1px solid #e9ecef;
+    }
+
+/* Bottom options */
+.bottom-options {
+    display: flex;
+    gap: 20px;
+    padding: 12px 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+/* Reporte section */
+.reporte-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .reporte-section label {
+        font-weight: 500;
+        color: #33363f;
+        font-size: 14px;
+    }
+
+/* ========== Panel derecho: Image area ========== */
+.image-panel {
+    border: 1px solid #bfbfbf;
+    display: flex;
+    width: 40%;
+    height: 50%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background: linear-gradient(135deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%, #f8f9fa), linear-gradient(135deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%, #f8f9fa);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+    ::deep .dx-textbox-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+    ::deep .dx-dateedit-container:focus-within {
+        border-color: #007bff !important;
+    }
+
+::deep .dx-checkbox {
+    font-size: 14px;
+    color: #33363f;
+}
+
+/* Responsive design */
+@media (max-width: 1400px) {
+    .frhrj113-layout {
+        grid-template-columns: 180px 1fr
+    }
+}
+
+@media (max-width: 1200px) {
+    .frhrj113-layout {
+        grid-template-columns: 150px 1fr;
+    }
+
+    .image-panel {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhrj113-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .employee-list-panel {
+        max-height: 300px;
+    }
+    .first-section {
+        padding:20px;
+        flex-direction: column-reverse;
+        gap: 12px;
+    }
+    .filter-row-dates {
+        grid-template-columns: 1fr;
+    }
+
+    .date-checkboxes {
+        padding-bottom: 0;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .employee-type-section {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .bottom-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhrj113-form {
+        padding: 10px;
+    }
+
+    .employee-type-checks {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .grid-toolbar {
+        flex-wrap: wrap;
+    }
+}

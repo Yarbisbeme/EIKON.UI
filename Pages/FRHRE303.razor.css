@@ -1,0 +1,277 @@
+/* Main form container */
+.frhre303-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Two-column layout */
+.frhre303-layout {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 20px;
+    width: 100%;
+}
+
+/* ========== Form column (left) ========== */
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-column .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.form-column .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Dual input row */
+.dual-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+.dual-input-row .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.dual-input-row .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Fechas section */
+.fechas-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.fechas-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.fechas-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.fechas-row .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fechas-row .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Beneficios section */
+.beneficios-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.beneficios-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Reporte section */
+.reporte-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.reporte-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.reporte-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.reporte-input {
+    flex: 1;
+}
+
+.action-btn {
+    padding: 8px 12px;
+    border: 1px solid #bfbfbf;
+    background: #f8f9fa;
+    color: #33363f;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    background: #e9ecef;
+}
+
+.action-btn i {
+    font-size: 14px;
+}
+
+/* ========== Side column (right) ========== */
+.side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Image area */
+.image-area {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%, #f8f9fa),
+                linear-gradient(135deg, #f8f9fa 25%, transparent 25%, transparent 75%, #f8f9fa 75%, #f8f9fa);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    border: 1px dashed #bfbfbf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Print options */
+.print-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-dateedit-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-combobox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-combobox-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-memo {
+    border: 1px solid #bfbfbf !important;
+}
+
+::deep .dx-memo:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-checkbox {
+    font-size: 14px;
+    color: #33363f;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .frhre303-layout {
+        grid-template-columns: 1fr 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhre303-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .side-column {
+        order: -1;
+    }
+
+    .dual-input-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fechas-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhre303-form {
+        padding: 10px;
+    }
+
+    .frhre303-layout {
+        gap: 15px;
+    }
+
+    .form-column {
+        gap: 12px;
+    }
+
+    .reporte-row {
+        flex-wrap: wrap;
+    }
+}

@@ -1,0 +1,250 @@
+@page "/FRHSM104"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Ingresos de afiliados a planes de Salud" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhsm104-form">
+        <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" CssClass="frhsm104-tabs">
+            <DxTabPage Text="Ingresos de afiliados">
+                <div class="tab-content">
+                    <div class="main-layout">
+                        <div class="left-section">
+                            <div class="employee-data">
+                                <div class="dual-input-row">
+                                    <div class="input">
+                                        <label>Número</label>
+                                        <DxTextBox @bind-Text="@Numero" NullText="">
+                                            <Buttons>
+                                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchNumero" />
+                                            </Buttons>
+                                        </DxTextBox>
+                                    </div>
+                                    <div class="input">
+                                        <label>Ex-empleado</label>
+                                        <DxTextBox @bind-Text="@ExEmpleado" NullText="" />
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>Empleado</label>
+                                    <DxTextBox @bind-Text="@Empleado" NullText="" ReadOnly="true" />
+                                </div>
+
+                                <div class="dual-input-row">
+                                    <div class="input">
+                                        <label>Cédula</label>
+                                        <DxTextBox @bind-Text="@Cedula" NullText="" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Fecha Ing</label>
+                                        <DxDateEdit @bind-Date="@FechaIngreso" DisplayFormat="dd/MM/yyyy" />
+                                    </div>
+                                </div>
+
+                                <div class="triple-input-row">
+                                    <div class="input">
+                                        <label>Tel Residen</label>
+                                        <DxTextBox @bind-Text="@TelResiden" NullText="" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Tel Celular</label>
+                                        <DxTextBox @bind-Text="@TelCelular" NullText="" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Ext. Telef</label>
+                                        <DxTextBox @bind-Text="@ExtTelef" NullText="" />
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>NSS</label>
+                                    <DxTextBox @bind-Text="@NSS" NullText="" />
+                                </div>
+
+                                <div class="triple-input-row">
+                                    <div class="input">
+                                        <label>Oficina</label>
+                                        <DxTextBox @bind-Text="@Oficina" NullText="" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Salario</label>
+                                        <DxTextBox @bind-Text="@Salario" NullText="" />
+                                    </div>
+                                    <div class="input">
+                                        <label>Categoría</label>
+                                        <DxTextBox @bind-Text="@Categoria" NullText="" />
+                                    </div>
+                                </div>
+
+                                <div class="input">
+                                    <label>Ubicación</label>
+                                    <DxTextBox @bind-Text="@Ubicacion" NullText="" />
+                                </div>
+
+                                <div class="input">
+                                    <label>Cargo</label>
+                                    <DxTextBox @bind-Text="@Cargo" NullText="" />
+                                </div>
+                            </div>
+
+                            <div class="nested-tabs-section">
+                                <DxTabs @bind-ActiveTabIndex="@NestedTabIndex" CssClass="nested-tabs">
+                                    <DxTabPage Text="Afiliado Principal">
+                                        <div class="nested-tab-content">
+                                            <DxGrid Data="@AfiliadoPrincipalData" CssClass="afiliado-grid">
+                                                <Columns>
+                                                    <DxGridDataColumn FieldName="Condicion" Caption="Condición" />
+                                                    <DxGridDataColumn FieldName="TipoPlan" Caption="Tipo Plan" />
+                                                    <DxGridDataColumn FieldName="TipoSeguro" Caption="Tipo Seguro" />
+                                                    <DxGridDataColumn FieldName="Estatus" Caption="Estatus" />
+                                                    <DxGridDataColumn FieldName="Incluido" Caption="Incluido" />
+                                                    <DxGridDataColumn FieldName="Excluido" Caption="Excluido" />
+                                                    <DxGridDataColumn FieldName="Solicitado" Caption="Solicitado" />
+                                                    <DxGridDataColumn FieldName="PagaEmp" Caption="Paga Emp" />
+                                                </Columns>
+                                            </DxGrid>
+                                        </div>
+                                    </DxTabPage>
+
+                                    <DxTabPage Text="Dependientes">
+                                        <div class="nested-tab-content">
+                                            <DxGrid Data="@DependientesData" CssClass="dependientes-grid">
+                                                <Columns>
+                                                    <DxGridDataColumn FieldName="Nombre" Caption="Nombre" />
+                                                    <DxGridDataColumn FieldName="Parentesco" Caption="Parentesco" />
+                                                    <DxGridDataColumn FieldName="FechaNac" Caption="Fecha Nac" />
+                                                    <DxGridDataColumn FieldName="Edad" Caption="Edad" />
+                                                    <DxGridDataColumn FieldName="Sexo" Caption="Sexo" />
+                                                    <DxGridDataColumn FieldName="Cedula" Caption="Cédula" />
+                                                    <DxGridDataColumn FieldName="NSS" Caption="NSS" />
+                                                    <DxGridDataColumn FieldName="Telefono" Caption="Teléfono" />
+                                                    <DxGridDataColumn FieldName="Numero" Caption="Número" />
+                                                </Columns>
+                                            </DxGrid>
+                                        </div>
+                                    </DxTabPage>
+                                </DxTabs>
+                            </div>
+
+                            <div class="input">
+                                <DxCheckBox @bind-Checked="@VerSoloMarcados" Text="Ver solo los Marcados" />
+                            </div>
+
+                            <div class="input">
+                                <label>Comentario</label>
+                                <DxMemo @bind-Text="@Comentario" Rows="3" NullText="" />
+                            </div>
+                        </div>
+
+                        <div class="right-section">
+                            <div class="image-panel">
+                                <div class="no-image">
+                                    <i class="fi fi-rr-user"></i>
+                                    <i class="fi fi-rr-users"></i>
+                                    <p>Imagen<br/>no<br/>disponible</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </DxTabPage>
+
+            <DxTabPage Text="Consulta de Afiliados">
+                <div class="tab-content">
+                    <p>Contenido del tab Consulta de Afiliados</p>
+                </div>
+            </DxTabPage>
+
+            <DxTabPage Text="Crear Familiares">
+                <div class="tab-content">
+                    <p>Contenido del tab Crear Familiares</p>
+                </div>
+            </DxTabPage>
+        </DxTabs>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+    private int ActiveTabIndex { get; set; } = 0;
+    private int NestedTabIndex { get; set; } = 0;
+
+    // Employee data
+    private string Numero { get; set; } = string.Empty;
+    private string ExEmpleado { get; set; } = string.Empty;
+    private string Empleado { get; set; } = string.Empty;
+    private string Cedula { get; set; } = string.Empty;
+    private DateTime? FechaIngreso { get; set; }
+    private string TelResiden { get; set; } = string.Empty;
+    private string TelCelular { get; set; } = string.Empty;
+    private string ExtTelef { get; set; } = string.Empty;
+    private string NSS { get; set; } = string.Empty;
+    private string Oficina { get; set; } = string.Empty;
+    private string Salario { get; set; } = string.Empty;
+    private string Categoria { get; set; } = string.Empty;
+    private string Ubicacion { get; set; } = string.Empty;
+    private string Cargo { get; set; } = string.Empty;
+    private bool VerSoloMarcados { get; set; } = false;
+    private string Comentario { get; set; } = string.Empty;
+
+    // Grid data
+    private List<AfiliadoPrincipal> AfiliadoPrincipalData { get; set; } = new();
+    private List<Dependiente> DependientesData { get; set; } = new();
+
+    private void OnSearchNumero()
+    {
+        // Implementar búsqueda
+    }
+
+    private void HandleAdd()
+    {
+        // Implementar agregar
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardar
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+
+    public class AfiliadoPrincipal
+    {
+        public string Condicion { get; set; } = string.Empty;
+        public string TipoPlan { get; set; } = string.Empty;
+        public string TipoSeguro { get; set; } = string.Empty;
+        public string Estatus { get; set; } = string.Empty;
+        public string Incluido { get; set; } = string.Empty;
+        public string Excluido { get; set; } = string.Empty;
+        public string Solicitado { get; set; } = string.Empty;
+        public string PagaEmp { get; set; } = string.Empty;
+    }
+
+    public class Dependiente
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Parentesco { get; set; } = string.Empty;
+        public string FechaNac { get; set; } = string.Empty;
+        public string Edad { get; set; } = string.Empty;
+        public string Sexo { get; set; } = string.Empty;
+        public string Cedula { get; set; } = string.Empty;
+        public string NSS { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
+        public string Numero { get; set; } = string.Empty;
+    }
+}

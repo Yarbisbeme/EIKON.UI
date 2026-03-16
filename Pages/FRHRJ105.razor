@@ -1,0 +1,128 @@
+@page "/FRHRJ105"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Asignación de Turnos individual" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhrj105-container">
+        <div class="main-content">
+            <div class="top-fields">
+                <div class="field-row">
+                    <div class="input" style="width:30%;">
+                        <label>Empleado</label>
+                        <DxTextBox @bind-Text="@Empleado" NullText="">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="input">
+                        <label>Nombre</label>
+                        <DxTextBox @bind-Text="@Nombre" ReadOnly="true" NullText="" />
+                    </div>
+
+                    <div class="input">
+                        <label for="user">Turno</label>
+                        <div class="search-field">
+                            <DxTextBox @bind-Text="@Turno"
+                                       NullText="ID requisición"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search"
+                                                    Click="@OnSearchTurno" />
+                                </Buttons>
+                            </DxTextBox>
+                            <DxTextBox NullText="ID requisicion" />
+                        </div>
+                    </div>
+
+                </div>
+
+                    @* <div class="input"> *@
+                    @*     <label>Turno</label> *@
+                    @*     <DxTextBox @bind-Text="@Turno" NullText=""> *@
+                    @*         <Buttons> *@
+                    @*             <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchTurno" /> *@
+                    @*         </Buttons> *@
+                    @*     </DxTextBox> *@
+                    @* </div> *@
+            </div>
+
+            <div class="grids-section">
+                <div class="grid-container">
+                    <div class="grid-header">Descripción Jornada</div>
+                    <DxGrid Data="@JornadaData"
+                            CssClass="jornada-grid"
+                            PageSize="10"
+                            ShowPager="false">
+                        <Columns>
+                            <DxGridDataColumn FieldName="Chk" Caption="Chk/Código" Width="100px" />
+                            <DxGridDataColumn FieldName="DescripcionCiclo" Caption="Descripción ciclo" />
+                            <DxGridDataColumn FieldName="SemanaCiclHorario" Caption="Semana/Cicl/Horario" Width="150px" />
+                        </Columns>
+                    </DxGrid>
+                </div>
+
+                <div class="grid-container">
+                    <div class="grid-header">Descripción Horario</div>
+                    <DxGrid Data="@HorarioData"
+                            CssClass="horario-grid"
+                            PageSize="10"
+                            ShowPager="false">
+                        <Columns>
+                            <DxGridDataColumn FieldName="Dia" Caption="Día" Width="80px" />
+                            <DxGridDataColumn FieldName="Horario" Caption="Horario" />
+                            <DxGridDataColumn FieldName="Almuerzo" Caption="Almuerzo" Width="100px" />
+                        </Columns>
+                    </DxGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Top fields
+    private string Empleado { get; set; } = string.Empty;
+    private string Nombre { get; set; } = string.Empty;
+    private string Turno { get; set; } = string.Empty;
+
+    // Grid data
+    private List<JornadaItem> JornadaData { get; set; } = new();
+    private List<HorarioItem> HorarioData { get; set; } = new();
+
+    public class JornadaItem
+    {
+        public string Chk { get; set; } = string.Empty;
+        public string DescripcionCiclo { get; set; } = string.Empty;
+        public string SemanaCiclHorario { get; set; } = string.Empty;
+    }
+
+    public class HorarioItem
+    {
+        public string Dia { get; set; } = string.Empty;
+        public string Horario { get; set; } = string.Empty;
+        public string Almuerzo { get; set; } = string.Empty;
+    }
+
+    private void OnSearchEmpleado() { }
+    private void OnSearchTurno() { }
+    private void HandleSave() { }
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+}

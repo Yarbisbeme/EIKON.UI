@@ -1,0 +1,681 @@
+/* FRHRE402 - Expediente de Solicitud Externa */
+
+/* Page search header personalizado */
+::deep .page-search-frhre402 {
+    display: grid;
+    grid-template-columns: 200px 250px 180px;
+    gap: 15px;
+    align-items: end;
+}
+
+::deep .page-search-frhre402 .input-search {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+::deep .page-search-frhre402 .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+::deep .page-search-frhre402 label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Nombre destacado */
+.nombre-destacado {
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #d73527;
+    padding: 12px 0;
+    background-color: #f8f9fa;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Form container */
+.frhre402-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Sección Identificación (Identificadores + Nombres + Imagen) */
+.seccion-identificacion {
+    display: grid;
+    grid-template-columns: 1fr 1fr 200px;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.grupo-identificadores h3,
+.grupo-nombres h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #33363f;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.columna-identificadores .input,
+.columna-nombres .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.columna-identificadores label,
+.columna-nombres label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.columna-imagen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagen-placeholder {
+    width: 180px;
+    height: 180px;
+    border: 2px solid #bfbfbf;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagen-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 13px;
+    gap: 4px;
+}
+
+/* Tabs Básico container */
+.tabs-basico-container {
+    margin-top: 20px;
+}
+
+.contenido-basico {
+    padding: 20px;
+}
+
+.dual-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.columna-izq .input,
+.columna-der .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.columna-izq label,
+.columna-der label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.input-edad {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 120px;
+    margin-bottom: 15px;
+}
+
+.input-edad label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Sección Familiares */
+.seccion-familiares {
+    padding: 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.campos-familiares {
+    margin-bottom: 20px;
+}
+
+.fila-1,
+.fila-2,
+.fila-3 {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.fila-1 {
+    grid-template-columns: 1fr 200px 300px;
+}
+
+.fila-2 {
+    grid-template-columns: 1fr 200px;
+}
+
+.fila-3 {
+    grid-template-columns: 1fr 1fr 300px;
+}
+
+.grupo-fecha-edad {
+    display: grid;
+    grid-template-columns: 200px 100px;
+    gap: 10px;
+    align-items: end;
+}
+
+.input-edad-fam {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkboxes-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 25px;
+}
+
+.grid-familiares {
+    margin-top: 20px;
+}
+
+.familiares-grid {
+    min-height: 200px !important;
+}
+
+/* Sección Experiencia Laboral */
+.seccion-experiencia-laboral {
+    padding: 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.campos-experiencia {
+    display: grid;
+    grid-template-columns: 150px 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-sueldo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.puestos-clasificacion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.puestos-columna label,
+.clasifica-columna label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.puestos-listbox,
+.clasifica-listbox {
+    min-height: 300px !important;
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+}
+
+/* Tabs Educación */
+.tabs-educacion-container {
+    margin-top: 20px;
+}
+
+.contenido-grado,
+.contenido-idiomas,
+.contenido-general,
+.contenido-oficios,
+.contenido-continuada {
+    padding: 20px;
+}
+
+.titulo-seccion {
+    font-size: 16px;
+    font-weight: 600;
+    color: #33363f;
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.grados-grid,
+.idiomas-grid {
+    min-height: 250px !important;
+}
+
+/* Tab General */
+.checkbox-estudia {
+    margin-bottom: 20px;
+}
+
+.campos-general {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.fila-campos {
+    display: grid;
+    grid-template-columns: 200px 150px;
+    gap: 15px;
+}
+
+.fila-campos-triple {
+    display: grid;
+    grid-template-columns: 150px 150px 1fr;
+    gap: 15px;
+}
+
+/* Tab Oficios */
+.oficios-dual-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.oficios-disponibles h3,
+.oficios-seleccionados h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #33363f;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.oficios-listbox,
+.oficios-seleccionados-listbox {
+    min-height: 300px !important;
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+}
+
+/* Tab Continuada */
+.educacion-continuada-seccion,
+.conocimientos-seccion {
+    margin-bottom: 25px;
+}
+
+.educacion-continuada-seccion h3,
+.conocimientos-seccion h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #33363f;
+    margin-bottom: 10px;
+}
+
+.educacion-continuada-grid,
+.conocimientos-grid {
+    min-height: 200px !important;
+}
+
+/* Tabs Experiencia Profesional */
+.tabs-experiencia-container {
+    margin-top: 20px;
+}
+
+.contenido-experiencia-profesional,
+.contenido-referencia {
+    padding: 20px;
+}
+
+.campos-experiencia-prof {
+    margin-bottom: 20px;
+}
+
+.fila-1-exp,
+.fila-2-exp,
+.fila-3-exp {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.fila-1-exp {
+    grid-template-columns: 1fr 200px;
+}
+
+.fila-2-exp {
+    grid-template-columns: 1fr 150px 150px;
+}
+
+.fila-3-exp {
+    grid-template-columns: 1fr 150px 150px auto;
+    align-items: end;
+}
+
+.checkbox-actual-exp {
+    display: flex;
+    align-items: center;
+    padding-bottom: 8px;
+}
+
+.grid-experiencia-prof {
+    margin-top: 20px;
+}
+
+.experiencia-profesional-grid {
+    min-height: 200px !important;
+}
+
+/* Tabs Varios (Información Adicional) */
+.tabs-varios-container {
+    margin-top: 20px;
+}
+
+.contenido-varios,
+.contenido-deportes,
+.contenido-licencia,
+.contenido-enfermedades {
+    padding: 20px;
+}
+
+.pregunta-varios {
+    margin-bottom: 25px;
+}
+
+.deportes-dual-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.deportes-listbox,
+.deportes-seleccionados-listbox {
+    min-height: 300px !important;
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+}
+
+/* Tab Licencia */
+.seccion-licencia-checkbox {
+    margin-bottom: 15px;
+}
+
+.campos-licencia {
+    margin-bottom: 25px;
+}
+
+.fila-licencia-1 {
+    display: grid;
+    grid-template-columns: 200px 200px 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.fila-licencia-2 {
+    display: grid;
+    grid-template-columns: 300px;
+    margin-bottom: 20px;
+}
+
+.seccion-vehiculo {
+    margin-bottom: 25px;
+}
+
+.vehiculo-checkbox {
+    margin-bottom: 15px;
+}
+
+.campos-vehiculo {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 15px;
+}
+
+.seccion-organizacion {
+    margin-top: 20px;
+}
+
+/* Tab Enfermedades */
+.campos-enfermedad {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.comentario-enfermedad {
+    margin-bottom: 20px;
+}
+
+.comentario-enfermedad label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.grid-enfermedades {
+    margin-top: 20px;
+}
+
+.enfermedades-grid {
+    min-height: 200px !important;
+}
+
+/* Input generic styling */
+.frhre402-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhre402-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* DevExpress overrides */
+::deep .dx-textbox-container,
+::deep .dx-combobox-container,
+::deep .dx-spin-edit-container,
+::deep .dx-date-edit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+}
+
+::deep .dx-textbox-container:focus-within,
+::deep .dx-combobox-container:focus-within,
+::deep .dx-spin-edit-container:focus-within,
+::deep .dx-date-edit-container:focus-within {
+    border-color: #007bff !important;
+}
+
+::deep .dx-tab {
+    font-weight: 500 !important;
+    color: #33363f !important;
+}
+
+::deep .dx-tab-active {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+::deep .dx-datagrid {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+}
+
+::deep .dx-datagrid-headers {
+    background-color: #f8f9fa !important;
+    font-weight: 600 !important;
+    color: #33363f !important;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .seccion-identificacion {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .columna-imagen {
+        grid-column: 1 / -1;
+    }
+
+    .dual-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .fila-1 {
+        grid-template-columns: 1fr 150px;
+    }
+
+    .grupo-fecha-edad {
+        grid-column: 1 / -1;
+    }
+
+    .campos-experiencia {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .puestos-clasificacion {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) {
+    ::deep .page-search-frhre402 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .fila-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .checkboxes-grupo {
+        padding-top: 0;
+    }
+
+    .oficios-dual-list,
+    .deportes-dual-list {
+        grid-template-columns: 1fr;
+    }
+
+    .fila-1-exp,
+    .fila-2-exp,
+    .fila-3-exp {
+        grid-template-columns: 1fr;
+    }
+
+    .checkbox-actual-exp {
+        padding-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    ::deep .page-search-frhre402 {
+        grid-template-columns: 1fr;
+    }
+
+    .seccion-identificacion {
+        grid-template-columns: 1fr;
+    }
+
+    .fila-1,
+    .fila-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .grupo-fecha-edad {
+        grid-template-columns: 1fr;
+    }
+
+    .campos-experiencia {
+        grid-template-columns: 1fr;
+    }
+
+    .fila-campos,
+    .fila-campos-triple {
+        grid-template-columns: 1fr;
+    }
+
+    .fila-licencia-1,
+    .fila-licencia-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .campos-vehiculo {
+        grid-template-columns: 1fr;
+    }
+
+    .campos-enfermedad {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .nombre-destacado {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .frhre402-form {
+        gap: 20px;
+    }
+
+    .seccion-identificacion,
+    .seccion-familiares,
+    .seccion-experiencia-laboral,
+    .contenido-grado,
+    .contenido-idiomas,
+    .contenido-general,
+    .contenido-oficios,
+    .contenido-continuada,
+    .contenido-experiencia-profesional,
+    .contenido-referencia,
+    .contenido-varios,
+    .contenido-deportes,
+    .contenido-licencia,
+    .contenido-enfermedades {
+        padding: 15px;
+    }
+
+    .imagen-placeholder {
+        width: 150px;
+        height: 150px;
+    }
+}

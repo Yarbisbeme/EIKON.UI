@@ -1,0 +1,14 @@
+.content {
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+.content .main-content{
+  padding: 2rem;
+  width: 100%;
+  height: auto;
+  min-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #ffffff;
+}

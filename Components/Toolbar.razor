@@ -1,0 +1,140 @@
+﻿@using EIKON.UI.Interfaces
+@using DevExpress.Blazor
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@namespace EIKON.UI.Components
+<div class="toolbar">
+    @if (options.Contains("add"))
+    {
+        <div class="toolbar-item" @onclick="OnAdd">
+            <i class="fi fi-rr-plus"></i>
+        </div>
+    }
+    @if (options.Contains("save"))
+    {
+        <div class="toolbar-item" @onclick="OnSave">
+            <i class="fi fi-rr-disk"></i>
+        </div>
+    }
+    @if (options.Contains("remove"))
+    {
+        <span class="toolbar-divider"></span>
+        <div class="toolbar-item" @onclick="OnRemove">
+            <i class="fi fi-rr-trash"></i>
+        </div>
+    }
+    @if (options.Contains("leave"))
+    {
+        <div class="toolbar-item" @onclick="OnLeave">
+            <i class="fi fi-rr-rotate-reverse"></i>
+        </div>
+    }
+    @if (options.Contains("procesar"))
+    {
+        <div class="toolbar-item" @onclick="OnProccess">
+            <i class="fi fi-rr-check"></i>
+        </div>
+    }
+    @if (options.Contains("audit"))
+    {
+        <div class="toolbar-item" @onclick="OnAudit">
+            <i class="fi fi-rr-shield-check"></i>
+        </div>
+    }
+    <span class="toolbar-divider"></span>
+    <div class="toolbar-item" @onclick="OnClose">
+        <i class="fi fi-rr-cross"></i>
+    </div>
+</div>
+
+@code {
+    //[Parameter] public string[] options { get; set; } = [];
+
+    // Parámetros para las funciones
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnRemove { get; set; }
+    [Parameter] public EventCallback OnLeave { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnProccess { get; set; }
+    [Parameter] public EventCallback OnAudit { get; set; }
+    [Parameter] public string formulario { get; set; } = "FRH";
+    public string[] options { get; set; } = [];
+    private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+    public string Token { get; set; } = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                Console.WriteLine("Token vacio");
+            }
+            api.SetToken(Token);
+            //StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await SetPermisos();
+            StateHasChanged();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        Token = auth.tkn;
+        if (string.IsNullOrEmpty(Token))
+        {
+            //Token = await auth.GetTokenAsync();
+            return;
+        }
+        api.SetToken(Token);
+    }   
+    public async Task<bool> SetPermisos()
+    {
+        try
+        {
+            var pa = api.GetPa();
+            
+            auth.SetToken(Token);
+           
+            
+            permisos = await api.GetTrhfm000DtosByPaIs(formulario, Token);
+        } //  (formulario); }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al obtener permisos: " + ex.Message);
+        }
+
+        if (permisos == null)
+        {
+            permisos = new Trhfm000Dto();
+            permisos.MpMail = false;
+            permisos.MpDelete = false;
+            permisos.MpUpdate = false;
+            permisos.MpReadFo = false;
+            permisos.MpAddFor = false;
+
+        }
+        
+
+        if (permisos.MpAddFor == true)
+            options = options.Append("add").ToArray();
+        if (permisos.MpUpdate == true)
+            options = options.Append("save").ToArray();
+        if (permisos.MpDelete == true)
+            options = options.Append("remove").ToArray();
+        if (permisos.MpAudit == true)
+        options = options.Append("audit").ToArray();
+        options = options.Append("procesar").ToArray();
+       //StateHasChanged();
+        return true;
+       // ToolbarOptions = ToolbarOptions.Append("leave").ToArray();
+    }
+}

@@ -1,0 +1,514 @@
+@page "/FRHNO403"
+@layout MainLayout
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="FRHNO403 - Reportes de Planes de Descuentos" BackUrl="/dash" />
+    
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Sección Principal de Filtros -->
+        <div class="main-filters-section">
+            <!-- Filtros de Fechas -->
+            <div class="filters-left">
+                <div class="filter-group">
+                    <div class="checkbox-field">
+                        <DxCheckBox @bind-Checked="@FechaEnabled">Fecha</DxCheckBox>
+                    </div>
+                    <div class="date-range">
+                        <div class="date-field">
+                            <DxDateEdit @bind-Date="@FechaDesde" 
+                                       Enabled="@FechaEnabled"
+                                       NullText="/" />
+                        </div>
+                        <span class="date-separator">Hasta</span>
+                        <div class="date-field">
+                            <DxDateEdit @bind-Date="@FechaHasta" 
+                                       Enabled="@FechaEnabled"
+                                       NullText="/" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="input-field">
+                        <DxCheckBox @bind-Checked="@MesEnabled">Mes</DxCheckBox>
+                        <DxTextBox @bind-Text="@MesValue" 
+                                  Enabled="@MesEnabled" />
+                    </div>
+                    <div class="input-field">
+                        <label>Año</label>
+                        <DxSpinEdit @bind-Value="@AnoValue" 
+                                   MinValue="2000" 
+                                   MaxValue="2099"
+                                   Enabled="@MesEnabled" />
+                    </div>
+                </div>
+
+                <div class="input-field">
+                    <DxCheckBox @bind-Checked="@OficinaEnabled">Oficina</DxCheckBox>
+                    <DxTextBox @bind-Text="@OficinaValue" 
+                              Enabled="@OficinaEnabled" />
+                </div>
+
+                <div class="input-field">
+                    <DxCheckBox @bind-Checked="@UbicacionEnabled">Ubicación</DxCheckBox>
+                    <DxTextBox @bind-Text="@UbicacionValue" 
+                              Enabled="@UbicacionEnabled" />
+                </div>
+
+                <div class="input-field">
+                    <DxCheckBox @bind-Checked="@EmpleadoEnabled">Empleado</DxCheckBox>
+                    <DxTextBox @bind-Text="@EmpleadoValue" 
+                              Enabled="@EmpleadoEnabled" />
+                </div>
+
+                <div class="input-field">
+                    <DxCheckBox @bind-Checked="@NoPlanEnabled">No. Plan</DxCheckBox>
+                    <DxTextBox @bind-Text="@NoPlanValue" 
+                              Enabled="@NoPlanEnabled" />
+                </div>
+
+                <div class="input-field">
+                    <DxCheckBox @bind-Checked="@TipoPlanEnabled">Tipo Plan</DxCheckBox>
+                    <DxTextBox @bind-Text="@TipoPlanValue" 
+                              Enabled="@TipoPlanEnabled" />
+                </div>
+            </div>
+
+            <!-- Opciones de Estado -->
+            <div class="filters-right">
+                <div class="status-options">
+                    <div class="status-group">
+                        <DxCheckBox @bind-Checked="@RegularOption">Regular</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@TemporalOption">Temporal</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@EximpleadoOption">Exempleado</DxCheckBox>
+                        <DxCheckBox @bind-Checked="@PensionadosOption">Pensionados</DxCheckBox>
+                    </div>
+                </div>
+
+                <!-- Opciones Adicionales -->
+                <div class="additional-options">
+                    <div class="options-group">
+                        <div class="checkbox-row">
+                            <DxCheckBox @bind-Checked="@VigentesOption">Vigentes</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@SimulaDescuentoOption">Simula Descuento</DxCheckBox>
+                        </div>
+                        <div class="checkbox-single">
+                            <DxCheckBox @bind-Checked="@FechaInicioPlanOption">Fecha inicio plan</DxCheckBox>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hoy y Ayer -->
+                <div class="date-quick-options">
+                    <DxCheckBox @bind-Checked="@HoyOption">Hoy</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@AyerOption">Ayer</DxCheckBox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Reporte -->
+        <div class="report-section">
+            <div class="report-header">
+                <label>Reporte</label>
+                <div class="report-controls">
+                    <DxComboBox Data="@ReportTypesList" 
+                               @bind-Value="@SelectedReportType" 
+                               NullText="Disco"
+                               TextFieldName="Name" 
+                               ValueFieldName="Id"
+                               CssClass="report-dropdown" />
+                </div>
+            </div>
+            
+            <div class="report-details">
+                <div class="report-row">
+                    <div class="input-field narrow">
+                        <label>Tipo</label>
+                        <DxComboBox Data="@TipoReporteList" 
+                                   @bind-Value="@SelectedTipoReporte" 
+                                   NullText="Seleccionar tipo"
+                                   TextFieldName="Name" 
+                                   ValueFieldName="Id" />
+                    </div>
+                    <div class="input-field wide">
+                        <label>Nombre</label>
+                        <DxTextBox @bind-Text="@NombreReporteValue" />
+                    </div>
+                    <div class="report-actions">
+                        <DxButton IconCssClass="fi fi-rr-check" 
+                                 CssClass="icon-btn success-btn" 
+                                 Click="@OnValidateReportClick" />
+                        <DxButton IconCssClass="fi fi-rr-cross-small" 
+                                 CssClass="icon-btn error-btn" 
+                                 Click="@OnClearReportClick" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container principal */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    /* Sección principal de filtros */
+    .main-filters-section {
+        display: flex;
+        gap: 30px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .filters-left {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .filters-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-left: 20px;
+        border-left: 1px solid transparent;
+    }
+
+    /* Input fields con label arriba */
+    .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .input-field label {
+        font-weight: normal;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-field.narrow {
+        flex: 0 0 120px;
+    }
+
+    .input-field.wide {
+        flex: 2;
+    }
+
+    /* Filter row para campos en línea */
+    .filter-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    /* Campos de fecha */
+    .date-range {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .date-field {
+        flex: 1;
+    }
+
+    .date-separator {
+        font-size: 14px;
+        color: #666;
+        white-space: nowrap;
+    }
+
+
+    /* Opciones de estado */
+    .status-options {
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 15px;
+    }
+
+    .status-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Opciones adicionales */
+    .additional-options {
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 15px;
+    }
+
+    .options-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .checkbox-row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .checkbox-single {
+        display: flex;
+    }
+
+    /* Opciones rápidas de fecha */
+    .date-quick-options {
+        display: flex;
+        gap: 15px;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+    }
+
+    /* Sección de reporte */
+    .report-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .report-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .report-header label {
+        font-weight: 600;
+        color: #333;
+        font-size: 16px;
+        min-width: 80px;
+    }
+
+    .report-controls {
+        flex: 1;
+    }
+
+    .report-dropdown {
+        min-width: 200px;
+    }
+
+    .report-details {
+        border-top: 1px solid #e0e0e0;
+        padding-top: 15px;
+    }
+
+    .report-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 15px;
+    }
+
+    .report-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* Botones de acción */
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success-btn {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .success-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .error-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .error-btn:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+
+    /* Responsive Design */
+    media (max-width: 768px) {
+        .main-filters-section {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .filters-right {
+            padding-left: 0;
+            border-left: none;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .filter-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .date-range {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .checkbox-row {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .date-quick-options {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .report-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .report-actions {
+            justify-content: center;
+        }
+    }
+
+    media (max-width: 480px) {
+        .main-filters-section,
+        .report-section {
+            padding: 15px;
+        }
+
+        .year-section {
+            min-width: 60px;
+        }
+
+        .report-dropdown {
+            min-width: auto;
+            width: 100%;
+        }
+    }
+</style>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "leave" };
+    
+    // Filtros principales con checkboxes
+    private bool FechaEnabled { get; set; } = true;
+    private DateTime? FechaDesde { get; set; } = DateTime.Now;
+    private DateTime? FechaHasta { get; set; } = DateTime.Now;
+    
+    private bool MesEnabled { get; set; } = true;
+    private string MesValue { get; set; } = "";
+    private int AnoValue { get; set; } = DateTime.Now.Year;
+    
+    private bool OficinaEnabled { get; set; } = true;
+    private string OficinaValue { get; set; } = "";
+    
+    private bool UbicacionEnabled { get; set; } = true;
+    private string UbicacionValue { get; set; } = "";
+    
+    private bool EmpleadoEnabled { get; set; } = true;
+    private string EmpleadoValue { get; set; } = "";
+    
+    private bool NoPlanEnabled { get; set; } = true;
+    private string NoPlanValue { get; set; } = "";
+    
+    private bool TipoPlanEnabled { get; set; } = true;
+    private string TipoPlanValue { get; set; } = "";
+    
+    // Opciones de estado
+    private bool RegularOption { get; set; } = true;
+    private bool TemporalOption { get; set; } = false;
+    private bool EximpleadoOption { get; set; } = false;
+    private bool PensionadosOption { get; set; } = false;
+    
+    // Opciones adicionales
+    private bool VigentesOption { get; set; } = true;
+    private bool SimulaDescuentoOption { get; set; } = false;
+    private bool FechaInicioPlanOption { get; set; } = true;
+    
+    // Opciones rápidas de fecha
+    private bool HoyOption { get; set; } = false;
+    private bool AyerOption { get; set; } = false;
+    
+    // Sección de reporte
+    private int? SelectedReportType { get; set; }
+    private int? SelectedTipoReporte { get; set; }
+    private string NombreReporteValue { get; set; } = "";
+    
+    // Listas de datos
+    private List<ReportTypeItem> ReportTypesList = new List<ReportTypeItem>
+    {
+        new ReportTypeItem { Id = 1, Name = "Disco" },
+        new ReportTypeItem { Id = 2, Name = "Impresora" },
+        new ReportTypeItem { Id = 3, Name = "Email" },
+        new ReportTypeItem { Id = 4, Name = "Vista Previa" }
+    };
+
+    private List<ReportTypeItem> TipoReporteList = new List<ReportTypeItem>
+    {
+        new ReportTypeItem { Id = 1, Name = "PDF" },
+        new ReportTypeItem { Id = 2, Name = "Excel" },
+        new ReportTypeItem { Id = 3, Name = "Word" },
+        new ReportTypeItem { Id = 4, Name = "CSV" },
+        new ReportTypeItem { Id = 5, Name = "Texto" }
+    };
+    
+    public class ReportTypeItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+    
+    private void OnValidateReportClick()
+    {
+        // Lógica para validar el reporte
+        Console.WriteLine($"Validando reporte: {NombreReporteValue}");
+    }
+    
+    private void OnClearReportClick()
+    {
+        // Lógica para limpiar el reporte
+        SelectedTipoReporte = null;
+        NombreReporteValue = "";
+        Console.WriteLine("Reporte limpiado");
+    }
+    
+    private async Task HandleClose()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "¡Reporte de Planes de Descuentos guardado!");
+    }
+}

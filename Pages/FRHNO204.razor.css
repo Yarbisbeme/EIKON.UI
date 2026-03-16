@@ -1,0 +1,35 @@
+﻿.custom-textarea {
+    height: auto;
+}
+
+.validity-period {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-direction: row;
+}
+
+.validity-period-span {
+    margin-bottom: 10px;
+}
+
+.validity-period-inputs {
+    flex-direction: row;
+    display: flex;
+    gap: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .validity-period{
+        flex-direction: column;
+        align-items:center;
+    }
+
+    .validity-period-span {
+        margin-bottom: unset;
+    }
+
+    .validity-period-inputs {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,218 @@
+@layout MainLayout
+@page "/FRHCA405"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Reportes de Asistencias, tardanzas y permisos" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhca405-form">
+        <!-- Fecha Report Section -->
+        <div class="fecha-reporte-section">
+            <div class="fecha-inputs">
+                <div class="input">
+                    <label>Fecha Reporte</label>
+                    <DxDateEdit @bind-Date="@FechaReporte" DisplayFormat="dd/MM/yyyy" />
+                </div>
+                <div class="input">
+                    <label>Hasta</label>
+                    <DxDateEdit @bind-Date="@FechaHasta" DisplayFormat="dd/MM/yyyy" />
+                </div>
+            </div>
+            <div class="fecha-checkboxes">
+                <DxCheckBox @bind-Checked="@Hoy">Hoy</DxCheckBox>
+                <DxCheckBox @bind-Checked="@Ayer">Ayer</DxCheckBox>
+                <DxCheckBox @bind-Checked="@FechaInicio">Fecha inicio</DxCheckBox>
+                <DxCheckBox @bind-Checked="@FechaNomina">Fecha Nómina</DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Search Fields Section -->
+        <div class="search-fields-section">
+            <div class="search-field-item">
+                <DxCheckBox @bind-Checked="@OficinaChecked">Oficina</DxCheckBox>
+                <div class="search-inputs">
+                    <DxTextBox @bind-Text="@OficinaId"
+                               NullText="ID Oficina"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchOficina" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox @bind-Text="@OficinaNombre" NullText="Nombre oficina" />
+                </div>
+            </div>
+
+            <div class="search-field-item">
+                <DxCheckBox @bind-Checked="@UbicacionChecked">Ubicación</DxCheckBox>
+                <div class="search-inputs">
+                    <DxTextBox @bind-Text="@UbicacionId"
+                               NullText="ID Ubicación"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchUbicacion" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox @bind-Text="@UbicacionNombre" NullText="Nombre ubicación" />
+                </div>
+            </div>
+
+            <div class="search-field-item">
+                <DxCheckBox @bind-Checked="@ClaseChecked">Clase</DxCheckBox>
+                <div class="search-inputs">
+                    <DxTextBox @bind-Text="@ClaseId"
+                               NullText="ID Clase"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchClase" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox @bind-Text="@ClaseNombre" NullText="Nombre clase" />
+                </div>
+            </div>
+
+            <div class="search-field-item">
+                <DxCheckBox @bind-Checked="@TipoAsistenciaChecked">Tipo Asistencia</DxCheckBox>
+                <div class="search-inputs">
+                    <DxTextBox @bind-Text="@TipoAsistenciaId"
+                               NullText="ID Tipo"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchTipoAsistencia" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox @bind-Text="@TipoAsistenciaNombre" NullText="Nombre tipo asistencia" />
+                </div>
+            </div>
+
+            <div class="search-field-item">
+                <DxCheckBox @bind-Checked="@EmpleadoChecked">Empleado</DxCheckBox>
+                <div class="search-inputs">
+                    <DxTextBox @bind-Text="@EmpleadoId"
+                               NullText="ID Empleado"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                        </Buttons>
+                    </DxTextBox>
+                    <DxTextBox @bind-Text="@EmpleadoNombre" NullText="Nombre empleado" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Tipo de Disco Checkboxes -->
+        <div class="disco-checkboxes">
+            <DxCheckBox @bind-Checked="@Regular">Regular</DxCheckBox>
+            <DxCheckBox @bind-Checked="@Temporero">Temporero</DxCheckBox>
+            <DxCheckBox @bind-Checked="@Exempleado">Exempleado</DxCheckBox>
+            <DxCheckBox @bind-Checked="@Pensionados">Pensionados</DxCheckBox>
+        </div>
+
+        <!-- Disco Section -->
+        <label style="font-weight:600;">Disco</label>
+        <div class="disco-section">
+            <div class="input">
+                <label>Tipo</label>
+                <DxComboBox Data="@TipoOptions"
+                            @bind-Value="@TipoSeleccionado"
+                            TextFieldName="Text"
+                            ValueFieldName="Value"
+                            NullText="Seleccionar tipo"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" />
+            </div>
+            <div class="input">
+                <label>Nombre</label>
+                <div class="nombre-input-group">
+                    <DxTextBox @bind-Text="@Nombre" NullText="Nombre archivo" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "save", "close" };
+
+    // Fecha Reporte
+    private DateTime? FechaReporte { get; set; } = DateTime.Now;
+    private DateTime? FechaHasta { get; set; } = DateTime.Now;
+    private bool Hoy { get; set; } = false;
+    private bool Ayer { get; set; } = false;
+    private bool FechaInicio { get; set; } = true;
+    private bool FechaNomina { get; set; } = false;
+
+    // Search Fields
+    private bool OficinaChecked { get; set; } = false;
+    private string OficinaId { get; set; } = "";
+    private string OficinaNombre { get; set; } = "";
+
+    private bool UbicacionChecked { get; set; } = false;
+    private string UbicacionId { get; set; } = "";
+    private string UbicacionNombre { get; set; } = "";
+
+    private bool ClaseChecked { get; set; } = false;
+    private string ClaseId { get; set; } = "";
+    private string ClaseNombre { get; set; } = "";
+
+    private bool TipoAsistenciaChecked { get; set; } = false;
+    private string TipoAsistenciaId { get; set; } = "";
+    private string TipoAsistenciaNombre { get; set; } = "";
+
+    private bool EmpleadoChecked { get; set; } = false;
+    private string EmpleadoId { get; set; } = "";
+    private string EmpleadoNombre { get; set; } = "";
+
+    // Disco checkboxes
+    private bool Regular { get; set; } = true;
+    private bool Temporero { get; set; } = true;
+    private bool Exempleado { get; set; } = false;
+    private bool Pensionados { get; set; } = false;
+
+    // Disco section
+    private string Disco { get; set; } = "";
+    private string TipoSeleccionado { get; set; } = "";
+    private string Nombre { get; set; } = "";
+
+    private List<TipoOption> TipoOptions = new()
+    {
+        new TipoOption { Value = "1", Text = "Tipo 1" },
+        new TipoOption { Value = "2", Text = "Tipo 2" },
+        new TipoOption { Value = "3", Text = "Tipo 3" }
+    };
+
+    // TODO: Implementar búsqueda de oficina
+    private void OnSearchOficina() { }
+
+    // TODO: Implementar búsqueda de ubicación
+    private void OnSearchUbicacion() { }
+
+    // TODO: Implementar búsqueda de clase
+    private void OnSearchClase() { }
+
+    // TODO: Implementar búsqueda de tipo asistencia
+    private void OnSearchTipoAsistencia() { }
+
+    // TODO: Implementar búsqueda de empleado
+    private void OnSearchEmpleado() { }
+
+    // TODO: Implementar confirmación de disco
+    private void HandleCheck() { }
+
+    // TODO: Implementar cancelación
+    private void HandleCancel() { }
+
+    // TODO: Implementar cierre del formulario
+    private void HandleClose() { }
+
+    public class TipoOption
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+    }
+}

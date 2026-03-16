@@ -1,0 +1,330 @@
+﻿@page "/FRHRE101Detalle"
+@page "/FRHRE101Detalle/{id:int}"
+
+@using DevExpress.Blazor
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+@inject IJSRuntime JSRuntime
+<PageTitle>Prueba de Componentes</PageTitle>
+<h1>Solicitud de Empleo Externa</h1>
+
+
+
+<h3 class=""></h3>
+<div class="container">
+   <EditForm data-bind="@frhso000Dtos" Model="solicitud" 
+                      OnValidSubmit="@HandleValidSubmit"
+                      OnInvalidSubmit="@HandleInvalidSubmit"
+                      Context="EditFormContext">
+        <DataAnnotationsValidator />  
+        <ValidationSummary />
+        <div class="row">
+        <div class="form-group col-md-2">
+            <label for="solnume">Código</label>
+            <DxTextBox id="solnume" @bind-Text="@solicitud.Solnume"
+                       ValidationEnabled="true"
+                       ShowValidationIcon="true"
+                       ShowValidationSuccessState="true" Enabled="false"></DxTextBox>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="ccdescri">Tipo</label>
+            <DxTextBox id="ccdescri" @bind-Text="@solicitud.TpCodigo" ValidationEnabled="true"
+                       ShowValidationIcon="true"
+                       ShowValidationSuccessState="true"></DxTextBox>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="solfecha">Fecha</label>
+            <DxDateEdit id="solfecha" @bind-Date="@solicitud.Solfech" ValidationEnabled="true"
+                       ShowValidationIcon="true"
+                       ShowValidationSuccessState="true"></DxDateEdit>
+        </div>
+        </div>
+    </EditForm>
+</div>
+@code {
+    // [Parameter]
+    // public string? tk { get; set; }
+    [Parameter]
+    public int id  { get; set; }
+    public bool IsModalVisible { get; set; }
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } ="";
+
+    DateTime MinDate { get; set; }
+    DateTime MaxDate { get; set; }
+    DateTime SelectedDate { get; set; } = DateTime.Today;
+
+    bool Enabled { get; set; } = false;
+    bool SilentMode { get; set; } = true;
+    bool Sound { get; set; } = true;
+    bool Vibration { get; set; } = false;
+    void CheckedChanged(bool value)
+    {
+        SilentMode = value;
+        Enabled = !value;
+    }
+    private void ConfirmToken()
+    {
+        // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+        IsModalVisible = false;
+    }
+
+    private void Cancel()
+    {
+        IsModalVisible = false;
+    }
+    private void OpenModal()
+    {
+        IsModalVisible = true;
+    }
+
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private List<Frhpu010Dto> data;
+    private List<Frhjo010Dto> puestos { get; set; } = new List<Frhjo010Dto>();
+    private string SelectedCategoryId { get; set; }
+    private List<Trhof010Dto> oficinas { get; set; }
+    private List<Trhub010Dto> ubicaciones { get; set; }
+    private Frhso000Dto solicitud { get; set; } = new Frhso000Dto();  
+    string FormValidationState = "";
+    IEnumerable<Trhem000Dto> empresas { get; set; }
+    Trhem000Dto EmpresaActual { get; set; } = new Trhem000Dto();
+    List<Trhof010Dto> EmpresaActualOficinas { get; set; } = new List<Trhof010Dto>();
+    Trhof010Dto OficinaActual { get; set; }
+    List<Frhso000Dto> frhso000Dtos { get; set; } = new List<Frhso000Dto>();
+    List<Trhlu000Dto> trhlu000Dtos { get; set; } = new List<Trhlu000Dto>();
+    List<Trhnc000Dto> trhnc000Dtos { get; set; } = new List<Trhnc000Dto>();
+    List<Trhrg000Dto> trhrg000Dtos { get; set; } = new List<Trhrg000Dto>(); 
+    List<Trhdo000Dto> trhdo000Dtos { get; set; } = new List<Trhdo000Dto>();
+    List<Trhim000Dto> trhim000Dtos { get; set; } = new List<Trhim000Dto>();
+    List<Trhts000Dto> trhts000Dtos { get; set; } = new List<Trhts000Dto>();
+    List<Trhci000Dto> trhci000Dtos { get; set; } = new List<Trhci000Dto>(); 
+    List<Trhpt000Dto> trhpt000Dtos { get; set; } = new List<Trhpt000Dto>(); 
+    List<Trhef000Dto> trhef000Dtos { get; set; } = new List<Trhef000Dto>(); 
+    List<Trhco000Dto> trhco000Dtos { get; set; } = new List<Trhco000Dto>();
+    List<Trhho000Dto> trhho000Dtos { get; set; } = new List<Trhho000Dto>(); 
+    List<Trhpf000Dto> trhpf000Dtos { get; set; } = new List<Trhpf000Dto>(); 
+    List<Trhsu000Dto> trhsu000Dtos { get; set; } = new List<Trhsu000Dto>(); 
+    List<Trhhg000Dto> trhhg000Dtos { get; set; } = new List<Trhhg000Dto>();
+    List<Trhgn000Dto> trhgn000Dtos { get; set; } = new List<Trhgn000Dto>(); 
+
+    //private string authToken;
+
+    // Llamada JSInterop para obtener el token de la cookie después de renderizar
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+            api.SetToken(Token);
+            StateHasChanged();  // Forzar un nuevo renderizado si es necesario
+            //api.SetToken(Token);
+            await CargarDatos();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        DateTime currentDateTime = DateTime.Now;
+        MinDate = new DateTime(currentDateTime.Year, currentDateTime.Month, 1);
+        MaxDate = new DateTime(
+        currentDateTime.Year,
+        currentDateTime.Month,
+        DateTime.DaysInMonth(currentDateTime.Year, currentDateTime.Month)
+        );
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //  data = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>(ApiBaseUrl + "Trhem000");
+        //   empresas = await HttpClient.GetFromJsonAsync<List<Models.Trhem000>>("http://localhost:8081/api/Trhem000");
+        // data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+        // data = await api.GetFrhpu010Dtos();
+        // puestos = await api.joGetAllAsync(Token);
+        // ubicaciones = await api.ubGetByEmCodigo("01",Token);
+        // oficinas = await api.ofGetByEmCodigo("01", Token);
+        await CargarDatos();  
+        //modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "Trhnz000");
+    }
+    async Task CargarDatos()
+    {
+        if (id == 0)
+        { //data = new List<Trhcc010Dto>();
+          //editContext = new EditContext(data);
+            solicitud = new Frhso000Dto();
+            solicitud.ChangedBy = "Eikon";
+            solicitud.CreatedBy = "Eikon";
+            solicitud.ChangedOn = DateTime.Today;
+            solicitud.CreatedOn = DateTime.Today;
+            
+            solicitud.IdentityColumn = 0;
+
+            return;
+        }
+        if (id > 0)
+        { //data = new List<Trhcc010Dto>();
+          //editContext = new EditContext(data);
+            solicitud = await api.GetByIdFrhso000Dtos(id);
+            
+            return;
+        }
+
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Frhpu010Dto)e.DataItem).IdentityColumn;
+        await api.puDeleteAsync(codigo,Token);
+        //await HttpClient.puDeleteAsync(ApiBaseUrl + "Trhps000/" + ((Trhps000Dto)e.DataItem).IdentityColumn);
+        data = await api.GetFrhpu010Dtos();
+        //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            nv.NavigateTo("/FRHCL101Detalle");
+            // Frhpu010Dto newCategory = new Frhpu010Dto();
+            // SetNewValues(newCategory, (Frhpu010Dto)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<DTOs.Trhps000Dto>(ApiBaseUrl + "Trhps000/", newCategory);
+            // HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhps000Dto>(ApiBaseUrl + "Trhps000/", newCategory);
+            //var ret = await api.InsertTrhps000Dto(newCategory);
+            // Verifica si la solicitud fue exitosa
+            // if (ret)
+            // {
+            //     data = await api.GetTrhps000Dtos();
+            // }
+            // else
+            // {
+            //    Console.WriteLine($"Error: Insertando ");
+            // }
+
+            //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+        }
+        else
+        {
+            var dataItem = (Frhpu010Dto)e.DataItem;
+            var codigo = ((Frhpu010Dto)e.DataItem).IdentityColumn;
+            nv.NavigateTo("/FRHCL101Detalle/@codigo");
+            // SetEditValues(dataItem, (Frhpu010Dto)e.EditModel);
+            // await api.UpdateFrhpu010Dto(dataItem);
+            // HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl + "Trhps000/" + dataItem.PasUserid, dataItem);
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+            //     string responseContent = await response.Content.ReadAsStringAsync();
+            //     // Puedes deserializar el contenido si es un JSON
+            //     // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            // }
+            // else
+            // {
+            //     // La solicitud falló. Puedes manejar el error aquí.
+            //     string errorContent = await response.Content.ReadAsStringAsync();
+            //     Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            // }
+            // var ret = await api.UpdateTrhps000Dto(dataItem);
+            // if (ret)
+            // { data = await api.GetTrhps000Dtos(); }
+            // else
+            // { Console.WriteLine($"Error: Actualizando"); }
+            //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "Trhps000");
+        }
+
+        void SetNewValues(Frhpu010Dto dataItem, Frhpu010Dto newValues)
+        {
+            dataItem.Puetitu = newValues.Puetitu;
+            dataItem.Puenume = newValues.Puenume;
+            dataItem.OfCodigo = newValues.OfCodigo; 
+            dataItem.UbCodigo = newValues.UbCodigo;
+
+            dataItem.JoNumber = newValues.JoNumber;
+            // dataItem.PasEsEmp = newValues.PasEsEmp;
+            // dataItem.PasUserE = newValues.PasUserE;
+            // dataItem.PasRedEs = newValues.PasRedEs;
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+        void SetEditValues(Frhpu010Dto dataItem, Frhpu010Dto newValues)
+        {
+            dataItem.Puetitu = newValues.Puetitu;
+            dataItem.Puenume = newValues.Puenume;
+            dataItem.OfCodigo = newValues.OfCodigo;
+            dataItem.UbCodigo = newValues.UbCodigo;
+
+            dataItem.JoNumber = newValues.JoNumber;
+            //dataItem.CreatedBy = "Eikon";
+            //dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+
+
+    }
+
+    // Método para abrir el formulario
+    private void OpenForm()
+    {
+        // SelectedItem = item;
+        // nv.NavigateTo("/FRHCL101Detalle/" + SelectedItem.IdentityColumn);
+
+    }
+    void OnRowClick(GridRowClickEventArgs e)
+    {
+        nv.NavigateTo("/FRHCL101Detalle/" + e.Grid.GetRowValue(e.VisibleIndex, "IdentityColumn"));
+        //Alert = $"Clicked row index: {e.VisibleIndex}. Corresponding date: '{e.Grid.GetRowValue(e.VisibleIndex, "Date")}'";
+    }
+    async Task SelectedEmpresaChanged(Trhem000Dto empresa)
+    {
+        EmpresaActual = empresa;
+        EmpresaActualOficinas = await  api.ofGetByEmCodigo(empresa.EmCodigo, Token);// Cities.Where(c => c.CountryId == CurrentCountry.CountryId);
+        OficinaActual = EmpresaActualOficinas.FirstOrDefault();
+    }
+
+    void HandleValidSubmit()
+    {
+        FormValidationState = @"El formulario contine datos válidos";
+    }
+    void HandleInvalidSubmit()
+    {
+       FormValidationState = @"El formulario contine datos inválidos";
+    }
+
+}
+
+
+

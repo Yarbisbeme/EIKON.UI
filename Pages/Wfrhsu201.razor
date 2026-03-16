@@ -1,0 +1,35 @@
+﻿@page "/Wfrhsu201"
+@layout MainLayout
+@using EIKON.UI.Interfaces
+@using DevExpress.Blazor
+@inject IMockService<Trhaw000Dto> MockService
+<h3>Solicitud Accion de Personal Wfrhsu201 - Pendiente de Implementar</h3>
+<p>Solicitud Accion</p>
+<h3>Aprobadores (Mock)</h3>
+
+@* @if (aprobadores == null)
+{
+    <p>Cargando...</p>
+}
+else
+{ *@
+    <DxGrid Data="@aprobadores" ShowFilterRow="true">
+        <Columns>
+        <DxGridDataColumn FieldName="AwCodigo" Caption="ID" />
+        <DxGridDataColumn FieldName="AwDescri" Caption="Nombre" />
+        <DxGridDataColumn FieldName="AwNivel" Caption="Nivel" DisplayFormat="c" />
+        <DxGridDataColumn FieldName="AwEmail" Caption="Email" DisplayFormat="d" />
+        <DxGridDataColumn FieldName="Maenume" Caption="Empleado" />
+        </Columns>
+    </DxGrid>
+@* } *@
+
+@code {
+    private List<Trhaw000Dto>? aprobadores;
+
+    protected override async Task OnInitializedAsync()
+    {
+        aprobadores = await MockService.GetAllAsync(9);
+        //StateHasChanged();
+    }
+}

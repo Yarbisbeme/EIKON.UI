@@ -1,0 +1,512 @@
+/* FRHCA101 - Acción de Cambios */
+
+.frhca101-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Top Section: Datos empleado + Imagen */
+.frhca101-form .top-section {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 20px;
+}
+
+.frhca101-form .employee-data {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.frhca101-form .image-area {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.frhca101-form .image-placeholder {
+    width: 100%;
+    height: 280px;
+    border: 2px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhca101-form .image-placeholder i {
+    font-size: 80px;
+    color: #bfbfbf;
+}
+
+/* Standard Input Fields */
+.frhca101-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhca101-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Empleado Row */
+.frhca101-form .empleado-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.frhca101-form .empleado-field {
+    width: 150px;
+    background-color: #e3f2fd;
+}
+
+.frhca101-form .btn-search {
+    padding: 0 12px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhca101-form .btn-search:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhca101-form .btn-search i {
+    font-size: 16px;
+}
+
+/* Dual Row */
+.frhca101-form .dual-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Cambios Row */
+.frhca101-form .cambios-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.frhca101-form .cambios-field {
+    width: 120px;
+}
+
+/* Tabs Section */
+.frhca101-form .tabs-section {
+    margin-top: 10px;
+}
+
+/* Tab Cambio */
+.frhca101-form .cambio-tab {
+    padding: 15px;
+}
+
+.frhca101-form .cambio-layout {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 25px;
+}
+
+.frhca101-form .cambio-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Field with Search */
+.frhca101-form .field-with-search {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.frhca101-form .field-codigo {
+    width: 100px;
+}
+
+.frhca101-form .field-descripcion {
+    flex: 1;
+}
+
+.frhca101-form .btn-search-inline {
+    padding: 0 10px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+}
+
+.frhca101-form .btn-search-inline:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhca101-form .btn-search-inline i {
+    font-size: 14px;
+}
+
+/* Sueldo Row */
+.frhca101-form .sueldo-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.frhca101-form .sueldo-field {
+    width: 150px;
+}
+
+.frhca101-form .dots {
+    font-size: 14px;
+    color: #33363f;
+}
+
+.frhca101-form .base-field {
+    width: 120px;
+}
+
+/* Fecha Row */
+.frhca101-form .fecha-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.frhca101-form .fecha-field {
+    width: 150px;
+}
+
+.frhca101-form .btn-calendar {
+    padding: 0 10px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #33363f;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frhca101-form .btn-calendar:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhca101-form .btn-calendar i {
+    font-size: 14px;
+}
+
+/* Checkbox Section */
+.frhca101-form .checkbox-section {
+    padding: 8px 0;
+}
+
+/* Fechas Section */
+.frhca101-form .fechas-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.frhca101-form .section-label {
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.frhca101-form .fecha-input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.frhca101-form .fecha-input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhca101-form .fecha-con-am {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.frhca101-form .am-label {
+    font-size: 13px;
+    color: #33363f;
+    font-weight: 500;
+}
+
+/* Cambio Options (Columna derecha) */
+.frhca101-form .cambio-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.frhca101-form .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhca101-form .datos-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.frhca101-form .datos-labels label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Tab Comentario */
+.frhca101-form .comentario-tab {
+    padding: 15px;
+}
+
+.frhca101-form .comentario-memo {
+    width: 100%;
+    min-height: 400px;
+}
+
+/* DevExpress Component Overrides */
+.frhca101-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca101-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca101-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhca101-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhca101-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca101-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca101-form ::deep .dx-spin-edit {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca101-form ::deep .dx-spin-edit:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca101-form ::deep .dx-memo-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhca101-form ::deep .dx-memo-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhca101-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhca101-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhca101-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.frhca101-form ::deep .dx-radio-icon {
+    border: 1px solid #bfbfbf;
+}
+
+.frhca101-form ::deep .dx-radio-checked .dx-radio-icon {
+    border-color: #007bff;
+}
+
+.frhca101-form ::deep .dx-radio-checked .dx-radio-icon::before {
+    background-color: #007bff;
+}
+
+/* Tabs styling */
+.frhca101-form ::deep .dx-tabs {
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.frhca101-form ::deep .dx-tab {
+    padding: 10px 20px;
+}
+
+.frhca101-form ::deep .dx-tab-active {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #007bff;
+}
+
+/* Special styling for empleado field */
+.frhca101-form .empleado-field ::deep .dx-textbox {
+    background-color: #e3f2fd;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhca101-form {
+        padding: 15px;
+        gap: 18px;
+    }
+
+    .frhca101-form .top-section {
+        grid-template-columns: 1fr 240px;
+        gap: 18px;
+    }
+
+    .frhca101-form .image-placeholder {
+        height: 240px;
+    }
+
+    .frhca101-form .cambio-layout {
+        grid-template-columns: 1fr 180px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhca101-form {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .frhca101-form .top-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhca101-form .image-placeholder {
+        height: 200px;
+    }
+
+    .frhca101-form .dual-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .frhca101-form .cambio-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .frhca101-form .field-with-search {
+        flex-wrap: wrap;
+    }
+
+    .frhca101-form .field-codigo {
+        width: 100%;
+    }
+
+    .frhca101-form .field-descripcion {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhca101-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .frhca101-form .input label {
+        font-size: 13px;
+    }
+
+    .frhca101-form .empleado-row {
+        flex-direction: column;
+    }
+
+    .frhca101-form .empleado-field {
+        width: 100%;
+    }
+
+    .frhca101-form .cambios-row {
+        flex-direction: column;
+    }
+
+    .frhca101-form .cambios-field {
+        width: 100%;
+    }
+
+    .frhca101-form .sueldo-row {
+        flex-wrap: wrap;
+    }
+
+    .frhca101-form .sueldo-field {
+        width: 100%;
+    }
+
+    .frhca101-form .base-field {
+        width: 100%;
+    }
+
+    .frhca101-form .fecha-row {
+        flex-wrap: wrap;
+    }
+
+    .frhca101-form .fecha-field {
+        width: 100%;
+    }
+
+    .frhca101-form .fecha-con-am {
+        flex-wrap: wrap;
+    }
+
+    .frhca101-form .comentario-memo {
+        min-height: 300px;
+    }
+}

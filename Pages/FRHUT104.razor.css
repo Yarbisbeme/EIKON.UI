@@ -1,0 +1,175 @@
+/* Main form container */
+.frhut104-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Search row - first row with 3 fields */
+.search-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+/* Detail row - second row with 5 fields */
+.detail-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+/* Input fields */
+.frhut104-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhut104-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Grid section */
+.grid-section {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.contadores-grid {
+    min-height: 400px;
+}
+
+.frhut104-form ::deep .dx-datagrid {
+    border: 1px solid #bfbfbf !important;
+}
+
+.frhut104-form ::deep .dx-datagrid-header-panel {
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #007bff !important;
+}
+
+.frhut104-form ::deep .dx-datagrid-headers {
+    background-color: #e9ecef !important;
+    font-weight: 600;
+}
+
+.frhut104-form ::deep .dx-datagrid-rowsview .dx-row {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.frhut104-form ::deep .dx-datagrid-rowsview .dx-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+.frhut104-form ::deep .dx-datagrid-rowsview .dx-selection.dx-row {
+    background-color: #e7f3ff !important;
+}
+
+/* DevExpress overrides */
+.frhut104-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.frhut104-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.frhut104-form ::deep .dx-texteditor-input {
+    color: #33363f !important;
+    font-size: 14px;
+}
+
+/* Search button styling */
+.frhut104-form ::deep .dx-button {
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhut104-form ::deep .dx-button:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.frhut104-form ::deep .dx-editor-button .dx-icon {
+    color: #007bff !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .search-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .search-row .input:nth-child(3) {
+        grid-column: 1 / -1;
+    }
+
+    .detail-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .detail-row .input:nth-child(2) {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhut104-form {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .search-row,
+    .detail-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .search-row .input:nth-child(3),
+    .detail-row .input:nth-child(2) {
+        grid-column: auto;
+    }
+
+    .frhut104-form .input label {
+        font-size: 13px;
+    }
+
+    .contadores-grid {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhut104-form {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .search-row,
+    .detail-row {
+        gap: 10px;
+    }
+
+    .frhut104-form .input label {
+        font-size: 12px;
+    }
+
+    .frhut104-form ::deep .dx-texteditor-input {
+        font-size: 13px !important;
+    }
+
+    .contadores-grid {
+        min-height: 250px;
+    }
+}

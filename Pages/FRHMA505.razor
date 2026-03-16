@@ -1,0 +1,181 @@
+@layout MainLayout
+@page "/FRHMA505"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Modelos de cartas" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhma505-form">
+        <!-- Top Row: Código + Descripción + Clasificación + Firma -->
+        <div class="top-row">
+            <div class="input codigo-input">
+                <label>Código</label>
+                <DxTextBox @bind-Text="@Codigo"
+                           CssClass="codigo-textbox"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+            <div class="input">
+                <label>Descripción</label>
+                <DxTextBox @bind-Text="@Descripcion"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+            <div class="input">
+                <label>Clasificación</label>
+                <DxTextBox @bind-Text="@Clasificacion"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+            <div class="input">
+                <label>Firma</label>
+                <DxTextBox @bind-Text="@Firma"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+        </div>
+
+        <!-- Formato Checkboxes -->
+        <div class="formato-section">
+            <label class="section-label">Formato</label>
+            <div class="formato-checkboxes">
+                <DxCheckBox @bind-Checked="@ConTimbre">Con Timbre</DxCheckBox>
+                <DxCheckBox @bind-Checked="@FirmaImpresa">Firma impresa</DxCheckBox>
+                <DxCheckBox @bind-Checked="@Plantilla">Plantilla</DxCheckBox>
+            </div>
+        </div>
+
+        <!-- Main Layout: Texto de la carta + Atributo/Merge -->
+        <div class="main-layout">
+            <!-- Left: Texto de la carta -->
+            <div class="texto-section">
+                <div class="texto-header">Texto de la carta</div>
+                <textarea class="text-memo-custom"
+                          @bind="TextoCarta"
+                          rows="18"
+                          placeholder="Escriba el texto de la carta aquí..."></textarea>
+            </div>
+
+            <!-- Right: Atributo/Merge -->
+            <div class="atributo-section">
+                <div class="atributo-header">
+                    <span>Atributo/Merge</span>
+                    <DxButton Text="Limpiar"
+                              CssClass="limpiar-btn"
+                              Click="@OnLimpiar" />
+                </div>
+                <DxListBox Data="@AtributosList"
+                           @bind-Values="@SelectedAtributos"
+                           SelectionMode="ListBoxSelectionMode.Multiple"
+                           CssClass="atributos-listbox">
+                    <DxListEditorColumn FieldName="Text" />
+                </DxListBox>
+            </div>
+        </div>
+
+            <div class="input">
+                <label>Plantilla</label>
+                <DxTextBox @bind-Text="@PlanillaValue"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+            </div>
+        <!-- Bottom Section: Plantilla + Tipo y tamaño de letra -->
+        <div class="bottom-section">
+
+            <div class="tipo-tamano-group">
+                <div class="tipo-tamano-inputs">
+                <label class="section-label">Tipo y tamaño de letra</label>
+                    <div class="input tipo-input">
+                        <label>Tipo</label>
+                        <DxTextBox @bind-Text="@TipoLetra"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                    </div>
+                    <div class="input tamano-input">
+                        <label>Tamaño</label>
+                        <DxTextBox @bind-Text="@TamanoLetra"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="input beneficio-input">
+                <label>Beneficio</label>
+                <DxTextBox @bind-Text="@Beneficio"
+                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchBeneficio" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "remove", "close" };
+
+    // Top Row
+    private string? Codigo { get; set; }
+    private string? Descripcion { get; set; }
+    private string? Clasificacion { get; set; }
+    private string? Firma { get; set; }
+
+    // Formato
+    private bool ConTimbre { get; set; } = false;
+    private bool FirmaImpresa { get; set; } = false;
+    private bool Plantilla { get; set; } = false;
+
+    // Texto de la carta
+    private string? TextoCarta { get; set; }
+
+    // Atributos
+    private IEnumerable<AtributoItem> SelectedAtributos = new List<AtributoItem>();
+    private List<AtributoItem> AtributosList = new()
+    {
+        new AtributoItem { Text = "Nombre" },
+        new AtributoItem { Text = "Apellido" },
+        new AtributoItem { Text = "Fecha ingreso" },
+        new AtributoItem { Text = "Antiguedad Servicio (2 anos)" },
+        new AtributoItem { Text = "Sueldo Mensual" },
+        new AtributoItem { Text = "Sexo (sr,sra,tía)" },
+        new AtributoItem { Text = "El o La" },
+        new AtributoItem { Text = "Dirección" },
+        new AtributoItem { Text = "Sueldo en Letra" },
+        new AtributoItem { Text = "Fecha (DD/MM/AAAA)" },
+        new AtributoItem { Text = "Fecha del día (letras)" },
+        new AtributoItem { Text = "Estado civil" },
+        new AtributoItem { Text = "Supervisor" },
+        new AtributoItem { Text = "Número Empleado" },
+        new AtributoItem { Text = "Fecha de Salida" },
+        new AtributoItem { Text = "Cargo" },
+        new AtributoItem { Text = "Fecha de Cumpleaños (letras)" },
+        new AtributoItem { Text = "Cédula" },
+        new AtributoItem { Text = "INSS" },
+        new AtributoItem { Text = "Oficina" }
+    };
+
+    // Bottom Section
+    private string? PlanillaValue { get; set; }
+    private string? TipoLetra { get; set; }
+    private string? TamanoLetra { get; set; }
+    private string? Beneficio { get; set; }
+
+    // Event Handlers
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+    private void OnSearchCodigo() { }
+    private void OnSearchBeneficio() { }
+    private void OnLimpiar() { SelectedAtributos = new List<AtributoItem>(); }
+
+    public class AtributoItem
+    {
+        public string Text { get; set; } = string.Empty;
+    }
+}

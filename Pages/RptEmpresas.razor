@@ -1,0 +1,17 @@
+@page "/report31/"
+
+@using DevExpress.Blazor.Reporting
+@using DevExpress.XtraReports.UI
+@using EIKON.UI.PredefinedReports
+@using EIKON.UI.Services
+
+@inject EikonDataServices ApiService
+<link href="~/css/custom/eikon-style.css" rel="stylesheet" />
+@* <link href="_content/DevExpress.Blazor.Reporting.Viewer/css/dx-blazor-reporting-components.bs5.css" rel="stylesheet" />
+ *@
+<DxReportViewer @ref="rptEmpresas" Report="Report" RootCssClasses="w-100 h-100" />
+
+@code {
+    DxReportViewer rptEmpresas;
+    XtraReport Report = new Report32();
+}

@@ -1,0 +1,333 @@
+/* FRHMA509 - Editor de fórmulas */
+
+.frhma509-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Individual Fields */
+.frhma509-form .codigo-field,
+.frhma509-form .nombre-field,
+.frhma509-form .descripcion-field {
+    width: 100%;
+}
+
+/* Standard Input Fields */
+.frhma509-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+
+.frhma509-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Editor + Calculator Row */
+.frhma509-form .editor-calculator-row {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 20px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.frhma509-form .editor-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhma509-form .editor-section label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.frhma509-form .formula-editor {
+    min-height: 300px !important;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+/* Calculator Section */
+.frhma509-form .calculator-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frhma509-form .calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.frhma509-form .calc-btn {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #bfbfbf;
+    background-color: #fff;
+    color: #33363f;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.frhma509-form .calc-btn:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+    .frhma509-form .calc-btn.operator {
+        background-color: #f8f9fa;
+        color: var(--naranja-eikon-normal);
+        font-weight: 700;
+    }
+
+.frhma509-form .calc-btn.special {
+    background-color: #e9ecef;
+}
+
+.frhma509-form .calc-btn.span-2 {
+    grid-column: span 2;
+}
+
+.frhma509-form .probar-formula-btn {
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.frhma509-form .probar-formula-btn:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+/* Three Columns Section */
+.frhma509-form .three-columns-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.frhma509-form .column {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.frhma509-form .column-header {
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #bfbfbf;
+    font-weight: 600;
+    color: #33363f;
+    font-size: 14px;
+    text-align: center;
+}
+
+.frhma509-form .column-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.frhma509-form .list-item {
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    color: #33363f;
+}
+
+.frhma509-form .list-item:hover {
+    background-color: #e9ecef;
+    border-color: var(--naranja-eikon-normal);
+}
+
+/* Bottom checkboxes */
+.frhma509-form .bottom-checkboxes {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Test Dialog (Popup) */
+.test-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+}
+
+.test-dialog .formula-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #007bff;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.test-dialog .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.test-dialog .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+.test-dialog .formula-readonly,
+.test-dialog .resultado-readonly {
+    background-color: #f8f9fa;
+}
+
+/* DevExpress Component Overrides */
+.frhma509-form ::deep .dx-textbox-container,
+.frhma509-form ::deep .dx-dropdownedit-input-wrapper,
+.frhma509-form ::deep .dx-memo {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhma509-form ::deep .dx-textbox-container:focus-within,
+.frhma509-form ::deep .dx-dropdownedit-input-wrapper:focus-within,
+.frhma509-form ::deep .dx-memo:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhma509-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhma509-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+.frhma509-form ::deep .dx-tabs {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+.modal-body ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .frhma509-form {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .frhma509-form .editor-calculator-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .frhma509-form .calculator-section {
+        order: 2;
+    }
+
+    .frhma509-form .calculator-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .frhma509-form .three-columns-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhma509-form {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .frhma509-form .editor-calculator-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhma509-form .calculator-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .frhma509-form .calc-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .frhma509-form .three-columns-section {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .frhma509-form .bottom-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .test-dialog {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhma509-form {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .frhma509-form .input label {
+        font-size: 13px;
+    }
+
+    .frhma509-form .calculator-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+    }
+
+    .frhma509-form .calc-btn {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .frhma509-form .probar-formula-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}

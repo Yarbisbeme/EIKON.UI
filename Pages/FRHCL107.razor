@@ -1,0 +1,404 @@
+﻿@page "/FRHCL107"
+@inject NavigationManager nv;
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+f
+<PageTitle>Categorías</PageTitle>
+
+<DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+    <DxTabPage Text="Mantenimiento">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Categorías Salariales" BackUrl="/dash" />
+            </div>
+            <Toolbar formulario="FRHCL107" OnProccess="BuscarTool" OnAdd="AgregarTool" OnSave="GuardaTool" OnRemove="EliminarTool" OnAudit="OnAuditTool" />
+        </div>
+        <br />
+        <EditForm Context="editpage" Model="@editModel">
+            <DataAnnotationsValidator />
+            <DxFormLayout>
+                
+                <DxFormLayoutItem Caption="Código">
+                    <DxTextBox @bind-Text="@editModel.CtCodigo" MaxLength="3" ReadOnly ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                        <Buttons>
+                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="BuscarTool" />
+                        </Buttons>
+                    </DxTextBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Descripción">
+                    <DxTextBox @bind-Text="@editModel.CtDescri" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Mínimo">
+                    <DxSpinEdit @bind-Value="@editModel.Minimo" Format="N2" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Máximo">
+                    <DxSpinEdit @bind-Value="@editModel.Maximo" Format="N2" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Punto medio">
+                    <DxSpinEdit @bind-Value="@editModel.Midpoint" Format="N2" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Pto Mín">
+                    <DxSpinEdit @bind-Value="@editModel.Ptominimo" Format="N0" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Pto Medio">
+                    <DxSpinEdit @bind-Value="@editModel.Ptomedio" Format="N0" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Pto Máx">
+                    <DxSpinEdit @bind-Value="@editModel.Ptomaximo" Format="N0" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Desde">
+                    <DxDateEdit @bind-Date="@editModel.CtDesde" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Hasta">
+                    <DxDateEdit @bind-Date="@editModel.CtHasta" />
+                </DxFormLayoutItem>
+
+                
+                <DxFormLayoutItem Caption="Desc. alterno">
+                    <DxTextBox @bind-Text="@editModel.CtDesalterno" MaxLength="20" />
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem Caption="Moneda">
+                    <DxComboBox @bind-Value="@editModel.CyCodigo" ValueFieldName="CyCodigo" TextFieldName="CyDescri"
+                                Data="@cyList" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Tabulador">
+                    <DxComboBox @bind-Value="@editModel.TtCodigo" ValueFieldName="TtCodigo" TextFieldName="TtDescri"
+                                Data="@ttList" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Periocidad">
+                    <DxComboBox @bind-Value="@editModel.PrCodigo" ValueFieldName="PrCodigo" TextFieldName="PrDescri"
+                                Data="@prList" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Estatus">
+                    <DxCheckBox @bind-Checked="@editModel.CtEstatus">Activo</DxCheckBox>
+                </DxFormLayoutItem>
+
+            </DxFormLayout>
+        </EditForm>
+    </DxTabPage>
+    <DxTabPage Text="Consulta">
+        <div class="header">
+            <div style="display:flex;width:auto;gap:20px;">
+                <Breadcrumb Title="Categorías Salariales" BackUrl="/dash" />
+            </div>
+        </div>
+        <div>        <DxGrid Data="@ctList" @ref="MyGrid"
+                CssClass="mw-1100"
+                EditMode="GridEditMode.EditRow"
+                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Equals">
+            <Columns>
+                <DxGridCommandColumn Width="160px" VisibleIndex="1">
+                    <CellDisplayTemplate>
+                        <a @onclick="@(() => ShowEditRecord((Trhct010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                    </CellDisplayTemplate>
+                </DxGridCommandColumn>
+                <DxGridDataColumn Caption="Gódigo" FieldName="CtCodigo" Width="80px" VisibleIndex="3" />
+                <DxGridDataColumn Caption="Descripción" FieldName="CtDescri" Width="300px" VisibleIndex="4" />
+                <DxGridDataColumn Caption="Activo" FieldName="CtEstatus" VisibleIndex="8" Width="130px" />
+            </Columns>
+            <ToolbarTemplate>
+                <DxToolbar>
+                    <DxToolbarItem Text="Export to XLSX" Click="ExportXlsx_Click" BeginGroup="true" />
+                    <DxToolbarItem Context="itemCtx" Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                        <Template>
+                            <DxCheckBox @bind-Checked="@ExportSelectedRowsOnly">Export Selected Rows Only</DxCheckBox>
+                        </Template>
+                    </DxToolbarItem>
+                </DxToolbar>
+            </ToolbarTemplate>
+
+        </DxGrid>
+        </div>
+        <div class="chart-item mt-2 w-75">
+            <DxPieChart Data="EmpleadoCat"
+                        Width="80%"
+                        InnerDiameter="0.5">
+                <DxChartTitle Text="@titleText" />
+                <DxPieChartSeries T="DonutDataItem"
+                                  TArgument="string"
+                                  TValue="int"
+                                  ArgumentField="s => s.Estatus"
+                                  ValueField="s => s.Amount"
+                                  SummaryMethod="Enumerable.Sum">
+                    <DxChartSeriesLabel Visible="true"
+                                        Position="RelativePosition.Inside"
+                                        ValueFormat='ChartElementFormat.FromLdmlString("#")' />
+                </DxPieChartSeries>
+                <DxChartLegend VerticalAlignment="VerticalEdge.Bottom"
+                               Position="RelativePosition.Outside" />
+                <DxChartTooltip Enabled="true" Position="RelativePosition.Outside">
+
+                </DxChartTooltip>
+            </DxPieChart>
+        </div>
+    </DxTabPage>
+</DxTabs>
+
+<ConfirmDialog @ref="confirmDialog" Title="Confirmar Eliminación"
+               Message="¿Seguro deseas eliminar esta Categoria Salarial?"
+               OnConfirm="OnConfirmDelete" />
+
+<DxPopup @bind-Visible="@isPopupVisible"
+         HeaderText="@popupTitle"
+         ShowCloseButton="true"
+         ShowFooter="true"
+         Width="600px">
+    <BodyTemplate Context="popupCtx">
+            <DxFormLayout>
+                <DxFormLayoutItem Caption="Creado por:">
+                    <DxTextBox @bind-Text="@editModel.CreatedBy" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Creado el:">
+                    <DxDateEdit @bind-Date="@editModel.CreatedOn" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Modificado por:">
+                    <DxTextBox @bind-Text="@editModel.ChangedBy" ReadOnly />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Modificado el:">
+                    <DxDateEdit @bind-Date="@editModel.ChangedOn" ReadOnly />
+                </DxFormLayoutItem>
+            </DxFormLayout>
+    </BodyTemplate>
+    <FooterTemplate>
+        <DxButton Text="Salir" RenderStyle="ButtonRenderStyle.Secondary" Click="@OnCancelPopup" />
+    </FooterTemplate>
+</DxPopup>
+
+@code {
+    public int ActiveTabIndex { get; set; } = 0; // Set initial active tab (0-indexed)
+    private Trhct010Dto editModel = new();
+   // private string[] ToolbarOptions = new string[5];
+    public Alert2 alertInfo { get; set; } = new Alert2();
+    private ConfirmDialog confirmDialog;
+    private List<Trhct010Dto> ctList;
+    private List<Trhtt000Dto> ttList;
+    private List<Trhcy000Dto> cyList;
+    private List<Trhpr000Dto> prList;
+    private List<Vfrhma000Activo> emList;
+    bool ExportSelectedRowsOnly { get; set; }
+
+    public string Token { get; set; } = "";
+    public string ApiBaseUrl { get; set; } = "";
+    private bool IsNewRecord = false;
+    private bool isPopupVisible = false;
+    private string popupTitle = "Categoría Salariales";
+    private string titleText = "Cantidad de Empleados por Categoría";
+    IEnumerable<DonutDataItem> EmpleadoCat;
+    class DonutDataItem
+    {
+        public string Estatus { get; }
+        public int Amount { get; }
+        public DonutDataItem(string estatus, int amount)
+        {
+            (Estatus, Amount) = (estatus, amount);
+        }
+    }
+    async Task ExportXlsx_Click()
+    {
+        await MyGrid.ExportToXlsxAsync("ExportResult", new GridXlExportOptions()
+        {
+            ExportSelectedRowsOnly = ExportSelectedRowsOnly,
+            CustomizeCell = OnCustomizeXlCell
+        });
+    }
+
+    void OnCustomizeXlCell(GridExportCustomizeCellEventArgs args)
+    {
+        if (args.ColumnFieldName == "CtDescri" && args.AreaType == SheetAreaType.DataArea)
+            args.Formatting.Font = new XlCellFont() { Italic = true };
+        args.Handled = true;
+    }
+
+    protected void AgregarTool()
+    {
+        editModel = new Trhct010Dto();
+        editModel.EmEmpresa = "01";
+    }
+
+    protected async Task GuardaTool()
+    {
+        try
+        {
+
+            if (editModel.IdentityColumn == 0)
+            {
+                var ret0 = await api.ctAddAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                alertInfo.Show("Agregado con exito!!!", "success");
+            }
+            else
+            {
+                var ret = await api.ctUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+               // StateHasChanged();
+                alertInfo.Show("Modificado con exito!!!", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ActiveTabIndex = 1;
+            //StateHasChanged();
+            Console.Write("Esto es un error al guardar..." + ex.Message);
+        }
+    }
+
+    protected void EliminarTool()
+    {
+        confirmDialog.Show();
+    }
+
+    private async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            try
+            {
+                // Lógica de eliminación si el usuario confirma
+                editModel.CtEstatus = false;
+                var ret = await api.ctUpdateAsync(editModel, Token);
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+                //StateHasChanged();
+                Console.WriteLine("Error al eliminar..." + ex.Message);
+            }
+        }
+        else
+        {
+            alertInfo.Show("Eliminación cancelada");
+        }
+    }
+
+    private void ShowNewRecordPopup()
+    {
+        editModel = new Trhct010Dto();
+        ActiveTabIndex = 0;
+    }
+
+    private void ShowEditRecord(Trhct010Dto record)
+    {
+        editModel = record;
+        ActiveTabIndex = 0;
+    }
+
+    void OnActiveTabIndexChanged(int newIndex)
+    {
+        // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
+        ActiveTabIndex = newIndex;
+    }
+
+    void BuscarTool()
+    {
+        ActiveTabIndex = 1; // Cambiar a la pestaña de busqueda de oficinas
+    }
+
+    private void OnCancelPopup()
+    {
+        isPopupVisible = false;
+    }
+
+    private void OnAuditTool()
+    {
+        isPopupVisible = true;
+    }
+
+    DxGrid MyGrid = new();
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Solo ejecutar la llamada una vez, cuando el componente se renderiza por primera vez
+            //Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                Token = await auth.GetTokenAsync();
+            }
+            if (string.IsNullOrEmpty(Token))
+            {
+                nv.NavigateTo("/index");
+            }
+
+            api.SetToken(Token);
+            //StateHasChanged();
+
+            await CargarDatos();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            // api.ObtenerTokenAsync();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+
+            api.SetToken(Token);
+        }
+
+        ApiBaseUrl = api.GetApiBaseUrl();
+
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        var api2 = new Trhct010Client(ApiBaseUrl, HttpClient);
+        ctList = (List<Trhct010Dto>)await api.Trhct010DtoGetAll(Token);
+        ttList = (List<Trhtt000Dto>)await api.Trhtt000DtoGetAll(Token);
+        cyList = (List<Trhcy000Dto>)await api.Trhcy000DtoGetAll(Token);
+        prList = (List<Trhpr000Dto>)await api.Trhpr000DtoGetAll(Token);
+        emList = (List<Vfrhma000Activo>)await api.Vfrhma000ActivoGetAll(Token);
+        EmpleadoCat = emList
+            .GroupBy(e => e.CtDescri)
+            .Select(g => new DonutDataItem(
+                g.Key,
+                g.Count()
+            )); 
+        ActiveTabIndex = 1;
+    }
+
+    async Task CargarDatos()
+    {
+        if (Token != null)
+        {
+            ApiBaseUrl = api.GetApiBaseUrl();
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            var api2 = new Trhct010Client(ApiBaseUrl, HttpClient);
+
+            ctList = (List<Trhct010Dto>)await api.Trhct010DtoGetAll(Token);
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}
+
+
+

@@ -1,0 +1,333 @@
+/* FRHSM401 - Reportes Seguridad industrial */
+.frhsm401-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Main Layout: Content + Action Buttons */
+.frhsm401-form .main-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+}
+
+/* Content Area (Left) */
+.frhsm401-form .content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Standard Input Field */
+.frhsm401-form .input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.frhsm401-form .input label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Top Dates Row: Todos + Desde + Hasta + Fijar */
+.frhsm401-form .dates-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.frhsm401-form .date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 120px;
+}
+
+.frhsm401-form .date-group label {
+    font-weight: 500;
+    color: #33363f;
+    font-size: 14px;
+}
+
+/* Reporte Combo - Blue Background */
+.frhsm401-form .reporte-combo ::deep .dx-dropdowneditor-input-wrapper {
+    background-color: #e3f2fd;
+    border-color: #2196f3 !important;
+}
+
+/* Search Rows (Accidente, Medicamentos, Med. Enfermería, Lic. Enfermedad) */
+.frhsm401-form .search-row {
+    display: grid;
+    grid-template-columns: 150px 100px 1fr;
+    gap: 8px;
+    align-items: center;
+}
+
+.frhsm401-form .codigo-input {
+    max-width: 100px;
+}
+
+.frhsm401-form .descripcion-input {
+    width: 100%;
+}
+
+/* Fecha Checkboxes */
+.frhsm401-form .fecha-checkboxes {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+/* Radio Buttons Section */
+    .frhsm401-form .radio-section {
+        padding: 10px 0;
+        display: flex;
+        flex-wrap:wrap;
+        gap:15px;
+    }
+
+.frhsm401-form .radio-group-custom ::deep .dx-radiogroup-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frhsm401-form .radio-group-custom ::deep .dx-radiobutton {
+    margin-bottom: 0;
+}
+
+.frhsm401-form .radio-group-custom ::deep .dx-radiobutton-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 50%;
+}
+
+.frhsm401-form .radio-group-custom ::deep .dx-radiobutton-checked .dx-radiobutton-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Disco Section */
+.frhsm401-form .disco-section {
+    margin-top: 5px;
+}
+
+.frhsm401-form .disco-fields {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 15px;
+    align-items: end;
+}
+
+.frhsm401-form .disco-tipo {
+    max-width: 150px;
+}
+
+.frhsm401-form .sub-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #33363f;
+    margin-top: -2px;
+}
+
+/* Action Buttons Panel (Right) */
+.frhsm401-form .action-buttons-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 32px;
+}
+
+.frhsm401-form .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* ===== DevExpress Component Overrides ===== */
+.frhsm401-form ::deep .dx-textbox-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhsm401-form ::deep .dx-textbox-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.frhsm401-form ::deep .dx-dropdowneditor-input-wrapper {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhsm401-form ::deep .dx-dropdowneditor-input-wrapper:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* DateEdit */
+.frhsm401-form ::deep .dx-dateedit-container {
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px;
+}
+
+.frhsm401-form ::deep .dx-dateedit-container:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Editor Buttons */
+.frhsm401-form ::deep .dx-editor-button {
+    background-color: #f8f9fa;
+    border-left: 1px solid #bfbfbf !important;
+}
+
+.frhsm401-form ::deep .dx-editor-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Checkboxes */
+.frhsm401-form ::deep .dx-checkbox {
+    margin-bottom: 0;
+}
+
+.frhsm401-form ::deep .dx-checkbox-icon {
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+.frhsm401-form ::deep .dx-checkbox-checked .dx-checkbox-icon {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Button Styling */
+.frhsm401-form ::deep .dx-button {
+    border-radius: 4px;
+}
+
+.frhsm401-form ::deep .dx-button-secondary {
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    color: #33363f;
+}
+
+.frhsm401-form ::deep .dx-button-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.frhsm401-form ::deep .dx-button-success {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: #fff;
+}
+
+.frhsm401-form ::deep .dx-button-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.frhsm401-form ::deep .dx-button-danger {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #fff;
+}
+
+.frhsm401-form ::deep .dx-button-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .frhsm401-form .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .frhsm401-form .action-buttons-panel {
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 15px;
+    }
+
+    .frhsm401-form .disco-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .frhsm401-form .disco-tipo {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .frhsm401-form {
+        gap: 15px;
+    }
+
+    .frhsm401-form .content-area {
+        gap: 12px;
+    }
+
+    .frhsm401-form .dates-row {
+        flex-wrap: wrap;
+    }
+
+    .frhsm401-form .date-group {
+        min-width: 100px;
+    }
+
+    .frhsm401-form .search-row {
+        grid-template-columns: 120px 80px 1fr;
+    }
+
+    .frhsm401-form .fecha-checkboxes {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .frhsm401-form .action-buttons-panel {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .frhsm401-form {
+        gap: 12px;
+    }
+
+    .frhsm401-form .input label,
+    .frhsm401-form .date-group label {
+        font-size: 13px;
+    }
+
+    .frhsm401-form .dates-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .frhsm401-form .date-group {
+        min-width: 100%;
+    }
+
+    .frhsm401-form .search-row {
+        grid-template-columns: 1fr;
+    }
+
+    .frhsm401-form .codigo-input {
+        max-width: 100%;
+    }
+
+    .frhsm401-form .action-buttons-panel {
+        flex-direction: column;
+    }
+
+    .frhsm401-form .action-btn {
+        width: 100%;
+    }
+}

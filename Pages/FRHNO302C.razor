@@ -1,0 +1,314 @@
+@layout MainLayout
+@page "/FRHNO302C"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Reportes generales de Nómina" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhno302c-form">
+        <!-- Main Layout: Content + Action Buttons -->
+        <div class="main-layout">
+            <!-- Left Content Area -->
+            <div class="content-area">
+                <!-- Reporte Nómina -->
+                <div class="input" style="width:30%;">
+                    <label>Reporte</label>
+                    <DxComboBox Data="@ReporteOptions"
+                                @bind-Value="@Reporte"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                CssClass="reporte-combo" />
+                </div>
+                <div class="input">
+                    <label>Nómina</label>
+                    <div class="nomina-row">
+                        <div class="checkbox-with-combo">
+                            <DxCheckBox @bind-Checked="@TodasNominas">Todas</DxCheckBox>
+                            <DxComboBox Data="@NominaOptions"
+                                        @bind-Value="@NominaValue"
+                                        NullText=""
+                                        Enabled="@(!TodasNominas)"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        </div>
+                        <div class="imagen-check">
+                            <DxCheckBox @bind-Checked="@Imagen">Imagen</DxCheckBox>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empleados Section -->
+                <div class="section-group empleados-section">
+                    <div class="section-header">
+                        <label>Empleados</label>
+                    </div>
+                    <div class="section-content">
+                        <DxCheckBox @bind-Checked="@TodosEmpleados">Todos</DxCheckBox>
+                        <DxTextBox @bind-Text="@EmpleadoBusqueda"
+                                   Enabled="@(!TodosEmpleados)"
+                                   NullText="Buscar empleado..."
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchEmpleado" />
+                            </Buttons>
+                        </DxTextBox>
+                        <DxCheckBox @bind-Checked="@EnviarEmail">Enviar Email al Empleado</DxCheckBox>
+                    </div>
+                </div>
+
+                <!-- Períodos Section -->
+                <div class="section-group periodos-section">
+                    <div class="section-header">
+                        <DxCheckBox @bind-Checked="@UsarPeriodos">Períodos</DxCheckBox>
+                    </div>
+                    <div class="section-content">
+                        <!-- Desde -->
+                        <div class="periodo-row">
+                            <label class="periodo-label">Desde</label>
+                            <div class="periodo-inputs">
+                                <div class="input periodo-campo">
+                                    <label>Período</label>
+                                    <DxSpinEdit @bind-Value="@PeriodoDesde"
+                                                MinValue="0"
+                                                DisplayFormat="N0"
+                                                Enabled="@UsarPeriodos" />
+                                </div>
+                                <div class="input ano-campo">
+                                    <label>Año</label>
+                                    <DxSpinEdit @bind-Value="@AnoDesde"
+                                                MinValue="2000"
+                                                MaxValue="2100"
+                                                DisplayFormat="N0"
+                                                Enabled="@UsarPeriodos" />
+                                </div>
+                                <div class="fijar-check">
+                                    <DxCheckBox @bind-Checked="@FijarDesde" Enabled="@UsarPeriodos">Fijar</DxCheckBox>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hasta -->
+                        <div class="periodo-row">
+                            <label class="periodo-label">Hasta</label>
+                            <div class="periodo-inputs">
+                                <div class="input periodo-campo">
+                                    <label>Período</label>
+                                    <DxSpinEdit @bind-Value="@PeriodoHasta"
+                                                MinValue="0"
+                                                DisplayFormat="N0"
+                                                Enabled="@UsarPeriodos" />
+                                </div>
+                                <div class="input ano-campo">
+                                    <label>Año</label>
+                                    <DxSpinEdit @bind-Value="@AnoHasta"
+                                                MinValue="2000"
+                                                MaxValue="2100"
+                                                DisplayFormat="N0"
+                                                Enabled="@UsarPeriodos" />
+                                </div>
+                                <div class="fijar-check">
+                                    <DxCheckBox @bind-Checked="@FijarHasta" Enabled="@UsarPeriodos">Fijar</DxCheckBox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transacciones Section -->
+                <div class="section-group transacciones-section">
+                    <div class="section-header">
+                        <label>Transacciones</label>
+                    </div>
+                    <div class="section-content">
+                        <div class="transacciones-checks">
+                            <DxCheckBox @bind-Checked="@TodasTransacciones">Todas</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@Invisibles">Invisibles</DxCheckBox>
+                            <DxCheckBox @bind-Checked="@Complementario">Complementario</DxCheckBox>
+                        </div>
+                        <div class="transacciones-inputs">
+                            <DxTextBox @bind-Text="@TransaccionCodigo"
+                                       CssClass="trans-codigo"
+                                       Enabled="@(!TodasTransacciones)"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                            <DxTextBox @bind-Text="@TransaccionDescripcion"
+                                       CssClass="trans-descripcion"
+                                       Enabled="@(!TodasTransacciones)"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchTransaccion" />
+                                </Buttons>
+                            </DxTextBox>
+                            <DxButton IconCssClass="fi fi-rr-list"
+                                      RenderStyle="ButtonRenderStyle.Secondary"
+                                      CssClass="trans-btn"
+                                      Click="@OnListTransacciones" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Otros Criterios Section -->
+                <div class="section-group otros-criterios-section">
+                    <div class="section-header">
+                        <label>Otros Criterios</label>
+                    </div>
+                    <div class="section-content">
+
+                        <div style="display:flex;gap:space-between; align-items:center">
+                            <DxCheckBox style="width:200px;" @bind-Checked="@Oficina">Oficina</DxCheckBox>
+                            <div style="display:flex; gap:10px; width:100%">
+                                <div style="width:150px;">
+                                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchOficina" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                </div>
+                                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                                </DxTextBox>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;gap:space-between; align-items:center">
+                            <DxCheckBox style="width:200px;" @bind-Checked="@Ubicacion">Ubicación</DxCheckBox>
+                            <div style="display:flex; gap:10px; width:100%">
+                                <div style="width:150px;">
+                                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchUbicacion" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                </div>
+                                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                                </DxTextBox>
+                            </div>
+                        </div>
+
+
+                        <div style="display:flex;gap:space-between; align-items:center">
+                            <DxCheckBox style="width:200px;" @bind-Checked="@CentroC">Centro C.</DxCheckBox>
+                            <div style="display:flex; gap:10px; width:100%">
+                                <div style="width:150px;">
+                                    <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                        <Buttons>
+                                            <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCentroC" />
+                                        </Buttons>
+                                    </DxTextBox>
+                                </div>
+                                <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                                </DxTextBox>
+                            </div>
+                        </div>
+
+                        <div class="dependencias-check">
+                            <DxCheckBox @bind-Checked="@Dependencias">Dependencias</DxCheckBox>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employee Type Checkboxes -->
+                <div class="employee-checkboxes">
+                    <DxCheckBox @bind-Checked="@Regulares">Regulares</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@Temporeros">Temporeros</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@ExEmpleados">ExEmpleados</DxCheckBox>
+                </div>
+
+                <!-- Disco Section -->
+                <div class="disco-section">
+                    <div class="disco-fields">
+                        <div class="input disco-tipo">
+                            <label style="font-weight:600;">Disco</label>
+                            <label class="sub-label">Tipo</label>
+                            <DxComboBox Data="@TipoDiscoOptions"
+                                        @bind-Value="@TipoDisco"
+                                        NullText=""
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        </div>
+                        <div class="input disco-nombre">
+                            <label>Nombre</label>
+                            <DxTextBox @bind-Text="@DiscoNombre"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            </DxTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close" };
+
+    // Reporte y Nómina
+    private string? Reporte { get; set; }
+    private bool TodasNominas { get; set; } = false;
+    private string? NominaValue { get; set; }
+    private bool Imagen { get; set; } = false;
+
+    // Empleados
+    private bool TodosEmpleados { get; set; } = true;
+    private string? EmpleadoBusqueda { get; set; }
+    private bool EnviarEmail { get; set; } = false;
+
+    // Períodos
+    private bool UsarPeriodos { get; set; } = true;
+    private int PeriodoDesde { get; set; } = 0;
+    private int AnoDesde { get; set; } = 0;
+    private bool FijarDesde { get; set; } = false;
+    private int PeriodoHasta { get; set; } = 0;
+    private int AnoHasta { get; set; } = 0;
+    private bool FijarHasta { get; set; } = false;
+
+    // Transacciones
+    private bool TodasTransacciones { get; set; } = true;
+    private bool Invisibles { get; set; } = false;
+    private bool Complementario { get; set; } = false;
+    private string? TransaccionCodigo { get; set; }
+    private string? TransaccionDescripcion { get; set; }
+
+    // Otros Criterios
+    private bool Oficina { get; set; } = true;
+    private string? OficinaValue { get; set; }
+    private bool Ubicacion { get; set; } = true;
+    private string? UbicacionValue { get; set; }
+    private bool CentroC { get; set; } = true;
+    private string? CentroCValue { get; set; }
+    private bool Dependencias { get; set; } = false;
+
+    // Employee Types
+    private bool Regulares { get; set; } = true;
+    private bool Temporeros { get; set; } = true;
+    private bool ExEmpleados { get; set; } = true;
+
+    // Disco
+    private string? TipoDisco { get; set; }
+    private string? DiscoNombre { get; set; }
+
+    // Dropdown Options
+    private List<string> ReporteOptions = new() { "Reporte 1", "Reporte 2", "Reporte 3" };
+    private List<string> NominaOptions = new() { "Nómina 1", "Nómina 2", "Nómina 3" };
+    private List<string> TipoDiscoOptions = new() { "Tipo 1", "Tipo 2", "Tipo 3" };
+
+    // Event Handlers
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+    private void OnSearchEmpleado() { }
+    private void OnSearchTransaccion() { }
+    private void OnListTransacciones() { }
+    private void OnSearchOficina() { }
+    private void OnSearchUbicacion() { }
+    private void OnSearchCentroC() { }
+    private void OnBrowseDisco() { }
+    private void OnSearch() { }
+    private void OnPrint() { }
+    private void OnExport() { }
+    private void OnRefresh() { }
+    private void OnUpload() { }
+    private void OnAccept() { }
+}

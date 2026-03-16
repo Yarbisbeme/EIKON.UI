@@ -1,0 +1,29 @@
+﻿@using DevExpress.Blazor
+
+<DxCheckBox @bind-Checked="BoolValue">@Label</DxCheckBox>
+
+@code {
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    // Wrapper bool
+    private bool BoolValue
+    {
+        get => Value == "S";
+        set
+        {
+            var newValue = value ? "S" : "N";
+            if (newValue != Value)
+            {
+                Value = newValue;
+                ValueChanged.InvokeAsync(Value);
+            }
+        }
+    }
+}

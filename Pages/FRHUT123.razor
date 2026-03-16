@@ -1,0 +1,231 @@
+@page "/FRHUT123"
+
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+
+@layout MainLayout
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Definición de Formatos para importar archivos a Eikón" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnAdd="HandleAdd" OnSave="HandleSave" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhut123-container">
+        <div class="frhut123-toolbar">
+            <DxButton IconCssClass="fi fi-rr-plus"
+                      RenderStyle="ButtonRenderStyle.Secondary"
+                      Click="@HandleAdd"
+                      CssClass="toolbar-action-btn" />
+            <DxButton IconCssClass="fi fi-rr-document"
+                      RenderStyle="ButtonRenderStyle.Secondary"
+                      Click="@HandleDocument"
+                      CssClass="toolbar-action-btn" />
+            <DxButton IconCssClass="fi fi-rr-folder"
+                      RenderStyle="ButtonRenderStyle.Secondary"
+                      Click="@HandleFolder"
+                      CssClass="toolbar-action-btn" />
+            <DxButton IconCssClass="fi fi-rr-search"
+                      RenderStyle="ButtonRenderStyle.Secondary"
+                      Click="@HandleSearch"
+                      CssClass="toolbar-action-btn" />
+            <DxButton IconCssClass="fi fi-rr-arrow-right"
+                      RenderStyle="ButtonRenderStyle.Secondary"
+                      Click="@HandleNext"
+                      CssClass="toolbar-action-btn" />
+        </div>
+
+        <div class="frhut123-form">
+            <div class="left-column">
+                <div class="input codigo-with-checkbox">
+                    <label>Código</label>
+                    <div class="codigo-container">
+                        <DxCheckBox @bind-Checked="@CodigoEnabled" CssClass="codigo-checkbox" />
+                        <DxTextBox @bind-Text="@Codigo" NullText="" CssClass="codigo-input">
+                            <Buttons>
+                                <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchCodigo" />
+                            </Buttons>
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <div class="input">
+                    <label>Descripción</label>
+                    <DxTextBox @bind-Text="@Descripcion" NullText="" />
+                </div>
+
+                <div class="input">
+                    <label>Formato de Fecha</label>
+                    <DxTextBox @bind-Text="@FormatoFecha" NullText="" />
+                </div>
+
+                <div class="input">
+                    <label>Definición del formato</label>
+                    <DxTextBox @bind-Text="@DefinicionFormato" NullText="" />
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="options-panel">
+                    <div class="option-group">
+                        <label class="group-label">Destino</label>
+                        <div class="checkbox-group">
+                            <DxCheckBox @bind-Checked="@DestinoNomina" Text="Nómina" />
+                            <DxCheckBox @bind-Checked="@DestinoReloj" Text="Reloj" />
+                            <DxCheckBox @bind-Checked="@DestinoPlanes" Text="Planes" />
+                            <DxCheckBox @bind-Checked="@DestinoScript" Text="Script" />
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="group-label">Hora</label>
+                        <DxRadioGroup TData="string" TValue="string" @bind-Value="@SelectedHora" CssClass="radio-group">
+                            <Items>
+                                <DxRadioGroupItem Text="HH:MM" Value="@("HHMM1")" />
+                                <DxRadioGroupItem Text="HH:MM" Value="@("HHMM2")" />
+                                <DxRadioGroupItem Text="HH:I MM" Value="@("HHIMM")" />
+                            </Items>
+                        </DxRadioGroup>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="group-label">Limitado por</label>
+                        <div class="checkbox-group">
+                            <DxCheckBox @bind-Checked="@LimitadoTab" Text="TAB" />
+                            <DxCheckBox @bind-Checked="@LimitadoEspacios" Text="Espacios" />
+                            <DxCheckBox @bind-Checked="@LimitadoComa" Text="Coma" />
+                            <DxCheckBox @bind-Checked="@LimitadoExcel" Text="XExcel" />
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="group-label">Tipo de Registro</label>
+                        <DxRadioGroup TData="string" TValue="string" @bind-Value="@SelectedTipoRegistro" CssClass="radio-group">
+                            <Items>
+                                <DxRadioGroupItem Text="Indicador" Value="@("Indicador")" />
+                                <DxRadioGroupItem Text="Con Id Transacción" Value="@("ConIdTransaccion")" />
+                                <DxRadioGroupItem Text="Formato Militar" Value="@("FormatoMilitar")" />
+                                <DxRadioGroupItem Text="Sin Punto Base" Value="@("SinPuntoBase")" />
+                            </Items>
+                        </DxRadioGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ejemplo-section">
+            <div class="input">
+                <label>Ejemplo</label>
+                <DxMemo @bind-Text="@Ejemplo"
+                        Rows="6"
+                        NullText=""
+                        CssClass="ejemplo-memo" />
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="input archivo-input">
+                <label>Fuda/Archivo</label>
+                <DxTextBox @bind-Text="@FudaArchivo" NullText="">
+                    <Buttons>
+                        <DxEditorButton IconCssClass="fi fi-rr-search" Click="@OnSearchArchivo" />
+                    </Buttons>
+                </DxTextBox>
+            </div>
+            <div class="input base-input">
+                <label>Base</label>
+                <DxSpinEdit @bind-Value="@Base"
+                            MinValue="0"
+                            MaxValue="100"
+                            Increment="1"
+                            ShowSpinButtons="true" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "add", "save", "close" };
+
+    // Left column properties
+    private bool CodigoEnabled { get; set; } = false;
+    private string Codigo { get; set; } = string.Empty;
+    private string Descripcion { get; set; } = string.Empty;
+    private string FormatoFecha { get; set; } = string.Empty;
+    private string DefinicionFormato { get; set; } = string.Empty;
+
+    // Right column - Destino (checkboxes)
+    private bool DestinoNomina { get; set; } = false;
+    private bool DestinoReloj { get; set; } = false;
+    private bool DestinoPlanes { get; set; } = false;
+    private bool DestinoScript { get; set; } = false;
+
+    // Right column - Hora
+    private string SelectedHora { get; set; } = "HHMM1";
+
+    // Right column - Limitado por
+    private bool LimitadoTab { get; set; } = false;
+    private bool LimitadoEspacios { get; set; } = false;
+    private bool LimitadoComa { get; set; } = false;
+    private bool LimitadoExcel { get; set; } = false;
+
+    // Right column - Tipo de Registro
+    private string SelectedTipoRegistro { get; set; } = "Indicador";
+
+    // Bottom sections
+    private string Ejemplo { get; set; } = string.Empty;
+    private string FudaArchivo { get; set; } = string.Empty;
+    private int Base { get; set; } = 0;
+
+    // Search handlers
+    private void OnSearchCodigo()
+    {
+        // Implementar búsqueda de código
+    }
+
+    private void OnSearchArchivo()
+    {
+        // Implementar búsqueda de archivo
+    }
+
+    // Toolbar action handlers
+    private void HandleAdd()
+    {
+        // Implementar agregar
+    }
+
+    private void HandleSave()
+    {
+        // Implementar guardar
+    }
+
+    private void HandleDocument()
+    {
+        // Implementar documento
+    }
+
+    private void HandleFolder()
+    {
+        // Implementar abrir carpeta
+    }
+
+    private void HandleSearch()
+    {
+        // Implementar búsqueda
+    }
+
+    private void HandleNext()
+    {
+        // Implementar siguiente
+    }
+
+    private void HandleClose()
+    {
+        nv.NavigateTo("/dash");
+    }
+}

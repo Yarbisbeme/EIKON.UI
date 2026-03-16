@@ -1,0 +1,817 @@
+﻿@page "/FRHCL111Detalle"
+@page "/FRHCL111Detalle/{pOfCodigo}"
+@layout MainLayout
+@using DevExpress.Blazor
+@using System.ComponentModel.DataAnnotations
+@using System.Net.Http.Json
+@using System.Net.Http.Headers
+@using EIKON.UI.Interfaces
+@using Microsoft.AspNetCore.Components
+
+@using EIKON.UI.Components
+@inject HttpClient HttpClient
+@inject EIKON.UI.Services.EikonDataServices api
+@inject EIKON.UI.Services.AuthenticationService auth
+
+@inject NavigationManager nv
+@inject IJSRuntime JS
+
+<PageTitle>Editar Centro de Costos</PageTitle>
+
+@if (data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+   
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Creación de Centro de Costos - SIRH</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+            }
+
+            .container {
+                width: 95%;
+                margin: 0 auto;
+                background-color: #e9e9e9;
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+                font-size: 18px;
+                color: #333;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+
+            .form-group {
+                margin-bottom: 4px;
+            }
+
+                .form-group label {
+                    display: block;
+                    font-weight: bold;
+                    margin-bottom: 4px;
+                }
+
+                .form-group input, .form-group select {
+                    width: 80%;
+                    padding: 4px;
+                    box-sizing: border-box;
+                }
+
+                    .form-group input[type="checkbox"] {
+                        width: 50%;
+                    }
+
+            .form-row {
+                display: flex;
+                justify-content: space-between;
+            }
+
+                .form-row .form-group {
+                    width: 48%;
+                }
+
+            .actions {
+                text-align: right;
+               
+                margin-top: 10px;
+            }
+
+                .actions button {
+                    padding: 10px 15px;
+                    margin: 0 5px;
+                    cursor: pointer;
+                }
+
+            .checkitem > label {
+                display: inline-block;
+                width: calc(100% - 20px);
+                vertical-align: middle;
+            }
+
+            .checkitem > input[type=checkbox] {
+                display: inline-block;
+                width: 15px;
+                height: 25%;
+                vertical-align: middle;
+            }
+
+            .checkitem > input[type=radio] {
+                display: inline-block;
+                width: 15px;
+                height: 25%;
+                vertical-align: middle;
+
+            }
+
+            table {
+                width: 100%;
+                margin-top: 15px;
+                border-collapse: collapse;
+            }
+
+            table, th, td {
+                border: 1px solid #ccc;
+            }
+
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+
+           .hidden {
+                display: none;
+            }
+
+            .Ahdn {
+                display: none;
+            }
+
+            .Uhdn {
+                display: none;
+            }
+
+            .Dhdn {
+                display: none;
+            }
+
+            .Shdn {
+                display: none;
+            }
+
+            .Phdn {
+                display: none;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Centro de Costo?" OnConfirm="OnConfirmDelete" />
+        <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) registros relacionados a este centro de costo, favor eliminar primero los registros asociados" />
+        <div class="container">
+            <h1>SIRH - Creación de Centro de Costos</h1>
+            <EditForm data-bind="@SelectedItem" Model="SelectedItem" 
+                      OnValidSubmit="@HandleValidSubmit"
+                      OnInvalidSubmit="@HandleInvalidSubmit"
+                      Context="EditFormContext">
+                <DataAnnotationsValidator />
+                <div class="border border-primary rounded p-2">
+                    <div class="btn-group" role="group" aria-label="Barra de botones">
+                        <button type="button" class="btn btn-dark" @onclick="Cancelar">
+                            <i class="fas fa-close"></i> Salir
+                        </button>
+                        <button type="button" class="btn btn-secondary @cShdn" @onclick="Deshacer">
+                            <i class="fas fa-undo-alt"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-success @cAhdn"  @onclick="Agregar">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                        <button type="button" class="btn btn-warning @cUhdn"  @onclick="Editar">
+                        <i class="fi fi-rr-edit"></i> Editar
+                    </button>
+                        <button type="submit" class="btn btn-primary @cShdn" @onclick="Guarda" >
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                        <button type="button" class="btn btn-danger @cDhdn" @onclick="ShowConfirmDialog">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                    <button type="button" class="btn btn-dark" @onclick="Cancelar">
+                        <i class="fas fa-backward"></i> Salir
+                    </button>
+                    </div>
+                </div>
+            <div class="row">
+             <div class="form-group col-md-4">
+                        <label for="cccodigo">Código</label>
+                        <DxTextBox id="cccodigo" @bind-Text="@SelectedItem.CcCodigo"
+                                   ValidationEnabled="true"
+                                   ShowValidationIcon="true"
+                                   ShowValidationSuccessState="true" Enabled="false"></DxTextBox>
+            </div>
+            <div class="form-group col-md-4">
+                        <label for="ccdescri">Descripción</label>
+                        <DxTextBox id="ccdescri" @bind-Text="@SelectedItem.CcDescri" ValidationEnabled="true"
+                                   ShowValidationIcon="true"
+                                   ShowValidationSuccessState="true" ></DxTextBox>
+            </div>
+                    
+               
+            </div>
+            <div class="row">
+                
+                <div class="form-group  col-md-4">
+                        <label for="cccosto">Centro Costo</label>
+                        @* <DxTextBox id="cccosto" @bind-Text="@SelectedItem.CcCosto" ValidationEnabled="true"
+                                   ShowValidationIcon="true"
+                                   ShowValidationSuccessState="true"></DxTextBox> *@
+                        <DxMaskedInput @bind-Value="SelectedItem.CcCosto"
+                                       Mask="##########">
+                            <DxTextMaskProperties InvalidInputNotificationText="Solo números permitidos" />
+                        </DxMaskedInput>
+
+                </div>
+           
+                    <div class="form-group  col-md-4">
+                        <label for="cccontabl">Cuenta Contable</label>
+                        <DxTextBox id="cccontabl" @bind-Text="@SelectedItem.CcContabl" ValidationEnabled="true"
+                                   ShowValidationIcon="true"
+                                   ShowValidationSuccessState="true"></DxTextBox>
+
+                    </div>
+                    <div class="form-group  col-md-2">
+                        <label for="empresa">Empresa</label>
+                        <DxComboBox id="empresa" Data="@empresas" ValueFieldName="EmCodigo" TextFieldName="EmDescri" @bind-Value="SelectedItem.EmEmpresa" ValidationEnabled="true"
+                                    ShowValidationIcon="true" 
+                                   ShowValidationSuccessState="true"></DxComboBox>
+                    </div>
+                    <div class="form-group  col-md-2">
+                        <label for="empresa">Empresa</label>
+                        <DxComboBox id="empresa2" Data="@empresas" ValueFieldName="EmCodigo" TextFieldName="EmDescri" @bind-Value="SelectedItem.EmEmpresa" ValidationEnabled="true"
+                                    ShowValidationIcon="true" 
+                                    ShowValidationSuccessState="true"></DxComboBox>
+                    </div>
+
+              
+            </div>
+         
+
+
+            
+            
+                <!--aqui-->
+               @*  <div class="form-group  col-md-3 checkitem " style="border:dashed;">
+                   
+                    <label>Estatus</label><br />
+                    <label for="inactivo">Inactivo</label>
+                        <input type="radio" id="inactivo" name="red" checked>
+
+                    <label for="activo">Activo</label>
+                    <input type="radio" id="activo" name="red">
+
+                        <label for="vacante">Vacante</label>
+                        <input type="radio" id="vacante" name="red">
+
+                        <label for="proceso">Proceso</label>
+                        <input type="radio" id="proceso" name="red">
+
+                        <label for="eliminar">Eliminar</label>
+                        <input type="radio" id="eliminar" name="red">
+                    
+                </div> *@
+
+                <!---->
+                <div class="row w-100 mx-0">
+                    <p class="demo-text col-12 mt-2">
+
+                        <b> <ValidationSummary /></b>
+                    </p>
+                </div>
+                @* <DxFormLayoutItem ColSpanMd="12">
+                    <ValidationSummary />
+                </DxFormLayoutItem> *@
+                
+            </EditForm>
+
+            
+            
+             
+        </div>
+    </body>
+
+    
+   @*  <DxGrid Data="@data" @ref="MyGrid"
+            CssClass="mw-1100"
+            EditModelSaving="OnEditModelSaving"
+                EditMode="GridEditMode.EditRow"
+            DataItemDeleting="OnDataItemDeleting">
+        <Columns>
+            <DxGridCommandColumn Width="60px" >
+                <HeaderTemplate>
+                    <a class="plus" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"></a>
+                </HeaderTemplate>
+                <CellDisplayTemplate>
+                    <a class="edit" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                    <a class="trash" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"></a>
+                </CellDisplayTemplate>
+               </DxGridCommandColumn>
+            <DxGridDataColumn Caption="Id" FieldName="PasUserid" Width="260px"  />
+            <DxGridDataColumn Caption="Nombre" FieldName="Pasnomb" Width="300px" />
+            <DxGridDataColumn FieldName="Maenume" Caption="Empleado"/>
+            <DxGridDataColumn Caption="Expira" FieldName="PasExpira" />
+            <DxGridDataColumn FieldName="PasEsEmp" Caption="Es Empleado" />
+            
+
+        </Columns>
+    </DxGrid> *@
+    
+}
+
+<h3 class=""></h3>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public string? pOfCodigo { get; set; }
+    //public bool IsModalVisible { get; set; }
+    //public string FechaCrea { get; set; }
+    //public string sPrueba { get; set; }
+   // public string SueldoEntrada { get; set; } = "0.00";
+   // public string Presupuesto { get; set; } = "0.00";
+    public bool CantAdd { get; set; } = false;
+    public bool CantEdit { get; set; } = false;
+    public bool CantDelete { get; set; } = true;
+    public bool CantSave { get; set; } = true;
+    public string Token { get; set; } = "";
+    public string PaCodigo { get; set; } = "0088";
+    public string IsCodigo { get; set; } = "FRHCL111";
+    public string ApiBaseUrl { get; set; } ="";
+    public string cAhdn { get; set; } = "";
+    public string cUhdn { get; set; } = "";
+    public string cShdn { get; set; } = "";
+    public string cDhdn { get; set; } = "";
+    private ConfirmDialog confirmDialog;
+    private AlertDialog alertDialog;
+    string FormValidationState = "";
+    void ShowConfirmDialog()
+    {
+        confirmDialog.Show(); // Muestra el diálogo
+    }
+    void ShowAlertDialog()
+    {
+        alertDialog.Message = "Testing";
+        alertDialog.Show(); // Muestra la alerta
+    }
+    async Task OnConfirmDelete(bool confirmed)
+    {
+        if (confirmed)
+        {
+            // Lógica de eliminación si el usuario confirma
+            await DeleteItem();
+        }
+        else
+        {
+            // Lógica si el usuario cancela
+            Console.WriteLine("Eliminación cancelada");
+        }
+    }
+
+    // private void ConfirmToken()
+    // {
+    //     // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
+    //     //IsModalVisible = false;
+    // }
+
+
+    // private void Cancel()
+    // {
+    //    // IsModalVisible = false;
+    // }
+   
+    protected void Guarda()
+    {
+        var dataItem = SelectedItem;
+       // dataItem.OfEstatus = Estatus;
+
+        if (SelectedItem.IdentityColumn==0)
+        {
+            var ret0 = api.ccAddAsync(dataItem,Token); //insertar centro de costo
+                                                        //dataue = new List<Frhue000Dto>();
+            
+        }
+        else
+        {
+            var ret = api.ccUpdateAsync(dataItem,Token); // update centro de costo
+            
+        }
+        //Task.Delay(4000);
+        nv.NavigateTo("/FRHCL100Test");
+
+    }
+    protected void Cancelar()
+    {
+        nv.NavigateTo("/FRHCL100Test");
+    }
+    protected async Task Deshacer()
+    {
+        await CargaRegistro();
+        //await SetPermisos(PaCodigo,IsCodigo);
+        clase = "";
+    }
+    protected void Editar()
+    {
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        //CantSave= false;
+    }
+    protected void Agregar()
+    {
+        clase = "hidden";
+        cShdn = "";
+        cUhdn = "hidden";
+        cAhdn = "hidden";
+        SelectedItem.IdentityColumn=0;
+        // SelectedItem.a = "000";
+        // SelectedItem.Pasnomb = "xx";
+        // SelectedItem.PasUserid = "xx";
+        // SelectedItem.PasFecRe = DateTime.Today;
+        // SelectedItem.PasFecEx = DateTime.Today;
+        // SelectedItem.PasEsEmp = "N";
+        SelectedItem.CreatedBy = "N";
+        SelectedItem.CreatedOn = DateTime.Today;
+        SelectedItem.ChangedOn = DateTime.Today;
+        SelectedItem.ChangedBy = "N";
+        CantSave = false;
+    }
+    // Propiedad que manejará el estatus seleccionado
+    private string Estatus { get; set; } = "A"; // Valor por defecto "A" para Activo
+                                                // Propiedad que manejará el campo EsEmpleado
+    bool EsEmpl { get; set; } = false;
+    bool EnabledEmp { get; set; } = false;
+    bool Vacante { get; set; } = false;
+    bool EnabledExp { get; set; } = false;
+    private string clase { get; set; } = "";
+    // Método que actualiza el valor del estatus al cambiar la selección
+    private void CambiarEstatus(ChangeEventArgs e)
+    {
+        Estatus = e.Value.ToString();
+    }
+    private void EsEmpleadEstatus(bool value)
+    {
+        EsEmpl = value;
+        EnabledEmp = EsEmpl;  
+
+    }
+    private void ExpiraEstatus(bool value)
+    {
+        Vacante = value;
+        EnabledExp = Vacante;
+
+    }
+    DxGrid? MyGrid;
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    private bool IsChecked { get; set; } = false;
+    string GetText()
+    {
+        if (IsChecked) return "Activo";
+        else return "Inactivo";
+    }
+    private EditContext editContext;
+    private List<Trhcc010Dto> data;
+    //private Frhrq010Dto datarq;
+    //private List<Trhnz000Dto> modulos { get; set; } =new List<Trhnz000Dto>();
+    private string SelectedCategoryId { get; set; }
+    private Trhcc010Dto SelectedItem { get; set; }
+    private List<Trhem000> empresas { get; set; } = new List<Trhem000>();
+    //private List<Trhpa000Dto> perfiles { get; set; } = new List<Trhpa000Dto>();
+    private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
+
+    //   private List<Frhjo010Dto> ofregional { get; set; } = new List<Frhjo010Dto>();
+
+    //private List<Trhpv000Dto> provincias { get; set; }
+    //private List<Trhto000Dto> tipoOfic { get; set; }
+    //private List<Trhcr000Dto> ofregional { get; set; }
+
+    //private List<Trhnp010Dto> clases { get; set; }
+    //private Trhnp010Dto clase_np { get; set; }
+    //private Trhct010Dto categoria_np { get; set; }
+    //private List<Trhct010Dto> categorias { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            //api.ObtenerTokenAsync();
+            // Token = api.GetToken();
+            // Token = await auth.GetTokenAsync();
+            Token = auth.tkn;
+            if (string.IsNullOrEmpty(Token))
+            {
+                //Token = await auth.GetTokenAsync();
+                return;
+            }
+            api.SetToken(Token);
+        }
+        ApiBaseUrl = api.GetApiBaseUrl();
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        data = await HttpClient.GetFromJsonAsync<List<Trhcc010Dto>>(ApiBaseUrl + "api/Trhcc010");
+        empresas = await HttpClient.GetFromJsonAsync<List<Trhem000>>(ApiBaseUrl + "api/Trhem000");
+        //ofregional =  await HttpClient.GetFromJsonAsync<List<Trhcr000Dto>>(ApiBaseUrl + "api/Trhcr000");
+        //tipoOfic =  await HttpClient.GetFromJsonAsync<List<Trhto000Dto>>(ApiBaseUrl + "api/Trhto000");
+        //provincias =  await HttpClient.GetFromJsonAsync<List<Trhpv000Dto>>(ApiBaseUrl + "api/Trhpv000");
+        // clases = await api.npGetByEmCodigo("01", Token);
+        //  categorias = await api.ctGetByEmCodigo("01", Token);
+        // perfiles = await HttpClient.GetFromJsonAsync<List<Trhpa000Dto>>(ApiBaseUrl + "api/Trhpa000");
+        // data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+        // set permisos
+        //await SetPermisos(PaCodigo, IsCodigo);
+        //modulos = await api.GetTrhnz000Dtos();
+        await CargaRegistro();
+        // if (id==0)
+        // { data = await api.GetTrhps000Dtos(); }
+        // else
+        // { SelectedItem = await api.GetByIdTrhps000Dtos(id);
+        //     data = new List<Trhps000Dto>();
+        //     data.Add(SelectedItem);
+        //     Estatus = SelectedItem.PasUserE;
+        //     EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+        //     EnabledEmp = EsEmpl;
+        //     Expira = SelectedItem.PasExpira == "S" ? true : false;
+        //     EnabledExp = Expira;
+        //     dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        // }
+        //modulos = await HttpClient.GetFromJsonAsync<List<Trhnz000>>(ApiBaseUrl + "api/Trhnz000");
+    }
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Trhps000Dto)e.DataItem).IdentityColumn;
+        await api.DeleteTrhps000Dto(codigo);
+        //await HttpClient.DeleteAsync(ApiBaseUrl + "api/Trhps000/" + ((Trhps000Dto)e.DataItem).IdentityColumn);
+        // data = await api.GetTrhcc010s();
+        //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+    }
+    async Task ConfirmDelete()
+    {
+        // Llamada a JavaScript para la confirmación
+        bool isConfirmed = await JS.InvokeAsync<bool>("confirmar", "¿Estás seguro de que deseas eliminar este registro?");
+
+        if (isConfirmed)
+        {
+            // Lógica para eliminar si el usuario confirma
+            await  DeleteItem();
+        }
+    }
+
+    async Task DeleteItem()
+    {
+        // Tu lógica para eliminar el elemento
+        // dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        // if (dataue.Count() > 0)
+        // {
+        //     alertDialog.Message = "Tiene (" + dataue.Count().ToString() + " ) perfil(es). Favor elimine todos los perfiles asociados a este empleado y luego podra eliminar el empleado.";
+        //     alertDialog.Show();
+        //     //await JS.InvokeVoidAsync("alert", "Favor eliminar los perfiles asociados a este usuario antes de eliminarlo!");
+        // }
+        // else
+
+        await api.puDeleteAsync(id,Token);
+        nv.NavigateTo("/FRHCL100Test");
+
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        if (e.IsNew)
+        {
+            Trhcc010Dto newCategory = new Trhcc010Dto();
+            SetNewValues(newCategory, (Trhcc010Dto)e.EditModel);
+            //await HttpClient.PostAsJsonAsync<DTOs.Trhps000Dto>(ApiBaseUrl + "api/Trhps000/", newCategory);
+            // HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhps000Dto>(ApiBaseUrl + "api/Trhps000/", newCategory);
+            HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Trhcc010Dto>(ApiBaseUrl + "api/Trhcc010/", newCategory);
+            // Verifica si la solicitud fue exitosa
+            if (response.IsSuccessStatusCode)
+            {
+                // SelectedItem = await api.GetTrhcc010s();
+            }
+            else
+            {
+                Console.WriteLine($"Error: Insertando ");
+            }
+
+            //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+        }
+        else
+        {
+            var dataItem = (Trhcc010Dto)e.DataItem;
+            SetEditValues(dataItem, (Trhcc010Dto)e.EditModel);
+            // HttpResponseMessage response = await HttpClient.PutAsJsonAsync(ApiBaseUrl + "api/Trhps000/" + dataItem.PasUserid, dataItem);
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+            //     string responseContent = await response.Content.ReadAsStringAsync();
+            //     // Puedes deserializar el contenido si es un JSON
+            //     // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+            // }
+            // else
+            // {
+            //     // La solicitud falló. Puedes manejar el error aquí.
+            //     string errorContent = await response.Content.ReadAsStringAsync();
+            //     Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+            // }
+            var ret = await api.ccUpdateAsync(dataItem,Token);
+            if (ret)
+            { data = await api.ccGetAllAsync(Token); }
+            else
+            { Console.WriteLine($"Error: Actualizando"); }
+            //data = await HttpClient.GetFromJsonAsync<List<Trhps000Dto>>(ApiBaseUrl + "api/Trhps000");
+        }
+
+        void SetNewValues(Trhcc010Dto dataItem, Trhcc010Dto newValues)
+        {
+            dataItem.CcDescri = newValues.CcDescri;
+            dataItem.CcCosto = newValues.CcCosto;
+            dataItem.CcCodigo = newValues.CcCodigo;
+            dataItem.CcContabl = newValues.CcContabl;
+
+            dataItem.EmEmpresa = newValues.EmEmpresa;
+
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+        void SetEditValues(Trhcc010Dto dataItem, Trhcc010Dto newValues)
+        {
+            dataItem.CcDescri = newValues.CcDescri;
+            dataItem.CcCosto = newValues.CcCosto;
+            dataItem.CcCodigo = newValues.CcCodigo;
+            dataItem.CcContabl = newValues.CcContabl;
+
+            dataItem.EmEmpresa = newValues.EmEmpresa;
+
+            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedOn = DateTime.Today.Date;
+            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedOn = DateTime.Today.Date;
+
+        }
+
+    }
+    // async Task SetPermisos(string paCodigo, string isCodigo)
+    // {
+    //     permisos = await api.GetTrhfm000DtosByPaIs(isCodigo);
+    //     if (permisos == null)
+    //     {
+    //         permisos = new Trhfm000Dto();
+    //         permisos.MpMail = false;
+    //         permisos.MpDelete = false;
+    //         permisos.MpUpdate = false;
+    //         permisos.MpReadFo = false;
+    //         permisos.MpAddFor = false;
+
+    //     }
+    //     cAhdn = permisos.MpAddFor ? "" : "hidden";
+    //     cUhdn = permisos.MpUpdate ? "" : "hidden";
+    //     cShdn = "hidden";
+    //     cDhdn = permisos.MpDelete ? "" : "hidden";
+    //     //return "OK";
+
+    // }
+    async Task CargaRegistro()
+    {
+        if (id == 0 && pOfCodigo=="000")
+        { //data = new List<Trhcc010Dto>();
+          //editContext = new EditContext(data);
+            SelectedItem = new Trhcc010Dto();
+            SelectedItem.ChangedBy = "Eikon";
+            SelectedItem.CreatedBy = "Eikon";
+            SelectedItem.ChangedOn = DateTime.Today;
+            SelectedItem.CreatedOn = DateTime.Today;
+            SelectedItem.EmEmpresa = "01";
+           // SelectedItem.CcEstatus = "A";
+           // SelectedItem.OfFax = " ";
+            SelectedItem.IdentityColumn = 0;
+            
+            return;
+        }
+        if (id > 0)
+        {
+            //https://localhost:8082/api/Trhcc010/1
+            SelectedItem =  await HttpClient.GetFromJsonAsync<Trhcc010Dto>(ApiBaseUrl + "api/Trhcc010/"+id.ToString()); 
+            data = new List<Trhcc010Dto>();
+            data.Add(SelectedItem);
+            //clase_np = await api.npGetByCodigoAsync(SelectedItem.NpCodigo, Token);
+            //categoria_np = await api.ctGetByCodigoAsync(clase_np.CtCodigo, Token);
+            //sPrueba = clase_np.NpPeriodo.ToString("N0");
+            //FechaCrea = SelectedItem.ChangedOn.ToString("yyyy-MM-dd");
+            //Estatus = SelectedItem.OfEstatus;
+            //Presupuesto = categoria_np.Ptomedio.ToString("N2");
+            //SueldoEntrada = categoria_np.Minent.ToString("N2");
+            // EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+            // EnabledEmp = EsEmpl;
+            // Vacante = SelectedItem.Puevaca == "S" ? true : false;
+            // EnabledExp = Expira;
+            //  dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        }
+        if(pOfCodigo == "000")
+        {
+            SelectedItem = new Trhcc010Dto();
+            return;
+        }
+        if (pOfCodigo != "")
+        {
+            //https://localhost:8082/api/Trhcc010/PorCodigo/001
+            SelectedItem = await HttpClient.GetFromJsonAsync<Trhcc010Dto>(ApiBaseUrl + "api/Trhcc010/Trhcc010PorCodigo/" + pOfCodigo);
+            data = new List<Trhcc010Dto>();
+            foreach (var prop in SelectedItem.GetType().GetProperties())
+            {
+                if (prop.PropertyType == typeof(string))
+                {
+                    var valor = (string)prop.GetValue(SelectedItem);
+                    prop.SetValue(SelectedItem, valor?.Trim());
+                }
+            }
+            data.Add(SelectedItem);
+            //clase_np = await api.npGetByCodigoAsync(SelectedItem.NpCodigo, Token);
+            //categoria_np = await api.ctGetByCodigoAsync(clase_np.CtCodigo, Token);
+            //sPrueba = clase_np.NpPeriodo.ToString("N0");
+            //FechaCrea = SelectedItem.ChangedOn.ToString("yyyy-MM-dd");
+            //Estatus = SelectedItem.OfEstatus;
+            //Presupuesto = categoria_np.Ptomedio.ToString("N2");
+            //SueldoEntrada = categoria_np.Minent.ToString("N2");
+            // EsEmpl = SelectedItem.PasEsEmp == "S" ? true : false;
+            // EnabledEmp = EsEmpl;
+            // Vacante = SelectedItem.Puevaca == "S" ? true : false;
+            // EnabledExp = Expira;
+            //  dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        }
+    }
+    async Task BuscarReq()
+    {
+        // if (SelectedItem.Reqnume != null)
+        // { 
+        //     //  datarq = await api.ge(id);
+        //     await JS.InvokeVoidAsync("alert", "Pendiente buscar requisicion...");
+
+        // }
+        // else
+        // {
+        //     await JS.InvokeVoidAsync("alert", "Requisicion vacia...");
+        // }
+    }
+    /*desde aqui*/
+    async Task OnDataItemDeletingUe(GridDataItemDeletingEventArgs e)
+    {
+        var codigo = ((Frhue000Dto)e.DataItem).IdentityColumn;
+        var userid = ((Frhue000Dto)e.DataItem).PasUserid;
+        await HttpClient.DeleteAsync(ApiBaseUrl + "frhue000/" + ((Frhue000Dto)e.DataItem).IdentityColumn);
+      //  dataue = await api.GetFrhue000DtosByPasUserId(userid);
+    }
+    // async Task OnEditModelSavingUe(GridEditModelSavingEventArgs e)
+    // {
+    //     if (e.IsNew)
+    //     {
+    //         Frhue000Dto newCategory = new Frhue000Dto();
+    //         SetNewValues(newCategory, (Frhue000Dto)e.EditModel);
+    //         //await HttpClient.PostAsJsonAsync<DTOs.frhue000Dto>(ApiBaseUrl + "frhue000/", newCategory);
+    //         HttpResponseMessage response = await HttpClient.PostAsJsonAsync<Frhue000Dto>(ApiBaseUrl + "frhue000/", newCategory);
+
+    //         // Verifica si la solicitud fue exitosa
+    //         if (response.IsSuccessStatusCode)
+    //         {
+    //             // La solicitud fue exitosa. Puedes leer el contenido si es necesario.
+    //             string responseContent = await response.Content.ReadAsStringAsync();
+    //             // Puedes deserializar el contenido si es un JSON
+    //             // var result = JsonConvert.DeserializeObject<YourResponseModel>(responseContent);
+    //         }
+    //         else
+    //         {
+    //             // La solicitud falló. Puedes manejar el error aquí.
+    //             string errorContent = await response.Content.ReadAsStringAsync();
+    //             Console.WriteLine($"Error: {response.StatusCode} - {errorContent}");
+    //         }
+
+    //         dataue = await api.GetFrhue000DtosByPasUserId(newCategory.PasUserid);
+    //     }
+     
+
+    //     // void SetNewValues(Frhue000Dto dataItem, Frhue000Dto newValues)
+    //     // {
+    //     //     dataItem.PasUserid = SelectedItem.PasUserid;
+
+    //     //     dataItem.PaCodigo = newValues.PaCodigo;
+
+    //     //     dataItem.EmCodigo = newValues.EmCodigo;
+
+    //     //     dataItem.CreatedBy = "Eikon";
+    //     //     dataItem.CreatedOn = DateTime.Today.Date;
+    //     //     dataItem.ChangedBy = " ";
+    //     //     dataItem.ChangedOn = DateTime.Today.Date;
+
+    //     // }
+        
+    // }
+    /*hasta aqui*/
+
+    void HandleValidSubmit()
+    {
+        FormValidationState = @"El formulario contine datos válidos";
+    }
+    void HandleInvalidSubmit()
+    {
+        FormValidationState = @"El formulario contine datos inválidos";
+    }
+}
+
+
+

@@ -1,0 +1,339 @@
+﻿/* Login page */
+.e-login {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.e-login .e-nav {
+  display: flex;
+  position: relative;
+  z-index: 10;
+  background-color: #fbf9f9;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  height: 100px;
+  width: 100%;
+}
+
+.e-login .e-nav .e-nav-logo {
+  width: 140px;
+}
+
+.e-login .e-nav .e-nav-logo img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.e-login .e-nav .e-nav-links {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.e-login .e-nav .e-nav-links ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 20px;
+}
+
+.e-login .e-nav .e-nav-links ul li a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+  border-bottom: 1px solid transparent;
+  color: #33363f;
+}
+
+.e-login .e-nav .e-nav-links ul li a:hover {
+  border-color: var(--naranja-eikon-normal);
+}
+
+.e-login .e-nav .e-nav-links ul li a i {
+  font-size: 24px;
+  line-height: 0%;
+}
+
+.e-login .e-login-body {
+  display: flex;
+  width: 100%;
+  min-height: calc(100dvh - 120px);
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.e-login .e-login-body .left {
+  height: min(736px, 100%);
+  width: min(627px, 50%);
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Carousel Styles */
+.e-login .e-login-body .left ::deep .login-carousel {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.e-login .e-login-body .left ::deep .carousel-item {
+  width: 100%;
+  height: 700px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.e-login .e-login-body .left ::deep .carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #f8f9fa;
+}
+
+.e-login .e-login-body .left ::deep .carousel-caption {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 80%;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.e-login .e-login-body .left ::deep .carousel-caption h3 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.e-login .e-login-body .left ::deep .carousel-caption p {
+  color: #e0e0e0;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Carousel Indicators */
+.e-login .e-login-body .left ::deep .dxbs-carousel-indicators {
+  bottom: 15px;
+  gap: 8px;
+}
+
+.e-login .e-login-body .left ::deep .dxbs-carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.e-login .e-login-body .left ::deep .dxbs-carousel-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
+}
+
+.e-login .e-login-body .left ::deep .dxbs-carousel-indicator.active {
+  background-color: #b9351c;
+  width: 30px;
+  border-radius: 5px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.e-login .e-login-body .middle {
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.e-login .e-login-body .middle .line {
+  width: 1px;
+  background-color: #e5e5ea;
+  border-radius: 20px;
+  height: 400px;
+}
+
+.e-login .e-login-body .right {
+  height: 100%;
+  width: min(100%, 352px);
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.e-login .e-login-body .right .e-img {
+  width: 40px;
+  height: 40px;
+}
+
+.e-login .e-login-body .right .e-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.e-login .e-login-body .right h1 {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.e-login .e-login-body .right p {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.e-login .e-login-body .right .login-form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.e-login .e-login-body .right .login-form .form-btn {
+  cursor: pointer;
+  height: 42px;
+  width: min(352px, 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+  border: none;
+  border-radius: 4px;
+  background: #b9351c;
+  color: #ffffff;
+}
+
+.e-login .e-login-body .right .login-form .form-btn:hover {
+  background-color: #8b2815;
+}
+
+.e-login .e-login-body .right .login-support {
+  color: #33363f;
+  line-height: normal;
+}
+
+.e-login .e-login-body .right .login-support > span {
+  text-decoration: underline;
+  color: #004a99;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: 5%;
+  text-underline-offset: 20%;
+  cursor: pointer;
+}
+
+@media (max-width: 1030px) {
+  .e-login .e-login-body .middle {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .e-login .e-nav .e-nav-links ul li a span {
+    margin-top: auto;
+    display: none;
+  }
+
+  .e-login .e-login-body {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+
+  .e-login .e-login-body .middle,
+  .e-login .e-login-body .left {
+    display: none;
+  }
+
+  .e-login .e-login-body .right {
+    max-width: 100%;
+  }
+
+  .e-login-body .right {
+    display: flex;
+    justify-content: center;
+  }
+
+  .e-login-body .right p,
+  .e-login-body .right h1 {
+    text-align: center;
+  }
+
+  .e-login .e-login-body .right .e-img {
+    margin-inline: auto;
+  }
+
+  .e-login .e-login-body .right .login-form {
+    align-items: center;
+  }
+
+  /* Carousel responsive adjustments */
+  .e-login .e-login-body .left ::deep .carousel-item {
+    height: 500px;
+  }
+
+  .e-login .e-login-body .left ::deep .carousel-caption {
+    padding: 15px 20px;
+    max-width: 90%;
+  }
+
+  .e-login .e-login-body .left ::deep .carousel-caption h3 {
+    font-size: 20px;
+  }
+
+  .e-login .e-login-body .left ::deep .carousel-caption p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .e-login .e-login-body {
+    min-height: calc(100vh - 100px);
+    justify-content: center;
+  }
+
+  .e-login .e-login-body .right .login-form {
+    width: 90%;
+    margin-inline: auto;
+  }
+}

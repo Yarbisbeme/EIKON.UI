@@ -1,0 +1,22 @@
+﻿@* PageTitle.razor *@
+@* @rendermode InteractiveServer
+ *@
+@namespace EIKON.UI.Components
+<div class="page-title">
+    @if (!string.IsNullOrEmpty(BackUrl))
+    {
+        <a href="@BackUrl" class="back-link">
+            <i class="fi fi-rr-angle-left"></i>
+        </a>
+    }
+    else
+    {
+        <i class="fi fi-rr-angle-left"></i>
+    }
+    <h2>@Title</h2>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string? BackUrl { get; set; }
+}

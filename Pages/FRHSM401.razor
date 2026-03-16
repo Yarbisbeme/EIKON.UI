@@ -1,0 +1,255 @@
+@layout MainLayout
+@page "/FRHSM401"
+@using EIKON.UI.Components
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@inject NavigationManager nv
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <Breadcrumb Title="Reportes Seguridad industrial" BackUrl="/dash" />
+    <div class="page-header">
+        <div class="page-toolbar">
+            <Toolbar formulario="FRHxxx999" OnClose="HandleClose" />
+        </div>
+    </div>
+
+    <div class="frhsm401-form">
+        <!-- Main Layout: Content + Action Buttons -->
+        <div class="main-layout">
+            <!-- Left Content Area -->
+            <div class="content-area">
+                <!-- Top Row: Todos + Desde + Hasta + Fijar -->
+                <div class="dates-row">
+                    <DxCheckBox @bind-Checked="@Todos">Todos</DxCheckBox>
+                    <div class="date-group">
+                        <label>Desde</label>
+                        <DxDateEdit @bind-Date="@FechaDesde"
+                                    DisplayFormat="d/M"
+                                    NullText="/ /" />
+                    </div>
+                    <div class="date-group">
+                        <label>Hasta</label>
+                        <DxDateEdit @bind-Date="@FechaHasta"
+                                    DisplayFormat="d/M"
+                                    NullText="/ /" />
+                    </div>
+                    <DxCheckBox @bind-Checked="@Fijar">Fijar</DxCheckBox>
+                </div>
+
+                <!-- Reporte -->
+                <div class="input">
+                    <label>Reporte</label>
+                    <DxComboBox Data="@ReporteOptions"
+                                @bind-Value="@Reporte"
+                                NullText="Seleccione..."
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                CssClass="reporte-combo" />
+                </div>
+
+                <div class="divider"></div>
+                <!-- Accidente Row -->
+                <div style="display:flex;gap:space-between; align-items:center">
+                    <DxCheckBox style="width:200px;" @bind-Checked="@AccidenteCheck">Accidente</DxCheckBox>
+                    <div style="display:flex; gap:10px; width:100%">
+                        <div style="width:150px;">
+                            <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div>
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <!-- Medicamentos Row -->
+                <div style="display:flex;gap:space-between; align-items:center">
+                    <DxCheckBox style="width:200px;" @bind-Checked="@MedicamentosCheck">Medicamentos</DxCheckBox>
+                    <div style="display:flex; gap:10px; width:100%">
+                        <div style="width:150px;">
+                            <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div>
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                        </DxTextBox>
+                    </div>
+                </div>
+
+
+                <!-- Med. Enfermería Row -->
+                <div style="display:flex;gap:space-between; align-items:center">
+                    <DxCheckBox style="width:200px;" @bind-Checked="@MedEnfermeriaCheck">Med. Enfermería</DxCheckBox>
+                    <div style="display:flex; gap:10px; width:100%">
+                        <div style="width:150px;">
+                            <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div>
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <!-- Lic. Enfermedad Row -->
+                <div style="display:flex;gap:space-between; align-items:center">
+                    <DxCheckBox style="width:200px;" @bind-Checked="@LicEnfermedadCheck">Lic. Enfermedad</DxCheckBox>
+                    <div style="display:flex; gap:10px; width:100%">
+                        <div style="width:150px;">
+                            <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                                <Buttons>
+                                    <DxEditorButton IconCssClass="fi fi-rr-search" />
+                                </Buttons>
+                            </DxTextBox>
+                        </div>
+                        <DxTextBox ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never" Enabled="false">
+                        </DxTextBox>
+                    </div>
+                </div>
+
+                <!-- Fecha Checkboxes -->
+                <div class="fecha-checkboxes">
+                    <DxCheckBox @bind-Checked="@FechaHabilNomina">Fecha Hábil Nómina</DxCheckBox>
+                    <DxCheckBox @bind-Checked="@FechaDeberiaRegresar">Fecha que debería regresar</DxCheckBox>
+                </div>
+
+                <div class="divider"></div>
+                <!-- Radio Buttons Section -->
+                <div class="radio-section">
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("Accidentes")">
+                        Accidentes
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("Medicamentos")">
+                        Medicamentos
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("MedEnfermeria")">
+                        MedEnfermeria
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("LicEnfermedad")">
+                        LicEnfermedad
+                    </DxRadio>
+                                        <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("Examenes")">
+                        Examenes
+                    </DxRadio>
+                                        <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("Embarazadas")">
+                        Embarazadas
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("Visitas")">
+                        Visitas
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("LicMedicas")">
+                        LicMedicas
+                    </DxRadio>
+                    <DxRadio GroupName="accion"
+                             @bind-GroupValue="@TipoReporte"
+                             Value="@("AvisoCitas")">
+                        AvisoCitas
+                    </DxRadio>
+                </div>
+
+                <!-- Disco Section -->
+                <div class="disco-section">
+                    <div class="disco-fields">
+                        <div class="input disco-tipo">
+                            <label style="font-weight:600;">Disco</label>
+                            <label class="sub-label">Tipo</label>
+                            <DxComboBox Data="@TipoDiscoOptions"
+                                        @bind-Value="@TipoDisco"
+                                        NullText=""
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        </div>
+                        <div class="input disco-nombre">
+                            <label>Nombre</label>
+                            <DxTextBox @bind-Text="@DiscoNombre"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never">
+                            </DxTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // **- private string[] // **- ToolbarOptions = { "close", "save", "add" };
+
+    // Fechas
+    private bool Todos { get; set; } = false;
+    private DateTime? FechaDesde { get; set; }
+    private DateTime? FechaHasta { get; set; }
+    private bool Fijar { get; set; } = false;
+
+    // Reporte
+    private string? Reporte { get; set; }
+
+    // Accidente
+    private bool AccidenteCheck { get; set; } = false;
+    private string? AccidenteCodigo { get; set; }
+    private string? AccidenteDescripcion { get; set; }
+
+    // Medicamentos
+    private bool MedicamentosCheck { get; set; } = false;
+    private string? MedicamentosCodigo { get; set; }
+    private string? MedicamentosDescripcion { get; set; }
+
+    // Med. Enfermería
+    private bool MedEnfermeriaCheck { get; set; } = false;
+    private string? MedEnfermeriaCodigo { get; set; }
+    private string? MedEnfermeriaDescripcion { get; set; }
+
+    // Lic. Enfermedad
+    private bool LicEnfermedadCheck { get; set; } = false;
+    private string? LicEnfermedadCodigo { get; set; }
+    private string? LicEnfermedadDescripcion { get; set; }
+
+    // Fecha Checkboxes
+    private bool FechaHabilNomina { get; set; } = false;
+    private bool FechaDeberiaRegresar { get; set; } = false;
+
+    // Radio Group
+    private string TipoReporte { get; set; } = "Accidentes";
+
+    // Disco
+    private string? TipoDisco { get; set; }
+    private string? DiscoNombre { get; set; }
+
+    // Dropdown Options
+    private List<string> ReporteOptions = new() { "Reporte 1", "Reporte 2", "Reporte 3" };
+    private List<string> TipoDiscoOptions = new() { "Tipo 1", "Tipo 2", "Tipo 3" };
+
+    // Event Handlers
+    private void HandleClose() { nv.NavigateTo("/dash"); }
+    private void OnSearchAccidente() { }
+    private void OnSearchMedicamentos() { }
+    private void OnSearchMedEnfermeria() { }
+    private void OnSearchLicEnfermedad() { }
+    private void OnBrowseDisco() { }
+    private void OnSearch() { }
+    private void OnPrint() { }
+    private void OnExport() { }
+    private void OnRefresh() { }
+    private void OnAccept() { }
+}

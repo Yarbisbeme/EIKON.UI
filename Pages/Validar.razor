@@ -1,0 +1,44 @@
+﻿<h3>Validar</h3>
+@page "/Validar"
+@using DevExpress.Blazor
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@SelectedContact">
+    <DataAnnotationsValidator />
+
+    <DxTextBox @bind-Text="SelectedItem.PhoneNumber"
+               InputType="TextBoxInputType.Tel"
+               Placeholder="Ingrese su número de teléfono"
+               CssClass="form-control"
+               ShowValidationIcon="true" />
+
+   
+   
+
+    <DxButton Click="SubmitForm" Text="Enviar" />
+</EditForm>
+
+@code {
+    private UserModel SelectedItem { get; set; } = new UserModel();
+    private ContactModel SelectedContact { get; set; } = new ContactModel();
+    private void SubmitForm() {
+        Console.WriteLine($"Teléfono ingresado: {SelectedItem.PhoneNumber}");
+    }
+
+    public class UserModel {
+        [Required(ErrorMessage = "El teléfono es obligatorio")]
+        [Phone(ErrorMessage = "Ingrese un número de teléfono válido")]
+        [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Formato incorrecto. Ej: +1234567890")]
+        public string PhoneNumber { get; set; } = string.Empty;
+    }
+    public class ContactModel
+    {
+        [Required(ErrorMessage = "Teléfono requerido")]
+        [RegularExpression(@"^\(\d{3}\) \d{3}-\d{4}$",
+            ErrorMessage = "Formato inválido (###) ###-####")]
+        public string PhoneNumber { get; set; }
+    }
+
+}
+
+
