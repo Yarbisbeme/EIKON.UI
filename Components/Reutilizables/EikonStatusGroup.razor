@@ -1,0 +1,33 @@
+<div class="eikon-status-container">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label class="status-label">@Label</label>
+    }
+    <div class="segmented-group">
+        @foreach (var item in Items)
+        {
+            <div class="status-item @(Value == item.Value ? "active" : "")" 
+                 @onclick="() => SelectItem(item.Value)">
+                @item.Text
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "Estatus";
+    [Parameter] public string Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public List<EstatusItem> Items { get; set; } = new();
+
+    private async Task SelectItem(string newValue)
+    {
+        Value = newValue;
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    public class EstatusItem {
+        public string Text { get; set; }
+        public string Value { get; set; }
+    }
+}

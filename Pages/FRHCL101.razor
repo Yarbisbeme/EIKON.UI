@@ -3,6 +3,7 @@
 @using DevExpress.Blazor
 @using System.Net.Http.Json
 @using System.Net.Http.Headers
+@using EIKON.UI.Components.Reutilizables
 @using EIKON.UI.Interfaces
 
 @using EIKON.UI.Components
@@ -30,8 +31,7 @@ else
         <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Usuario?" OnConfirm="OnConfirmDelete" />
         <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) perfil(es) asociados a este empleado, favor eliminar los perfiles" />
         <Alert2 @ref="alertInfo" TypeAlert="info" Message="Creación de Cargos" />
-
-        @* * Componente reutilizable para los Headers de los Form *@
+        
         <FormHeader 
             Title="SIRH - Creación de Cargos" 
             FormCode="FRHCL101" 
@@ -46,83 +46,83 @@ else
                     <EditForm data-bind="@SelectedItem" Model="SelectedItem">
 
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="puenume">Cargo</label>
+                            <div class="form-group col-md-4 mb-3">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puenume">Cargo</label>
                                 <DxTextBox id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" />
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="puetitu">Título</label>
+                            <div class="form-group col-md-4 mb-3">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puetitu">Título</label>
                                 <DxTextBox id="puetitu" @bind-Text="@SelectedItem.Puetitu" />
                             </div>
-                            <div class="form-group col-md-2">
-                                <label for="reqnume">Requisición</label>
-                                <DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"/>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="btnBuscar">Buscar Requisición</label>
+                            <div class="form-group col-md-4 mb-3">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="reqnume">Requisición</label>
+                                @**<DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"/>*@
+                                 
+                                <div class="form-group d-flex gap-2">
+                                    <DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"/>
+                                    <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
+                                </div>
+                                
+                            </div>@* 
+                            <div class="form-group col-md-1 mb-3 d-flex align-items-end align-items-right">
                                 <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
-                            </div>
+                            </div>*@
                         </div>
 
                         <div class="row">
-                            <div class="form-group  col-md-4">
-                                <label for="Oficina">Oficina</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Oficina">Oficina</label>
                                 <DxComboBox id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="SelectedItem.OfCodigo"  />
                             </div>
-                            <div class="form-group  col-md-4">
-                                <label for="Ubicacion">Departamento</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Ubicacion">Departamento</label>
                                 <DxComboBox id="Ubicacion" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="SelectedItem.UbCodigo" />
                             </div>
-                            <div class="form-group  col-md-4">
-                                <label for="Puesto">Puesto</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Puesto">Puesto</label>
                                 <DxComboBox id="Puesto" Data="@puestos" ValueFieldName="JoNumber" TextFieldName="JoTitulo" @bind-Value="SelectedItem.JoNumber" />
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group  col-md-4">
-                                <label for="Clase">Clase</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Clase">Clase</label>
                                 <DxComboBox id="Clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="SelectedItem.NpCodigo" />
                             </div>
 
-                            <div class="form-group  col-md-4">
-                                <label for="Categoria">Categoria</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Categoria">Categoria</label>
                                 <DxComboBox id="Categoria" Data="@categorias" ValueFieldName="CtCodigo" TextFieldName="CtDescri" @bind-Value="clase_np.CtCodigo" Readonly />
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="create">Fecha Creacion</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="create">Fecha Creacion</label>
                                 <DxDateEdit id="create" @bind-Date="@SelectedItem.ChangedOn" />
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group  col-md-4">
-                                <label for="sEntrada">Sueldo Entrada</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="sEntrada">Sueldo Entrada</label>
                                 <DxSpinEdit id="sEntrada" @bind-Value="@categoria_np.Minent" Mask="n2" ReadOnly /> @* Solo permite numeros y es para seleccionar *@
                             </div>
-                            <div class="form-group  col-md-4">
-                                <label for="pPrueba">Perido de Prueba en Meses</label>
+                            <div class="form-group mb-3 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="pPrueba">Perido de Prueba en Meses</label>
                                 <DxSpinEdit id="pPrueba" @bind-Value="@SelectedItem.Pueperi" Mask="@NumericMask.WholeNumber" />
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="presupuesto">Presupuesto</label>
+                            <div class="form-group mb-2 col-md-4">
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="presupuesto">Presupuesto</label>
                                 <DxSpinEdit id="presupuesto" @bind-Value="@categoria_np.Ptomedio" Mask="n2" />
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label for="puevaca">Estatus</label>
-                                <DxRadioGroup   
-                                    Id="puevaca" CssClass="dxbl-text-edit"
-                                    Items="@estatus"
-                                    TextFieldName="Text"
-                                    ValueFieldName="Value"
-                                    @bind-Value="@SelectedItem.Puevaca"
-                                    Layout="RadioGroupLayout.Horizontal">
-                                </DxRadioGroup>
-                            </div>
-                        </div>
+                        <hr class="mb-2" style="border-top: 2px solid #dee2e6; opacity: 1;" />
+                        
+                        <EikonStatusGroup 
+                        Label="Estatus" 
+                        Items="@estatus" 
+                        @bind-Value="@SelectedItem.Puevaca" 
+                        />
+
                     </EditForm>
                 </DxTabPage>
                 <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Puestos">
@@ -534,13 +534,13 @@ else
         }
     }
 
-    private List<EstatusP> estatus = new()
+    private List<EikonStatusGroup.EstatusItem> estatus = new List<EikonStatusGroup.EstatusItem>
     {
-        new EstatusP("A", "Activo"),
-        new EstatusP("I", "Inactivo"),
-        new EstatusP("V", "Vacante"),
-        new EstatusP("P", "Proceso"),
-        new EstatusP("E", "Eliminado"),
+        new EikonStatusGroup.EstatusItem { Text = "Activo", Value = "A" },
+        new EikonStatusGroup.EstatusItem { Text = "Inactivo", Value = "I" },
+        new EikonStatusGroup.EstatusItem { Text = "Vacante", Value = "V" },
+        new EikonStatusGroup.EstatusItem { Text = "Proceso", Value = "P" },
+        new EikonStatusGroup.EstatusItem { Text = "Eliminado", Value = "E" }
     };
     private List<Frhpu010Dto> data;
     private List<Frhrq010Dto> datarq;
