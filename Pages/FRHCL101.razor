@@ -28,90 +28,87 @@ else
         <title>Creación de Cargos</title>
     </head>
     <body>
+    @* *Mensajes *@
         <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Usuario?" OnConfirm="OnConfirmDelete" />
         <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) perfil(es) asociados a este empleado, favor eliminar los perfiles" />
         <Alert2 @ref="alertInfo" TypeAlert="info" Message="Creación de Cargos" />
-        
-        <FormHeader 
-            Title="SIRH - Creación de Cargos" 
-            FormCode="FRHCL101" 
-            OnAdd="Agregar" 
-            OnSave="Save" 
-            OnRemove="Eliminar"
-        />
+
+        <div class="header border-bottom pb-2 mb-4 d-flex justify-content-between align-items-center">
+            <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">SIRH - Creación de Cargos</p>
+            <Toolbar  OnAdd="Agregar" OnSave="Save" OnRemove="Eliminar" formulario="FRHCL101" />
+        </div>
 
         <div class="container">
+
             <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+
                 <DxTabPage CssClass="dxbl-tabs" Text="Mantenimiento del Puesto">
-                    <EditForm data-bind="@SelectedItem" Model="SelectedItem">
+            
+                    <EditForm class="eikon-tab-animada" data-bind="@SelectedItem" Model="SelectedItem">
+                        <DataAnnotationsValidator />
 
                         <div class="row">
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puenume">Cargo</label>
-                                <DxTextBox id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" />
+                                <DxTextBox CssClass="eikon-input eikon-readonly" id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" />
                             </div>
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puetitu">Título</label>
-                                <DxTextBox id="puetitu" @bind-Text="@SelectedItem.Puetitu" />
+                                <DxTextBox CssClass="eikon-input" id="puetitu" @bind-Text="@SelectedItem.Puetitu" />
                             </div>
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="reqnume">Requisición</label>
-                                @**<DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"/>*@
                                  
                                 <div class="form-group d-flex gap-2">
-                                    <DxTextBox id="reqnume" @bind-Text="@SelectedItem.Reqnume"/>
+                                    <DxTextBox CssClass="eikon-input" id="reqnume" @bind-Text="@SelectedItem.Reqnume" />
                                     <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
                                 </div>
-                                
-                            </div>@* 
-                            <div class="form-group col-md-1 mb-3 d-flex align-items-end align-items-right">
-                                <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
-                            </div>*@
+                            </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Oficina">Oficina</label>
-                                <DxComboBox id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="SelectedItem.OfCodigo"  />
+                                <DxComboBox CssClass="eikon-input" id="Oficina" Data="@oficinas" ValueFieldName="OfCodigo" TextFieldName="OfDescri" @bind-Value="SelectedItem.OfCodigo"  />
                             </div>
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Ubicacion">Departamento</label>
-                                <DxComboBox id="Ubicacion" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="SelectedItem.UbCodigo" />
+                                <DxComboBox CssClass="eikon-input" id="Ubicacion" Data="@ubicaciones" ValueFieldName="UbCodigo" TextFieldName="UbDescri" @bind-Value="SelectedItem.UbCodigo" />
                             </div>
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Puesto">Puesto</label>
-                                <DxComboBox id="Puesto" Data="@puestos" ValueFieldName="JoNumber" TextFieldName="JoTitulo" @bind-Value="SelectedItem.JoNumber" />
+                                <DxComboBox CssClass="eikon-input" id="Puesto" Data="@puestos" ValueFieldName="JoNumber" TextFieldName="JoTitulo" @bind-Value="SelectedItem.JoNumber" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Clase">Clase</label>
-                                <DxComboBox id="Clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="SelectedItem.NpCodigo" />
+                                <DxComboBox CssClass="eikon-input" id="Clase" Data="@clases" ValueFieldName="NpCodigo" TextFieldName="NpDescri" @bind-Value="SelectedItem.NpCodigo" />
                             </div>
 
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="Categoria">Categoria</label>
-                                <DxComboBox id="Categoria" Data="@categorias" ValueFieldName="CtCodigo" TextFieldName="CtDescri" @bind-Value="clase_np.CtCodigo" Readonly />
+                                <DxComboBox CssClass="eikon-input eikon-readonly" id="Categoria" Data="@categorias" ValueFieldName="CtCodigo" TextFieldName="CtDescri" @bind-Value="clase_np.CtCodigo" Readonly />
                             </div>
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="create">Fecha Creacion</label>
-                                <DxDateEdit id="create" @bind-Date="@SelectedItem.ChangedOn" />
+                                <DxDateEdit CssClass="eikon-input" id="create" @bind-Date="@SelectedItem.ChangedOn" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="sEntrada">Sueldo Entrada</label>
-                                <DxSpinEdit id="sEntrada" @bind-Value="@categoria_np.Minent" Mask="n2" ReadOnly /> @* Solo permite numeros y es para seleccionar *@
+                                <DxSpinEdit CssClass="eikon-input eikon-readonly" id="sEntrada" @bind-Value="@categoria_np.Minent" Mask="n2" ReadOnly /> @* Solo permite numeros y es para seleccionar *@
                             </div>
                             <div class="form-group mb-3 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="pPrueba">Perido de Prueba en Meses</label>
-                                <DxSpinEdit id="pPrueba" @bind-Value="@SelectedItem.Pueperi" Mask="@NumericMask.WholeNumber" />
+                                <DxSpinEdit CssClass="eikon-input" id="pPrueba" @bind-Value="@SelectedItem.Pueperi" Mask="@NumericMask.WholeNumber" />
                             </div>
                             <div class="form-group mb-2 col-md-4">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="presupuesto">Presupuesto</label>
-                                <DxSpinEdit id="presupuesto" @bind-Value="@categoria_np.Ptomedio" Mask="n2" />
+                                <DxSpinEdit CssClass="eikon-input" id="presupuesto" @bind-Value="@categoria_np.Ptomedio" Mask="n2" />
                             </div>
                         </div>
 
@@ -124,169 +121,171 @@ else
                         />
 
                     </EditForm>
+
+
                 </DxTabPage>
                 <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Puestos">
-                <h3>Consulta de Puestos</h3>
-                <DxGrid Data="@data" 
-                        @ref="MyGrid"
-                        PageSize="15"
-                        CssClass="mw-1100"
-                        KeyFieldName="Puenume"
-                        ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
-                    <Columns>
-                        <DxGridCommandColumn Width="60px" VisibleIndex="2">
-                            <HeaderTemplate>
-                                <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
-                            </HeaderTemplate>
-                            <CellDisplayTemplate>
-                                <a class="" @onclick="@(() => Editar((Frhpu010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
-                            @*  <a class="text-primary" @onclick="@(() => MyGrid.SelectDataItem(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a> *@
-                            </CellDisplayTemplate>
-                        </DxGridCommandColumn>
-                        <DxGridDataColumn Caption="Id" FieldName="Puenume" Width="100px" VisibleIndex="3" />
-                        <DxGridDataColumn Caption="Descripción" FieldName="Puetitu" Width="300px" VisibleIndex="4" />
-           
-                        @* <DxGridDataColumn FieldName="OfCodigo" Caption="ID Oficina"/> *@
-                        <DxGridDataColumn Caption="Oficina" FieldName="OfCodigo" Width="160px" VisibleIndex="5">
-                        <EditSettings>
-                        <DxComboBoxSettings 
-                            Data="oficinas"
-                            ValueFieldName="OfCodigo"
-                            TextFieldName="OfDescri"
-                            FilteringMode="DataGridFilteringMode.Contains"
-                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                            EditFormat="{1} {2}">
-                    <Columns>
-                    <DxListEditorColumn FieldName="OfCodigo" Caption="Código" />
-                    <DxListEditorColumn FieldName="OfDescri" Caption="Descripción" />
-                    <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
-                        </Columns>
-                    </DxComboBoxSettings>
-                </EditSettings>
-            </DxGridDataColumn>
-            @* <DxGridDataColumn FieldName="UbCodigo" Caption="ID Ubicac" /> *@
-            <DxGridDataColumn Caption="Departamento" FieldName="UbCodigo" Width="260px" VisibleIndex="6">
-                <EditSettings>
-                    <DxComboBoxSettings Data="ubicaciones"
-                                        ValueFieldName="UbCodigo"
-                                        TextFieldName="UbDescri"
-                                        FilteringMode="DataGridFilteringMode.Contains"
-                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                        EditFormat="{1} {2}">
-                        <Columns>
-                            <DxListEditorColumn FieldName="UbCodigo" Caption="Código" />
-                            <DxListEditorColumn FieldName="UbDescri" Caption="Descripción" />
-                            <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
-                        </Columns>
-                    </DxComboBoxSettings>
-                </EditSettings>
-            </DxGridDataColumn>
-@*             <DxGridDataColumn FieldName="JoNumber" Caption="Id Puesto" /> *@ 
-            <DxGridDataColumn Caption="Puesto" FieldName="JoNumber" Width="260px" VisibleIndex="7">
-                <EditSettings>
-                    <DxComboBoxSettings Data="puestos"
-                                        ValueFieldName="JoNumber"
-                                        TextFieldName="JoTitulo"
-                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                        EditFormat="{1} {2}">
-                        <Columns>
-                            <DxListEditorColumn FieldName="JoNumber" Caption="Código" />
-                            <DxListEditorColumn FieldName="JoTitulo" Caption="Descripción" />
-                            <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
-                        </Columns>
-                    </DxComboBoxSettings>
-                </EditSettings>
-            </DxGridDataColumn>
-            <DxGridDataColumn FieldName="IdentityColumn" Width="150px" Caption="#" Visible="false">
-                
-            </DxGridDataColumn>
-             <!-- Columna para el botón -->
-        
+                    <div class="eikon-tab-animada">
+                        <h3>Consulta de Puestos</h3>
+                        <DxGrid Data="@data" @ref="MyGrid"
+                                PageSize="15"
+                                CssClass="mw-1100"
+                                KeyFieldName="Puenume"
+                                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
+                            <Columns>
+                                <DxGridCommandColumn MinWidth="60" VisibleIndex="2">
+                                    <HeaderTemplate>
+                                        <a class="text-primary" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-plus"></i></a>
+                                    </HeaderTemplate>
+                                    <CellDisplayTemplate>
+                                        <a class="" @onclick="@(() => Editar((Frhpu010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                                    @*  <a class="text-primary" @onclick="@(() => MyGrid.SelectDataItem(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a> *@
+                                    </CellDisplayTemplate>
+                                </DxGridCommandColumn>
+                                <DxGridDataColumn Caption="Id" FieldName="Puenume" MinWidth="100" VisibleIndex="3" />
+                                <DxGridDataColumn Caption="Descripción" FieldName="Puetitu" MinWidth="300" VisibleIndex="4" />
+                            
+                                @* <DxGridDataColumn FieldName="OfCodigo" Caption="ID Oficina"/> *@
+                                <DxGridDataColumn Caption="Oficina" FieldName="OfCodigo" MinWidth="160" VisibleIndex="5">
+                                    <EditSettings>
+                                        <DxComboBoxSettings Data="oficinas"
+                                                            ValueFieldName="OfCodigo"
+                                                            TextFieldName="OfDescri"
+                                                            FilteringMode="DataGridFilteringMode.Contains"
+                                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                            EditFormat="{1} {2}">
+                                            <Columns>
+                                                <DxListEditorColumn FieldName="OfCodigo" Caption="Código" />
+                                                <DxListEditorColumn FieldName="OfDescri" Caption="Descripción" />
+                                                <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
+                                            </Columns>
+                                        </DxComboBoxSettings>
+                                    </EditSettings>
+                                </DxGridDataColumn>
+                                @* <DxGridDataColumn FieldName="UbCodigo" Caption="ID Ubicac" /> *@
+                                <DxGridDataColumn Caption="Departamento" FieldName="UbCodigo" MinWidth="260" VisibleIndex="6">
+                                    <EditSettings>
+                                        <DxComboBoxSettings Data="ubicaciones"
+                                                            ValueFieldName="UbCodigo"
+                                                            TextFieldName="UbDescri"
+                                                            FilteringMode="DataGridFilteringMode.Contains"
+                                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                            EditFormat="{1} {2}">
+                                            <Columns>
+                                                <DxListEditorColumn FieldName="UbCodigo" Caption="Código" />
+                                                <DxListEditorColumn FieldName="UbDescri" Caption="Descripción" />
+                                                <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
+                                            </Columns>
+                                        </DxComboBoxSettings>
+                                    </EditSettings>
+                                </DxGridDataColumn>
+                    @*             <DxGridDataColumn FieldName="JoNumber" Caption="Id Puesto" /> *@ 
+                                <DxGridDataColumn Caption="Puesto" FieldName="JoNumber" MinWidth="260" VisibleIndex="7">
+                                    <EditSettings>
+                                        <DxComboBoxSettings Data="puestos"
+                                                            ValueFieldName="JoNumber"
+                                                            TextFieldName="JoTitulo"
+                                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                            EditFormat="{1} {2}">
+                                            <Columns>
+                                                <DxListEditorColumn FieldName="JoNumber" Caption="Código" />
+                                                <DxListEditorColumn FieldName="JoTitulo" Caption="Descripción" />
+                                                <DxListEditorColumn FieldName="EmEmpresa" Caption="Empresa" Width="60px" />
+                                            </Columns>
+                                        </DxComboBoxSettings>
+                                    </EditSettings>
+                                </DxGridDataColumn>
+                                <DxGridDataColumn FieldName="IdentityColumn" MinWidth="150" Caption="#" Visible="false">
+                                    
+                                </DxGridDataColumn>
+                                <!-- Columna para el botón -->
+                            
 
 
 
-        </Columns>
-    </DxGrid>
+                            </Columns>
+                        </DxGrid>
+                    </div>
                 </DxTabPage>
-             <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Requisiciones">
-                    <h3>Consulta de Requisiciones</h3>
-                    <DxGrid Data="@datarq" @ref="MyGrid2"
-                            CssClass="mw-1100"
-                            KeyFieldName="Reqnume"
-                            ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
-                        <Columns>
-                            <DxGridCommandColumn Width="160px" VisibleIndex="1">
-                                <HeaderTemplate>
-                                </HeaderTemplate>
-                                <CellDisplayTemplate>
-                                    <a class="" @onclick="@(() => Editar2((Frhrq010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
+                <DxTabPage CssClass="dxbl-tabs"  Text="Consulta de Requisiciones">
+                    <div class="eikon-tab-animada">
+                        <h3>Consulta de Requisiciones</h3>
+                        <DxGrid Data="@datarq" @ref="MyGrid2"
+                                CssClass="mw-1100"
+                                KeyFieldName="Reqnume"
+                                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
+                            <Columns>
+                                <DxGridCommandColumn MinWidth="160" VisibleIndex="1">
+                                    <HeaderTemplate>
+                                    </HeaderTemplate>
+                                    <CellDisplayTemplate>
+                                        <a class="" @onclick="@(() => Editar2((Frhrq010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
 
-                                </CellDisplayTemplate>
-                            </DxGridCommandColumn>
-                            <DxGridDataColumn Caption="Req #" FieldName="Reqnume" Width="80px" VisibleIndex="3">
+                                    </CellDisplayTemplate>
+                                </DxGridCommandColumn>
+                                <DxGridDataColumn Caption="Req #" FieldName="Reqnume" MinWidth="80" VisibleIndex="3">
 
-                            </DxGridDataColumn>
-                            <DxGridDataColumn Caption="Descripción" FieldName="Reqtitu" Width="300px" VisibleIndex="4">
+                                </DxGridDataColumn>
+                                <DxGridDataColumn Caption="Descripción" FieldName="Reqtitu" MinWidth="300" VisibleIndex="4">
 
-                            </DxGridDataColumn>
-                            <DxGridDataColumn Caption="Oficina" FieldName="OfCodigo" Width="160px" VisibleIndex="5">
-                                <EditSettings>
-                                    <DxComboBoxSettings Data="oficinas"
-                                                        ValueFieldName="OfCodigo"
-                                                        TextFieldName="OfDescri"
-                                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                                        EditFormat="{1} {2}">
-                                        <Columns>
-                                            <DxListEditorColumn FieldName="OfCodigo" Caption="Código" />
-                                            <DxListEditorColumn FieldName="OfDescri" Caption="Descripción" />
-                                        </Columns>
-                                    </DxComboBoxSettings>
-                                </EditSettings>
-                            </DxGridDataColumn>
-                            <DxGridDataColumn Caption="Fecha" FieldName="Reqfech" Width="80px" VisibleIndex="5"></DxGridDataColumn>
-                            <DxGridDataColumn Caption="Cantidad" FieldName="Reqqty" Width="80px" VisibleIndex="6"></DxGridDataColumn>
+                                </DxGridDataColumn>
+                                <DxGridDataColumn Caption="Oficina" FieldName="OfCodigo" MinWidth="160" VisibleIndex="5">
+                                    <EditSettings>
+                                        <DxComboBoxSettings Data="oficinas"
+                                                            ValueFieldName="OfCodigo"
+                                                            TextFieldName="OfDescri"
+                                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                            EditFormat="{1} {2}">
+                                            <Columns>
+                                                <DxListEditorColumn FieldName="OfCodigo" Caption="Código" />
+                                                <DxListEditorColumn FieldName="OfDescri" Caption="Descripción" />
+                                            </Columns>
+                                        </DxComboBoxSettings>
+                                    </EditSettings>
+                                </DxGridDataColumn>
+                                <DxGridDataColumn Caption="Fecha" FieldName="Reqfech" MinWidth="80" VisibleIndex="5"></DxGridDataColumn>
+                                <DxGridDataColumn Caption="Cantidad" FieldName="Reqqty" MinWidth="80" VisibleIndex="6"></DxGridDataColumn>
 
-                            <DxGridDataColumn Caption="Motivo" FieldName="MtCodigo" VisibleIndex="8" Width="130px">
-                                <EditSettings>
-                                    <DxComboBoxSettings Data="motivos"
-                                                        ValueFieldName="MtCodigo"
-                                                        TextFieldName="MtDescri"
-                                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                                        EditFormat="{1} {2}"
-                                                        SearchMode="@ListSearchMode.AutoSearch"
-                                                        SearchFilterCondition="@ListSearchFilterCondition.Contains">
-                                        <Columns>
-                                            <DxListEditorColumn FieldName="MtCodigo" Caption="Código" />
-                                            <DxListEditorColumn FieldName="MtDescri" Caption="Descripción" />
-                                        </Columns>
-                                    </DxComboBoxSettings>
-                                </EditSettings>
-                            </DxGridDataColumn>
+                                <DxGridDataColumn Caption="Motivo" FieldName="MtCodigo" VisibleIndex="8" MinWidth="130">
+                                    <EditSettings>
+                                        <DxComboBoxSettings Data="motivos"
+                                                            ValueFieldName="MtCodigo"
+                                                            TextFieldName="MtDescri"
+                                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                            EditFormat="{1} {2}"
+                                                            SearchMode="@ListSearchMode.AutoSearch"
+                                                            SearchFilterCondition="@ListSearchFilterCondition.Contains">
+                                            <Columns>
+                                                <DxListEditorColumn FieldName="MtCodigo" Caption="Código" />
+                                                <DxListEditorColumn FieldName="MtDescri" Caption="Descripción" />
+                                            </Columns>
+                                        </DxComboBoxSettings>
+                                    </EditSettings>
+                                </DxGridDataColumn>
 
-                            <DxGridDataColumn Caption="Estatus" FieldName="Reqesta" VisibleIndex="9" Width="130px">
-                                <EditSettings>
-                                    <DxComboBoxSettings Data="estatus"
-                                                        ValueFieldName="Value"
-                                                        TextFieldName="Text"
-                                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                                        EditFormat="{1} {2}"
-                                                        SearchMode="@ListSearchMode.AutoSearch"
-                                                        SearchFilterCondition="@ListSearchFilterCondition.Contains">
-                                        <Columns>
-                                            <DxListEditorColumn FieldName="Value" Caption="Código" />
-                                            <DxListEditorColumn FieldName="Text" Caption="Descripción" />
+                                <DxGridDataColumn Caption="Estatus" FieldName="Reqesta" VisibleIndex="9" MinWidth="130">
+                                    <EditSettings>
+                                        <DxComboBoxSettings Data="estatus"
+                                                            ValueFieldName="Value"
+                                                            TextFieldName="Text"
+                                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                                            EditFormat="{1} {2}"
+                                                            SearchMode="@ListSearchMode.AutoSearch"
+                                                            SearchFilterCondition="@ListSearchFilterCondition.Contains">
+                                            <Columns>
+                                                <DxListEditorColumn FieldName="Value" Caption="Código" />
+                                                <DxListEditorColumn FieldName="Text" Caption="Descripción" />
 
-                                        </Columns>
-                                    </DxComboBoxSettings>
-                                </EditSettings>
-                            </DxGridDataColumn>
+                                            </Columns>
+                                        </DxComboBoxSettings>
+                                    </EditSettings>
+                                </DxGridDataColumn>
 
-                        </Columns>
-                    </DxGrid>
+                            </Columns>
+                        </DxGrid>
+                    </div>
                 </DxTabPage>
             </DxTabs>
-      
-            
         </div>
     </body>
 
@@ -542,6 +541,7 @@ else
         new EikonStatusGroup.EstatusItem { Text = "Proceso", Value = "P" },
         new EikonStatusGroup.EstatusItem { Text = "Eliminado", Value = "E" }
     };
+    
     private List<Frhpu010Dto> data;
     private List<Frhrq010Dto> datarq;
     //private List<Trhnz000Dto> modulos { get; set; } =new List<Trhnz000Dto>();
@@ -707,6 +707,8 @@ else
     }
     async Task CargaRegistro()
     {
+
+
         data = await api.Frhpu010DtoGetAll(Token);
         
 
@@ -722,6 +724,20 @@ else
 
 
         }
+
+        if (SelectedItem != null)
+        {
+            // 1. Destruir TODOS los espacios (Para IDs y Códigos)
+            SelectedItem.Puenume = SelectedItem.Puenume?.Replace(" ", "");
+            SelectedItem.Reqnume = SelectedItem.Reqnume?.Replace(" ", "");
+            SelectedItem.OfCodigo = SelectedItem.OfCodigo?.Replace(" ", "");
+            SelectedItem.UbCodigo = SelectedItem.UbCodigo?.Replace(" ", "");
+            SelectedItem.JoNumber = SelectedItem.JoNumber?.Replace(" ", "");
+
+            // 2. Destruir solo espacios de los bordes (Para Títulos y Nombres)
+            SelectedItem.Puetitu = SelectedItem.Puetitu?.Trim();
+        }
+
         clase_np = clases.FirstOrDefault(pt => pt.NpCodigo == SelectedItem.NpCodigo);
         if(clase_np == null)
         {

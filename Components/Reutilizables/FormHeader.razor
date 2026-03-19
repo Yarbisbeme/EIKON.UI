@@ -3,7 +3,7 @@
     <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">
         @Title
     </p>
-    <Toolbar OnAdd="OnAdd" OnSave="OnSave" OnRemove="OnRemove" formulario="@FormCode" />
+    <Toolbar OnLeave="OnLeave" OnClose="OnClose" OnAdd="OnAdd" OnSave="OnSave" OnRemove="OnRemove" formulario="@FormCode" />
 </div>
 
 @code {
@@ -12,6 +12,8 @@
     
     // Eventos que pasarás al Toolbar
     [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback OnLeave { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public EventCallback OnSave { get; set; }
     [Parameter] public EventCallback OnRemove { get; set; }
 }
