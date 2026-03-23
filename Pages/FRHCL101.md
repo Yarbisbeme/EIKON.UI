@@ -8,7 +8,10 @@ Favor tomar el último proyecto que te envíe (EIKON.UI) y busques los formulari
 ### Metodos ⚙️
 
 #### CargarRegistro()
-- Se añadio un replace a los SelectedItem para eliminar los espacios. SelectedItem.xxxnume.Replace(oldValue: " ", newValue: "")
+- Se añadio un replace a los SelectedItem para eliminar los espacios. SelectedItem.xxxnume.Replace(oldValue: " ", newValue: ""). Esto hara que no haya errores a la hora de buscar por ejemplo requisiciones, como por ejemplo buscar una requisicion "4____8".
+
+### BuscarReq()
+- Existia este Metodo, sin embargo estaba mal implementado ya que lo unico que hacia era ir hacia el Tab de las requisiones. Implementamos que cuando se ejecutara la accion de Buscar cambiara de Tab y buscara la requisicion guardada en la variable y las parecidas a esta.
 
 ### Componentes 🧱
 

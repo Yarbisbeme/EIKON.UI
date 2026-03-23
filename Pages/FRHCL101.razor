@@ -130,7 +130,8 @@ else
                                 PageSize="15"
                                 CssClass="mw-1100"
                                 KeyFieldName="Puenume"
-                                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
+                                ShowFilterRow="true" 
+                                FilterRowCondition="GridFilterRowCondition.Contains">
                             <Columns>
                                 <DxGridCommandColumn MinWidth="60" VisibleIndex="2">
                                     <HeaderTemplate>
@@ -212,7 +213,8 @@ else
                         <DxGrid Data="@datarq" @ref="MyGrid2"
                                 CssClass="mw-1100"
                                 KeyFieldName="Reqnume"
-                                ShowFilterRow="true" FilterRowCondition="GridFilterRowCondition.Contains">
+                                ShowFilterRow="true" 
+                                FilterRowCondition="GridFilterRowCondition.Contains">
                             <Columns>
                                 <DxGridCommandColumn MinWidth="160" VisibleIndex="1">
                                     <HeaderTemplate>
@@ -221,9 +223,10 @@ else
                                         <a class="" @onclick="@(() => Editar2((Frhrq010Dto)context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"><i class="fi fi-rr-edit"></i></a>
 
                                     </CellDisplayTemplate>
-                                </DxGridCommandColumn>
-                                <DxGridDataColumn Caption="Req #" FieldName="Reqnume" MinWidth="80" VisibleIndex="3">
-
+                                    </DxGridCommandColumn>
+                                <DxGridDataColumn Caption="Req #" FieldName="Reqnume" MinWidth="80" VisibleIndex="3" 
+                                    FilterRowValue="@filtroReq" 
+                                    FilterRowValueChanged="@((object v) => filtroReq = v?.ToString())">
                                 </DxGridDataColumn>
                                 <DxGridDataColumn Caption="Descripción" FieldName="Reqtitu" MinWidth="300" VisibleIndex="4">
 
@@ -319,6 +322,7 @@ else
 <h3 class=""></h3>
 
 @code {
+
     [Parameter]
     public int id { get; set; }
     public bool IsModalVisible { get; set; }
@@ -339,11 +343,11 @@ else
     public string cShdn { get; set; } = "";
     public string cDhdn { get; set; } = "";
     private EditContext contextoValidacion; 
-    //// **- private string[] // **- ToolbarOptions = new string[5];
     public Alert2 alertInfo { get; set; } = new Alert2();
-
+    public string filtroReq { get; set; } = ""; /* Variable para guardar la Requisicion a Buscar */
     private ConfirmDialog confirmDialog;
     private AlertDialog alertDialog;
+
     void ShowConfirmDialog()
     {
         confirmDialog.Show(); // Muestra el diálogo
@@ -366,7 +370,6 @@ else
             Console.WriteLine("Eliminación cancelada");
         }
     }
-
     private void ConfirmToken()
     {
         // Aquí puedes hacer algo con el token, por ejemplo, almacenarlo en una variable global o enviarlo a un servicio
@@ -382,6 +385,7 @@ else
     {
         IsModalVisible = true;
     }
+
     protected async Task Save()
         {
             // Obligamos al contexto a revisar todo
@@ -429,33 +433,37 @@ else
         //StateHasChanged();
         contextoValidacion = new EditContext(dataItem); // Nueva linea para hacer las validaciones, ya que el toolbar son divs y no btn
     }
+
     void OnActiveTabIndexChanged(int newIndex)
     {
         ActiveTabIndex = newIndex;
         // You can add logic here to handle tab changes, e.g., load data based on the selected tab.
     }
+ 
     protected void Cancelar()
     {
         nv.NavigateTo("/FRHCL101");
     }
+ 
     protected async Task Deshacer()
     {
         await CargaRegistro();
         //await SetPermisos(PaCodigo,IsCodigo);
         clase = "";
     }
+ 
     protected void Editar()
     {
 
         //CantSave= false;
         alertInfo.Show("Editar Cargo!!!");
     }
-protected void Editar2(Frhrq010Dto item)
+    protected void Editar2(Frhrq010Dto item)
     {
         clase_np = clases.FirstOrDefault();
         SelectedItem = new Frhpu010Dto() ;
-        SelectedItem.Puetitu = item.Reqtitu;
-        SelectedItem.Reqnume = item.Reqnume;
+        SelectedItem.Puetitu = item.Reqtitu?.Trim();
+        SelectedItem.Reqnume = item.Reqnume?.Trim();
         SelectedItem.OfCodigo = item.OfCodigo;
         SelectedItem.EmEmpresa = empresaActual;
         SelectedItem.UbCodigo = item.UbCodigo;
@@ -729,6 +737,7 @@ protected void Editar2(Frhrq010Dto item)
             ActiveTabIndex = index;
         }
     }
+    
     async Task CargaRegistro()
     {
         data = await api.Frhpu010DtoGetAll(Token);   
@@ -790,12 +799,18 @@ protected void Editar2(Frhrq010Dto item)
         contextoValidacion = new EditContext(SelectedItem); // Nueva linea para hacer las validaciones, ya que el toolbar son divs y no btn
         await InvokeAsync(StateHasChanged);
     }
-    async Task BuscarReq()
+
+    void BuscarReq()
     {
-        SetActiveTab(2); // Cambiar a la pestaña de busqueda
+        SetActiveTab(2); 
         
+        // PASO C: ¡AHORA! Inyectamos el texto cuando la caja ya está viva en la pantalla
+        filtroReq = SelectedItem.Reqnume?.Trim(); 
+        
+        // PASO D: Forzamos el repintado final
+        StateHasChanged();
     }
-    /*desde aqui*/
+
     async Task OnDataItemDeletingUe(GridDataItemDeletingEventArgs e)
     {
         var codigo = ((Frhue000Dto)e.DataItem).IdentityColumn;
