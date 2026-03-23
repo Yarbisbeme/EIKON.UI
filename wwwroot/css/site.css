@@ -386,13 +386,25 @@ body {
 /* *============================* */
 /* *clases para inputs con error* */
 /* *============================* */
-.eikon-input-error{
-    border-color: #dc3545 !important; /* Rojo de alerta estándar */
-    background-color: #fff8f8 !important; /* Fondo sutilmente rojo */
+/* 1. La caja principal por fuera (aquí va el borde rojo general) */
+.eikon-input.invalid, 
+.eikon-input.is-invalid {
+    border: 1px solid #dc3545 !important; 
+    background-color: #fff8f8 !important; 
+    border-radius: 4px; /* Opcional: para que las esquinas sean redondeadas */
 }
 
-/* Efecto focus cuando tiene error */
-.eikon-input-error:focus-within {
+/* 2. El texto y áreas internas (le quitamos los bordes para evitar la "doble caja") */
+.eikon-input.invalid input,
+.eikon-input.is-invalid input,
+.eikon-input.invalid .dxbs-dropdown-area {
+    border: none !important; /* ¡Esta es la clave! Quita el borde interno */
+    background-color: transparent !important; /* Para que tome el fondo rojo clarito de la caja principal */
+    box-shadow: none !important;
+}
+
+/* 3. El resalte al hacer clic */
+.eikon-input.invalid:focus-within {
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
 }
 

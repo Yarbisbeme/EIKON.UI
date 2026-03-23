@@ -217,12 +217,7 @@
 
             await JSRuntime.InvokeVoidAsync("sessionStorage.removeItem", "authToken");
 
-
-
             await JSRuntime.InvokeVoidAsync("sessionStorage.clear");
-
-
-
 
 
             StateHasChanged();  // Forzar un nuevo renderizado si es necesario
@@ -236,7 +231,6 @@
     private async void ConfirmLogin()
     {
         //var auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
         try
         {
             login = api.Frhma010Login(user, pass, empresa);
@@ -251,6 +245,8 @@
             api.SetToken(Token);
             api.SetTipo(login.FirstOrDefault().Tipo);
             api.SetPa(login.FirstOrDefault().UsrPa);
+            api.SetUser(user);
+            api.SetEmpresa(login.FirstOrDefault().UsrEm);
             auth.SetToken(Token);
             auth.tkn = Token;
             //auth.Role = login.FirstOrDefault().UsrPa;
@@ -260,7 +256,7 @@
         }
         catch (Exception ex)
         {
-            nombre = "Ha ocurrido un error verifique sus datos";
+            nombre = "Ha ocurrido un error verifique sus datos: " + ex;
             alertInfo.Show(nombre);
             return;
             //MenuItems = await api.GetDxMenuForRole("00000000",Token);
@@ -289,5 +285,5 @@
         {
             Console.WriteLine($"Error al cargar datos: {ex.Message}");
         }
-
-}}
+    }
+}

@@ -29,18 +29,54 @@ Favor tomar el último proyecto que te envíe (EIKON.UI) y busques los formulari
 ![alt text](image-2.png)
 
 ---------
-## Bugs 🐞
+# Bugs 🐞
 
-### Creacion de Cargo
+## Creacion de Cargo
+
+### Problema
 
 ![alt text](image.png)
 ![alt text](image-1.png)
 
 - Al crear un cargo a traves de  una requisicion, se le otorga un ID 000000.
-- Al crear el cargo se asigna a la empresa ID " ", la cual no corresponde.
 
 **prioridad:** Es alta ya que no permite crear correctamente los cargos.
-**Riesgo:**  Alto ya que no tiene un ID Correcto, Y la empresa a la que pertenece es fantasma.
+**Riesgo:**  Alto ya que no tiene un ID Correcto.
+
+### Refactoring
+
+Al parecer exisita un error en el controlador el cual tomaba unica y exclusivamente el ID Pasado por la UI y no generaba el ID con el contador Proporcionado por el Prhlib00. por lo que procedimos a hacer dos cambios en la Api:
+
+- Cambiamos cambiamos la entidad para que guardara en Puenume la variable devuelta por prhlib00, pasando de "`Puenume = dto.Puenume,`" a "`Puenume = puenumeGenerado`".
+- Cambiamos la consulta en Prhlib00 pues existia un choque de cantidad de caracteres. Colocamos un Trim(), para quitar los espacios vacios y hacer la consulta correctamente.
+
+Con estos cambios Pasamos de tener cargos con Puenume " " o "000000" a "Mrhcc000.Secuencia + 1".
+
+![alt text](image-6.png)
+
+## Post a BD con empresa " "
+
+### Problema
+
+Al hacer un HTTP Post se crea en la BD con la empresa " ", en los casos donde no se pasa la empresa.
+
+### Solucion
+
+- Creamos en el servicio API GetEmpresa y SetEmpresa.
+- Hacemos un setEmpresa en el Login para poder Guardarlo
+- En los formularios al inicializarlos se podra obtener La empresa actual del colaborador para asi hacer la peticion correctamente.
+
+# Validaciones de campos
+
+- Modificamos el FRHPU010Dto para que los campos fueran Requierd y asi sea mas facil la validacion.
+- Creamos un EditContext para poder tener acceso al contexto y saber cuando los inputs estan vacios.
+- Se crearon los estilos para los inputs vacios con validacion.
+
+
+#### Creacion de cargo Ejemplo
+
+![alt text](image-7.png)
+![alt text](image-9.png)
 
 # Before
 

@@ -40,27 +40,26 @@ else
 
         <div class="container">
 
-            <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged">
+            <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged" @key="contextoValidacion">
 
                 <DxTabPage CssClass="dxbl-tabs" Text="Mantenimiento del Puesto">
             
-                    <EditForm class="eikon-tab-animada" data-bind="@SelectedItem" Model="SelectedItem">
+                    <EditForm class="eikon-tab-animada" EditContext="@contextoValidacion">
                         <DataAnnotationsValidator />
-
                         <div class="row">
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puenume">Cargo</label>
-                                <DxTextBox CssClass="eikon-input eikon-readonly" id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" />
+                                <DxTextBox CssClass="eikon-input eikon-readonly" id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" onin />
                             </div>
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puetitu">Título</label>
-                                <DxTextBox CssClass="eikon-input" id="puetitu" @bind-Text="@SelectedItem.Puetitu" />
+                                <DxTextBox CssClass="eikon-input" id="puetitu" @bind-Text="@SelectedItem.Puetitu" BindValueMode="BindValueMode.OnInput"/>
                             </div>
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="reqnume">Requisición</label>
                                  
                                 <div class="form-group d-flex gap-2">
-                                    <DxTextBox CssClass="eikon-input" id="reqnume" @bind-Text="@SelectedItem.Reqnume" />
+                                    <DxTextBox CssClass="eikon-input" id="reqnume" @bind-Text="@SelectedItem.Reqnume" BindValueMode="BindValueMode.OnInput"/>
                                     <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
                                 </div>
                             </div>
@@ -339,6 +338,7 @@ else
     public string cUhdn { get; set; } = "";
     public string cShdn { get; set; } = "";
     public string cDhdn { get; set; } = "";
+    private EditContext contextoValidacion; 
     //// **- private string[] // **- ToolbarOptions = new string[5];
     public Alert2 alertInfo { get; set; } = new Alert2();
 
@@ -383,8 +383,25 @@ else
         IsModalVisible = true;
     }
     protected async Task Save()
-    {
-        var dataItem = SelectedItem;
+        {
+            // Obligamos al contexto a revisar todo
+            bool formularioValido = contextoValidacion.Validate();
+            StateHasChanged();
+
+            if (!formularioValido) 
+            {
+                // Tomamos TODOS los mensajes de error que existan, sin importar a qué campo pertenezcan
+                var todosLosErrores = contextoValidacion.GetValidationMessages();
+                string culpables = string.Join(" | ", todosLosErrores);
+
+                // Imprimimos la lista cruda
+                alertInfo.Show($"Faltan: {culpables}", "warning");
+                
+                return; // Cortamos el guardado
+            }
+
+            var dataItem = SelectedItem;
+
         // dataItem.Puevaca = Estatus;
         try {
             if (SelectedItem.IdentityColumn==0)
@@ -395,7 +412,6 @@ else
             }
             else
             {
-
                 var ret = await api.UpdateFrhpu010Dto(dataItem);
                 //   nv.NavigateTo("/FRHCL101");
             }
@@ -411,7 +427,7 @@ else
         id = SelectedItem.IdentityColumn;
         await CargaRegistro();
         //StateHasChanged();
-
+        contextoValidacion = new EditContext(dataItem); // Nueva linea para hacer las validaciones, ya que el toolbar son divs y no btn
     }
     void OnActiveTabIndexChanged(int newIndex)
     {
@@ -434,28 +450,29 @@ else
         //CantSave= false;
         alertInfo.Show("Editar Cargo!!!");
     }
-    protected void Editar2(Frhrq010Dto item)
+protected void Editar2(Frhrq010Dto item)
     {
         clase_np = clases.FirstOrDefault();
         SelectedItem = new Frhpu010Dto() ;
         SelectedItem.Puetitu = item.Reqtitu;
         SelectedItem.Reqnume = item.Reqnume;
         SelectedItem.OfCodigo = item.OfCodigo;
+        SelectedItem.EmEmpresa = empresaActual;
         SelectedItem.UbCodigo = item.UbCodigo;
         SelectedItem.JoNumber = item.JoNumber;
         SelectedItem.ChangedOn = DateTime.Today;
-        SelectedItem.ChangedBy = "N";
+        SelectedItem.ChangedBy = usuarioActual; 
         SelectedItem.NpCodigo =clase_np.CtCodigo;
         SelectedItem.Puenume = "000000"; 
 
         categoria_np = categorias.Where(x => x.CtCodigo == clase_np.CtCodigo).FirstOrDefault();
         SelectedItem.Puevaca = "A";
-
-
         Estatus = SelectedItem.Puevaca;
 
         alertInfo.Show("Crear Cargo a partir de una requisicion!!!");
         ActiveTabIndex = 0;
+
+        contextoValidacion = new EditContext(SelectedItem); 
     }
     protected void Eliminar()
     {
@@ -466,25 +483,32 @@ else
         alertInfo.Show("Eliminar Cargo!!!","warning");
         confirmDialog.Show();
     }
+    
     protected void Agregar()
     {
         clase = "hidden";
         cShdn = "";
         cUhdn = "hidden";
         cAhdn = "hidden";
-        SelectedItem.IdentityColumn=0;
+        
+        // 1. ¡LA LÍNEA MÁGICA! Nace un cargo 100% limpio y vacío
+        SelectedItem = new Frhpu010Dto(); 
+        
+        SelectedItem.IdentityColumn = 0;
         alertInfo.Show("Crear Nuevo Cargo!!!");
-        // SelectedItem.a = "000";
-        // SelectedItem.Pasnomb = "xx";
-        // SelectedItem.PasUserid = "xx";
-        // SelectedItem.PasFecRe = DateTime.Today;
-        // SelectedItem.PasFecEx = DateTime.Today;
-        // SelectedItem.PasEsEmp = "N";
-        SelectedItem.CreatedBy = "N";
+        
+        SelectedItem.EmEmpresa = empresaActual;
+        SelectedItem.CreatedBy = usuarioActual; 
         SelectedItem.CreatedOn = DateTime.Today;
         SelectedItem.ChangedOn = DateTime.Today;
-        SelectedItem.ChangedBy = "N";
+        SelectedItem.ChangedBy = usuarioActual; 
+        
+        // 2. Le pasamos el objeto limpio al inspector
+        contextoValidacion = new EditContext(SelectedItem); 
         CantSave = false;
+        
+        // 3. Forzamos a la pantalla a limpiarse
+        StateHasChanged(); 
     }
     // Propiedad que manejará el estatus seleccionado
     private string Estatus { get; set; } = "A"; // Valor por defecto "A" para Activo
@@ -551,16 +575,16 @@ else
     //private List<Trhpa000Dto> perfiles { get; set; } = new List<Trhpa000Dto>();
     private Trhfm000Dto permisos { get; set; } = new Trhfm000Dto();
     private List<Trhmt000Dto> motivos { get; set; }
-
     private List<Frhjo010Dto> puestos { get; set; } = new List<Frhjo010Dto>();
-
     private List<Trhof010Dto> oficinas { get; set; }
     private List<Trhub010Dto> ubicaciones { get; set; }
-
     private List<Trhnp010Dto> clases { get; set; }
     private Trhnp010Dto clase_np { get; set; }
     private Trhct010Dto categoria_np { get; set; }
     private List<Trhct010Dto> categorias { get; set; }
+    private string empresaActual { get; set; } = "";
+    private string usuarioActual { get; set; } = "";
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -577,14 +601,17 @@ else
             api.SetToken(Token);
             auth.SetToken(Token);
         }
+
+        empresaActual = api.GetEmpresa();
+        usuarioActual = api.GetUser();
         data = await api.Frhpu010DtoGetAll(Token); //await HttpClient.GetFromJsonAsync<List<Frhpu010Dto>>(
         datarq = await api.Frhrq010DtoGetAll(Token);
         puestos = await api.Frhjo010DtoGetAll(Token);
-        ubicaciones = await api.Trhub010DtoGetByEmpresa("01", Token);
-        oficinas = await api.Trhof010DtoGetByEmpresa("01", Token); //*api.ofGetByEmCodigo("01", Token);
-        clases = await api.Trhnp010DtoGetByEmpresa("01", Token);
-        categorias = await api.ctGetByEmCodigo("01", Token);
-        motivos = await api.mtGetByEmCodigo("01", Token);
+        ubicaciones = await api.Trhub010DtoGetByEmpresa(empresaActual, Token);
+        oficinas = await api.Trhof010DtoGetByEmpresa(empresaActual, Token); //*api.ofGetByEmCodigo(empresaActual, Token);
+        clases = await api.Trhnp010DtoGetByEmpresa(empresaActual, Token);
+        categorias = await api.ctGetByEmCodigo(empresaActual, Token);
+        motivos = await api.mtGetByEmCodigo(empresaActual, Token);
 
         await CargaRegistro();
         
@@ -631,17 +658,17 @@ else
             dataItem.Puetitu = newValues.Puetitu;
             dataItem.OfCodigo = newValues.OfCodigo; 
             dataItem.UbCodigo = newValues.UbCodigo;
-
             dataItem.JoNumber = newValues.JoNumber;
             dataItem.Puefedi = newValues.Puefedi;
             dataItem.Puefech = newValues.Puefech;
             dataItem.Puesuel = newValues.Puesuel;
-            dataItem.CreatedBy = "Eikon";
+            dataItem.CreatedBy = usuarioActual; // Cambio por el usuario obtenido al inicializar
             dataItem.CreatedOn = DateTime.Today.Date;
-            dataItem.ChangedBy = newValues.ChangedBy;
+            dataItem.ChangedBy = usuarioActual;
             dataItem.ChangedOn = DateTime.Today.Date;
 
         }
+
         void SetEditValues(Frhpu010Dto dataItem, Frhpu010Dto newValues)
         {
             //dataItem.PasUserid = newValues.PasUserid;
@@ -649,17 +676,14 @@ else
             dataItem.Puetitu = newValues.Puetitu;
             dataItem.OfCodigo = newValues.OfCodigo;
             dataItem.UbCodigo = newValues.UbCodigo;
-
             dataItem.JoNumber = newValues.JoNumber;
             dataItem.Puefedi = newValues.Puefedi;
             dataItem.Puefech = newValues.Puefech;
             dataItem.Puesuel = newValues.Puesuel;
-            dataItem.ChangedBy = "Eikon";
+            dataItem.ChangedBy = usuarioActual; // Cambio por el usuario obtenido al inicializar
             //            dataItem.CreatedOn = DateTime.Today.Date;
             //            dataItem.ChangedBy = newValues.ChangedBy;
             dataItem.ChangedOn = DateTime.Today.Date;
-
-
         }
 
     }
@@ -707,11 +731,7 @@ else
     }
     async Task CargaRegistro()
     {
-
-
-        data = await api.Frhpu010DtoGetAll(Token);
-        
-
+        data = await api.Frhpu010DtoGetAll(Token);   
 
         if (id==0)
         {
@@ -733,6 +753,7 @@ else
             SelectedItem.OfCodigo = SelectedItem.OfCodigo?.Replace(" ", "");
             SelectedItem.UbCodigo = SelectedItem.UbCodigo?.Replace(" ", "");
             SelectedItem.JoNumber = SelectedItem.JoNumber?.Replace(" ", "");
+            SelectedItem.NpCodigo = SelectedItem.NpCodigo?.Replace(" ", "");
 
             // 2. Destruir solo espacios de los bordes (Para Títulos y Nombres)
             SelectedItem.Puetitu = SelectedItem.Puetitu?.Trim();
@@ -766,6 +787,7 @@ else
         Vacante = SelectedItem.Puevaca == "S" ? true : false;
         // EnabledExp = Expira;
         //  dataue = await api.GetFrhue000DtosByPasUserId(SelectedItem.PasUserid);
+        contextoValidacion = new EditContext(SelectedItem); // Nueva linea para hacer las validaciones, ya que el toolbar son divs y no btn
         await InvokeAsync(StateHasChanged);
     }
     async Task BuscarReq()
