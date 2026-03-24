@@ -75,7 +75,6 @@ Al hacer un HTTP Post se crea en la BD con la empresa " ", en los casos donde no
 - Creamos un EditContext para poder tener acceso al contexto y saber cuando los inputs estan vacios.
 - Se crearon los estilos para los inputs vacios con validacion.
 
-
 #### Creacion de cargo Ejemplo
 
 ![alt text](image-7.png)

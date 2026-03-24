@@ -7,6 +7,9 @@
 @using EIKON.UI.Interfaces
 
 @using EIKON.UI.Components
+@using Microsoft.Extensions.Localization
+@using EIKON.UI.Resources
+@inject IStringLocalizer<SharedResources> Traductor
 @inject HttpClient HttpClient
 @inject EIKON.UI.Services.EikonDataServices api
 @inject EIKON.UI.Services.AuthenticationService auth
@@ -17,7 +20,13 @@
 
 @if (data == null)
 {
-    <p><em>Loading...</em></p>
+    <div style="height: 400px; position: relative;">
+        <DxLoadingPanel Visible="true" 
+                        IsContentBlocked="true" 
+                        ApplyBackgroundShading="true" 
+                        IndicatorAnimationType="Spin" 
+                        Text="Preparando formulario..." />
+    </div>
 }
 else
 {
@@ -36,6 +45,8 @@ else
         <div class="header border-bottom pb-2 mb-4 d-flex justify-content-between align-items-center">
             <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">SIRH - Creación de Cargos</p>
             <Toolbar  OnAdd="Agregar" OnSave="Save" OnRemove="Eliminar" formulario="FRHCL101" />
+            <button class="btn btn-primary" @onclick="@(() => CambiarIdioma("es"))">Español</button>
+            <button class="btn btn-secondary" @onclick="@(() => CambiarIdioma("en"))">English</button>
         </div>
 
         <div class="container">
@@ -48,7 +59,7 @@ else
                         <DataAnnotationsValidator />
                         <div class="row">
                             <div class="form-group col-md-4 mb-3">
-                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puenume">Cargo</label>
+                                <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="puenume">@Traductor["lbl_Cargo"]</label>
                                 <DxTextBox CssClass="eikon-input eikon-readonly" id="puenume" @bind-Text="@SelectedItem.Puenume" ReadOnly="true" onin />
                             </div>
                             <div class="form-group col-md-4 mb-3">
@@ -825,6 +836,18 @@ else
         await CargaRegistro();  
         SetActiveTab(0); // Cambiar a la pestaña de Mantenimiento
         //StateHasChanged();
+    }
+
+    void CambiarIdioma(string cultura)
+    {
+        // Atrapamos la URL actual para saber a dónde regresar
+        var uri = new Uri(nv.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        
+        // Armamos la URL hacia nuestro Mini-API con el idioma deseado
+        var query = $"?culture={Uri.EscapeDataString(cultura)}&redirectUri={Uri.EscapeDataString(uri)}";
+        
+        // Viajamos forzando la recarga para que los textos cambien
+        nv.NavigateTo("/Culture/Set" + query, forceLoad: true);
     }
     
 }

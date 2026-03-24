@@ -20,7 +20,7 @@ builder.Services.AddMvc()
         options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 // -----------------------------
-// Servicios básicos
+// Servicios bï¿½sicos
 // -----------------------------
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
@@ -91,7 +91,7 @@ builder.Services.AddDevExpressBlazorReporting();
 //);
 
 // -----------------------------
-// Sesión
+// Sesiï¿½n
 // -----------------------------
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -100,6 +100,12 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+// ---------------------------------------
+// Servicio de Localizacion para el idioma
+// ---------------------------------------
+builder.Services.AddLocalization();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -132,6 +138,17 @@ app.UseReporting(options =>
         DevExpress.XtraReports.UI.DataBindingMode.Expressions;
 });
 
+// ------------------------
+// Configuracion del idioma
+// ------------------------
+var supportedCultures = new[] { "es", "en" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("es") // EspaÃ±ol por defecto
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
 // -----------------------------
 // Pipeline HTTP
 // -----------------------------
@@ -159,5 +176,21 @@ app.MapFallbackToPage("/_Host");
 string contentPath = app.Environment.ContentRootPath;
 AppDomain.CurrentDomain.SetData("DataDirectory", contentPath);
 AppDomain.CurrentDomain.SetData("DXResourceDirectory", contentPath);
+
+
+// Controlador rÃ¡pido para cambiar el idioma
+app.MapGet("/Culture/Set", (string culture, string redirectUri, HttpContext context) =>
+{
+    if (culture != null)
+    {
+        // Guardamos el idioma elegido en una Cookie oficial de .NET
+        context.Response.Cookies.Append(
+            Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.DefaultCookieName,
+            Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.MakeCookieValue(
+                new Microsoft.AspNetCore.Localization.RequestCulture(culture, culture)));
+    }
+    // Devolvemos al usuario a la pantalla donde estaba
+    return Results.Redirect(redirectUri);
+});
 
 app.Run();
