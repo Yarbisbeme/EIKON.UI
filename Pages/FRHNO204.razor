@@ -642,9 +642,9 @@
                 periodos = periodos.Where(p => p.WgSecuen==sec).ToList();
                 empleados = await api.Frhma010DtoGetByEmpresa(NominaSeleccionada.EmEmpresa, Token);
                 AnoFiscalValue = ano;
-                EfectividadValue = periodos.Min(p => p.WgInicial).DateTime;
-                AlValue = periodos.Max(p => p.WgFinalF).DateTime;
-                CorteValue = periodos.Max(p => p.WgFechaC).DateTime;
+                EfectividadValue = periodos.Min(p => p.WgInicial);
+                AlValue = periodos.Max(p => p.WgFinalF);
+                CorteValue = periodos.Max(p => p.WgFechaC);
 
             }
             
