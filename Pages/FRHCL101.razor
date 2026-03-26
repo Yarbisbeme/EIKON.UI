@@ -16,41 +16,60 @@
 @inject NavigationManager nv
 @inject IJSRuntime JS
 
-<PageTitle>Opciones Menu</PageTitle>
 
-@if (data == null)
-{
-    <div style="height: 400px; position: relative;">
-        <DxLoadingPanel Visible="true" 
-                        IsContentBlocked="true" 
-                        ApplyBackgroundShading="true" 
-                        IndicatorAnimationType="Spin" 
-                        Text="Preparando formulario..." />
-    </div>
-}
-else
-{
-   
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Creación de Cargos</title>
-    </head>
-    <body>
-    @* *Mensajes *@
-        <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Usuario?" OnConfirm="OnConfirmDelete" />
-        <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) perfil(es) asociados a este empleado, favor eliminar los perfiles" />
-        <Alert2 @ref="alertInfo" TypeAlert="info" Message="Creación de Cargos" />
+    @* 1. Mensajes ocultos (no afectan la vista inicial) *@
+    <ConfirmDialog @ref="confirmDialog" Title="Eliminar Usuario" Message="¿Estás seguro que deseas eliminar este Usuario?" OnConfirm="OnConfirmDelete" />
+    <AlertDialog @ref="alertDialog" Title="Eikon Alerta" Message="Existe(n) perfil(es) asociados a este empleado, favor eliminar los perfiles" />
+    <Alert2 @ref="alertInfo" TypeAlert="info" Message="@Traductor["Titulo_CreacionCargos"]" />
 
-        <div class="header border-bottom pb-2 mb-4 d-flex justify-content-between align-items-center">
-            <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">SIRH - Creación de Cargos</p>
-            <Toolbar  OnAdd="Agregar" OnSave="Save" OnRemove="Eliminar" formulario="FRHCL101" />
-            <button class="btn btn-primary" @onclick="@(() => CambiarIdioma("es"))">Español</button>
-            <button class="btn btn-secondary" @onclick="@(() => CambiarIdioma("en"))">English</button>
+    @* 2. HEADER: Carga instantáneamente sin importar el esqueleto *@
+    <div class="header border-bottom pb-2 mb-4 d-flex justify-content-between align-items-center">
+        <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">SIRH - @Traductor["Titulo_CreacionCargos"]</p>
+        <Toolbar OnAdd="Agregar" OnSave="Save" OnRemove="Eliminar" formulario="FRHCL101" />
+        
+        <div>
+            <button class="btn btn-primary btn-sm me-1" @onclick="@(() => CambiarIdioma("es"))">ES</button>
+            <button class="btn btn-secondary btn-sm" @onclick="@(() => CambiarIdioma("en"))">EN</button>
         </div>
+    </div>
 
-        <div class="container">
+    <div class="container">
+        @if (cargando)
+        {
+            <div class="placeholder-glow">
+                <div class="d-flex gap-1 mb-4 border-bottom pb-2">
+                    <span class="placeholder col-3" style="height: 40px; border-radius: 4px;"></span>
+                    <span class="placeholder col-3" style="height: 40px; border-radius: 4px;"></span>
+                    <span class="placeholder col-3" style="height: 40px; border-radius: 4px;"></span>
+                </div>
 
+                @for (int i = 0; i < 4; i++) 
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="placeholder col-4 mb-2" style="height: 15px; border-radius: 3px;"></span> 
+                            <span class="placeholder col-12" style="height: 34px; border-radius: 4px;"></span> 
+                        </div>
+                        <div class="col-md-4">
+                            <span class="placeholder col-4 mb-2" style="height: 15px; border-radius: 3px;"></span>
+                            <span class="placeholder col-12" style="height: 34px; border-radius: 4px;"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="placeholder col-4 mb-2" style="height: 15px; border-radius: 3px;"></span>
+                            <span class="placeholder col-12" style="height: 34px; border-radius: 4px;"></span>
+                        </div>
+                    </div>
+                }
+                
+                <hr class="mb-2" style="border-top: 2px solid #dee2e6; opacity: 1;" />
+                <div class="col">
+                    <span class="placeholder col-4 mb-2" style="height: 15px; border-radius: 3px; width: 10px;"></span>
+                    <span class="placeholder col-6" style="height: 34px; border-radius: 4px;"></span>
+                </div>
+            </div>
+        }
+        else
+        {
             <DxTabs ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged" @key="contextoValidacion">
 
                 <DxTabPage CssClass="dxbl-tabs" Text="Mantenimiento del Puesto">
@@ -68,7 +87,7 @@ else
                             </div>
                             <div class="form-group col-md-4 mb-3">
                                 <label class="mb-1" style="font-weight: 500; color: #2e2e2e;" for="reqnume">Requisición</label>
-                                 
+                                    
                                 <div class="form-group d-flex gap-2">
                                     <DxTextBox CssClass="eikon-input" id="reqnume" @bind-Text="@SelectedItem.Reqnume" BindValueMode="BindValueMode.OnInput"/>
                                     <DxButton Id="btnBuscar" Click="BuscarReq" Text="Buscar" class="btn btn-info"/>
@@ -299,38 +318,8 @@ else
                     </div>
                 </DxTabPage>
             </DxTabs>
-        </div>
-    </body>
-
-    
-   @*  <DxGrid Data="@data" @ref="MyGrid"
-            CssClass="mw-1100"
-            EditModelSaving="OnEditModelSaving"
-                EditMode="GridEditMode.EditRow"
-            DataItemDeleting="OnDataItemDeleting">
-        <Columns>
-            <DxGridCommandColumn Width="60px" >
-                <HeaderTemplate>
-                    <a class="plus" @onclick="@(() => MyGrid.StartEditNewRowAsync())" style="text-decoration: none;" href="javascript:void(0);"></a>
-                </HeaderTemplate>
-                <CellDisplayTemplate>
-                    <a class="edit" @onclick="@(() => MyGrid.StartEditRowAsync(context.VisibleIndex))" style="text-decoration: none;" href="javascript:void(0);"></a>
-                    <a class="trash" @onclick="@(() => MyGrid.ShowDataItemDeleteConfirmation(context.DataItem))" style="text-decoration: none;" href="javascript:void(0);"></a>
-                </CellDisplayTemplate>
-               </DxGridCommandColumn>
-            <DxGridDataColumn Caption="Id" FieldName="PasUserid" Width="260px"  />
-            <DxGridDataColumn Caption="Nombre" FieldName="Pasnomb" Width="300px" />
-            <DxGridDataColumn FieldName="Maenume" Caption="Empleado"/>
-            <DxGridDataColumn Caption="Expira" FieldName="PasExpira" />
-            <DxGridDataColumn FieldName="PasEsEmp" Caption="Es Empleado" />
-            
-
-        </Columns>
-    </DxGrid> *@
-    
-}
-
-<h3 class=""></h3>
+        }
+    </div>
 
 @code {
 
@@ -358,6 +347,7 @@ else
     public string filtroReq { get; set; } = ""; /* Variable para guardar la Requisicion a Buscar */
     private ConfirmDialog confirmDialog;
     private AlertDialog alertDialog;
+    private bool cargando = true;
 
     void ShowConfirmDialog()
     {
@@ -606,35 +596,62 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
-        if (string.IsNullOrEmpty(Token))
-        {
-            
-            Token = await auth.GetTokenAsync();
-            Token = auth.tkn;
-            if (string.IsNullOrEmpty(Token))
-            {
-                //Token = await auth.GetTokenAsync();
-                return;
-            }
-            api.SetToken(Token);
-            auth.SetToken(Token);
-        }
-
-        empresaActual = api.GetEmpresa();
-        usuarioActual = api.GetUser();
-        data = await api.Frhpu010DtoGetAll(Token); //await HttpClient.GetFromJsonAsync<List<Frhpu010Dto>>(
-        datarq = await api.Frhrq010DtoGetAll(Token);
-        puestos = await api.Frhjo010DtoGetAll(Token);
-        ubicaciones = await api.Trhub010DtoGetByEmpresa(empresaActual, Token);
-        oficinas = await api.Trhof010DtoGetByEmpresa(empresaActual, Token); //*api.ofGetByEmCodigo(empresaActual, Token);
-        clases = await api.Trhnp010DtoGetByEmpresa(empresaActual, Token);
-        categorias = await api.ctGetByEmCodigo(empresaActual, Token);
-        motivos = await api.mtGetByEmCodigo(empresaActual, Token);
-
-        await CargaRegistro();
-        
+        // cambiamos la forma de la carga del formulario para que sea afterRender()
     }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try 
+            {
+                // 1. LEER EL TOKEN
+                if (string.IsNullOrEmpty(Token))
+                {
+                    Token = await auth.GetTokenAsync();
+                    Token = auth.tkn;
+                    
+                    if (string.IsNullOrEmpty(Token)) return; 
+                    
+                    api.SetToken(Token);
+                    auth.SetToken(Token);
+                }
+
+                // 2. DATOS DE SESIÓN
+                empresaActual = api.GetEmpresa();
+                usuarioActual = api.GetUser();
+
+                // 3. DESCARGAR LISTAS
+                data = await api.Frhpu010DtoGetAll(Token); 
+                datarq = await api.Frhrq010DtoGetAll(Token);
+                puestos = await api.Frhjo010DtoGetAll(Token);
+                ubicaciones = await api.Trhub010DtoGetByEmpresa(empresaActual, Token);
+                oficinas = await api.Trhof010DtoGetByEmpresa(empresaActual, Token); 
+                clases = await api.Trhnp010DtoGetByEmpresa(empresaActual, Token);
+                categorias = await api.ctGetByEmCodigo(empresaActual, Token);
+                motivos = await api.mtGetByEmCodigo(empresaActual, Token);
+
+                // 4. PREPARAR EL FORMULARIO
+                await CargaRegistro();
+            }
+            catch (Exception ex)
+            {
+                // ¡AQUÍ ATRAPAMOS AL CULPABLE!
+                Console.WriteLine("🚨 ERROR FATAL AL CARGAR: " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                
+                // Opcional: Mostrarle la alerta al usuario para que sepa que algo falló
+                alertInfo.Show("Error de conexión al cargar los datos.", "danger");
+            }
+            finally 
+            {
+                // 5. EL FINALLY GARANTIZA QUE EL ESQUELETO SE QUITE SÍ O SÍ
+                cargando = false;
+                StateHasChanged(); 
+            }
+        }
+    }
+    
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
     {
         var codigo = ((Trhps000Dto)e.DataItem).IdentityColumn;
