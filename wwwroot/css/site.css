@@ -240,7 +240,6 @@ body {
     overflow: hidden;
     margin-inline: auto;
 }
- 
 
 /* Remove tabs repetition*/
 .dxbl-text.dxbl-tabs-space-reservation{
@@ -324,3 +323,110 @@ body {
      max-width: 640px;
    }
  }
+
+
+/* *===============================================* */
+/* *Clases agregadas por Mr. Yarbis Beltre Mercedes*  */
+/* *===============================================* */
+
+.eikon-input {
+    height: 42px !important;
+    border: 1px solid #bfbfbf !important;
+    border-radius: 4px !important;
+    background-color: transparent !important;
+    transition: border-color 0.3s, box-shadow 0.3s !important;
+}
+
+/* El campo de texto real que va por dentro */
+.eikon-input input {
+    color: #414141 !important;
+    font-size: 14px !important;
+    padding: 0 15px !important; 
+    height: 100% !important;    
+}
+
+/* Efecto focus con el color oficial de EIKON */
+.eikon-input:focus-within {
+    /* Usamos tu variable global */
+    border-color: var(--naranja-eikon-normal, #b9351c) !important;
+    
+    /* El mismo color EIKON pero con 15% de opacidad para el resplandor */
+    box-shadow: 0 0 0 0.1rem rgba(185, 53, 28, 0.15) !important;
+    outline: none !important;
+}
+
+/* Alineación de los botones internos (como el calendario o las flechitas de números) */
+.eikon-input .dxbl-btn {
+    padding: 0 10px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* *===============================* */
+/* *clases para inputs con ReadOnly* */
+/* *===============================* */
+.eikon-input.eikon-readonly {
+    background-color: #e9ecef !important; 
+    border-color: #d3d3d3 !important;     
+    cursor: not-allowed !important;
+}
+
+/* Oscurecemos el texto y ponemos el cursor de prohibido */
+.eikon-input.eikon-readonly input {
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+}
+
+/* Anulamos el efecto rojo al hacer clic para que no parezca editable */
+.eikon-input.eikon-readonly:focus-within {
+    border-color: #d3d3d3 !important;
+    box-shadow: none !important;
+}
+
+/* *============================* */
+/* *clases para inputs con error* */
+/* *============================* */
+/* 1. La caja principal por fuera (aquí va el borde rojo general) */
+.eikon-input.invalid, 
+.eikon-input.is-invalid {
+    border: 1px solid #dc3545 !important; 
+    background-color: #fff8f8 !important; 
+    border-radius: 4px; /* Opcional: para que las esquinas sean redondeadas */
+}
+
+/* 2. El texto y áreas internas (le quitamos los bordes para evitar la "doble caja") */
+.eikon-input.invalid input,
+.eikon-input.is-invalid input,
+.eikon-input.invalid .dxbs-dropdown-area {
+    border: none !important; /* ¡Esta es la clave! Quita el borde interno */
+    background-color: transparent !important; /* Para que tome el fondo rojo clarito de la caja principal */
+    box-shadow: none !important;
+}
+
+/* 3. El resalte al hacer clic */
+.eikon-input.invalid:focus-within {
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+
+/** ==================================== **/
+/** ANIMACIONES DE TRANSICIÓN PARA EIKON **/
+/** ==================================== **/ 
+
+/* Definimos qué hace la animación: Aparecer de la nada y subir un poco */
+@keyframes fadeInSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-10px); /* Empieza 10px desde los lados */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);    /* Termina en su posición original */
+    }
+}
+
+/* Esta es la clase que le pondremos a nuestro contenido */
+.eikon-tab-animada {
+    animation: fadeInSlideRight 0.3s ease-out forwards;
+    width: 100%;
+}

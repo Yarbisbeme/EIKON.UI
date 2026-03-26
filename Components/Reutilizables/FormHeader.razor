@@ -1,0 +1,19 @@
+
+<div class="header border-bottom pb-2 mb-3 d-flex justify-content-between align-items-center">
+    <p class="eikon-primary-text mb-0" style="font-size:18px; font-weight:300;">
+        @Title
+    </p>
+    <Toolbar OnLeave="OnLeave" OnClose="OnClose" OnAdd="OnAdd" OnSave="OnSave" OnRemove="OnRemove" formulario="@FormCode" />
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string FormCode { get; set; } = "";
+    
+    // Eventos que pasarás al Toolbar
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback OnLeave { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnRemove { get; set; }
+}
