@@ -61,7 +61,6 @@ namespace EIKON.UI.Services
         private string _pa;
         private string _user;
         private string _tipo;
-        private string _em;
 
         //private string _apiBaseUrl = _apiBaseUrl ;
         //private string _apiBaseUrl = "https://localhost:44377/api/";
@@ -102,18 +101,6 @@ namespace EIKON.UI.Services
             //return _httpContextAccessor.HttpContext.Session.GetString("Pa");
             return _pa;
         }
-
-        public void SetEmpresa(string em)
-        {
-            _em = em;
-        }
-
-        public string GetEmpresa()
-        {
-            return _em;
-        }
-
-
         public void SetTipo(string tipo)
         {
 

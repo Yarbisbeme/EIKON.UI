@@ -756,7 +756,7 @@ else
                     }
                     if (TxtEstatus.Contains("Completed"))
                     {
-                        fecha1s = statusNomina.OrderBy(o => o.FechaIni).FirstOrDefault().FechaIni.DateTime  ;
+                        fecha1s = statusNomina.OrderBy(o => o.FechaIni).FirstOrDefault().FechaIni  ;
                         tiempoTranscurrido = statusNomina.OrderBy(o => o.FechaIni).FirstOrDefault().FechaFin - fecha1s;
                         ValorProgresoTxt =  "100% Completado en " + tiempoTranscurrido.Hours.ToString("00") + ":" + tiempoTranscurrido.Minutes.ToString("00") + ":" + tiempoTranscurrido.Seconds.ToString("00") + " (hh:mm:ss)";
                     }

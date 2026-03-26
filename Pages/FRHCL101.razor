@@ -62,7 +62,7 @@
                 }
                 
                 <hr class="mb-2" style="border-top: 2px solid #dee2e6; opacity: 1;" />
-                <div class="col">
+                <div class="">
                     <span class="placeholder col-4 mb-2" style="height: 15px; border-radius: 3px; width: 10px;"></span>
                     <span class="placeholder col-6" style="height: 34px; border-radius: 4px;"></span>
                 </div>
@@ -594,18 +594,18 @@
     private string empresaActual { get; set; } = "";
     private string usuarioActual { get; set; } = "";
 
-    protected override async Task OnInitializedAsync()
+protected override async Task OnInitializedAsync()
     {
-        // cambiamos la forma de la carga del formulario para que sea afterRender()
+        // Esto se queda vacío para que el esqueleto cargue a la velocidad de la luz
     }
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender) // Solo queremos que busque en la BD la primera vez que entra
         {
             try 
             {
-                // 1. LEER EL TOKEN
+                // 1. LEER EL TOKEN (Seguro de usar aquí porque JS ya está vivo)
                 if (string.IsNullOrEmpty(Token))
                 {
                     Token = await auth.GetTokenAsync();
@@ -617,11 +617,11 @@
                     auth.SetToken(Token);
                 }
 
-                // 2. DATOS DE SESIÓN
-               // empresaActual = api.GetEmpresa();
+                // 2. DATOS DE SESIÓN (¡Súper importante no borrar esto!)
+                // empresaActual = api.GetEmpresa();
                 usuarioActual = api.GetUser();
 
-                // 3. DESCARGAR LISTAS
+                // 3. DESCARGAR LISTAS (Usando la empresa que acabamos de obtener)
                 data = await api.Frhpu010DtoGetAll(Token); 
                 datarq = await api.Frhrq010DtoGetAll(Token);
                 puestos = await api.Frhjo010DtoGetAll(Token);
@@ -636,12 +636,11 @@
             }
             catch (Exception ex)
             {
-                // ¡AQUÍ ATRAPAMOS AL CULPABLE!
+                // ¡AQUÍ ATRAPAMOS AL CULPABLE DE LOS 5 MINUTOS!
                 Console.WriteLine("🚨 ERROR FATAL AL CARGAR: " + ex.Message);
                 Console.WriteLine(ex.StackTrace);
                 
-                // Opcional: Mostrarle la alerta al usuario para que sepa que algo falló
-                alertInfo.Show("Error de conexión al cargar los datos.", "danger");
+                alertInfo.Show("Error de conexión al cargar los datos. Revisa la consola.", "danger");
             }
             finally 
             {
@@ -651,7 +650,6 @@
             }
         }
     }
-    
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
     {
         var codigo = ((Trhps000Dto)e.DataItem).IdentityColumn;
